@@ -1,0 +1,165 @@
+<html>
+<head>
+<title>Apollo Tiers Files</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<H1 align=center>Creating and Modifying Apollo Tiers Files</H1>
+
+For display purposes, Apollo groups feature types into <i>tiers</i>,
+conceptual groupings of related types that can be controlled as a unit
+and displayed in a single horizontal row.  Apollo's configuration files
+include a "style" file and a tiers file for each data source (called a
+Data Adapter) that Apollo knows about.  The tiers file specifies how each
+data type should be displayed (position, color, shape, URL for more info,
+etc.).
+<P>
+There is a good description of the Apollo tiers files in the 
+<a href=http://www.fruitfly.org/annot/apollo/userguide.html#TiersFiles>Apollo user
+manual</a>--please read that section before you read this description of
+how to create and change tiers files.
+<P>If you edit the tiers file, be aware that each tier line and each type line must be a
+<i>single</i> line--if these lines contain newlines, they will not be
+parsed properly.  Some text editors will break up long lines by inserting newlines.
+<P>
+Note that the order of lines in the tiers file is how Apollo determines
+the vertical ordering of the data in the display.  The first tiers in the
+file appear closest to the central axis.
+<br>
+<h3>Adding new types to a tiers file</h3>
+Sometimes when you display a datafile, you will see messages in the 
+<a href=http://www.fruitfly.org/annot/apollo/userguide.html#stdout>Apollo console</a>
+about new feature property schemes being created, e.g.
+<P>
+Creating new feature property scheme for Gene Prediction<br>
+Creating new feature property scheme for Softberry<br>
+Creating new feature property scheme for Gene Model<br>
+Creating new feature property scheme for
+blastx:Honeybee_TREMBL30.5_SWISS47.5<br>
+Creating new feature property scheme for Glean3<br>
+<P>
+These messages mean that these datatypes are missing from the appropriate
+tiers file and should be added to it.  To figure out which tiers file Apollo
+is using, look at the console output for a line like:
+<BR>
+Using tiers file /users/nomi/.apollo/fly.tiers
+<P>
+The main challenges to adding these new types to the tiers file are figuring out what
+tier each datatype belongs in, and determining what vertical position 
+to assign them, ranging from close to the metric to farther up in the panel.
+<P>
+In this example, we started with Drosophila data (which uses fly.tiers)
+and read a data file that contained some new types.  To add these new types
+to fly.tiers, the curator reasoned as follows:
+<P>
+For Gene Prediction, this seems like some new generic gene prediction
+datatype, so I add a new "Type" in the Gene Prediction tier:
+<BR>
+[Type]<br>
+label : Gene Prediction<br>
+tiername : Gene Prediction<br>
+datatype : Gene Prediction<br>
+glyph : DrawableResultFeatureSet<br>
+color : 153,51,255<br>
+usescore : true<br>
+minscore : 100.0<br>
+column : SCORE<br>
+column : GENOMIC_RANGE<br>
+column : query_frame<br>
+column : GENOMIC_LENGTH<br>
+sortbycolumn : GENOMIC_RANGE<br>
+<P>
+For Softberry, I happen to know that they make the fgenesh program, so I
+add one new line with the Softberry datatype to the fgenesh Type
+description:
+<BR>
+[Type]<br>
+label : Fgenesh<br>
+tiername : Gene Prediction<br>
+datatype : fgenesh:dummy<br>
+datatype : Softberry<br>
+glyph : DrawableResultFeatureSet<br>
+color : 255,153,255<br>
+usescore : true<br>
+minscore : 100.0<br>
+column : SCORE<br>
+column : GENOMIC_RANGE<br>
+column : query_frame<br>
+column : GENOMIC_LENGTH<br>
+sortbycolumn : GENOMIC_RANGE<br>
+weburl : http://www.softberry.com/berry.phtml?topic=index&amp;group=programs&amp;subgroup=gfind#<br>
+<br>
+I'm not sure what Gene Model is, so I create a whole new Tier
+and Type for this, just after the third party annotations:
+<br>
+[Tier]<br>
+tiername : Gene Model<br>
+expanded : true<br>
+<br>
+[Type]<br>
+label : Gene Model<br>
+tiername : Gene Model<br>
+datatype : Gene Model<br>
+glyph : DrawableResultFeatureSet<br>
+color : 255,51,51<br>
+usescore : true<br>
+minscore : 100.0<br>
+column : SCORE<br>
+column : GENOMIC_RANGE<br>
+column : MATCH_RANGE<br>
+column : GENOMIC_LENGTH<br>
+column : MATCH_LENGTH<br>
+sortbycolumn : GENOMIC_RANGE<br>
+<br>
+For blastx:Honeybee_TREMBL30.5_SWISS47.5, this seems similar to BLAST 
+similarity to fly, but instead, it is for bee, so I created a new Tier
+and Type just under the BLASTX similarity to fly with the same color:
+<br>
+[Tier]<br>
+tiername : BLASTX Similarity to Bee<br>
+expanded : true<br>
+<br>
+[Type]<br>
+label : BLASTX Similarity to Bee<br>
+tiername : BLASTX Similarity to Bee<br>
+datatype : blastx:Honeybee_TREMBL30.5_SWISS47.5<br>
+glyph : DrawableResultFeatureSet<br>
+color : 255,20,0<br>
+usescore : true<br>
+column : SCORE<br>
+column : identity<br>
+column : expect<br>
+column : query_frame<br>
+column : GENOMIC_RANGE<br>
+column : MATCH_RANGE<br>
+column : GENOMIC_LENGTH<br>
+column : MATCH_LENGTH<br>
+sortbycolumn : GENOMIC_RANGE<br>
+groupby : HOMOLOGY<br>
+weburl :
+http://srs.ebi.ac.uk/srs6bin/cgi-bin/wgetz?[swall-acc:__ID__]+-e<br>
+<P>
+<h3>Getting Apollo to use your new tiers file</h3>
+The best place to put your edited tiers file is in your personal .apollo
+directory.  If you use the same tiers file name (e.g. fly.tiers),
+you shouldn't
+need to change your style file--the new tiers file will be used automatically
+the next time you start Apollo.  If you choose a different name for the tiers
+file, 
+make sure the style file contains the new
+tiers file name.  For example, if you saved a new Drosophila types file as
+"my.tiers", then you'd need to change the Types line in fly.style to say
+<pre>
+Types		        "my.tiers"
+</pre>
+<P>
+Note that you must quit and restart Apollo for your new tiers file to
+take effect.
+<HR><P>
+<!-- hhmts start -->
+Last modified: Thu Oct 27 10:14:45 PDT 2005
+<!-- hhmts end -->
+
+</body>
+</html>

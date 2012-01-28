@@ -1,0 +1,17 @@
+After last week's Apollo release, we discovered a few rather nasty bugs.
+Because of changes in the Ensembl CGI server, you could no longer read
+Ensembl CGI data into Apollo.  We also discovered that the GFF writer
+was broken--you couldn't save data in GFF format.  And
+rubberbanding wasn't working right--when you rubberbanded a bunch of
+features, some were selected and some weren't.
+
+All those bugs are fixed in 1.2.6; however, rubberbanding is still not
+working right on Mac.  You may see the black rubberband rectangle drawn
+as you move the mouse, instead of just at the end when you release it, so
+you will see a concentric set of black rectangles.  This looks ugly but
+does not impair the functionality of the rubberband.  We hope to fix this
+bug before the next release.
+
+This .tar.gz file includes the complete Apollo source.  If you want to
+install Apollo with the nice installer, please go to
+http://www.fruitfly.org/annot/apollo/install.html

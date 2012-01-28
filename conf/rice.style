@@ -1,0 +1,68 @@
+// Style for rice data, based on game.style
+ImportStyle "game.style" 
+
+// The name of the types file (a file--expected to be in the user's ~/.apollo directory
+// or in the APOLLO_ROOT/conf directory)
+Types		        "rice.tiers"
+
+// Organism to use when writing out ChadoXML (if not already specified
+// for the individual feature)
+Organism                "Oryza sativa"
+
+NameAdapterInstall "apollo.config.RiceNameAdapter"
+
+// Whether to enable the navigation manager, default false.
+EnableNavigationManager "false"
+
+// List of chromosomes for pulldown menu in navigation bar and load-by-location 
+// data adapter. data adapter gets this from chado-adapter.xml config. navigation
+// is not yet enabled. rice chado only chrom 1 at this point.
+// Chromosomes             "1, 2, 3, 4"
+
+// Whether to show the genes ID field in the annot info editor. default true.
+ShowIdField  "false"
+
+// Whether the transcript symbol should be editable in annotinfo. default true
+TranscriptSymbolEditable "false"
+
+// Whether to show the "Is Dicsitronic?" checkbox in annot info
+ShowIsDicistronicAnnotInfoCheckbox "false"
+
+// Whether to show the "Evauluation of Peptide" drop down list. This is more or less
+// a flybase specific dropdown list, where a peptide analysis program was run and the
+// curator could pick from the results (or something like that)       
+// also whether to show associated menu item in annotation menu
+//ShowEvaluationOfPeptideAnnotInfoList "false"
+ShowEvaluationOfPeptide "false"
+
+// Whether to display/use the isProblematic checkbox in annot info editor
+ShowIsProblematicAnnotInfoCheckbox "false"
+
+// Whether to display/use the "Finished?" checkbox in annot info
+// transcript panel. Indicates work on that transcript is done I think.
+ShowFinishedAnnotInfoCheckbox "false"
+
+// Show table in annot info that displays database cross references
+// for the annotation, that can potentially bring up web pages
+ShowDBCrossRefAnnotInfoTable "false"
+
+// Show "Replace stop codon with selenocysteine" checkbox in annot info
+ShowReplaceStopAnnotInfoCheckbox "false"
+
+// allow for translational frame shift editing in the exon detail editor
+// which also get displayed in the annot info editor. default is "true"
+EnableTranslationalFrameShiftEditing "false"
+
+// Allow for sequence error editing in exon detail editor, which also displays in
+// annot info editor. Default is "true".
+EnableSequenceErrorEditing "false"
+
+// Whether to show/use ownership menu item in annot menu for disowning
+// & owning annots. default is true.
+ShowOwnershipAnnotMenuItem "false"
+
+// Whether to show/use annot menu item for setting transcript
+// finished/unfinished - default is true
+ShowTranscriptFinishedAnnotMenuItem "false"
+
+// Be sure that the last line of this file ends with a newline.

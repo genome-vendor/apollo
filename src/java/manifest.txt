@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Class-Path: org.bdgp.jar jakarta-oro-2.0.6.jar patbinfree153.jar biojava.jar jaxp.jar pg74.213.jdbc3.jar crimson.jar junit.jar psgr2.jar ecp1_0beta.jar log4j-1.2.14.jar te-common.jar ensj-compatibility-19.0.jar mm.mysql-2.0.6.jar ensj.jar
+Main-Class: apollo.main.Apollo
+
+Name: apollo/main/Apollo

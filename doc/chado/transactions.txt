@@ -1,0 +1,572 @@
+Descriptions of Apollo edits/transactions
+-----------------------------------------
+
+TOP LEVEL
+---------
+<transactions author="guanming" version="1.0" database="db"??>
+	<map_position chromosome="2R" start="800" end="1200">
+	<add>
+	<delete>
+	<update>
+</transactions>			
+
+
+DELETE GENE/ANNOTATION
+----------------------
+GUI: Main window annot menu.
+Event Source: Annotation Editor(AE)/AnnotationChangeCoalescer(ACC)
+Transaction: Operation DELETE, Class ANNOTATION
+NOTE: We are not supporting multiple session undo. That is you can undo within a session, but cant undo changes from a previous apollo session (that was saved and reloaded).
+xml:
+<delete>
+	<annotation id="CG123" timestamp="ts"></annotation>
+</delete>
+
+DELETE TRANSCRIPT
+-----------------
+GUI: main window annot menu
+Event Source: AE/ACC
+Transaction: Operation DELETE, Class TRANSCRIPT
+xml:
+  <object_class>TRANSCRIPT</object_class>
+  author? date? does chado record for deletes?
+<delete timestamp="ts">
+  <transcript id="CG123-RA"></transcript>
+</delete>
+
+DELETE EXON
+-----------
+GUI: Main window annot menu delete selected exon
+Event Source: AE/ACC
+Transaction: Operation DELETE, Class EXON
+chado: remove feature relationship between exon and transcript. If no
+other feature_rels remove exon. Perhaps dont have to check if
+indicated in xml.
+XML:
+<delete timestamp="ts">
+	<exon parent_id="CG123-RA" start="40 end="80" isShared="false"></exon>
+</delete>
+
+DELETE TRANSCRIPT COMMENT
+-------------------------
+GUI: FED comment editor
+FED METHOD: featureChanged
+TRANSACTION: Operation DELETE, Class TRANSCRIPT, Subpart COMMENT,
+hasComment returns true, getComment returns deleted comment
+CHADO: query for deleted comment by comment string itself?
+XML:
+<delete timestamp=ts>
+  <transcript id=CG123>
+   <comment>Comment string</comment>
+	</transcript>
+</delete>
+
+
+ADD TRANSCRIPT
+--------------   
+GUI: Main window drag in transcript, result menu, annot menu:duplicate
+(creates gene if no other transcript in region)
+Event Source: AnnotationEditor(AE)/AnnotationChangeCoalescer(ACC)
+Transaction: Operation ADD(or INSERT), Class TRANSCRIPT (no subpart)
+xml:
+
+  <object_class>TRANSCRIPT</object_class>
+  <author>Mark</author>
+  <date>9.7.2004</date>
+  <add>
+     <parent_annotation_id>CG12345</parent_annotation_id> - parent
+     <name?transcript_id?>CG12345-RB</name>
+     <exon?span?> is exon not general enough?
+       <start>45</start>
+       <end>90</end>
+     </exon>
+     <exon>
+       <start>100</start>
+       <end>150</end> 
+     </exon>
+     <start_codon> 50 </start_codon>
+     <stop_codon??>automatic?
+  </add>                                               
+</transaction>
+
+
+
+ADD GENE
+--------
+GUI: Main window drag where no transcript, result menu.
+Event Source: AE/ACC
+Transaction: Operation ADD, Class ANNOTATION
+xml:
+<add timestamp="ts">
+  <annotation id="CG-temp-1234">
+     <transcript id="CG-temp-123-RA">
+        do we need an id? YES for subsequent transactions
+        <exon parent_id="temp-trans-id"??? start="50" end="40"> -- shared is optional
+        <exon start=100 end=150> 
+        <start_codon>50</start_codon> -- stop is automatic?
+     </transcript>
+   </annotation>  
+</add>
+
+
+
+MOVE EXONS TO TRANSCRIPT
+------------------------
+JAVA: AnnotationEditor.moveExonsToTranscript is called by AnnotationEditor.mergeTranscripts.
+<update timestamp="ts">
+  <exon parent_id="CG123-RA" start="5" end="10">
+    -- NOTE we are not recording previous value - not needed in xml - only in java for undo
+    <parent_id>CG123-RB</parent_id>
+  </exon>
+<update>
+          
+
+Merge genes
+-----------
+this is a tricky one. all the contents has to be added to
+updated to merged gene. Merging gene has to be deleted.
+<compound_transaction??merge_genes?? merge?>
+ <update timestamp=ts>
+  <transcript id="CG123-RA">
+     <parent_id>
+	<before>CG123</before>
+	<after>CG122</after>
+      </parent_id>
+  </transcript>
+  <transcript id=transcript2>
+     <parent_id...
+  </transcript>
+  ... more transcripts...	
+  <annotation id="merged-into-gene-id">
+    -- a bunch of stuff - need to look at code to see what get merged in - synonyms...
+ </update>
+
+ <delete>
+  <annotation id="merged_gene">
+
+</compund_transaction>
+
+
+
+   
+Merge Exons:
+----------- 
+GUI: Main window annotation menu. can merge more than two
+delete exons, add new merged one (check for exons with
+same new range) (or delete one and update other?)
+<merge timestamp=ts>
+  <delete>
+    <exon parent start end shared>
+    <exon parent start end shared>
+    ...
+  </delete>
+  <add>
+    <exon parent start end shared>
+  </add>
+</merge>
+
+MERGE TRANSCRIPTS
+-----------------
+can only merge 2
+
+SPLIT TRANSCRIPT
+----------------
+ delete and 2 adds? what about dbxrefs and syns and
+all? AE does remove exons from 1st trans and then add transcript or
+add gene depending on overlap
+
+
+split exon: old exon gets limits updated - doesnt seem to be event for
+that - if not there needs to be. then 2nd exon is added with ADD EXON.
+
+
+
+                           
+Add Exon: 
+                                                                               
+
+EXON RANGE CHANGE 
+-----------------
+(could be an add or an update in chado depending
+on if there are fellow exons with same range):
+GUI: EDE drag ends of exons
+ANNOTATION EDITOR METHOD: setExonTerminus
+TRANSACTION: Operation UPDATE? conditional DELETE followed by ADD
+             class EXON, Subpart RANGE(START?END?)LIMITS?
+CHADO: if update only do update if not shared, if shared create new
+exon and new feature_relationship
+if delete/add delete feature_relationship,  
+only delete exon feature if not shared by other transcripts
+create new exon and new feature_relationship. 
+I think I like update better.
+gene and transcript featureloc have to be updated too(downside of
+redundant featurelocs).
+XML:
+<transaction>
+  <object_class>EXON</object_class>
+  <parent_transcript_id>CG123-RA</parent_transcript_id> -- in update?
+  -- start and end?
+  <author>
+  <date>
+  <update?>
+     <subpart???>RANGE</subpart> ???
+     <before>
+        -- range/location element? exon element?
+        <start>40</start>
+        -- if end is same do we put it in? probably not
+        <end>70</end>
+     </before>
+     <after>
+        <start>50</start>
+        <end>80</end>
+     </after>
+     <exon_is_shared>true</exon_is_shared>
+  </update>  
+</transaction>
+
+
+SPLIT GENE
+----------
+GUI: possible side effect of actions in main panel, like deleting an
+exon
+ANNOTATION EDITOR METHOD: splitGene
+ACTION: create new gene, update parent(feature_rel) of transcript to
+new gene. transfer strand,type,start codon to new gene&trans
+chado question: do exons get shared across genes - i imagine not - but
+i also imagine gene wont get split unless they lack shared exons -
+exception might be shared UTR exons(discistronic?).
+TRANSACTION: 
+1) Operation ADD, Object Class ANNOTATION
+2) Operation UPDATE, Object Class TRANSCRIPT, SubPart PARENT(?)
+XML:
+
+Translation Start:
+                                                                       
+
+Frame Shift Position:
+                                                                                    
+
+Sequencing Error Position:
+
+
+Set Longest ORF: 
+
+Set Translation Terminus: 
+
+Splice Site (Exon limits):
+
+Take ownership - i think this is covered by the author of
+transactions?
+
+Disown - currently there is no event for this - needs to be!
+
+Transcript Status - this might be pase - not sure -
+AE.setTranscriptStatus called by AnnotationMenu.setStatus which is
+flipped by AM toggleCompleted menu item - which is still used - this
+needs a real event - currently just sends out a redraw
+
+
+
+
+
+Add/Remove Evidence - i think this became pase once end match highlighting was implemented
+
+Flip Result strand - dont think this gets written to db
+
+
+We probably need to state something about map position at the top of
+the transaction file, what the coords are relative to, like:
+
+  <map_position>
+    <chromosome>2L</chromosome>
+    <arm>2L</arm>
+    <span?location?>
+      <start>16274100</start>
+      <end>16278100</end>
+    </span>
+  </map_position>
+
+
+-----------------------------------
+ANNOTATION INFO EDITOR TRANSACTIONS
+-----------------------------------
+The java class for the Annotation Info Editor is
+apollo.gui.annotinfo.FeatureEditorDialog (FED)
+(perhaps these events should be moved to AnnotationEditor?)
+
+
+ADD TRANSCRIPT COMMENT 
+----------------------
+GUI: Annotation Info Editor(FeatureEditorDialog FED) comments editor
+FED METHOD: featureChanged - presently just does REPLACE COMMENT event
+for all adds and deletes for transcripts and genes - have to replace
+with finer grain events.
+TRANSACTION: Operation ADD, Class TRANSCRIPT, subpart COMMENT - but
+this is still insufficient as we dont know which comment is the new
+one. Transaction has to contain the actual new comment - not sure best
+way to do this is - generic Object (cast to Comment - yuk),
+probably best way is with hasComment() getComment()
+XML:
+<transaction>
+  <object_class>TRANSCRIPT</object_class>
+  <transcript_id>CG123-RA</transcript_id> -- or in <add>?
+  <author>, <date>
+  <add>
+     <subpart?>COMMENT</subpart> -- is this necasary?
+     <comment>
+        "This is a comment"
+        -- author and date given above, comment id?? do we need?
+     </comment>
+  </add>
+</transaction>
+     
+
+ADD GENE COMMENT
+----------------
+same as ADD TRANSCRIPT COMMENT above with object_class ANNOTATION and <annotation_id>
+
+DELETE GENE COMMENT
+-------------------
+same as DELETE TRANSCRIPT COMMENT above with object_class ANNOTATION
+and <annotation_id>
+
+
+READ THROUGH STOP
+-----------------
+GUI: Annot info transcript box "Replace stop codon with
+selenocysteine" checkbox. 
+JAVA METHOD: apollo.gui.annotinfo.TranscriptEditPanel (part of FED)
+updateFeature sets Transcript readThroughStop. FED.featureChanged
+fires AnnotationChangeEvent(REPLACE TRANSLATION).
+TRANSACTION: Operation UPDATE, Class TRANSCRIPT, 
+Subpart READ_THROUGH_STOP?? 
+CHADO: Where does this get put in chado? Is there a place for it yet?
+Or is apollo ahead of chado here?
+XML:
+<transaction>
+  <object_class>TRANSCRIPT</object_class>
+  <transcript_id>CG123-RA</transcript_id>
+  <author>...<date>...
+  <update>
+     <before>
+          <read_through_stop>true</read_through_stop>
+     </before>
+     <after>
+        <read_through_stop>false</read_thtough_stop>
+     </after>
+  </update>
+</transaction>
+
+A lot of the FED changes get lumped into one REPLACE ANNOTATION
+AnnotationChangeEvent in FED.save(). The actual changes have to be
+teased out.
+
+I wonder if a bunch of these could all be lumped - the xml could
+probably be but the transactions probably would be too awkward to lump.
+
+
+ANNOTATION TYPE CHANGE
+----------------------
+GUI: Annot info Type drop down list
+JAVA: FED.setupTypeChange (AnnotationChangeEvent ACE: UPDATE,TYPE)
+TRANSACTION: 
+  Operation UPDATE
+  Class ANNOTATION
+  Subpart TYPE
+XML:
+<transaction>
+  <object_class>TRANSCRIPT<object_class>
+  <transcript_id>CG12-RA</transcript_id>
+  <author>,<date>
+  <update>
+     <before>
+        <type>psuedogene</type>
+     </before>
+     <after>
+        <type>tRNA
+     </after>
+  </update>
+</transaction>
+
+
+ANNOTATION ID CHANGE
+--------------------
+GUI: Annot info ID field
+JAVA: FED.setupIdChange
+TRANSACTION:
+  Operation UPDATE
+  Class     ANNOTATION
+  Subpart   ID
+XML:
+<transaction>
+  <object_class>ANNOTATION</object_class>
+  <annotation_id>CG123</annotation_id>
+  <author>,<date>
+  <update>
+     <before>
+        <id>CG123</id>
+     </before>
+     <after>
+        <id>CG122</id>
+     </after>       
+  </update>
+</transaction>
+
+
+ANNOTATION NAME CHANGE
+----------------------
+GUI: Annot info "Symbol" field
+JAVA: FED.setupNameChange
+TRANSACTION:
+  Operation UPDATE
+  Class     ANNOTATION
+  Subpart   NAME
+XML:
+<transaction>
+  <object_class>ANNOTATION</object_class>
+  <annotation_id>CG123</annotation_id>
+  <author>,<date>
+  <update>
+     <before>
+        <name>koosh-koosh</name>
+     </before>
+     <after>
+        <name>poosh-poosh</name>
+     </after>       
+  </update>
+</transaction>
+
+
+TRANSCRIPT NAME CHANGE
+----------------------
+GUI: Annot info transcript panel "Symbol" field
+JAVA: FED.setupNameChange
+TRANSACTION:
+  Operation UPDATE
+  Class     TRANSCRIPT
+  Subpart   NAME
+XML:
+<transaction>
+  <object_class>TRANSCRIPT</object_class>
+  <transcript_id>CG123</transcript_id>
+  <author>,<date>
+  <update>
+     <before>
+        <name>koosh-koosh-RA</name>
+     </before>
+     <after>
+        <name>poosh-poosh-RA</name>
+     </after>       
+  </update>
+</transaction>
+
+
+
+There currently is no event sent out for the edits below in the
+annotation info editor - they just get lumped in the ANNOTATION
+REPLACE event. This must be ammended. Each of these has to get its own
+event/transaction.
+
+ANNOTATION/TRANSCRIPT SYNONYMS
+------------------------------
+GUI: Annot info gene panel synonyms field
+JAVA: no synonym event currently fired. FED.synsChanged() is where
+synonym change is checked for. Should we send out event for each added
+and deleted synonym or an event for an update of the whole thing? Same
+with comments i guess. Also should we record events as the user makes
+changes or at commit time? For synonyms we have to do at commit time
+as its just a comma delimited field - theres nothing that says
+synonym editing is done - just the commit. So if we do update event of the
+whole thing then downstream recipients (jdbc, xml parser) would have
+to sort it out. If we do it here we take the hassle away from downstream.
+TRANSACTION:
+  Operation: ADD,DELETE (or UPDATE if whole list)
+  Class: ANNOTATION or TRANSCRIPT
+  Subpart: SYNONYM
+  if ADD/DELETE need a hasSynonym/getSynonym(), otherwise wont know
+  which synonym is the pertinent one
+XML:
+<transaction>
+  <object_class>ANNOTATION/TRANSCRIPT</object_class>
+  <annotation/transcript_id>CG123/-RA</annotation/transcript_id>
+  <author>  <date>
+  <add>
+     <synonym>mooshmoosh</synonym>
+     <synonym>wooshywoosh</synonym>
+  </add>
+  <delete>
+     <synonym>pooshpoosh</synonym>
+  </delete>
+</transaction>
+
+OR instead of add/delete
+  <update>
+     <before>
+        <synonym_list>moosh, poosh, kwoosh</synonym_list>
+     </before>
+     <after>
+        <synonym_list>poosh, new-synonym</synonym_list>
+     </after>
+  </update>
+I think i like add/delete better.
+
+
+ANNOTATION/TRANSCRIPT IS_PROBLEMATIC
+------------------------------------
+GUI: Annot info is_problematic checkboxes
+JAVA: FED.featureChanged. doesnt fire ACE - needs to.
+TRANSACTION: 
+  Operation: UPDATE
+  Class:     ANNOTATION/TRANSCRIPT
+  Subpart:   IS_PROBLEMATIC
+XML:
+<transaction>
+  <object_class>ANNOTATION/TRANSCRIPT</object_class>
+  <annot/trans_id>CG123<annot/trans_id>
+  <author> <date>
+  <update>
+     <before> -- for booleans do we really need a before and after?
+        <is_problematic>false</is_problematic>
+     </before>
+     <after>
+        <is_problematic>true</is_problematic>
+     </after>
+  </update>
+</transaction>                            
+
+
+ANNOTATION IS DICISTRONIC
+-------------------------
+GUI: Annot info "Is dicistronic?" checkbox
+JAVA: dicistronic is a property of the annot not a formal
+variable. This could and probably should be elevated to a real
+instance variable (properties are just a quick way of getting new
+stuff into the datamodel - dicistronic is new). 
+FED.featureChanged goes through the properties looking for changes,
+but none of the properties currently have their own event.
+TRANSACTION: 
+  Operation: UPDATE
+  Class:     ANNOTATION
+  SubPart:   IS_DICISTRONIC          
+XML:
+<transaction>
+  <object_class>ANNOTATION</object_class>
+  <author> <date>
+  <update>
+     <before>
+        <is_dicistronic>false</is_dicistronic>
+     </before>
+     <after>
+        <is_dicistronic>true</is_dicistronic>
+     </after>
+  <update>
+</transaction>
+
+
+ANNOTATION SP_STATUS
+--------------------
+GUI: "Evaluation of peptide" drop down list is present in annot info
+editor, but as far as I can tell it is never actually written to the
+cloned gene properties - is this a bug? is this unfinished work? But
+it does appear that it does get recorded as the "sp_status" property
+from PeptideMenu which is a sub menu of AnnotationMenu.

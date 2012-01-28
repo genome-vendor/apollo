@@ -1,0 +1,23 @@
+// Style for GFF3 data.
+// Inherits from game.style.
+// Each line should have two strings, separated by one or more spaces.
+// The first string is a key and the second is the key's value.
+// It is necessary to put quotes around the strings if they contain
+// punctutation characters or spaces.
+// Both slash-star and slash-slash comments are accepted.
+// Blank lines are ignored.
+
+// Import the generic GAME style and then add to it.
+ImportStyle             "game.style"
+
+// The name of the types file (expected to be in the user's ~/.apollo directory
+// or in the APOLLO_ROOT/conf directory)
+Types		        "gff3.tiers"
+
+EnableEditing "true"
+
+// Name of the SO OBO file used for validation
+SequenceOntologyOBO     "so.obo"
+
+// Name of the Apollo OBO extension used for mapping SO -> Apollo datatypes
+ApolloOBO               "apollo.obo"

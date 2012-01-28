@@ -1,0 +1,440 @@
+-----
+DONE:
+-----
+
+1) SyntenyPanel configurable to fine view:
+a) lose link panel
+b) lock scrooming
+c) drop strands
+d) take out extra scollbar and zoom buttons(from szap)
+
+Vivek. I'll do it better this time. What you suggested -  to make these just plain
+configurable (where applicable) to all Szaps - is quite tempting.
+The LinkPanel occupies a lot of 'dead space' for a bunch of rectangles,
+so making it go away is one thing, but I'd like to make it resizable
+right now too (it's not).
+
+DONE (almost) - you can now resize the link panel, lock zooming, take f/r strands
+in/out and take annotations in/out through the gui as well as programmatically.
+
+4) need to get alignment data (probably cigar) into apollo synteny
+
+Vivek. Since I am responsible for the java that loads the current
+alignment data into Apollo anyway. I need to extend it to keep the cigar.
+
+DONE - apollo feature pairs inside the link panel now have populated cigar
+lines (where applicable)
+
+9) Get editing working 
+
+DONE (??) Editing is now working at a crude, file-based level for
+ensj/otter type formats. So we're not 104) Have menu items for hiding and showing of red and blue links
+(currently in the tiers window).
+really done...
+
+10) get save as working
+
+DONE, provided you save-as back to otter
+
+11) Take out filter on databases
+
+DONE
+
+15) Keep the variation message from coming up on every load - make
+have a warn me checkbox.
+17) FeaturePair for link needs to reflect strand of link - dont think it does now.
+
+DONE.
+
+104) Have menu items for hiding and showing of red and blue links
+(currently in the tiers window).
+106)(Coarse) With editing enabled an no annotation server selected get
+popup:
+"No valid annotation server or file was selected: Apollo has loaded
+the selected analyses"
+This has an ok button that wont work until its done loading.
+Also is this message necasary. Maybe a future warning checkbox?
+
+DONE - dialogue removed for now.
+107) repackage -> apollo.gui.synteny
+108) Have ability to turn off variation server. (off by default? off
+if blank?)
+
+----
+PASE:
+----
+0) Connection from coarse to fine - link click
+debug any issues with having 2 frames up at same time - theres
+probably some static variables that are going to need to be dynamic
+
+
+The extra scrollbar / zoom buttons still exist.
+
+2) need to subset the curation set from coarse to fine
+need the corresponding alignment and strands for the link
+
+Knows all about JalView (you still have to send
+me the code that creates the aligned seq, so I can see what's going
+to happen). I guess the 'thingy' you'd be writing here is a big method
+that takes a reference sequence and a target CurationSet, and returns
+a 'munged' CurationSet (with a reference sequence) suitable for an 
+aligned display? Or is it curation set that wraps _around_ a curation set
+that provides the 'munged' data on the fly? That sounds too hard.
+
+5) lower frame:
+insertions, deletions
+non linear scale (this might be a biggie - not sure)
+
+7) Edit across species - with menu items at first
+
+Mark! Mark! Mark! I promise to get Synteny-Editing working again (it
+seems to have fallen out of synch, so it doesn't _quite_ work right
+now). If you know how to do this, then it should be applicable to
+coarse/fine views. 
+Do this with results.
+
+19) no type for pruned cur set feats
+20) shift zooming(locked zooming) not working in fine view
+21) reverse strand feats not coming in
+22) result "exons" not independently selectable - whole trans selects
+23) closing fine view shouldnt kill apollo
+24) fine view close(or clear?) on new coarse load
+112) Types panel only comes up for most recent frame, and it controls
+all the frames. Should come up for all frames, but perhaps we want one
+to control all frames? unclear
+
+
+1. Correct endpoints of bottom edge of trapezoid 
+
+Right menu item on selection for displaying that species in the bottom.
+
+> do padleft and padright for getting link result
+
+> bring up just one species initially
+
+> get rid of link querying in adapter - supplanted by feature query
+
+> only data adapter should load style - right now also being loaded by
+  data loader, also data adapter is loading childs style not syntenys
+  style - needs to load synteny style not data adapters normal style
+
+> make links initially smaller by default
+
+3) we need a sample dataset - preferably a really tiny one so it can 
+load really fast - especially if im loading from a database across the 
+internet (would be nice to have some sort of flat file version for quick 
+testing - gff? game?) - ive made a bunch for game if anyone wants them
+- MG
+
+13) Get game working - vivek digging up game and gff files.
+High priority - get links from one of the species files. data adapter gui?
+How do results that are links get distinguished?
+
+14) The link curation set should be able to put in feature pairs in
+both strand (eventually get rid of it as a curation set see #100)
+
+100) Perhaps make links not a curation set but just a list of feature pairs?
+114) replace link curation set with LinkSet.
+
+Have menu items for hiding and showing of red and blue links
+(currently in the tiers window).
+
+The dmel CG is coming back with a big range with lots of other genes
+in it. Need to see if there are other CGs in the dmel entry that the psuedo entry links to.
+
+Presently it always searches the psuedo file for links and lets you choose. You should have the option of explicitly loading 2 entries that you know link up. Then you can load 2 saved files which is faster than loading from the url (especially when gadflyi is down)
+
+I need to look into saving from synteny - would be handy if this works.
+
+Orange blastx game hits need to show up.
+
+------------------------------
+end of fixes for release 1.3.6
+------------------------------
+
+-------------
+release 1.3.7
+-------------
+
+8) The menu state for the upper and lower dont get updated properly - 
+perhaps we wanna rethink menuing - it would be nice to not have to 
+select the species as a separate menu item - not sure what would be best.
+
+Enable start/stop view to be turned off from View menu [this would
+also be useful for normal view, not just for synteny]
+
+Game synteny - should be able select a feature set to retrieve 2nd
+species - can only do leaf seq feat (exon) at moment.
+
+Game synteny - need to get 2nd species selecting.
+fixed - problem was SZAP.handleNamedFeatureSelectionEvent was searching results
+but not annotations.
+
+Link loading(from menu) doesnt work for feature sets.
+
+Some game synteny links seem funny - going into utrs and such - check
+with data.
+
+> hide codons by default - turn on in view menu
+
+Middle click in link area should center both species on this point
+- i think at the moment its like left click - link selection.
+
+> home in/zoom to link:
+zoom both species
+hide irrelevant strands
+
+The set detail panels are split out of the picture initially - have to
+drag splitter to see them - and ya hafta know this to do it.
+
+Put check boxes on strand (+/+) link menu items.
+
+105) Make locked zooming the default, and unlocked zooming
+use the shift key.
+Sima would like a menu item for locked zooming like there is for
+locked scrolling - and maybe by default have it on  (even better would
+be to have locked zooming be default and shift for unlocked as listed
+below) -- made locked zooming default.
+Made locked scrolling initial state.
+
+Config initial locked zooming
+
+Config initial locked scrolling?
+
+menu item for locked zoom?
+
+Theres a bug where the coordinates in the links and upper species can 
+get off (happens when fiddling with strands and evidence panel
+orienation). Im noticing things get off even if you stay vertical but
+adjust the width of the evidence panel.
+It turns out that not only do you have to switch off a strand, 
+but you _also_ have to start with the evidence panel vertical, then switch 
+to horizontal (or vice versa). THEN things will mis-align. If you switch 
+off one of the stands AFTER the vertical<->horizontal switch, then it doesn't 
+do the effect. Something is not good about the Transformer in this case?  
+The sequence is:
+1. bring up a protein-protein link
+2. make evidence panel horiztonal
+3. switch off irrelevant strands. Bing! the protein-protein link is now
+clearly misaligned.
+Fixed by vivek
+
+Sometimes ranges in game synteny of 2 species are way off - cant
+replicate this. - hopefully this was fixed by viveks fix above - no
+repeatable so no way to know - keeping an eye out.
+
+
+Evidence panel should get more space initially - maybe make whole
+frame bigger (if screen size permits) - config the initial size?
+
+
+Links should indicate they are selected somehow - highlight? change
+color?
+
+Link needs to deselect when species features selected.
+
+Selection of a feature in a link should select the link and other
+linked feature.
+
+
+Need to deal with multi select of links. Links can be many to one.
+
+Right click in white space deselects links - should it? No
+Left click in white space does deselect but needs repaint
+
+Link select on right click? Species feats select on right click if
+nothing else selected. Emulate that? Yes!
+
+
+Need repaint on home in.
+
+Right click selects link but not linked feats.
+
+if load one species(in game synteny) after loading 2 species get this
+exception - or if load single species in synteny twice:
+java.lang.ClassCastException
+        at apollo.gui.LoadUtil.doLoad(LoadUtil.java:186)
+        at apollo.gui.LoadUtil.access$000(LoadUtil.java:29)
+        at apollo.gui.LoadUtil$1.finished(LoadUtil.java:127)
+        at apollo.gui.SwingWorker$1.run(SwingWorker.java:109)
+        at java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:178)
+        at java.awt.EventQueue.dispatchEvent(EventQueue.java:454)
+        at java.awt.EventDispatchThread.pumpOneEventForHierarchy(EventDispatchThread.java:201)
+        at java.awt.EventDispatchThread.pumpEventsForHierarchy(EventDispatchThread.java:151)
+        at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:145)
+        at java.awt.EventDispatchThread.pumpEvents(EventDispatchThread.java:137)
+        at java.awt.EventDispatchThread.run(EventDispatchThread.java:100)
+
+get loading of feature links working
+
+get link loading from bottom to top species
+
+get save working
+
+sometimes link not selecting
+
+when syntenic block selected shows "no_type" in evidence panel
+
+sometimes selection not coming into ev panel at all in synteny
+
+selection by name doesnt work for syntenic blocks as they are all
+named "X
+do direct selection for game rather than selection by name
+
+loading from a link - evidence panel dies
+
+
+Going from one species to 2 null pointer:
+java.lang.NullPointerException
+        at apollo.gui.genomemap.TierView.setScrollValues(TierView.java:388)
+        at apollo.gui.genomemap.TierView.updateManagerHeight(TierView.java:100)
+        at apollo.gui.genomemap.ManagedView.setBounds(ManagedView.java:57)
+        at apollo.gui.genomemap.FeatureView.setBounds(FeatureView.java:468)
+        at apollo.gui.genomemap.SplitterView.setBounds(SplitterView.java:81)
+        at apollo.gui.genomemap.SplitterView.updateSplitFract(SplitterView.java:104)
+        at apollo.gui.genomemap.SplitterView.setBounds(SplitterView.java:78)
+        at apollo.gui.genomemap.ColumnApolloLayout.layoutViews(ColumnApolloLayout.java:126)
+        at apollo.gui.genomemap.LaidoutViewContainer.setBounds(LaidoutViewContainer.java:38)
+        at apollo.gui.genomemap.SplitterView.setBounds(SplitterView.java:81)
+        at apollo.gui.genomemap.SplitterView.updateSplitFract(SplitterView.java:104)
+        at apollo.gui.genomemap.SplitterView.setBounds(SplitterView.java:78)
+        at apollo.gui.genomemap.ColumnApolloLayout.layoutViews(ColumnApolloLayout.java:126)
+        at apollo.gui.genomemap.ColumnApolloLayout.layoutViews(ColumnApolloLayout.java:23)
+        at apollo.gui.genomemap.ApolloPanel.doLayout(ApolloPanel.java:651)
+        at java.awt.Container.validateTree(Container.java:1092)
+        at java.awt.Container.validate(Container.java:1067)
+        at apollo.gui.genomemap.ApolloPanel.remove(ApolloPanel.java:265)
+        at apollo.gui.genomemap.StrandedZoomableApolloPanel.removeAllViews(StrandedZoomableApolloPanel.java:1202)
+        at apollo.gui.genomemap.StrandedZoomableApolloPanel.setCurationSet(StrandedZoomableApolloPanel.java:364)
+        at apollo.gui.synteny.CompositeApolloFrame.loadDataIntoPanels(CompositeApolloFrame.java:156)
+        at apollo.gui.synteny.CompositeApolloFrame.loadData(CompositeApolloFrame.java:87)
+        at apollo.gui.LoadUtil.doLoad(LoadUtil.java:229)
+        at apollo.gui.LoadUtil.access$000(LoadUtil.java:29)
+        at apollo.gui.LoadUtil$1.finished(LoadUtil.java:127)
+
+Loading one species in game synteny not working
+links not coming up for 2 species - this may be due to tier errors?
+my game synteny data is spewing tiers errors.
+
+game synteny adapter gui should remember one species/two species state
+of last load - in history.
+
+Game synteny needs to get species labels. Species should be in the
+data somewhere - not sure if this is so for psuedo. Theres an organism
+tag for the main genomic sequence that needs to be added - currently
+not in the xml.
+
+
+-----
+1.4.3
+-----
+
+concise version (major points) of fixes for 1.4.3:
+
+Synteny now comes up in vertcal mode by default with and the vertical evidence panel is now resizable.
+
+Vertical scrolling to selected feature is fixed. Previously apon selecting a link a selected feature that was part of the link would vertically scroll way off screen.
+
+You can now config links between 2 curation sets that contain links to each other. link_type, source and hit species are specified in the linked type in the tiers file. This works with game, in theory could be made to work with other adapters that have linked data embedded in the species data.
+
+Result popup menu item for bringing up a syntenic species only enabled for types that are linked (as configged above)
+
+Link popup menu now has visibilty check boxes for all the tiers that have links (as configged in tiers file)
+[window title now has species name]
+[cleaned up annoying error messages]
+
+
+longer version of 1.4.3 fixes:
+
+in vertical ev pan need to be able to make ev pan as big as ya want
+
+Annoying error message:
+tRNA:R:83AB-RA does not have translation start
+featureSet.getFeaturePosition: tRNA:R:83AB-RA has no feature containing 0 (1213947-1214019)
+snRNA:U4atac:83A-RA does not have translation start
+featureSet.getFeaturePosition: snRNA:U4atac:83A-RA has no feature containing 0 (1216883-1217004)
+HB{}1219-RA does not have translation start
+
+The species name and region description appears right next to the zoom factor:
+Zoom factor = 1.000 Drosophila melanogaster:2L:1-40710
+
+the title of the window says "Synteny Species1-Species2" even though we
+know the species.
+
+annot info comment list showing up with duplicates due to game.style
+being read in twice
+
+replace temp menu hardwire to syntenic block to querying tier props
+
+get blastx aa_dmel links working
+
+Game synteny: The link info needs to be configed - presently its
+hardwired. Link source should work with species not db - or maybe the
+source doesnt really matter as long as it has the same feature type. (see species labels
+todo item)
+
+enable synteny result menu item only for tiers with link info
+
+Going from 2 species to 1 (regular load) bottom species gets split out
+of JSplitPane.
+
+ev panels getting split out in vertical mode.
+
+on selection top species vertical scroll is way off - scrolls away selected feat
+
+score 0 should not shade by perc id
+
+If 2 species are loaded should we then be allowed to load just one
+again? I think so. and if so should the second species clear out - i
+would think so unless you wanted to see how the new 1st species links
+with the old 2nd species - but ya probably dont want to see that??
+
+game synteny: Load one species then load 2 (not from link):
+java.lang.NullPointerException
+ at apollo.gui.synteny.CompositeApolloFrame.loadDataIntoPanels(CompositeApolloFrame.java:227)
+  at apollo.gui.LoadUtil.doLoad(LoadUtil.java:190)
+  at apollo.gui.LoadUtil.access$000(LoadUtil.java:27)
+  at apollo.gui.LoadUtil$1.finished(LoadUtil.java:134)
+
+16) After dragging and droping from results to annots get this
+exception apon selecting the gene:
+
+java.lang.ClassCastException: apollo.datamodel.FeatureSet
+        at apollo.gui.SyntenyLinkPanel.handleFeatureSelectionEvent(SyntenyLinkPanel.java:328)
+        at apollo.gui.Controller.handleFeatureSelectionEvent(Controller.java:202)
+        at apollo.gui.SelectionManager.fireFeatureSelectionEvent(SelectionManager.java:215)
+        at apollo.gui.SelectionManager.select(SelectionManager.java:121)
+        at apollo.gui.genomemap.MouseManager.doLeftClick(MouseManager.java:58)
+        at apollo.gui.genomemap.ApolloPanel.doLeftClick(ApolloPanel.java:987)
+        at apollo.gui.genomemap.ApolloPanel.mouseClicked(ApolloPanel.java:962)
+
+The SyntenyLinkPanel is casting to FeaturePair.
+
+Many of the items in the Synteny Link popup menu should be checkboxes
+(e.g. "Show DNA links" (yes/no), "Show protein links" (yes/no))
+
+Get show dna,prot links in link menu working for game -> config -
+change to show tiers like types panel.
+
+---------
+^ 1.4.4 ^
+---------
+
+After loading synteny region, if you then load a regular game xml file,
+zoom panel is still up at the top (like for synteny)--would prefer it to
+go back to its normal position below main display.
+
+---------
+^ 1.5.4 ^
+---------
+2/2005: i see no visual indication of which species is the active one.
+the active species's name should turn green.
+
+with >2 species zooming is all messed up - the middle zoom works - the
+top and bottom dont - get overflow error:
+java.lang.StackOverflowError
+
+with >2 species should take out at least the middle species
+zoom/scroll bars - perhaps have it add/remove with menu item
+
+

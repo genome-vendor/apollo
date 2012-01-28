@@ -1,0 +1,60 @@
+// FLYBASE INTERNAL fly.style
+//
+// Imports the public fly.style; all that appears here is the stuff
+// that differs from the public one.
+//
+// This file is stored in CVS as conf/fly.internal.style, and should be
+// copied to conf/fly.style in order to use it.  (Meanwhile, the old
+// default fly.style is moved to fly.public.style.)
+// The copying is automatically done by "make private" which I use to make
+// the internal release, so you shouldn't need to do anything special.
+//
+// DON'T copy this file to ~/.apollo/fly.style, because Apollo
+// automatically parses first conf/fly.style and then ~/.apollo/fly.style,
+// so this will lead to redundancy.  All that should go in
+// ~/.apollo/fly.style is any preferences you have that DIFFER from
+// fly.internal.style.
+
+ImportStyle             "conf/fly.public.style"
+
+// If this is true, then annotations are colored by user color, but only
+// if you're in project internal mode.
+// Default is false--all annotations (of a given type) are the same
+// color, as defined in tiers file.
+UserTranscriptColouring "true"
+
+InternalMode "true"
+
+// 3/08/2005: all requests are routed through fruitfly.org, but
+// r4 (most current, right now r4.1) and r3.2 requests are 
+// rerouted to a server at flybase.net (Indiana).
+//DatabaseList "r4 (most current, right now r4.1), r3.2 (chado), r3.1 (gadfly), gadflypsef1 (gadfly Dpse), gadfly4 (r4 pipeline database)"
+//DatabaseList "r4 (most current), r3.2, gadfly, gadflypsef1, gadfly4"
+// 6/15/2006: New FlyBase Chado XML server doesn't offer a choice of dbs
+DatabaseList "r4 (most current)"
+DatabaseURLField = "%DATABASE%"
+// 6/2006: Indiana server now offers the latest version of the data, so
+// no need for a database list.
+
+// Each database in the above databaselist can be mapped to a
+// different style (with different tiers) with the DatabaseToStyle parameter.
+// (Perhaps this belongs in apollo.cfg?  But the db list is here...)
+//DatabaseToStyle "dbname -> dbstylefile.style"
+
+// To get species to come up with equal ranges in game synteny use the following:
+//PadLeftURLField = "%PADLEFT%"
+//PadRightURLField = "%PADRIGHT%"
+//DefaultPadding = "25000"
+//GeneURL "http://www.fruitfly.org/cgi-bin/annot/get_xml_url.pl?database=%DATABASE%&padleft=%PADLEFT%&padright=%PADRIGHT%&gene="
+// (But as of 7/2006, that URL won't work anymore.)
+
+// Parameters for use by ChadoXmlWrite.  (Capitalization doesn't matter.)
+// See ChadoXmlWrite.java for more info about how these constants are used.
+TypeIDOntology               "SO"           // For type_ids
+IDForDbxref                  "SO:0000105"   // SO id for dbxrefs
+DefaultChadoDatabase         "FlyBase"      // For xrefs, in case we can't figure out db
+DefaultSynonymAuthor         "gadfly3"
+DefaultSynonymPubType        "computer file"
+FeaturepropCV                "annotation property type"
+
+// Be sure that the last line of this file ends with a newline.

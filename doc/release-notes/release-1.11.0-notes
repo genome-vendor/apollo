@@ -1,0 +1,4 @@
++ Added "Sequence Aligner" that provides the editing and flexibility of
+the "Exon Detail Editor" along with alignment viewing (JalView)
++ Brought back the "Types Panel", which works in conjunction with the "Preferences Editor"
++ Various bugfixes

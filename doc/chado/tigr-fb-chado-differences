@@ -1,0 +1,85 @@
+we load different results - different analysis names, fb - gene
+predictions, tigr - protein alignments. no shocker there.
+
+retrieve matches (sim4,blast) very differently:
+- tigr retrieves feature props for query feature for its snps, fb doesnt
+even have featureprops for its query features in a match.
+- fb retrieves featureprop descriptions for its target feats, this is
+basically the fasta header, crucial info for the curator
+- tigr hits tends to be to one or just a few seqs, so its much faster
+to retrieve sequence separately, and cache to see if already
+retrieved. fb hits are to many different seqs, so its much faster to
+retrieve them in the query itself rather than separately.
+- tigr and fb use different analysisfeature columns for apollos
+primary score(fb:rawscore,tigr:pidentity)
+- fb has explicit alignment sequence in feature_loc.residue_info that
+it retrieves and sets alignment seqs with. tigr doesnt have
+this. neither have cigars yet.
+
+
+different chado fields/columns for gene and transcript name
+
+different names for cv terms (eg part_of vs partof)
+
+tigr has target species - fb doesnt. tigr includes target species in 
+target name, fb cant. (would be nice if fb got target species in chado)
+
+cds is implemented totally differently in fb and tigr. tigr uses an 
+early version of SO (or pre-SO), fb uses the current version of SO. 
+needed a completely different sql query to get cds - translation 
+start and stop. flybase has mrna and protein features in its query. 
+tigr has CDS, transcript, and protein features in its query.
+
+featureTypes are derived differently. fb just does program:sourcename,
+where sourcename is actually the name of the file that the data came
+from (eg blast filename), as thats the closest fb can come to having a
+species for the target (the blast filenames tend to have species or
+higher level taxonomy in it). tigr has program + programversion +
+target species.
+
+different cvs are used. fb uses SO for features, "relationship type"
+for relationships, and "property type" for property types. tigr has
+one ontology for all these: "TIGR Ontology".
+
+tigr had to rename analysisfeature.identity to pidentity as identity
+is a key word in sybase that cant be used for a column name.
+
+im using a postgres specific index optimization(enable seqscan off) 
+for gene queries (may take out eventually - hopefully when migrate to
+pg 7.4). tigr was at one point using sybase specific
+optimizations(forceplan), but no longer.
+
+tigr puts in redundant feature locs for all of its features. this
+means given a feature you can query for all of its subfeatures
+directly though featureloc, just querying for all feats featureloc'd
+to it. in fb a feature will not have all of its features redundantly
+feature loc'd to it. all features are feature loc'd to just the main
+genomic (chromosome arm), so have to get the features src feature, and
+then query for a range of feature locs to the src feature.
+
+fb top level queries are gene and scaffold(golden_path_region), tigr
+is assembly and supercontig
+
+add functionality for top level gene query to both be padded(still in
+progress) and to get its sequence from a substring of its parent as it
+has no sequence of its own (scaffold does)
+
+added gene prediction retrieval (tigr doesn have gene predics - or at
+least they are not retrieving them)
+
+optimized gene prediction query by putting analysis table in
+java/memory. (other queries should take advantage of this as well)
+
+did some tweeking of queries so they wouldnt flounder on postgres -
+took out outer join on search hits query that was killing postgres.
+
+fb curation set is offset (doesnt start at 1 or 0). Had to change
+sequence objects used to accomodate this(still need to refactor this).
+
+cvs are now being retrieved into java/memory as an
+optimization(crabtree put this in place).
+
+
+
+
+

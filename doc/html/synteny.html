@@ -1,0 +1,273 @@
+<html>
+
+<head>
+<title>Apollo Synteny User Guide</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<H1 align=center>Apollo Synteny User Guide</H1>
+<H3 align=center>Last updated 11/14/2003</H3>
+
+<CENTER><img SRC="images/synteny-small.gif" width=485 height=175></CENTER>
+<P>
+
+The Synteny viewer in Apollo lets you view the genomes of two species
+simultaneously, along with comparative analyses between the genomes.  This viewer
+is still under development.  You can try it out on some sample synteny
+gff files that are included with the Apollo distribution.
+It is also (theoretically) possible to load comparative data from the ensembl databases
+into the synteny viewer.
+If you'd like to try it out, you can edit conf/apollo.cfg in your Apollo directory,
+uncomment the second of the two DataAdapterInstall lines for the SyntenyAdapter, and
+comment out the first one:
+
+<pre>
+//DataAdapterInstall	"apollo.dataadapter.synteny.SyntenyAdapter" "synteny.style.gff"
+DataAdapterInstall	"apollo.dataadapter.synteny.SyntenyAdapter" "synteny.style"
+</pre>
+
+<h3><a NAME="Compara"></a>Reading cross-species comparative data</h3>
+You can view compara data in one of these two ways:
+<ul>
+  <li> With results and annotations for each species data present in ensembl databases, with comparative data (links between DNA or homologous genes) present in an ensembl_compara database. Examples of these databases can be found on the mysql instance at ensembldb.sanger.ac.uk:3306. This is easily the most flexible input format: Apollo should be able to point and read the databases on ensembldb when you install it. </li>
+  <li> With single species data and comparative data all provided in
+  GFF Files.</li> 
+  <li> With GAME xml data. see 
+  <a href="game-synteny.html">"Using the GAME synteny viewer"</a> 
+   </li>
+</ul>
+
+<h4>Configuring Apollo to read ensembl-compara data</h4>
+<p>
+The most flexible way to browse comparative data is to view the single-species and compara-data in ensembl-format: You can view such databases on at the mysql instance on ensembldb.sanger.ac.uk:3306 (with user "anonymous"). Examples of single species databases look like "homo_sapiens_core_19_34a",and an example compara database looks like "ensembl_compara_19_1".</p> 
+
+<p>When Apollo starts up, choose the "Synteny" option from the drop-down labelled "Choose a data adapter". You will be presented with this tabbed pane: the "Mouse" and "Human" tabs specify the data source and read option for each species, and the middle tab specifies where comparative information comes from: </p>
+
+<div align="center"><img
+ src="images/synteny-mouse.gif"
+ alt="synteny-mouse-tab" width="599" height="423">
+<br>
+</div>
+
+<p>
+The "Mouse" and "Human" tabs work the same way as the interface in the <a href="userguide.html#Reading_Ensembl_via_ensj">ensj-adapter</a> discussed above. In particular, 
+<ul>
+<li>You can specify which region of the chromosome to load using a <b>gene</b> stable id or a region or the chromosome.</li> 
+<li>You must get the input datasource right - that is, you must set up the DataSource panel on each tab to point at your favourite ensembl databases: here the "Mouse" tab is pointing at the current instance on ensembldb:</li>
+</ul>
+</p>
+
+<div align="center"><img
+ src="images/synteny-mouse-datasource.gif"
+ alt="synteny-mouse-datasource">
+<br>
+</div>
+
+<p> The "human" tab will show analogous information for the human data.</p>
+
+<p>The middle tab ("Human-Mouse") points at the ensembl-compara database: <p>
+
+<div align="center"><img
+ src="images/synteny-compara.gif"
+ alt="synteny-compara-tab" width="654" height="590">
+<br>
+</div>
+
+<p> This database stores DNA-DNA aligns, and protein-protein aligns between species. You can load either or both types of aligns with the checkboxes at the top of the tab. The source of the alignments must be an ensembl-compara database. The current one on ensembldb is ensembl_compara_19_1. </p> 
+
+<p>The button marked "view full synteny panel" will display a picture of synteny blocks found between mouse chromosomes and human chromosomes - it's another way of selecting which regions in the two species you want to see. More on this shortly.</p>
+
+<h4>Using Apollo to read cross-species data from ensembl and ensembl-compara tables</h4>
+In order to read anything, Apollo must  be supplied with EITHER
+<ul>
+ <li>One or more chromosome regions, e.g. Chromosome 1, 1-1000000 of Human, (either with or without a corresponding region of mouse), OR</li>
+ <li>A gene stable id from one species or the other.
+</ul>
+
+<p>
+For instance, you might want to view comparative information for genes on a mouse related to the region Chromosome1:1Mb-2Mb on a human. The following information entered on the "Mouse" and "Human" tabs will tell Apollo to do this:
+</p>
+
+<div align="center"><img
+ src="images/synteny-mouse-region.gif"
+ alt="synteny-mouse-region">
+<br>
+</div>
+
+<div align="center"><img
+ src="images/synteny-human-region.gif"
+ alt="synteny-human-region">
+<br>
+</div>
+
+<p>
+Note that the region fields in "Mouse" are blank, which means Apollo will try to imply the information from the mouse-human links it sees attached to the human genes on the first megabase of chromosome 1. 
+If you now hit the "OK", then Apollo will read and display the data: 
+</p>
+
+<div align="center"><img
+ src="images/synteny-apollo-frame.gif"
+ alt="synteny-apollo-frame" width="988" height="954">
+<br>
+</div>
+
+<p>
+This display shows that Apollo found that all the human-mouse links that mapped from the Human Chr 1:1Mb-2Mb ended up on Mouse Chr 4: 151Mb-152Mb. Apollo loaded that mouse region, and showed the links. This (quite complicated) frame has the following features to ease navigation:
+<p>
+In the centre pane DNA-DNA alignments are shown as blue rectangles, and protein-protein alignments are shown as red rectangles. These links are actually just features, and so are coloured according to this adapter's ".tiers" file, and can be switched on and off with the "Types Panel". By default the synteny adapter uses the "ensj.tiers" file, and these link features are features of type "syntenyd" and "syntenyp" respectively. You can suppress the display of the DNA-DNA alignments by opening the <a href="userguide.html#TypesPanel">types panel</a> and selecting not to show the type "syntenyd". This should really speed up the display.
+</p>
+<h4><a NAME="SyntenyLinks"></a> Synteny links </h4>
+<ol>
+<li>If you left-mouse-click on a link in the centre frame, the display will centre on that link, and highlight the homologous genes or sequence regions that the link represents.</li>
+<div align="center"><img
+ src="images/synteny-single-link.gif"
+ alt="synteny-single-link" width="800" height="600">
+<br>
+</div>
+-- notice that the homologous genes are highlighted in red. Links between genes on opposite strands are drawn to look like "bow ties".</li> 
+
+<li>Clicking in the centre panel anywhere <em>except</em> on a link will center the display at the selected point.</li>
+</li>
+
+<li>Left-clicking on an exon will highlight any homologous transcripts in the other panel. The structure of a selected transcript will be displayed (as always) in the panels to the left.</li>
+
+<li>The zoom buttons (x2, x10 etc) and scrollbars behave for each
+single-species panel as usual. The combination SHIFT+zoom button will
+simultaneously zoom both species panels. Deselecting the menu item
+Synteny->Shift for locked zooming will invert this, making locked
+zooming the default and shift zooming unlocked. (See below for related
+config param)
+</li>
+</ol>
+</p>
+
+<p>The menu actions (especially Edit->Find or View->Reverse Complement) are also useful. These actions are only applicable to a single species' panel (eg the Human or Mouse panel) at a time. To determine which species the menu action will be applied to, pull down the "File" menu. You will see the names of both species in the menu. 
+<div align="center"><img
+ src="images/synteny-file-menu.gif"
+ alt="synteny-single-link" width="213" height="212">
+<br>
+</div>
+</p>
+
+<p>
+Choose the species name from the menu to make that the active panel.  Now the menu item's action will apply only to the panel for the chosen species.
+<P>
+If you stretch the Apollo window horizontally, you will see the name of the active species (next to the zoom buttons) in green.  (The species name doesn't show unless you enlarge the Apollo window or change the evidence panel orientation to horizontal.)
+<div align="center"><img
+ src="images/synteny-species-focus.gif"
+ alt="synteny-species-focus" width="398" height="348">
+<br>
+</div>
+</p>
+
+<h4>Guided browsing with the full synteny panel</h4>
+<p>Alignments between different species have been grouped together into larger blocks called synteny regions. These regions are stored in the ensembl-compara database, and are visible in a panel invoked with the "View Full Synteny Panel" button in the compara (middle) dataadapter - see left image. If you push this button, you will see a panel loaded with many images of related chromosomes, like this one in the middle image (this particular image showing  human chromosomes syntenic to Mouse Chromsome 1 21Mb-33Mb <-> Human Chromosome 6 ). Left-clicking on any of the marked regions on the central chromosome will bring up a "this one please" menu option. 
+</p>
+<div align="center">
+<img
+ src="images/synteny-full-panel.gif"
+ alt="synteny-full-panel">
+<img
+ src="images/synteny-chromosome-panel.gif"
+ alt="synteny-chromosome-panel">
+<img
+ src="images/synteny-chromosome-panel-selected.gif"
+ alt="synteny-chromosome-panel-selected">
+</div>
+<p>Selecting this option will "drag" the selected pair of regions (eg Mouse 1:back to the chromosome/start/end ranges into <em>both</em> of the single-species adapters, that is, the ranges will be completely specified for both species. Nifty, eh?
+</p>
+
+<h4>When genes in your selected (query) region are homologous to genes in more than one target chromosome...</h4>
+If you choose to only enter a region/stable id for a single species, then Apollo will examine the compara-alignments for that region (and the pair of species) to work out which region to load for the "other" species. For instance, say you are comparing Mouse and Human genomes, and you select Human Chromosome 1:1-1Mb, and start a data load. Then Apollo will examine Mouse-Human protein-protein alignments, and deduce that the first Mb of Human Chr 1 actually maps to three Mouse Chromosomes: 
+<ul>
+<li>Mouse Chr 2: 112Mb-113Mb (where there are 12 protein-protein aligns) </li>
+<li> Mouse Chr 4:150Mb-152Mb (where there are 12 protein-protein aligns) </li>
+<li>  Mouse Chr 17 45Mb-46Mb (where there is 1 protein-protein align) </il>
+</ul>
+<p>Apollo can only display one of these regions at a time, so it will offer you the choice of which one to display, by showing the following panel:</p>
+<div align="center">
+<img
+ src="images/synteny-align-block-chooser.gif"
+ alt="align-block-chooser" width="465" height="150">
+</div>
+<p>You can choose which region to load by selecting the appropriate radio button and pushing the "OK" button. Apollo will then proceed to display the region you have selected on the Mouse against the first Mb of Human Chr 1.</p>
+
+<h4>Changing species, and browsing three species simultaneously</h4>
+The synteny.style file contains extra entries (beyond display options) that determine which species are loaded into the various tabs of the Synteny adapter. By changing these entries, you can change 
+<ul>
+<li>Which species are loaded (eg "Rat" instead of "Mouse") </li>
+<li>The order in which the species appear (eg the "Human" tab appears, then the "Human-Rat" tab, and then the "Rat" tab), and</li>
+<li>The number of species which are simultaneously compared (eg you could load three species simultaneously).</li>
+</ul>
+
+<p>Rather than describe these entries in detail, Apollo has been shipped with a number of different synteny.style file examples, to accommodate these various cases. These files are all present in the conf/ subdirectory of the Apollo distribution, and labelled according to their contents. For instance, the style file which will make Apollo browse Mouse vs Rat is labelled synteny.style.mouse-rat. To activate this file, simply copy it over the current synteny.style file. Then when Apollo is restarted, you will see the following adapters:
+<div align="center">
+<img
+ src="images/synteny-mouse-rat.gif"
+ alt="synteny-mouse-rat" width="600" height="425">
+</div>
+- and you can browse mouse/rat alignments as before.</p>
+<p> To browse mouse, rat and human genomes simultaneously, copy synteny.style.mouse-rat-human over synteny.style. Restarting Apollo will bring up three "pairs" of adapters:
+<div align="center">
+<img
+ src="images/synteny-mouse-rat-human.gif"
+ alt="synteny-mouse-rat" width="600" height="425">
+</div>
+-- again, any pair of species are configured exactly as before. Browsing can be initiated by choosing a single region or gene stable id in any species.</p>
+</ol>
+
+<h4>Reading Compara data from GFF Files</h4>
+If you have data from two species in Sanger GFF format, and links between that data (also in Sanger GFF Format) then you can load in the data into the Synteny viewer as before. Here's how to do this:
+<ol>
+<li>Copy the file conf/synteny.style.gff over conf/synteny.style. This will configure the compara-adapter (a composite) to use Apollo's gff adapters to read in data. </li>
+<li>Start Apollo. Choose "Synteny" from the Adapter list as usual. You will be presented with the following panel:
+<P>
+<div align="center">
+<img
+ src="images/synteny-gff-adapter.gif"
+ alt="synteny-gff-adapter" width="622" height="242">
+</div>
+<P>
+Note that I've labelled the species "Species1" etc: since the only thing that determines the data loaded is what is in the input files, I saw little point in making the logical species names anything more interesting (such as "human" etc).
+</li>
+<li> Choose files for each of the individual species' features and the link file. There is a single species file (called "chr2.200000-4000000.gff") in the data/ directory of the Apollo distribution. To start off with, you can use this file to load information for both species 1 and species 2 (why not?). In addition there is a file provided (data/links.gff) that contains a few links between the individual species' features. Once you have chosen the files, push the "OK" button to start loading and Apollo will load the chosen features and the links between them.
+</li>
+<li>The mechanics of browsing the displayed data are the same as when you load data from the EnsJ adapters, with the exception that there is no underlying sequence information</li>
+</ol>
+
+<h4> Synteny configuration params </h4>
+Here are some configuration params that can go in your synteny style
+file:<P>
+
+InitialShiftForLockedZooming "false"<br>
+Initially, the species zoom separately, (unless you use shift or you
+select zoom
+menu item, see above). Setting this param to false makes zooming locked
+without having to hit shift (if you do shift its unlocked). This is
+just the initial state, which can be altered with the menu item
+Synteny->Shift for locked zooming.<P>
+
+InitialLockedScrolling "true" <br>
+Initially synteny species scroll independently. Selecting
+Synteny->Lock Scrolling locks the scrolling of the species
+together. Setting this param to true brings synteny up in the locked
+scrolling state(which the menu can change).<P>
+
+InitialStateForStartStopCodonVisibility "false"<br>
+Setting this to false (the default setting) causes start/stop site codons to not be displayed, even
+upon zooming. This can be handy for synteny which is strapped for
+screen real estate. This is just an initial state which can be altered
+with the menu item "View->Show starts/stops (on zoom)", or by setting
+this variable to "true" in your style file.
+(This option can be used with single-species apollo styles as well.)
+<P>
+
+<h4>Currently known bugs</h4>
+Please see <a target=todo href=../synteny-todo>synteny-todo</a> for a description of
+the currently known synteny bugs.
+
+<P><HR><h3><a href=userguide.html>Back to main Apollo user guide</a></h3>
+
+</body>
+</html>

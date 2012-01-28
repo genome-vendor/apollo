@@ -1,0 +1,92 @@
+$Id: README.schema,v 1.3 2007/04/30 19:49:37 briano Exp $
+
+Notes on schema descriptions for GAME XML
+==============================
+It turns out that RELAX-NG (which can be stored as an rng file, which is
+XML, or an rnc file, "compact" format) is a better way to represent the
+GAME schema than XSD is.  RNG can represent the idea that there are
+elements that can occur in any order, but that some should only occur
+once (e.g. one "start").  XSD allows elements to be in any order zero or
+more times--it doesn't allow us to say that they should occur zero or one
+time.
+
+The good news, though, is that there is a translator called trang
+(http://www.thaiopensource.com/relaxng/trang.html) that can convert the
+rng to an xsd file (though unfortunately it loses the internal comments).
+The XSD is valid but not as stringent--it allows any number of "start"
+elements.  So if a GAME file validates with the xsd, that doesn't mean it
+will validate with the rng (which is more restrictive).  Actually, there
+are undoubtedly various other ways in which both the rng and the xsd are
+too lenient, and allow dubious GAME to validate.  For example, scores can
+be encoded as output of type=score, value=whatever:
+
+      <output>
+        <type>score</type>
+        <value>JUNK</value>
+      </output>
+
+and we can't really do any validation of these values (because they mean
+different things for different properties), so the XML above would be
+waved through.  We could tighten up some things in the schema to make it
+reject more not-quite-legal GAME examples, but it's good enough
+for now--assuming that the use case of trying to flag not-quite-legal
+GAME is not the main purpose of having the GAME schema.
+
+Please note that although this is a new schema description for
+GAME, this does not mean that we've changed anything in GAME.  The new
+schema just provides a better fit to the existing GAME.  (there  are also added
+comments to the schema description, including some rolled in from
+the old DTD, which is now removed from the repository.)
+
+Note that any further schema editing should be done on the rng file,
+since we can auto-generate a reasonable xsd from the rng but not
+vice-versa.  (Unfortunately, when you convert from rng to xsd, the
+internal comments are lost, though the comments at the beginning of the
+file are carried through.)
+
+Note that there are example files, game.xsd and game.rng, in 
+this directory.
+
+Converting between schema formats
+==============================
+Trang is a multi-format schema converter based on RELAX NG
+http://www.thaiopensource.com/relaxng/trang.html
+
+Jing: a RELAX NG validator in Java (uses Sax2 jar)
+http://www.thaiopensource.com/relaxng/jing.html
+Reads rng or rnc format schema and, given an XML data file, says whether
+it is syntactically valid according to your schema.
+
+Convert rng to xsd:
+
+ cd doc/trang
+ java -jar trang.jar ~/apollo/doc/game.rng ~/apollo/doc/game.conv.xsd
+
+(Unfortunately, internal comments in the rng are not preserved, although
+the initial comments are.)
+
+Convert xsd to rng:
+
+ java -jar rngconv.jar ../game.xsd > game.conv.rng
+
+Convert rng to rnc:
+
+ java -jar trang.jar ~/apollo/doc/game.rng ~/apollo/doc/game.conv.rnc
+
+
+Validating an XML file with an rng
+===============================
+time java -jar /users/nomi/apollo/doc/trang/jing-20030619/bin/jing.jar /users/nomi/apollo/doc/game.rng /users/nomi/apollo/data/annot-types.xml
+
+Validating an XML file with an rnc, using jing (-c means the schema is in
+rnc (compact) form; otherwise it expects rng (xml form)):
+
+time java -jar /users/nomi/apollo/doc/trang/jing-20030619/bin/jing.jar -c /users/nomi/apollo/doc/game.rnc /users/nomi/apollo/data/annot-types.xml
+
+Validating an XML file with an xsd (can't use jing)--program adapted by Andrew Dalke:
+
+cd apollo/src/java
+time java -classpath ../../doc/trang/jing-20030619/bin/jing.jar:. verify/VerifySchema -x /users/nomi/apollo/doc/game.conv.rnc /users/nomi/apollo/data/tiny.xml
+
+Website for validating an XML file with an xsd:
+http://apps.gotdotnet.com/xmltools/xsdvalidator/Default.aspx

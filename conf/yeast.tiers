@@ -1,0 +1,129 @@
+[Tier]
+tiername : CDS
+expanded : true
+labeled : true
+
+[Type]
+label : CDS
+tiername : CDS
+datatype : SO:CDS
+datatype : SO:CDS:das2
+glyph : DrawableGeneFeatureSet
+color : 51,102,255
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+
+[Type]
+label : intron
+tiername : CDS
+datatype : SO:intron
+glyph : ThinRectangle
+color : 255,255,255
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+
+[Tier]
+tiername : RNA
+expanded : true
+labeled : true
+
+[Type]
+label : ncRNA
+tiername : RNA
+resulttype : SO:ncRNA
+resulttype : SO:ncRNA:das2
+glyph : DrawableResultFeatureSet
+color : 0,204,0
+column : ID
+column : GENOMIC_RANGE
+number_of_levels : 1
+
+[Tier]
+tiername : PCR_product
+expanded : false
+
+[Type]
+label : PCR product
+tiername : PCR_product
+datatype : PCR_product
+datatype : SO:PCR_product
+datatype : SO:PCR_product:das2
+glyph : DrawableResultFeatureSet
+color : 0,255,255
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+
+[Tier]
+tiername : nucleotide_match
+expanded : true
+
+[Type]
+label : nucleotide match
+tiername : nucleotide_match
+datatype : SO:nucleotide_match
+datatype : SO:nucleotide_match:das2
+glyph : DrawableResultFeatureSet
+color : 0,154,97
+usescore : true
+column : SCORE
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+
+[Tier]
+tiername : telomere
+expanded : true
+
+[Type]
+label : telomere
+tiername : telomere
+datatype : telomere
+datatype : SO:telomere
+datatype : SO:telomere:das2
+glyph : DrawableResultFeatureSet
+color : 153,0,204
+column : ID
+column : GENOMIC_RANGE
+number_of_levels : 1
+
+[Tier]
+tiername : Repeat
+expanded : false
+
+[Type]
+label : Repeat_family
+tiername : Repeat
+datatype : repeat_family
+datatype : SO:repeat_family
+glyph : DrawableResultFeatureSet
+color : magenta
+column : NAME
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+
+[Tier]
+tiername : Binding_site
+
+[Type]
+label : Binding site
+tiername : Binding_site
+datatype : binding_site
+datatype : SO:binding_site
+glyph : DrawableResultFeatureSet
+color : 255,204,0
+column : NAME
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+

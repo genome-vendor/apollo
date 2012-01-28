@@ -1,0 +1,1339 @@
+# This example was generating by roundtripping data/small.chado through
+# Apollo (v1.6.3) and then marking it up to show what is hardcoded in
+# Apollo.  In general, anything in capital letters is hardcoded (though
+# there are also values, such as X or SO, that just happen to already use
+# capital letters and are not actually hardcoded--these should be clear
+# from context).
+
+
+<?XML VERSION="1.0" ENCODING="ISO-8859-1"?>
+<!-- CHADOXML FILE (FLYBASE V1.0, NO MACROS) CREATED BY nomi -->
+<!-- APOLLO VERSION: Apollo Genome Annotation and Curation Tool, version 1.6.3, last updated 2005-12-20 15:44 2005, /users/nomi/apollo/src/java/apollo/dataadapter/chadoxml/ChadoXmlWrite.java -->
+<CHADO DATE="Wed Dec 21 00:04:37 GMT 2005">
+  <_APPDATA  NAME="TITLE">FBgn0000826</_APPDATA>
+  <_APPDATA  NAME="ARM">X</_APPDATA>
+  <_APPDATA  NAME="FMIN">1212808</_APPDATA>
+  <_APPDATA  NAME="FMAX">1214934</_APPDATA>
+  <_APPDATA  NAME="RESIDUES">GAGAAGCAACACTTCAGTCTGACCAAAATCCTCAAGAAGGAGGAGCAAGAAGCGAGCGGTTCAAAGCGAAAGCGTCGTCAGAAGTTAAAGAAATCGAAAAATCAGCCGCAGAATGCGGAGAAGCTGGACGACGACTTCCAGGTAAACCTGAATGATAATCGCTTCAGTGCCGTTTACAAGTCGCACGAGTACAACATCGATCCCACCCACTCCCATTACAAGCCCACCAAGGGCATGCAGCAGATCATCGGCGAGAAGTTAAAGCGCAGAAAGGAGCAGGGGGAGGGCGGCGCTGCAAACGGCGATGCGGATGGGGATGAGCAGGTAGCCCCCAAGAGGAGTAAGCAGCAGCTGGAGCAGAACGCCCTGGTAAAGAGTCTGAAGCGTAAGATCCAGCTGCAGCAGCAGGGCCAGAAGCTTTAGAGGATTAATGTTACTGTACAATAGGTGAACAAATGTAAATTAAAGACTACGTTAATGACATTGAGCGAGACTGTTTTGGAATATACATTATATACTGTTTATAGCTGACAGATCCCCTGGCAAAAGCACAGGCGCACACAAAGCACAGCACACACCTTAATTTATCGCTTAAGCTAGCCTAGTTCTTAAGTACAATGAAATATTTGTTGAGGTCTCCTCGTGCTGGTGAGCTGACCATTGGCTTCCGTTAGTAGCTGTAGCTGAAGTAATGCTTGTAGAGGGTCACAGTCATGCCGGCGTCGAGGTGGAAGATGTCTGGTAGGCAGATGCGGCGCTCCTGCTCGTAAACGACCATCAGCTCGCAAACTTGCGCCCACACGGGATCGTAGAGACGCCGGATGAGCTGGCAGTCGAGCCGGGGGCGGACCAGCGCCTGGACTACGGTGTGCAGTAGGGCAGGGGTGGCGTTCTTGTCGAGAAACGCGGCGAAGGGGCTGCGTCCGAGGCACAGCTCGTAGAGGACTAGCCCCAGTGACCACACGTCCGACTTGAAATCCACCTTGCCCTGGCTGGACATCGCCTCCGGGGCCATGTACATGGGCGTGCCCATGCCCGCCTGCAGTTGAGTGCTGGGCGCATGAACGTTCGCGATCCCAAAGTCGGCGATCTTGACGCGGTCGTTGGCGTCGAGGAGCATGTTCTCGGGCTTGATGTCTCGGTGGATGACGCAGCGGATGTGCAGGTACTCGAGTCCCACTACCATGTCGCGGAAGTAGCCCATCAGCCGCTCCTGATTGACTCCCCCGGTGCCTGACGGCAGCTGCTGGATGACATCCCTCAAGGTGCCGTTGGGCACGTACTCCATCACGATGTTCACAGTGCCCGCGTGGCTAAAGGAGCGCAGGAACTCAACGATGTGCGGGTGGCGCAGCTGCGAGATGATGTACACCTCCTCCTTGATCAATCCCAACTCTGTCTTCGGATTCCGGACGATGATCCGCTTCACGCACACCTTCCTCTCCGGCTGTCCGCGCACCTCGTTTTGGTGGCAGAGGAAGACCCGGCCAAAGGTGCCCTGGCCCAGCACCCTTACCGCACGCAGCTTAGAGTCACCCAGTTCCATCTCGAGTGCGCAGAGTTCCGAAAGCGTAATCCGCGATCCCGCCTTGATGTACAGTTAGCCAGCAAAAGCGCAAGCGCGCCATCTATCGATTGCTTCGAAACAAGAGATGCACAGTTCCATCGGAAAAAGCCGAAAACTCGGAACTTCGGAAACCCCATATGAAAATTGCTCATCTGGCCAGCAGCAACAGTGCTCAATGAAAGTAAGTTATTAGAGTCTGGTTAATTAATCAAACTAACGCATCGTGAACTAACCCCATTCAAAAAGTCCATCCATGTGAAAAGTATGACTATCCTAAATTTTTATTTATTTTATTTAACAAAATTAAATATAGTATACAATACTAAACCTAATTAAATTTAATGAGTACTAGCTACGGGGGCCTTCGACTCGAGACTTATGGGTTAATTGCTTTATATAATAAACTTAGCTTTTTGGACAAATTTGTAAATTTTTGAGATATTTTCACAGGATGGGATACTTAAACAATTCGAGAGACTATGTGTACCAAATAAGTGAGATCTAATTGAGTGCAATTGACTGCAGGCGTTGAGAATATGGTCAACGGTGAGCTCGTCCC</_APPDATA>
+  <FEATURE>
+    <DBXREF_ID>
+      <DBXREF>
+        <ACCESSION>FBal0120393</ACCESSION>
+        <DB_ID>
+          <DB>
+            <NAME>FlyBase</NAME>
+          </DB>
+        </DB_ID>
+      </DBXREF>
+    </DBXREF_ID>
+# is_analysis is hardcoded to 0 for annotations and 1 for results
+    <IS_ANALYSIS>0</IS_ANALYSIS>
+    <IS_OBSOLETE>0</IS_OBSOLETE>
+    <NAME>png[+t1.7]</NAME>
+    <ORGANISM_ID>
+      <ORGANISM>
+        <GENUS>Drosophila</GENUS>
+        <SPECIES>melanogaster</SPECIES>
+      </ORGANISM>
+    </ORGANISM_ID>
+    <TIMEACCESSIONED>2004-02-02 15:15:00.536801</TIMEACCESSIONED>
+    <TIMELASTMODIFIED>2004-02-02 15:15:00.536801</TIMELASTMODIFIED>
+    <TYPE_ID>
+      <CVTERM>
+        <CV_ID>
+          <CV>
+# CV name used in type id can be changed by setting "typeIDOntology" in fly.style
+            <NAME>SO</NAME>
+          </CV>
+        </CV_ID>
+        <NAME>rescue_fragment</NAME>
+      </CVTERM>
+    </TYPE_ID>
+    <UNIQUENAME>png[+t1.7]</UNIQUENAME>
+    <FEATURE_SYNONYM>
+      <IS_CURRENT>1</IS_CURRENT>
+      <IS_INTERNAL>0</IS_INTERNAL>
+      <PUB_ID>
+        <PUB>
+          <TYPE_ID>
+            <CVTERM>
+              <CV_ID>
+                <CV>
+                  <NAME>PUB TYPE</NAME>
+                </CV>
+              </CV_ID>
+# pub type name is hardcoded to defaultSynonymPubType for synonym pubs--can be changed in fly.style
+              <NAME>COMPUTER FILE</NAME>
+            </CVTERM>
+          </TYPE_ID>
+          <UNIQUENAME>FlyBase</UNIQUENAME>
+        </PUB>
+      </PUB_ID>
+      <SYNONYM_ID>
+        <SYNONYM>
+          <NAME>png[+t1.7]</NAME>
+# If synonym_sgml was not included in the synonym record, the synonym name itself is used.
+          <SYNONYM_SGML>png[+t1.7]</SYNONYM_SGML>
+          <TYPE_ID>
+            <CVTERM>
+              <CV_ID>
+                <CV>
+                  <NAME>SYNONYM TYPE</NAME>
+                </CV>
+              </CV_ID>
+              <NAME>SYNONYM</NAME>
+            </CVTERM>
+          </TYPE_ID>
+        </SYNONYM>
+      </SYNONYM_ID>
+    </FEATURE_SYNONYM>
+    <FEATURELOC>
+      <FMAX>1214878</FMAX>
+      <FMIN>1213222</FMIN>
+      <IS_FMAX_PARTIAL>0</IS_FMAX_PARTIAL>
+      <IS_FMIN_PARTIAL>0</IS_FMIN_PARTIAL>
+# locgroup is always hardcoded to 0
+      <LOCGROUP>0</LOCGROUP>
+      <RANK>0</RANK>
+      <SRCFEATURE_ID>
+        <FEATURE>
+          <ORGANISM_ID>
+            <ORGANISM>
+              <GENUS>Drosophila</GENUS>
+              <SPECIES>melanogaster</SPECIES>
+            </ORGANISM>
+          </ORGANISM_ID>
+          <TYPE_ID>
+            <CVTERM>
+              <CV_ID>
+                <CV>
+# CV name used in type id can be changed by setting "typeIDOntology" in fly.style
+                  <NAME>SO</NAME>
+                </CV>
+              </CV_ID>
+              <NAME>CHROMOSOME_ARM</NAME>
+            </CVTERM>
+          </TYPE_ID>
+          <UNIQUENAME>X</UNIQUENAME>
+        </FEATURE>
+      </SRCFEATURE_ID>
+      <STRAND>-1</STRAND>
+    </FEATURELOC>
+  </FEATURE>
+  <FEATURE>
+    <DBXREF_ID>
+      <DBXREF>
+        <ACCESSION>FBgn0000826</ACCESSION>
+        <DB_ID>
+          <DB>
+            <NAME>FlyBase</NAME>
+          </DB>
+        </DB_ID>
+      </DBXREF>
+    </DBXREF_ID>
+# is_analysis is hardcoded to 0 for annotations and 1 for results
+    <IS_ANALYSIS>0</IS_ANALYSIS>
+    <IS_OBSOLETE>0</IS_OBSOLETE>
+    <NAME>png</NAME>
+    <ORGANISM_ID>
+      <ORGANISM>
+        <GENUS>Drosophila</GENUS>
+        <SPECIES>melanogaster</SPECIES>
+      </ORGANISM>
+    </ORGANISM_ID>
+    <SEQLEN>1126</SEQLEN>
+    <TIMEACCESSIONED>2003-12-01 16:54:59.540433</TIMEACCESSIONED>
+    <TIMELASTMODIFIED>2003-12-01 16:54:59.540433</TIMELASTMODIFIED>
+    <TYPE_ID>
+      <CVTERM>
+        <CV_ID>
+          <CV>
+# CV name used in type id can be changed by setting "typeIDOntology" in fly.style
+            <NAME>SO</NAME>
+          </CV>
+        </CV_ID>
+        <NAME>gene</NAME>
+      </CVTERM>
+    </TYPE_ID>
+    <UNIQUENAME>FBgn0000826</UNIQUENAME>
+    <FEATURE_RELATIONSHIP>
+      <SUBJECT_ID>
+        <FEATURE>
+          <DBXREF_ID>
+            <DBXREF>
+              <ACCESSION>FBtr0070234</ACCESSION>
+              <DB_ID>
+                <DB>
+                  <NAME>FlyBase</NAME>
+                </DB>
+              </DB_ID>
+            </DBXREF>
+          </DBXREF_ID>
+# is_analysis is hardcoded to 0 for annotations and 1 for results
+          <IS_ANALYSIS>0</IS_ANALYSIS>
+          <IS_OBSOLETE>0</IS_OBSOLETE>
+          <NAME>png-RA</NAME>
+          <ORGANISM_ID>
+            <ORGANISM>
+              <GENUS>Drosophila</GENUS>
+              <SPECIES>melanogaster</SPECIES>
+            </ORGANISM>
+          </ORGANISM_ID>
+          <RESIDUES>GGCGCGCTTGCGCTTTTGCTGGCTAACTGTACATCAAGGCGGGATCGCGGATTACGCTTTCGGAACTCTGCGCACTCGAGATGGAACTGGGTGACTCTAAGCTGCGTGCGGTAAGGGTGCTGGGCCAGGGCACCTTTGGCCGGGTCTTCCTCTGCCACCAAAACGAGGTGCGCGGACAGCCGGAGAGGAAGGTGTGCGTGAAGCGGATCATCGTCCGGAATCCGAAGACAGAGTTGGGATTGATCAAGGAGGAGGTGTACATCATCTCGCAGCTGCGCCACCCGCACATCGTTGAGTTCCTGCGCTCCTTTAGCCACGCGGGCACTGTGAACATCGTGATGGAGTACGTGCCCAACGGCACCTTGAGGGATGTCATCCAGCAGCTGCCGTCAGGCACCGGGGGAGTCAATCAGGAGCGGCTGATGGGCTACTTCCGCGACATGGTAGTGGGACTCGAGTACCTGCACATCCGCTGCGTCATCCACCGAGACATCAAGCCCGAGAACATGCTCCTCGACGCCAACGACCGCGTCAAGATCGCCGACTTTGGGATCGCGAACGTTCATGCGCCCAGCACTCAACTGCAGGCGGGCATGGGCACGCCCATGTACATGGCCCCGGAGGCGATGTCCAGCCAGGGCAAGGTGGATTTCAAGTCGGACGTGTGGTCACTGGGGCTAGTCCTCTACGAGCTGTGCCTCGGACGCAGCCCCTTCGCCGCGTTTCTCGACAAGAACGCCACCCCTGCCCTACTGCACACCGTAGTCCAGGCGCTGGTCCGCCCCCGGCTCGACTGCCAGCTCATCCGGCGTCTCTACGATCCCGTGTGGGCGCAAGTTTGCGAGCTGATGGTCGTTTACGAGCAGGAGCGCCGCATCTGCCTACCAGACATCTTCCACCTCGACGCCGGCATGACTGTGACCCTCTACAAGCATTACTTCAGCTACAGCTACTAACGGAAGCCAATGGTCAGCTCACCAGCACGAGGAGACCTCAACAAATATTTCATTGTACTTAAGAACTAGGCTAGCTTAAGCGATAAATTAAGGTGTGTGCTGTGCTTTGTGTGCGCCTGTGCTTTTGCCAGGGGATCTGTCAGCTATAAACAGTATATAATGTATATTCC</RESIDUES>
+          <SEQLEN>1126</SEQLEN>
+          <TIMEACCESSIONED>2002-06-18 16:47:52</TIMEACCESSIONED>
+          <TIMELASTMODIFIED>2002-06-18 16:47:52</TIMELASTMODIFIED>
+          <TYPE_ID>
+            <CVTERM>
+              <CV_ID>
+                <CV>
+# CV name used in type id can be changed by setting "typeIDOntology" in fly.style
+                  <NAME>SO</NAME>
+                </CV>
+              </CV_ID>
+              <NAME>MRNA</NAME>
+            </CVTERM>
+          </TYPE_ID>
+          <UNIQUENAME>FBtr0070234</UNIQUENAME>
+          <FEATURE_RELATIONSHIP>
+            <RANK>1</RANK>
+            <SUBJECT_ID>
+              <FEATURE>
+# is_analysis is hardcoded to 0 for annotations and 1 for results
+                <IS_ANALYSIS>0</IS_ANALYSIS>
+                <IS_OBSOLETE>0</IS_OBSOLETE>
+                <NAME>png:1</NAME>
+                <ORGANISM_ID>
+                  <ORGANISM>
+                    <GENUS>Drosophila</GENUS>
+                    <SPECIES>melanogaster</SPECIES>
+                  </ORGANISM>
+                </ORGANISM_ID>
+                <SEQLEN>1126</SEQLEN>
+                <TIMEACCESSIONED>2003-12-01 16:54:59.884289</TIMEACCESSIONED>
+                <TIMELASTMODIFIED>2003-12-01 16:54:59.884289</TIMELASTMODIFIED>
+                <TYPE_ID>
+                  <CVTERM>
+                    <CV_ID>
+                      <CV>
+# CV name used in type id can be changed by setting "typeIDOntology" in fly.style
+                        <NAME>SO</NAME>
+                      </CV>
+                    </CV_ID>
+# Type of exons is hardcoded to "exon"
+                    <NAME>EXON</NAME>
+                  </CVTERM>
+                </TYPE_ID>
+                <UNIQUENAME>CG11420:1</UNIQUENAME>
+                <FEATURELOC>
+                  <FMAX>1214434</FMAX>
+                  <FMIN>1213308</FMIN>
+                  <IS_FMAX_PARTIAL>0</IS_FMAX_PARTIAL>
+                  <IS_FMIN_PARTIAL>0</IS_FMIN_PARTIAL>
+# locgroup is always hardcoded to 0
+                  <LOCGROUP>0</LOCGROUP>
+                  <RANK>0</RANK>
+                  <SRCFEATURE_ID>
+                    <FEATURE>
+                      <ORGANISM_ID>
+                        <ORGANISM>
+                          <GENUS>Drosophila</GENUS>
+                          <SPECIES>melanogaster</SPECIES>
+                        </ORGANISM>
+                      </ORGANISM_ID>
+                      <TYPE_ID>
+                        <CVTERM>
+                          <CV_ID>
+                            <CV>
+# CV name used in type id can be changed by setting "typeIDOntology" in fly.style
+                              <NAME>SO</NAME>
+                            </CV>
+                          </CV_ID>
+                          <DBXREF_ID>
+                            <DBXREF>
+# SO:0000105 can be changed by setting "IDForDbxref" in fly.style
+                              <ACCESSION>SO:0000105</ACCESSION>
+                              <DB_ID>
+                                <DB>
+# CV name used in type id can be changed by setting "typeIDOntology" in fly.style
+                                  <NAME>SO</NAME>
+                                </DB>
+                              </DB_ID>
+                            </DBXREF>
+                          </DBXREF_ID>
+                          <NAME>CHROMOSOME_ARM</NAME>
+                        </CVTERM>
+                      </TYPE_ID>
+                      <UNIQUENAME>X</UNIQUENAME>
+                    </FEATURE>
+                  </SRCFEATURE_ID>
+                  <STRAND>-1</STRAND>
+                </FEATURELOC>
+              </FEATURE>
+            </SUBJECT_ID>
+            <TYPE_ID>
+              <CVTERM>
+                <CV_ID>
+                  <CV>
+                    <NAME>RELATIONSHIP TYPE</NAME>
+                  </CV>
+                </CV_ID>
+                <NAME>PARTOF</NAME>
+              </CVTERM>
+            </TYPE_ID>
+          </FEATURE_RELATIONSHIP>
+          <FEATURE_RELATIONSHIP>
+            <SUBJECT_ID>
+              <FEATURE>
+                <DBXREF_ID>
+                  <DBXREF>
+                    <ACCESSION>FBpp0070225</ACCESSION>
+                    <DB_ID>
+                      <DB>
+                        <NAME>FlyBase</NAME>
+                      </DB>
+                    </DB_ID>
+                  </DBXREF>
+                </DBXREF_ID>
+# is_analysis is hardcoded to 0 for annotations and 1 for results
+                <IS_ANALYSIS>0</IS_ANALYSIS>
+                <IS_OBSOLETE>0</IS_OBSOLETE>
+                <MD5CHECKSUM>dc35325c96ae9251163c02c6ba1d68e9</MD5CHECKSUM>
+                <NAME>png-PA</NAME>
+                <ORGANISM_ID>
+                  <ORGANISM>
+                    <GENUS>Drosophila</GENUS>
+                    <SPECIES>melanogaster</SPECIES>
+                  </ORGANISM>
+                </ORGANISM_ID>
+                <RESIDUES>MELGDSKLRAVRVLGQGTFGRVFLCHQNEVRGQPERKVCVKRIIVRNPKTELGLIKEEVYIISQLRHPHIVEFLRSFSHAGTVNIVMEYVPNGTLRDVIQQLPSGTGGVNQERLMGYFRDMVVGLEYLHIRCVIHRDIKPENMLLDANDRVKIADFGIANVHAPSTQLQAGMGTPMYMAPEAMSSQGKVDFKSDVWSLGLVLYELCLGRSPFAAFLDKNATPALLHTVVQALVRPRLDCQLIRRLYDPVWAQVCELMVVYEQERRICLPDIFHLDAGMTVTLYKHYFSYSY</RESIDUES>
+                <SEQLEN>291</SEQLEN>
+                <TIMEACCESSIONED>2003-12-01 16:54:59.917364</TIMEACCESSIONED>
+                <TIMELASTMODIFIED>2003-12-01 16:54:59.917364</TIMELASTMODIFIED>
+                <TYPE_ID>
+                  <CVTERM>
+                    <CV_ID>
+                      <CV>
+# CV name used in type id can be changed by setting "typeIDOntology" in fly.style
+                        <NAME>SO</NAME>
+                      </CV>
+                    </CV_ID>
+                    <NAME>protein</NAME>
+                  </CVTERM>
+                </TYPE_ID>
+                <UNIQUENAME>FBpp0070225</UNIQUENAME>
+                <FEATURELOC>
+                  <FMAX>1214354</FMAX>
+                  <FMIN>1213481</FMIN>
+                  <IS_FMAX_PARTIAL>0</IS_FMAX_PARTIAL>
+                  <IS_FMIN_PARTIAL>0</IS_FMIN_PARTIAL>
+# locgroup is always hardcoded to 0
+                  <LOCGROUP>0</LOCGROUP>
+                  <RANK>0</RANK>
+                  <SRCFEATURE_ID>
+                    <FEATURE>
+                      <ORGANISM_ID>
+                        <ORGANISM>
+                          <GENUS>Drosophila</GENUS>
+                          <SPECIES>melanogaster</SPECIES>
+                        </ORGANISM>
+                      </ORGANISM_ID>
+                      <TYPE_ID>
+                        <CVTERM>
+                          <CV_ID>
+                            <CV>
+# CV name used in type id can be changed by setting "typeIDOntology" in fly.style
+                              <NAME>SO</NAME>
+                            </CV>
+                          </CV_ID>
+                          <DBXREF_ID>
+                            <DBXREF>
+# SO:0000105 can be changed by setting "IDForDbxref" in fly.style
+                              <ACCESSION>SO:0000105</ACCESSION>
+                              <DB_ID>
+                                <DB>
+# CV name used in type id can be changed by setting "typeIDOntology" in fly.style
+                                  <NAME>SO</NAME>
+                                </DB>
+                              </DB_ID>
+                            </DBXREF>
+                          </DBXREF_ID>
+                          <NAME>CHROMOSOME_ARM</NAME>
+                        </CVTERM>
+                      </TYPE_ID>
+                      <UNIQUENAME>X</UNIQUENAME>
+                    </FEATURE>
+                  </SRCFEATURE_ID>
+                  <STRAND>-1</STRAND>
+                </FEATURELOC>
+                <FEATURE_DBXREF>
+                  <DBXREF_ID>
+                    <DBXREF>
+                      <ACCESSION>AAF45611.1</ACCESSION>
+                      <DB_ID>
+                        <DB>
+                          <NAME>GB_protein</NAME>
+                        </DB>
+                      </DB_ID>
+                    </DBXREF>
+                  </DBXREF_ID>
+                  <IS_CURRENT>1</IS_CURRENT>
+                </FEATURE_DBXREF>
+                <FEATURE_DBXREF>
+                  <DBXREF_ID>
+                    <DBXREF>
+                      <ACCESSION>FBpp0070225</ACCESSION>
+                      <DB_ID>
+                        <DB>
+                          <NAME>FlyBase</NAME>
+                        </DB>
+                      </DB_ID>
+                    </DBXREF>
+                  </DBXREF_ID>
+                  <IS_CURRENT>1</IS_CURRENT>
+                </FEATURE_DBXREF>
+                <FEATURE_DBXREF>
+                  <DBXREF_ID>
+                    <DBXREF>
+                      <ACCESSION>CG11420-PA</ACCESSION>
+                      <DB_ID>
+                        <DB>
+                          <NAME>Gadfly</NAME>
+                        </DB>
+                      </DB_ID>
+                    </DBXREF>
+                  </DBXREF_ID>
+                  <IS_CURRENT>1</IS_CURRENT>
+                </FEATURE_DBXREF>
+                <FEATURE_SYNONYM>
+                  <IS_CURRENT>0</IS_CURRENT>
+                  <IS_INTERNAL>0</IS_INTERNAL>
+                  <PUB_ID>
+                    <PUB>
+                      <TYPE_ID>
+                        <CVTERM>
+                          <CV_ID>
+                            <CV>
+                              <NAME>PUB TYPE</NAME>
+                            </CV>
+                          </CV_ID>
+# pub type name is hardcoded to defaultSynonymPubType for synonym pubs--can be changed in fly.style
+                          <NAME>COMPUTER FILE</NAME>
+                        </CVTERM>
+                      </TYPE_ID>
+                      <UNIQUENAME>gadfly3</UNIQUENAME>
+                    </PUB>
+                  </PUB_ID>
+                  <SYNONYM_ID>
+                    <SYNONYM>
+                      <NAME>CG11420-PA</NAME>
+                      <SYNONYM_SGML>CG11420-PA</SYNONYM_SGML>
+                      <TYPE_ID>
+                        <CVTERM>
+                          <CV_ID>
+                            <CV>
+                              <NAME>SYNONYM TYPE</NAME>
+                            </CV>
+                          </CV_ID>
+                          <NAME>SYNONYM</NAME>
+                        </CVTERM>
+                      </TYPE_ID>
+                    </SYNONYM>
+                  </SYNONYM_ID>
+                </FEATURE_SYNONYM>
+                <FEATURE_SYNONYM>
+                  <IS_CURRENT>1</IS_CURRENT>
+                  <IS_INTERNAL>0</IS_INTERNAL>
+                  <PUB_ID>
+                    <PUB>
+                      <TYPE_ID>
+                        <CVTERM>
+                          <CV_ID>
+                            <CV>
+                              <NAME>PUB TYPE</NAME>
+                            </CV>
+                          </CV_ID>
+# pub type name is hardcoded to defaultSynonymPubType for synonym pubs--can be changed in fly.style
+                          <NAME>COMPUTER FILE</NAME>
+                        </CVTERM>
+                      </TYPE_ID>
+                      <UNIQUENAME>gadfly3</UNIQUENAME>
+                    </PUB>
+                  </PUB_ID>
+                  <SYNONYM_ID>
+                    <SYNONYM>
+                      <NAME>png-PA</NAME>
+                      <SYNONYM_SGML>png-PA</SYNONYM_SGML>
+                      <TYPE_ID>
+                        <CVTERM>
+                          <CV_ID>
+                            <CV>
+                              <NAME>SYNONYM TYPE</NAME>
+                            </CV>
+                          </CV_ID>
+                          <NAME>SYNONYM</NAME>
+                        </CVTERM>
+                      </TYPE_ID>
+                    </SYNONYM>
+                  </SYNONYM_ID>
+                </FEATURE_SYNONYM>
+              </FEATURE>
+            </SUBJECT_ID>
+            <TYPE_ID>
+              <CVTERM>
+                <CV_ID>
+                  <CV>
+                    <NAME>RELATIONSHIP TYPE</NAME>
+                  </CV>
+                </CV_ID>
+                <NAME>PRODUCEDBY</NAME>
+              </CVTERM>
+            </TYPE_ID>
+          </FEATURE_RELATIONSHIP>
+          <FEATURELOC>
+            <FMAX>1214434</FMAX>
+            <FMIN>1213308</FMIN>
+            <IS_FMAX_PARTIAL>0</IS_FMAX_PARTIAL>
+            <IS_FMIN_PARTIAL>0</IS_FMIN_PARTIAL>
+# locgroup is always hardcoded to 0
+            <LOCGROUP>0</LOCGROUP>
+            <RANK>0</RANK>
+            <SRCFEATURE_ID>
+              <FEATURE>
+                <ORGANISM_ID>
+                  <ORGANISM>
+                    <GENUS>Drosophila</GENUS>
+                    <SPECIES>melanogaster</SPECIES>
+                  </ORGANISM>
+                </ORGANISM_ID>
+                <TYPE_ID>
+                  <CVTERM>
+                    <CV_ID>
+                      <CV>
+# CV name used in type id can be changed by setting "typeIDOntology" in fly.style
+                        <NAME>SO</NAME>
+                      </CV>
+                    </CV_ID>
+                    <DBXREF_ID>
+                      <DBXREF>
+# SO:0000105 can be changed by setting "IDForDbxref" in fly.style
+                        <ACCESSION>SO:0000105</ACCESSION>
+                        <DB_ID>
+                          <DB>
+# CV name used in type id can be changed by setting "typeIDOntology" in fly.style
+                            <NAME>SO</NAME>
+                          </DB>
+                        </DB_ID>
+                      </DBXREF>
+                    </DBXREF_ID>
+                    <NAME>CHROMOSOME_ARM</NAME>
+                  </CVTERM>
+                </TYPE_ID>
+                <UNIQUENAME>X</UNIQUENAME>
+              </FEATURE>
+            </SRCFEATURE_ID>
+            <STRAND>-1</STRAND>
+          </FEATURELOC>
+          <FEATURE_DBXREF>
+            <DBXREF_ID>
+              <DBXREF>
+                <ACCESSION>CG11420-RA</ACCESSION>
+                <DB_ID>
+                  <DB>
+                    <NAME>Gadfly</NAME>
+                  </DB>
+                </DB_ID>
+              </DBXREF>
+            </DBXREF_ID>
+            <IS_CURRENT>1</IS_CURRENT>
+          </FEATURE_DBXREF>
+          <FEATURE_DBXREF>
+            <DBXREF_ID>
+              <DBXREF>
+                <ACCESSION>FBtr0070234</ACCESSION>
+                <DB_ID>
+                  <DB>
+                    <NAME>FlyBase</NAME>
+                  </DB>
+                </DB_ID>
+              </DBXREF>
+            </DBXREF_ID>
+            <IS_CURRENT>1</IS_CURRENT>
+          </FEATURE_DBXREF>
+          <FEATURE_SYNONYM>
+            <IS_CURRENT>0</IS_CURRENT>
+            <IS_INTERNAL>0</IS_INTERNAL>
+            <PUB_ID>
+              <PUB>
+                <TYPE_ID>
+                  <CVTERM>
+                    <CV_ID>
+                      <CV>
+                        <NAME>PUB TYPE</NAME>
+                      </CV>
+                    </CV_ID>
+# pub type name is hardcoded to defaultSynonymPubType for synonym pubs--can be changed in fly.style
+                    <NAME>COMPUTER FILE</NAME>
+                  </CVTERM>
+                </TYPE_ID>
+                <UNIQUENAME>gadfly3</UNIQUENAME>
+              </PUB>
+            </PUB_ID>
+            <SYNONYM_ID>
+              <SYNONYM>
+                <NAME>CG11420-RA</NAME>
+                <SYNONYM_SGML>CG11420-RA</SYNONYM_SGML>
+                <TYPE_ID>
+                  <CVTERM>
+                    <CV_ID>
+                      <CV>
+                        <NAME>SYNONYM TYPE</NAME>
+                      </CV>
+                    </CV_ID>
+                    <NAME>SYNONYM</NAME>
+                  </CVTERM>
+                </TYPE_ID>
+              </SYNONYM>
+            </SYNONYM_ID>
+          </FEATURE_SYNONYM>
+          <FEATURE_SYNONYM>
+            <IS_CURRENT>1</IS_CURRENT>
+            <IS_INTERNAL>0</IS_INTERNAL>
+            <PUB_ID>
+              <PUB>
+                <TYPE_ID>
+                  <CVTERM>
+                    <CV_ID>
+                      <CV>
+                        <NAME>PUB TYPE</NAME>
+                      </CV>
+                    </CV_ID>
+# pub type name is hardcoded to defaultSynonymPubType for synonym pubs--can be changed in fly.style
+                    <NAME>COMPUTER FILE</NAME>
+                  </CVTERM>
+                </TYPE_ID>
+                <UNIQUENAME>gadfly3</UNIQUENAME>
+              </PUB>
+            </PUB_ID>
+            <SYNONYM_ID>
+              <SYNONYM>
+                <NAME>png-RA</NAME>
+                <SYNONYM_SGML>png-RA</SYNONYM_SGML>
+                <TYPE_ID>
+                  <CVTERM>
+                    <CV_ID>
+                      <CV>
+                        <NAME>SYNONYM TYPE</NAME>
+                      </CV>
+                    </CV_ID>
+                    <NAME>SYNONYM</NAME>
+                  </CVTERM>
+                </TYPE_ID>
+              </SYNONYM>
+            </SYNONYM_ID>
+          </FEATURE_SYNONYM>
+          <FEATUREPROP>
+            <RANK>0</RANK>
+            <TYPE_ID>
+              <CVTERM>
+                <CV_ID>
+                  <CV>
+# featureprop CV name can be changed by setting "featurepropCV" in fly.style
+                    <NAME>ANNOTATION PROPERTY TYPE</NAME>
+                  </CV>
+                </CV_ID>
+                <NAME>owner</NAME>
+              </CVTERM>
+            </TYPE_ID>
+            <VALUE>campbell</VALUE>
+          </FEATUREPROP>
+          <FEATUREPROP>
+            <RANK>0</RANK>
+            <TYPE_ID>
+              <CVTERM>
+                <CV_ID>
+                  <CV>
+# featureprop CV name can be changed by setting "featurepropCV" in fly.style
+                    <NAME>ANNOTATION PROPERTY TYPE</NAME>
+                  </CV>
+                </CV_ID>
+                <NAME>sp_comment</NAME>
+              </CVTERM>
+            </TYPE_ID>
+# Feature type "match" is hardcoded for results
+            <VALUE>Perfect MATCH to REAL SP with corresponding FBgn</VALUE>
+          </FEATUREPROP>
+          <FEATUREPROP>
+            <RANK>0</RANK>
+            <TYPE_ID>
+              <CVTERM>
+                <CV_ID>
+                  <CV>
+# featureprop CV name can be changed by setting "featurepropCV" in fly.style
+                    <NAME>ANNOTATION PROPERTY TYPE</NAME>
+                  </CV>
+                </CV_ID>
+                <NAME>protein_id</NAME>
+              </CVTERM>
+            </TYPE_ID>
+            <VALUE>AAF45611</VALUE>
+          </FEATUREPROP>
+        </FEATURE>
+      </SUBJECT_ID>
+      <TYPE_ID>
+        <CVTERM>
+          <CV_ID>
+            <CV>
+              <NAME>RELATIONSHIP TYPE</NAME>
+            </CV>
+          </CV_ID>
+          <NAME>PARTOF</NAME>
+        </CVTERM>
+      </TYPE_ID>
+    </FEATURE_RELATIONSHIP>
+    <FEATURE_DBXREF>
+      <DBXREF_ID>
+        <DBXREF>
+          <ACCESSION>CG11420</ACCESSION>
+          <DB_ID>
+            <DB>
+              <NAME>GB</NAME>
+            </DB>
+          </DB_ID>
+        </DBXREF>
+      </DBXREF_ID>
+      <IS_CURRENT>0</IS_CURRENT>
+    </FEATURE_DBXREF>
+    <FEATURE_DBXREF>
+      <DBXREF_ID>
+        <DBXREF>
+          <ACCESSION>FBan0011420</ACCESSION>
+          <DB_ID>
+            <DB>
+              <NAME>FlyBase</NAME>
+            </DB>
+          </DB_ID>
+        </DBXREF>
+      </DBXREF_ID>
+      <IS_CURRENT>1</IS_CURRENT>
+    </FEATURE_DBXREF>
+    <FEATURE_DBXREF>
+      <DBXREF_ID>
+        <DBXREF>
+          <ACCESSION>FBgn0024363</ACCESSION>
+          <DB_ID>
+            <DB>
+              <NAME>FlyBase</NAME>
+            </DB>
+          </DB_ID>
+        </DBXREF>
+      </DBXREF_ID>
+      <IS_CURRENT>0</IS_CURRENT>
+    </FEATURE_DBXREF>
+    <FEATURE_DBXREF>
+      <DBXREF_ID>
+        <DBXREF>
+          <ACCESSION>CG11420</ACCESSION>
+          <DB_ID>
+            <DB>
+              <NAME>Gadfly</NAME>
+            </DB>
+          </DB_ID>
+        </DBXREF>
+      </DBXREF_ID>
+      <IS_CURRENT>1</IS_CURRENT>
+    </FEATURE_DBXREF>
+    <FEATURE_DBXREF>
+      <DBXREF_ID>
+        <DBXREF>
+          <ACCESSION>FBgn0000826</ACCESSION>
+          <DB_ID>
+            <DB>
+              <NAME>FlyBase</NAME>
+            </DB>
+          </DB_ID>
+        </DBXREF>
+      </DBXREF_ID>
+      <IS_CURRENT>1</IS_CURRENT>
+    </FEATURE_DBXREF>
+    <FEATURE_SYNONYM>
+      <IS_CURRENT>0</IS_CURRENT>
+      <IS_INTERNAL>0</IS_INTERNAL>
+      <PUB_ID>
+        <PUB>
+          <TYPE_ID>
+            <CVTERM>
+              <CV_ID>
+                <CV>
+                  <NAME>PUB TYPE</NAME>
+                </CV>
+              </CV_ID>
+# pub type name is hardcoded to defaultSynonymPubType for synonym pubs--can be changed in fly.style
+              <NAME>COMPUTER FILE</NAME>
+            </CVTERM>
+          </TYPE_ID>
+          <UNIQUENAME>gadfly3</UNIQUENAME>
+        </PUB>
+      </PUB_ID>
+      <SYNONYM_ID>
+        <SYNONYM>
+          <NAME>pan-gnu</NAME>
+          <SYNONYM_SGML>pan-gnu</SYNONYM_SGML>
+          <TYPE_ID>
+            <CVTERM>
+              <CV_ID>
+                <CV>
+                  <NAME>SYNONYM TYPE</NAME>
+                </CV>
+              </CV_ID>
+              <NAME>SYNONYM</NAME>
+            </CVTERM>
+          </TYPE_ID>
+        </SYNONYM>
+      </SYNONYM_ID>
+    </FEATURE_SYNONYM>
+    <FEATURE_SYNONYM>
+      <IS_CURRENT>0</IS_CURRENT>
+      <IS_INTERNAL>0</IS_INTERNAL>
+      <PUB_ID>
+        <PUB>
+          <TYPE_ID>
+            <CVTERM>
+              <CV_ID>
+                <CV>
+                  <NAME>PUB TYPE</NAME>
+                </CV>
+              </CV_ID>
+# pub type name is hardcoded to defaultSynonymPubType for synonym pubs--can be changed in fly.style
+              <NAME>COMPUTER FILE</NAME>
+            </CVTERM>
+          </TYPE_ID>
+          <UNIQUENAME>gadfly3</UNIQUENAME>
+        </PUB>
+      </PUB_ID>
+      <SYNONYM_ID>
+        <SYNONYM>
+          <NAME>EG:8D8.5</NAME>
+          <SYNONYM_SGML>EG:8D8.5</SYNONYM_SGML>
+          <TYPE_ID>
+            <CVTERM>
+              <CV_ID>
+                <CV>
+                  <NAME>SYNONYM TYPE</NAME>
+                </CV>
+              </CV_ID>
+              <NAME>SYNONYM</NAME>
+            </CVTERM>
+          </TYPE_ID>
+        </SYNONYM>
+      </SYNONYM_ID>
+    </FEATURE_SYNONYM>
+    <FEATURE_SYNONYM>
+      <IS_CURRENT>0</IS_CURRENT>
+      <IS_INTERNAL>0</IS_INTERNAL>
+      <PUB_ID>
+        <PUB>
+          <TYPE_ID>
+            <CVTERM>
+              <CV_ID>
+                <CV>
+                  <NAME>PUB TYPE</NAME>
+                </CV>
+              </CV_ID>
+# pub type name is hardcoded to defaultSynonymPubType for synonym pubs--can be changed in fly.style
+              <NAME>COMPUTER FILE</NAME>
+            </CVTERM>
+          </TYPE_ID>
+          <UNIQUENAME>gadfly3</UNIQUENAME>
+        </PUB>
+      </PUB_ID>
+      <SYNONYM_ID>
+        <SYNONYM>
+          <NAME>PNG</NAME>
+          <SYNONYM_SGML>PNG</SYNONYM_SGML>
+          <TYPE_ID>
+            <CVTERM>
+              <CV_ID>
+                <CV>
+                  <NAME>SYNONYM TYPE</NAME>
+                </CV>
+              </CV_ID>
+              <NAME>SYNONYM</NAME>
+            </CVTERM>
+          </TYPE_ID>
+        </SYNONYM>
+      </SYNONYM_ID>
+    </FEATURE_SYNONYM>
+    <FEATURE_SYNONYM>
+      <IS_CURRENT>0</IS_CURRENT>
+      <IS_INTERNAL>0</IS_INTERNAL>
+      <PUB_ID>
+        <PUB>
+          <TYPE_ID>
+            <CVTERM>
+              <CV_ID>
+                <CV>
+                  <NAME>PUB TYPE</NAME>
+                </CV>
+              </CV_ID>
+# pub type name is hardcoded to defaultSynonymPubType for synonym pubs--can be changed in fly.style
+              <NAME>COMPUTER FILE</NAME>
+            </CVTERM>
+          </TYPE_ID>
+          <UNIQUENAME>gadfly3</UNIQUENAME>
+        </PUB>
+      </PUB_ID>
+      <SYNONYM_ID>
+        <SYNONYM>
+          <NAME>fs(1)M2</NAME>
+          <SYNONYM_SGML>fs(1)M2</SYNONYM_SGML>
+          <TYPE_ID>
+            <CVTERM>
+              <CV_ID>
+                <CV>
+                  <NAME>SYNONYM TYPE</NAME>
+                </CV>
+              </CV_ID>
+              <NAME>SYNONYM</NAME>
+            </CVTERM>
+          </TYPE_ID>
+        </SYNONYM>
+      </SYNONYM_ID>
+    </FEATURE_SYNONYM>
+    <FEATURE_SYNONYM>
+      <IS_CURRENT>1</IS_CURRENT>
+      <IS_INTERNAL>0</IS_INTERNAL>
+      <PUB_ID>
+        <PUB>
+          <TYPE_ID>
+            <CVTERM>
+              <CV_ID>
+                <CV>
+                  <NAME>PUB TYPE</NAME>
+                </CV>
+              </CV_ID>
+# pub type name is hardcoded to defaultSynonymPubType for synonym pubs--can be changed in fly.style
+              <NAME>COMPUTER FILE</NAME>
+            </CVTERM>
+          </TYPE_ID>
+          <UNIQUENAME>gadfly3</UNIQUENAME>
+        </PUB>
+      </PUB_ID>
+      <SYNONYM_ID>
+        <SYNONYM>
+          <NAME>png</NAME>
+          <SYNONYM_SGML>png</SYNONYM_SGML>
+          <TYPE_ID>
+            <CVTERM>
+              <CV_ID>
+                <CV>
+                  <NAME>SYNONYM TYPE</NAME>
+                </CV>
+              </CV_ID>
+              <NAME>SYNONYM</NAME>
+            </CVTERM>
+          </TYPE_ID>
+        </SYNONYM>
+      </SYNONYM_ID>
+    </FEATURE_SYNONYM>
+    <FEATURE_SYNONYM>
+      <IS_CURRENT>0</IS_CURRENT>
+      <IS_INTERNAL>0</IS_INTERNAL>
+      <PUB_ID>
+        <PUB>
+          <TYPE_ID>
+            <CVTERM>
+              <CV_ID>
+                <CV>
+                  <NAME>PUB TYPE</NAME>
+                </CV>
+              </CV_ID>
+# pub type name is hardcoded to defaultSynonymPubType for synonym pubs--can be changed in fly.style
+              <NAME>COMPUTER FILE</NAME>
+            </CVTERM>
+          </TYPE_ID>
+          <UNIQUENAME>gadfly3</UNIQUENAME>
+        </PUB>
+      </PUB_ID>
+      <SYNONYM_ID>
+        <SYNONYM>
+          <NAME>Png</NAME>
+          <SYNONYM_SGML>Png</SYNONYM_SGML>
+          <TYPE_ID>
+            <CVTERM>
+              <CV_ID>
+                <CV>
+                  <NAME>SYNONYM TYPE</NAME>
+                </CV>
+              </CV_ID>
+              <NAME>SYNONYM</NAME>
+            </CVTERM>
+          </TYPE_ID>
+        </SYNONYM>
+      </SYNONYM_ID>
+    </FEATURE_SYNONYM>
+    <FEATURELOC>
+      <FMAX>1214434</FMAX>
+      <FMIN>1213308</FMIN>
+      <IS_FMAX_PARTIAL>0</IS_FMAX_PARTIAL>
+      <IS_FMIN_PARTIAL>0</IS_FMIN_PARTIAL>
+# locgroup is always hardcoded to 0
+      <LOCGROUP>0</LOCGROUP>
+      <RANK>0</RANK>
+      <SRCFEATURE_ID>
+        <FEATURE>
+          <ORGANISM_ID>
+            <ORGANISM>
+              <GENUS>Drosophila</GENUS>
+              <SPECIES>melanogaster</SPECIES>
+            </ORGANISM>
+          </ORGANISM_ID>
+          <TYPE_ID>
+            <CVTERM>
+              <CV_ID>
+                <CV>
+# CV name used in type id can be changed by setting "typeIDOntology" in fly.style
+                  <NAME>SO</NAME>
+                </CV>
+              </CV_ID>
+              <NAME>CHROMOSOME_ARM</NAME>
+            </CVTERM>
+          </TYPE_ID>
+          <UNIQUENAME>X</UNIQUENAME>
+        </FEATURE>
+      </SRCFEATURE_ID>
+      <STRAND>-1</STRAND>
+    </FEATURELOC>
+    <FEATUREPROP>
+      <RANK>0</RANK>
+      <TYPE_ID>
+        <CVTERM>
+          <CV_ID>
+            <CV>
+# featureprop CV name can be changed by setting "featurepropCV" in fly.style
+              <NAME>ANNOTATION PROPERTY TYPE</NAME>
+            </CV>
+          </CV_ID>
+          <NAME>sp_status</NAME>
+        </CVTERM>
+      </TYPE_ID>
+# Feature type "match" is hardcoded for results
+      <VALUE>Perfect MATCH to SwissProt real (computational)</VALUE>
+    </FEATUREPROP>
+    <FEATUREPROP>
+      <RANK>0</RANK>
+      <TYPE_ID>
+        <CVTERM>
+          <CV_ID>
+            <CV>
+# featureprop CV name can be changed by setting "featurepropCV" in fly.style
+              <NAME>ANNOTATION PROPERTY TYPE</NAME>
+            </CV>
+          </CV_ID>
+          <NAME>cyto_range</NAME>
+        </CVTERM>
+      </TYPE_ID>
+      <VALUE>1F4-1F4</VALUE>
+    </FEATUREPROP>
+    <FEATUREPROP>
+      <RANK>0</RANK>
+      <TYPE_ID>
+        <CVTERM>
+          <CV_ID>
+            <CV>
+# featureprop CV name can be changed by setting "featurepropCV" in fly.style
+              <NAME>ANNOTATION PROPERTY TYPE</NAME>
+            </CV>
+          </CV_ID>
+          <NAME>gbunit</NAME>
+        </CVTERM>
+      </TYPE_ID>
+      <VALUE>AE003420</VALUE>
+    </FEATUREPROP>
+  </FEATURE>
+  <FEATURE>
+    <DBXREF_ID>
+      <DBXREF>
+        <ACCESSION>FBal0120389</ACCESSION>
+        <DB_ID>
+          <DB>
+            <NAME>FlyBase</NAME>
+          </DB>
+        </DB_ID>
+      </DBXREF>
+    </DBXREF_ID>
+# is_analysis is hardcoded to 0 for annotations and 1 for results
+    <IS_ANALYSIS>0</IS_ANALYSIS>
+    <IS_OBSOLETE>0</IS_OBSOLETE>
+    <NAME>png[171a]</NAME>
+    <ORGANISM_ID>
+      <ORGANISM>
+        <GENUS>Drosophila</GENUS>
+        <SPECIES>melanogaster</SPECIES>
+      </ORGANISM>
+    </ORGANISM_ID>
+    <TIMEACCESSIONED>2004-02-02 15:15:02.637564</TIMEACCESSIONED>
+    <TIMELASTMODIFIED>2004-02-02 15:15:02.637564</TIMELASTMODIFIED>
+    <TYPE_ID>
+      <CVTERM>
+        <CV_ID>
+          <CV>
+# CV name used in type id can be changed by setting "typeIDOntology" in fly.style
+            <NAME>SO</NAME>
+          </CV>
+        </CV_ID>
+        <NAME>point_mutation</NAME>
+      </CVTERM>
+    </TYPE_ID>
+    <UNIQUENAME>png[171a]</UNIQUENAME>
+    <FEATURE_SYNONYM>
+      <IS_CURRENT>1</IS_CURRENT>
+      <IS_INTERNAL>0</IS_INTERNAL>
+      <PUB_ID>
+        <PUB>
+          <TYPE_ID>
+            <CVTERM>
+              <CV_ID>
+                <CV>
+                  <NAME>PUB TYPE</NAME>
+                </CV>
+              </CV_ID>
+              <NAME>curator</NAME>
+            </CVTERM>
+          </TYPE_ID>
+          <UNIQUENAME>FlyBase</UNIQUENAME>
+        </PUB>
+      </PUB_ID>
+      <SYNONYM_ID>
+        <SYNONYM>
+          <NAME>png[171a]</NAME>
+          <SYNONYM_SGML>png[171a]</SYNONYM_SGML>
+          <TYPE_ID>
+            <CVTERM>
+              <CV_ID>
+                <CV>
+                  <NAME>SYNONYM TYPE</NAME>
+                </CV>
+              </CV_ID>
+              <NAME>SYNONYM</NAME>
+            </CVTERM>
+          </TYPE_ID>
+        </SYNONYM>
+      </SYNONYM_ID>
+    </FEATURE_SYNONYM>
+    <FEATURELOC>
+      <FMAX>1213737</FMAX>
+      <FMIN>1213737</FMIN>
+      <IS_FMAX_PARTIAL>0</IS_FMAX_PARTIAL>
+      <IS_FMIN_PARTIAL>0</IS_FMIN_PARTIAL>
+# locgroup is always hardcoded to 0
+      <LOCGROUP>0</LOCGROUP>
+      <RANK>0</RANK>
+      <SRCFEATURE_ID>
+        <FEATURE>
+          <ORGANISM_ID>
+            <ORGANISM>
+              <GENUS>Drosophila</GENUS>
+              <SPECIES>melanogaster</SPECIES>
+            </ORGANISM>
+          </ORGANISM_ID>
+          <TYPE_ID>
+            <CVTERM>
+              <CV_ID>
+                <CV>
+# CV name used in type id can be changed by setting "typeIDOntology" in fly.style
+                  <NAME>SO</NAME>
+                </CV>
+              </CV_ID>
+              <NAME>CHROMOSOME_ARM</NAME>
+            </CVTERM>
+          </TYPE_ID>
+          <UNIQUENAME>X</UNIQUENAME>
+        </FEATURE>
+      </SRCFEATURE_ID>
+      <STRAND>-1</STRAND>
+    </FEATURELOC>
+  </FEATURE>
+  <FEATURE>
+# is_analysis is hardcoded to 0 for annotations and 1 for results
+    <IS_ANALYSIS>1</IS_ANALYSIS>
+    <IS_OBSOLETE>0</IS_OBSOLETE>
+    <NAME>Q8MLD7-AE003420.4-aa_SPTR.dmel-blastx_masked</NAME>
+    <ORGANISM_ID>
+      <ORGANISM>
+        <GENUS>COMPUTATIONAL</GENUS>
+        <SPECIES>RESULT</SPECIES>
+      </ORGANISM>
+    </ORGANISM_ID>
+    <SEQLEN>0</SEQLEN>
+    <TIMEACCESSIONED>2004-10-08 16:43:45.326084</TIMEACCESSIONED>
+    <TIMELASTMODIFIED>2004-10-08 16:43:45.326084</TIMELASTMODIFIED>
+    <TYPE_ID>
+      <CVTERM>
+        <CV_ID>
+          <CV>
+# CV name used in type id can be changed by setting "typeIDOntology" in fly.style
+            <NAME>SO</NAME>
+          </CV>
+        </CV_ID>
+# Feature type "match" is hardcoded for results
+        <NAME>MATCH</NAME>
+      </CVTERM>
+    </TYPE_ID>
+    <UNIQUENAME>:1743264_blastx_masked</UNIQUENAME>
+    <ANALYSISFEATURE>
+      <ANALYSIS_ID>
+        <ANALYSIS>
+          <PROGRAM>blastx_masked</PROGRAM>
+          <PROGRAMVERSION>1.0</PROGRAMVERSION>
+          <SOURCENAME>aa_SPTR.dmel</SOURCENAME>
+          <SOURCEVERSION>1.0</SOURCEVERSION>
+          <TIMEEXECUTED>2004-07-01 01:54:31</TIMEEXECUTED>
+        </ANALYSIS>
+      </ANALYSIS_ID>
+      <RAWSCORE>101.9</RAWSCORE>
+    </ANALYSISFEATURE>
+    <FEATURE_RELATIONSHIP>
+      <SUBJECT_ID>
+        <FEATURE>
+          <ORGANISM_ID>
+            <ORGANISM>
+              <GENUS>COMPUTATIONAL</GENUS>
+              <SPECIES>RESULT</SPECIES>
+            </ORGANISM>
+          </ORGANISM_ID>
+          <TYPE_ID>
+            <CVTERM>
+              <CV_ID>
+                <CV>
+# CV name used in type id can be changed by setting "typeIDOntology" in fly.style
+                  <NAME>SO</NAME>
+                </CV>
+              </CV_ID>
+# Feature type "match" is hardcoded for results
+              <NAME>MATCH</NAME>
+            </CVTERM>
+          </TYPE_ID>
+          <UNIQUENAME>:5772885</UNIQUENAME>
+          <ANALYSISFEATURE>
+            <ANALYSIS_ID>
+              <ANALYSIS>
+                <PROGRAM>blastx_masked</PROGRAM>
+                <PROGRAMVERSION>1.0</PROGRAMVERSION>
+                <SOURCENAME>aa_SPTR.dmel</SOURCENAME>
+                <SOURCEVERSION>1.0</SOURCEVERSION>
+                <TIMEEXECUTED>2004-07-01 01:54:31</TIMEEXECUTED>
+              </ANALYSIS>
+            </ANALYSIS_ID>
+            <RAWSCORE>101.9</RAWSCORE>
+          </ANALYSISFEATURE>
+          <FEATURELOC>
+            <FMAX>497</FMAX>
+            <FMIN>287</FMIN>
+            <IS_FMAX_PARTIAL>0</IS_FMAX_PARTIAL>
+            <IS_FMIN_PARTIAL>0</IS_FMIN_PARTIAL>
+# locgroup is always hardcoded to 0
+            <LOCGROUP>0</LOCGROUP>
+            <RANK>1</RANK>
+            <RESIDUE_INFO>GDFKSRFEIIEELGKGRFGIVYKVQE---RGQPEQLLAAK--VIKCIKSQDRQKVLEEISIMRALQHPKLLQLAASFESPREIVMVMEYITGGEL---FERVVADDFTLTEMDCILFLRQVCDGVAYMHGQSVVHLDLKPENIMCHTRTSHQIKIIDFGLAQRLDTKAPVRVLFGTPEFIPPEIISYE-PIGFQSDMWSVGVICYVLLSGLSPFMGDTD</RESIDUE_INFO>
+            <SRCFEATURE_ID>
+              <FEATURE>
+# is_analysis is hardcoded to 0 for annotations and 1 for results
+                <IS_ANALYSIS>1</IS_ANALYSIS>
+                <NAME>Q8MLD7</NAME>
+                <ORGANISM_ID>
+                  <ORGANISM>
+                    <GENUS>COMPUTATIONAL</GENUS>
+                    <SPECIES>RESULT</SPECIES>
+                  </ORGANISM>
+                </ORGANISM_ID>
+                <RESIDUES>MSQLESYPENGIRLLRMRDVTASRSGEICLQVKHPQAEFRRIPTTRTYTSLLVLPAIRGNSSSSSLAARSCILTRPEDCTALIGGHVRLSVRYEPFPGTKVIWYKACHPIVESSNVTIRTTSQQSTLYITDISADDSGKYTVEVMNDYGVEAAAASVAVEGPPEPPSGQPSVSLGPDRVAVAWCGPPYDGGCMITGFIIEMQTIGDENCDEDSWQQVTRVVDSLAYTVKNLQPERQYRFRVRAENIHGRSAPGQASELVQITNTPQRSTSSDASDRFGQATVSVQSGGDFKSRFEIIEELGKGRFGIVYKVQERGQPEQLLAAKVIKCIKSQDRQKVLEEISIMRALQHPKLLQLAASFESPREIVMVMEYITGGELFERVVADDFTLTEMDCILFLRQVCDGVAYMHGQSVVHLDLKPENIMCHTRTSHQIKIIDFGLAQRLDTKAPVRVLFGTPEFIPPEIISYEPIGFQSDMWSVGVICYVLLSGLSPFMGDTDVETFSNITRADYDYDDEAFDCVSQEAKDFISQLLVHRKEDRLTAQQCLASKWLSQRPDDSLSNNKICTDKLKKFIIRRKWQKTGNAIRALGRMANLSVSRRNSAIAMGVLSSPRPSISGLGMLTTSAIGSGTSSQMTSLHEEEDDFSGEMPPVEKRTVLKLRDKSQCSERSDSGYSECSNCSGAQETLLLSLAKSKLEAIAKASTLPTVVHDTEQPVSLELPTKGEAIMRSDFTNTIKMRKKSLEDSAAREKPRSKPQVKPLLCESKLKVSQLKDRFQVSPAPASASASASAANKPPLAYGPFKIAKVASVGRISRTEEPGRSGRGAPSVSGKGKSPQVRSMPSSPLPQRSATPTRLMSQRVREAAERLAQQHTVASAQRHLGNGRGTGTGNGNGNSNSNGNGNGNTAETNRESRARRLINRFNSETQHITS</RESIDUES>
+                <TYPE_ID>
+                  <CVTERM>
+                    <CV_ID>
+                      <CV>
+# CV name used in type id can be changed by setting "typeIDOntology" in fly.style
+                        <NAME>SO</NAME>
+                      </CV>
+                    </CV_ID>
+                    <NAME>protein</NAME>
+                  </CVTERM>
+                </TYPE_ID>
+                <UNIQUENAME>Q8MLD7</UNIQUENAME>
+                <FEATUREPROP>
+                  <RANK>0</RANK>
+                  <TYPE_ID>
+                    <CVTERM>
+                      <CV_ID>
+                        <CV>
+# featureprop CV name can be changed by setting "featurepropCV" in fly.style
+                          <NAME>ANNOTATION PROPERTY TYPE</NAME>
+                        </CV>
+                      </CV_ID>
+                      <NAME>description</NAME>
+                    </CVTERM>
+                  </TYPE_ID>
+                  <VALUE>ID|Q8MLD7|SPTR|Q8MLD7 DESCRIPTION:&quot;CG18255-PB&quot; organism:&quot;Drosophila melanogaster&quot; EMBL:&quot;AE003808; AAF58089.2; -.&quot; (01-OCT-2002)</VALUE>
+                </FEATUREPROP>
+              </FEATURE>
+            </SRCFEATURE_ID>
+            <STRAND>1</STRAND>
+          </FEATURELOC>
+          <FEATURELOC>
+            <FMAX>1214345</FMAX>
+            <FMIN>1213703</FMIN>
+            <IS_FMAX_PARTIAL>0</IS_FMAX_PARTIAL>
+            <IS_FMIN_PARTIAL>0</IS_FMIN_PARTIAL>
+# locgroup is always hardcoded to 0
+            <LOCGROUP>0</LOCGROUP>
+            <RANK>0</RANK>
+            <RESIDUE_INFO>GDSKLR--AVRVLGQGTFGRVFLCHQNEVRGQPERKVCVKRIIVRNPKTE-LGLIKEEVYIISQLRHPHIVEFLRSFSHAGTVNIVMEYVPNGTLRDVIQQLPSGTGGVNQERLMGYFRDMVVGLEYLHIRCVIHRDIKPENMLLDA--NDRVKIADFGIANVHAPSTQLQAGMGTPMYMAPEAMSSQGKVDFKSDVWSLGLVLYELCLGRSPFAAFLD</RESIDUE_INFO>
+            <SRCFEATURE_ID>
+              <FEATURE>
+                <DBXREF_ID>
+                  <DBXREF>
+                    <ACCESSION>X</ACCESSION>
+                    <DB_ID>
+                      <DB>
+                        <NAME>Gadfly</NAME>
+                      </DB>
+                    </DB_ID>
+                  </DBXREF>
+                </DBXREF_ID>
+                <ORGANISM_ID>
+                  <ORGANISM>
+                    <GENUS>Drosophila</GENUS>
+                    <SPECIES>melanogaster</SPECIES>
+                  </ORGANISM>
+                </ORGANISM_ID>
+                <TYPE_ID>
+                  <CVTERM>
+                    <CV_ID>
+                      <CV>
+# CV name used in type id can be changed by setting "typeIDOntology" in fly.style
+                        <NAME>SO</NAME>
+                      </CV>
+                    </CV_ID>
+                    <NAME>CHROMOSOME_ARM</NAME>
+                  </CVTERM>
+                </TYPE_ID>
+                <UNIQUENAME>X</UNIQUENAME>
+              </FEATURE>
+            </SRCFEATURE_ID>
+            <STRAND>-1</STRAND>
+          </FEATURELOC>
+        </FEATURE>
+      </SUBJECT_ID>
+      <TYPE_ID>
+        <CVTERM>
+          <CV_ID>
+            <CV>
+              <NAME>RELATIONSHIP TYPE</NAME>
+            </CV>
+          </CV_ID>
+          <NAME>PARTOF</NAME>
+        </CVTERM>
+      </TYPE_ID>
+    </FEATURE_RELATIONSHIP>
+  </FEATURE>
+</CHADO>

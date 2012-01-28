@@ -1,0 +1,1263 @@
+<!-- Mark Gibson wrote:
+Attached is a chado xml file marked up with secret code at the beginning of lines:
+
+A - not needed in apollo.
+
+T - not needed for transactions (this includes all results more or less)
+
+R - redundant - this could be seen as a special class of A (not needed for apollo)
+
+V - verbose. where chado xml looks like database schema rather than getting to
+the point.
+
+If I put the letter at the beginning of an element than it applies to the whole
+element - tried to also indicate this with "..." after letter.
+
+So transaction chado xml does not need any of A,T, or R (and V could be reduced).
+
+Full apollo writeback would need everything.
+
+Apollo chado xml write just for interim save (if game is deemed unworthy) would
+need T and V but not R and A since its only for apollo not the db - thats nice.
+
+Verbose(V): this will make chado xml bulky - will probably make memory issue
+worse. There is basically a macro mechanism in chado xml that might be goo to
+take advantage of to reduce verbosity, though Shu has warned that these can be
+dangerous. What might be nice is to have the macros built into xort rather than
+having to declare them every time (course shu would say this is even more
+dangerous) or there could be a macro file that could be included (at least less
+dangerour than built in to xort).
+
+There are some "?" that I wasnt sure about.
+
+So with transaction xml chado adapter we will be implementing all of chado that
+isnt A, T, or R (and reducing V with macros). So by adding A, T, and R we would
+have a full chado xml writer - so if the transaction writer is a bomb it can be
+used as interim step towards a full writer - so it wont be useless if its seen
+as a blind alley.  -->
+
+<-- Chris Mungall wrote:
+
+Mark: thanks for sending your notes on the chadoXML, regarding
+superfluous data.
+
+I have attempted to present it using a more formal notation below. I
+am using your 4 codes, but I am indicating the element and its context
+with xslt-like notation. My translation may have misrepresented some
+of your comments, so you might like to check.
+
+I also have a few concerns which I'll get to further on in my email.
+
+Verbosity: Yes, ChadoXML is extremely verbose. It can be partly
+mitigated with macros (not sure what the dangers you mentioned
+are?). I think some of the verbosity below is also partly to do the
+with the generic xort dumper code. Many of the elements below can be
+condensed (Pinglei: why the lack of feature.uniquenames?).
+
+I don't think verbosity is that big a deal. It shouldn't affect memory
+usage if you use an event-based approach rather than something like
+DOM. It may have a negative impact on load/save time, this may or may
+not be negligible.
+
+Regarding the 'A's. I think most of the time you don't need to
+roundtrip these. You can just leave them out and the database will
+assign the appropriate default.
+
+More general comments to follow; here is my version of what you were
+saying (my comments begin #):
+
+V: feature/organism_id
+         #use macro
+V: feature/type_id
+         #use macro
+V: feature/dbxref_id
+         #use macro
+A: feature/residues   {where type='gene'}
+         #agreed: harvdev - do we really need gene residues?
+A: feature/residues   {where type='mRNA'}
+         #Mark - is this genuinely not needed?
+         #How does apollo deal with stuff like RNA editing?
+         #Don't you need to keep a copy of the edited RNA -
+         #or do you just keep the edits?
+         #Anyway, I don't see this being a problem
+A: feature_relationship/rank
+         #this is needed and used in apollo - but you get it
+         #for free with java vectors
+R: feature/is_analysis
+         #this is needed and used in apollo - some objects
+         #are annotations, some are analyses
+A?: feature/seqlen
+         #easily derived
+A: featureloc/is_fmax_partial
+         #this is needed and used in apollo - it's a feature property
+A: featureloc/is_fmin_partial
+         #ditto
+A: featureloc/locgroup
+         #use schema default (0)
+A: featureloc/rank
+         #use schema default (0)
+         #[except with featurepairs; Query=0, Subj=1]
+R,A,V: featureloc/srcfeature_id/feature/organism_id/organism
+         #I agree the chadoxml is overly verbose here
+         #all that is required is a unique key for the featureloc/srcfeature_id
+	#I'm sure this can be fixed easily
+A?,V:  featureloc/srcfeature_id/feature/type_id
+         #ditto
+T..A?: featureloc/srcfeature_id/feature/type_id/cvterm/dbxref_id
+         #ditto
+V: feature/feature_relationship/type_id
+         #macros
+         #Mark: does apollo preserve the type of the feature_relationship?
+A: feature   {where feature/type=protein}
+         #Does apollo not have a feature for the translation/pp?
+T,V,A?: feature/feature_dbxref {where type=protein}
+         #Can curators not edit dbxrefs for proteins in apollo?
+V,R: feature/feature_synonym {where feature/name = synonym}
+         #yes, features have the current name as a synonym in chado
+         #is this a big deal for roundtripping?
+
+I would add to your list:
+
+A: feature/feature_synonym/pub
+
+This could be problemmatic for roundtripping, as I believe apollo
+doesn't actually capture extra metadata about a synonym?
+
+Overall I don't think there's any major problems in what you've
+presented. However, that's not surprising since the data *currently*
+in chado dmel is originally sourced from Apollo!
+
+I'm a bit worried by the fact that your analysis is based on the
+existing chado Dmel. I know that's all you have to go on right now,
+but all of us absolutely have to be thinking in terms of how chado
+will be used for its original purpose - as an intergrated database.
+
+For example, what happens when we have data that is not normally
+editable in apollo attached to features - for example, GO associations
+and genetic data? (I believe harvdev are working hard to add this to
+chado dmel).
+
+I think proponents of both the fine-grained and course-grained
+transaction approach must come up with accounts of how this is to be
+handled.
+
+For example, if a gene with multiple GO associations is split into two
+genes, what happens to the GO associations?
+
+This may not be a problem for the majority of GMOD chado users. Either
+they won't have non-apollo data, or their non-apollo data will come
+from a different source. But this is a big issue for MODs that are using
+chado as an integrated database.
+
+Presumably we want to allow for different policies here. This would
+seem to me to add a certain amount of complexity to the apollo
+fine-grained transactions. I just want to make sure that issues
+like this have been taken into account.
+
+Cheers
+Chris -->
+
+
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- created by Pinglei Zhou, Flybase Harvard University -->
+<!--created from Database:release4 using dump_spec:/export2/zhou/install_xort/conf/dumpspec_apollo.xml -->
+
+<chado  dumpspec="dumpspec_appolo.xml" date="Tue Sept 24 12:45:36 EDT 2004">
+    <_appdata  name="title">CG9397</_appdata>
+    <_appdata  name="arm">2Rnew</_appdata>
+    <_appdata  name="fmin">2009580</_appdata>
+    <_appdata  name="fmax">2020531</_appdata>
+    <_appdata  name="residues">GATCCTTGGTGTGCCCGCGCCGTGTTCATTCTTTTGTGAAGACGGTTTTTCAGCTCTTTGTAGATTGGACAGCCTCTGTAGTTTGCTGTGTGATTGCCCCCACAGTTATTGCATTTTTTCTCGCATGCATTTTCTTTGTTAATTTGACACTGTTTGGAGTCGTGGAGATCTCCACAGACTACGCACACCGGGCGAAGTGTACAATATGACCTCGTGTGGCCATACTCTTGGCAGTTTGTACATTGTACAGGAGCGTTGCGTTTGTGCGGCTCTTCTACCGTGATCCTACGGTGCAAAAGGAGCTGGAGTTTGTAAATTGGGTGAACCTCGTTTTTTCTAGGAGGCTTGTTTTCTGGTTCAAGCTCAATCTTGAAGAGTGGTTGGGGCTGCCTGTTTCTGTTTTTGATATTGAACACGTTTTTGGCGTAAAATCCCTTTTCCTTTAGCGCCTCAGTTATCTCTTCGGGCGTAACATCAGACTCAATGCCCTTCAGGACTACTTGCAGGCCCTTGCTGCTTTTAAGCTGGTAGGTGTAGAAGCCTATTTTTTGTGCGGTAAAATAGTTTGTGACTTTTCTGTAGTCGTCCTCCGTTTTCGTCTGAAGTTTGATTTCGTTGATAGTACCTCTTACGAGGGGAATTATATGAAAGCTATCTTTCCCAATAAGGCCAATCAAAGTATTTACAAGACGGCTTGTGCTCCTCTCGCGGATGTATATTGGCGGAGGCTTTGTTTTCTTCGGTTCGATATCAACGGATCCCAGCGGCACGTCCTCAGCGGTATCTACCAGCAAGGCAAATCTGTTGGTATTTGCAGGGGCTACATTTTTGATCAAGGTAGAGTTGTCGCGTGTATTTTTCGGCTTGTTTCCCAAATCTGAATTTTCCGGGCTGAGCTTTCGCTTTATTGTAATGTAGCGGTCCATTCCAGTCTGCCAGGTCGACCCAGCTTTTTTGTTTACGTTTTCGTTTTGTTTTGCTGGCAGTGCAGCAGTACCGTTTATTGCTAGCGGTTTTGCTTTCGCTGACTTAGTCAGACCGTGAGCGGGTGCAGCCGATGACGAGGCAGAGCGGGCTGCCGGTCCCTCTCCAGCTGTTGTTGTTGGAGGTAGCGGGGCTTCTGTCGGAGCCAATAGAGCGGGAGAGCAGGAGCGGGCTCTTTCTTGATTTGTTGGTAGAAGAAGGTTTCCTGGGCTATGGGTTATTGACCGCTCGATGTCTGCGTTTGGGATTGTCGGTGAGACGTAGGAGAAGTACGCGTTGTTGCGCTGAATTGAGAGTCGGCGTTCGTCATGCTCGCGCTGACGCTGGGCGCGAGTGTCATTCTGACTCATAGTTTTATTATTTAAGATAACAATTCACTATGTATTTAAGCGATCTTGCATCGCATAGAGCGTCTCTTTCGCTTTCAGATTTTTTATTTAGTTTATTTTATTTGGCGTTCACTTCACTCAAAACAACCGATTTTGTGCGGAGCACGATAAAAACGTCTTCACACGTCGGCGATCGAATTGTATTTTGATTCCTTTTTATTATTTCATCGTTACTTTTCCTCCTTCATATTCTTCGCTTAGTTCTATACTTATTTCATATTTCTTATTTATATTTATATTTAATTTAGTATACGTTAATTATATATTTCTTATATTTCATATTTCTTATTTATATTCATATTTACTTTAGTATACGTTAATTATATTTTTCCTTCCTCATATTTCTAATATATATTAATATATATTCTTATTCTTAATATATATTAACATATATTCTTATTCTTAATATATATTAATATATATTCTTATTCTTAATAATATTAATCATAAATATTATTCGGTCACTGTTACCGCTAATAAAAATTGATCCCAATATCAATTTTCTTTTTTTTTATTAAATAATAATGTAAAGGAATCCATAAGTACAATTTCCCCTTCACTATTCACAGATTTTTACATCCTTGCCCACGCATTTCCGAGAAGAATCTAAATTGGCTTTTTTAACAATAACCTTTAAAAAAAATGAAACATTTCTTGAAAGTCTTTGATTTAAAATAAAAAGGTAAAAAATACACCCTGAGACATAAAAAGTATATAAAGAAATATGTTGTTATGCTTTAAAAAGTTTCTCCACATTTTATGGTGAGCACATAGTGTTAAACGATATGGAAAAATAAATTAAGATCAATAAATTAAAAATGAAAAATATGTAATCAAATTTTTCTTTTTCTTGTTTGATCAATCCATGCAGCTAAACATTTTAAATAAATAAGCTTTTTAAATGCCTTTTCAAACGTGCGGAAAACCTTTTTTAAAGTCGTATTAATACACATTAAATTGGAGTCGAACGGAAAATATTTAGCATGGAGTTGATGTGAAAAATTTATTTAACATAAAGGTTTCTGTCTTCGTTTATGCGTTCGGAAGTTTTAGATATGTGATTATTTATGAGTCTATTTTTTTATCGTAATTAAACTGACTTTGCGTTGGTTAACCAATTTTCCCGTTGATGGTCAAGGAACATCATGCAGTTCGCTATCAATTTTAAACTGGTTTGATTCCTTACTTAGTTTACATGCCCACTTATGTAATTTTGGAATTATCTATAAAAATACTGAAAAGGCATAACTGTTTATTTGGACGTAATCGCTGACAAAAGCTGTATGCTGTGGCAATCTGAGCTTTACACTGAGAGCATTTAAAAGACCCATAATTTTTTTTTAATTGTGATGGGCTCCAGTATAATTGCCAGCTTAGATATTTTATTGAGGAAATGTTTGATTATATTTTATTTTTATATTTAATAATTTAATTTAATATTATCTACACATATGTATATGCATCTACAAAAATATTCAGCGAAGTATGAATGCAGCATTATGGTTGTTTTTCTCTCAATTGTCTCAATCCTATTTTCACTCTCTCTCTCCGTTTGCTGCAGTTTAATAGCTTTCCGGAAAATGCAGCGCAAAATGCGAACGCAAGCTTATAAACTTATTTAACTTGTCACTCTTACGCAGTGTATTTTTGCATTTACAATGGTTGAGTGAGCTATTTTTTGCAGAGCTTTTGTGAGCTAAAACATTTTGATTGTATTAGATGCATTCCTCGGAAATGAATTCATTCACTTAATTAAAGTGATCCCAAGTATGTGCAGTGTAAAACGTTCAATAGGAACAAACATTTTATTGGTAGAGTAAAACTGGACACCAAACGAGTTTTGTCGCACTCGCACACACCCGCAAAATTCTCGCGTAAACATGTCTTCTTTGTCCCTCCTGTTTTTGCAGTCTCCCTCAGTTGCATCGCACAGACGTACGTACCATTGCTTGTAGCGTAATAAAAGCACGTGTTGTGTTTGATTCCTCGCTCCCTCCCTTTCTTTGGTCTTTAAAAACAGTTGCGACTTTAGATTGTGTTTGTGAGAGAGCTGGTCTGGCTGCCTTGCTGTTTTGTTATTGTTTGGTTTTTGCCATAACTTTGTTTACTTTTATCTTTTTTTATACAAGACTCGTGTTTTTTTTGTTTTTGTTCTTGACTTTTTTGGCCTTATTAAGTGTGGGCCAAAACAGATACATATAGCCAAGGTATTGGTTATGGGTGCATATTCTCCACACATCTGTATTTAGCTTCAAATTCGAGCTCAAGTTCCCATATAACCATGCTCGCTTGGATGAACCGGTTTTGAGTTTTATCGAACCGCAGGAACCTCTTGTATTCTGATTAGTTCCCACACATATCAACAGGTAGCTGCAGCTTGGGTCGCTTGTGTGTGAGCGAACTTGCCACCGCGGACACATCGGAAGTTGCTGCCCATCTAGCCAGCCGCCAAATGCTGAAATTCAAATACGGAATCTCTGAACTTCCCCAGAAGTTCAAATGCACACACTCACACACACAGAAAGAACTCACATTGTAGCGCAACAAGCTCCCCACGCGACCCTCTCTCTTGGTCCCGCTCTCGAAAACCTGCTGCCGCTGCACAGAAATCAAAAGTGAACACACTGCACGCGGCCCTTTCTTCTCCTCTTCACCCTCAGCTCGTCGGAGAGCCCCTATTAAAACGAACGGCAGTTCGTTGCCTTCGTTCTTGCTTCGCGTGCTTCGTATCTTGATTTGTGCCCGGTTCTAGTTGGCTAAGCCATTCGGCTGGCACTCGGTCCGCCGCCTCGCTTCTCGTCGGCTACCTCTTCGGGTGGGGCCGCAGCGCTCGGTCCACTCCCACTCCACTTGGCCCCACTCGTCAGTCAGTCGGCAGGCAGAGCAAGAGCAGCCCGCAGCTTTTTCGTGGGGAGATCGCAGTTTTTCGCTTGCCAATCGATGGCGTTTCGGAATTCTTAGCTTGCAGTGCAGCGCTTCTTAGACTTTGTTTAATTTGGTTATACTGCAATTGGCGGCTATTAAGAGCAGTGACCACTACATTAATTATGAATGGTACGCGCGGCAGACAAGTTGGCCCCGCGATAAGTAAATCGCTAGTTTGCTGAGGCACATTGGAATGCATTTGATTAGATTGCGATGTGTTTGTTCGCCCGTCATTGTTGTCAATAAACAAAAGCTGGCTCGCAGTCACAGCGACTAGGAGGTTAACCTGACTTACCCGTTTCGGTTTTGAATTCGGTTTCATTGTCGCTTTCTTGAACTTGCGAGCACCGCGTGGCCAATCTTGCAGAATGAATTTCGGGTGTGCACCGGAAACAACCGACAGTGAAATAACTACTGGCCATTCACAAATCCATAAAGCACAGTGTAACACTTTGTAACGGATCGCAAATCCAACCACCCCACGCAAATCAAAACCGAACCCGCGACGTCGATTAATTTTATGATGATCAAGTAGTTTCTCGTTGAAATATCAATCGAATTGAAAAATGTGTGTCATAAGTGCAGAAGTGAAGTGCAGCTTAATGCCAAAAGTCATACAAGTGCAATTGATTTAAATGAATTTTTGTTTAATTTGTATAAATATTTTTACTTCTCGTAACTCGATAGTCCGACCCACGAAAGTCGTAAAATGCAAGTTCATGGCGATATATATATACCAATTTGTGCAAACTGATGGGGAAAATCGGAATGGTAACACCATTTAAGGGCAGTGCGGCTAAAAATTGCTGACGAGCAACTTTCAGATTAATGCAATTCAAATTGGCTTTCCGTCGACTAACAATAAGCCGTTGGGAATAGCAGATGTGTGCTAAAGCAGATCCAGAGTTCTGGCAGCAGTTAACACCAATTAAAAGCGTCGTTATAGCAATAGTGCAGCAAACATAGAGGGAAAATGTCAGTCACTCAGCCAAAGGATACGGCATTAAAGACCAAGGAGTCGGCAGCTGAAGTAGCAGCCCCTCTGGCCCCACTCTCTGTCAAAACAGCAGGAGCAACGGGACGGAAAACTTTAACCTCCAGCGCGGCTTTGTCACTGTTTGATCAGCTGAAAAATAGCGTCAATACAAACAGTTTGACAATTGGCGCCGGCGTCGGCAACAACAGTAGCCCAGAAGCCACACCACCTATAACAGCACCAGCCAGTACAACCACCGCCTCCCCGATACTTACTCCCAAAAGCCCACCACCCACACCACCCATCAACAAAAGCCCGTCTCTGTCCTCCAATATTGAACTGAAGCCCCCGGCCAAACCCGCTCGGCCCTTTACCTCGCCCAGCACTATTGGAATCGTGCAGGGTACCAAACGGGGGGTGGGCGGAGTTTTTGGCGGGTTTGGAGCCCAAGCCGCCAAATTGGATATAAACGCATTGCGATCTCAGCTCTACCAGGGCGCCAGGAAGACTGCAACAACATCTCGAGTGGGAGTCGGCAAAACAACAACGGTGGCAACAGCCCCAAGAACAACTGGAGGAGAACGTGGCACAAAGGGGTCCAAGAAGAGATGTCTAGATCGGTACGACTCGTCGGAGTCATCAGACAGGTGAGTGCATGTCGTGGGCACACTACTGAAGTTTGGCATTTTGCAGCGATAGGGAAGTACGTTGCTCTTCGACAGTTCTAAATTCTAGTCGTAATTTGAGATTTTTTGAGGTTTATTTAAATGCAAAGGCAGGCACGATGGTCGTATCTAATTTATGAAATATATTGAAAACTTAAAATTTTTAAGGAACACAATAAGACTTATTTAACAATAATAAAAAATAAACTTTTTGCATAAACACCTTTAGTATACGCCATAAAGACATTCAATAGCAGCTTACCCCGTCCCCTTTTCATCGACGTATTTAATGGCATCATTAAGCGTCTTAACAATGCAAGCTGCCAAATGTATTTCTTAGATGCACTGCCTAACTATAAAGGGAAATGCAAAAGTGTATCTGCGAACCGGCTGGCTGTGCCAAGTCTGAGCCAAAGAAAATTCTCTAAATATACACGCGCGCTGTACTGCCAAAAAGTGATCCAAAAGTGTGATCCGTAAGACACAAATAGAATGCAGCCCATCCCAATCATGATAAACGTATGAACCAAATCTGCAATGCTCAGCGAGATCTGGAAAAAGCTAATAGCCGATTGAGCTGAATTTATCTGACAGGTAATCGTTCCGATAATTGTACAGAACAGCAAAGTGCCAGTCTTGTAAGGGGCCTACGAGGCACGTGCCTCATAGATTGCAAATTTATGGCTTACAGATACATTTGTATCTACTCAAATGGGCAGCCACAAAACCTCTTGCCGCAATGCCAACTAATTTCCGCTCATTAAAAATGCGCAGCACAGTAGAGGCAGCAGTGGAATGGAAACAAAGGAAGAGCAAAGGCCGCAACGAACTGCAGGCATTTGTATCTGGCAGATACGCACAACATGCGTTCATTTATCAGCCGCAAATGGCGGCTGATGCGCCGCAGTAGCAGAGCTGCTGATTTTCCATGCGGCGCGTGGGCGGTTGAGCAAACGAAAACAGCTTCCTGGCTGCATCGATGTAGATATAGATGCAGATACGAGTCCGAAACCGAAACCACCCCCTCGGGGAAATTAATCTTGAATATGGACGGTGCTCTCTGCCGATCTGCTGCACAATTGTCGATTATGTTTAAGTTATGTTTCGGTTTTCAGAAATGGTTCTGATTCCATACATATCTTCTAAACGCCAATGTGGCATTTGTGTCTGGTTTCGCAGCAGCATGTTTCAAATGTTTTGTGGGGAGCGTTTTGTCAATTGGCTTGGCCTTATCACCGTCCTCGTATCACCTCCCCAAGATCGCGTTCCCTCGTTGACTGGTGAGCGATTTCGGCGTTGCTTCTTTCTCTTCGTTGGCAGTCGGAAATCATTTAAACTTTTGGTCGTTGAACTCCTTTTGATTTATTTATTTTGTTTGTTTCTGTTTCTGTTTTTCTTCCCTTTTTGGTTTTTGTGTGTGTGTACTTTTTTGTCGCCGCCAAAAAGCACTGCATTTTGTTGTAGCTTTGTGTTTGGCTCGGTTTTTATTTCGATTTCGTTACGTTTTGTCCGAATCTTTGCACTGAATCTTTCCAGAGCTGTGCGCCTAAAATTTGAATCTTGTCAAAATGCTGATTTTTTAAACTAAACTCTCTCGTTGGCTGGCTCATTTTAACGTGTTCCTAAACCACAAAAAACAATCCCACTTCCACTGAGCGTAGTCATTAAAATGTATTTATTTTCGAAAAGCAAAACAAAAACCAAAACATGTGCACGTATGCATTTGAGTATAACCAGCGAGTAACATCCGCAGCTTCGAAGCGGAGGCATTTAACTTTAATTGTCGCTCATAAAGCTGAAACACAACTGCAAGAGTAACTGCCTACTTCAGCAACGCAATTGTTGGCTGCTGCAACTGCTGGCGTCGTCTTTGCTTTTTGCAGTGTCGCCGGACTGAGCGAGTGTGTGTGTGTGCTATTGATTTTGTCGACTTTGGTCTTACAGGTTTTCCACGTTTTTCCACATATTTCCACGAGACCCCGAGAGCGACCCACTGCTCCAATGGCGCGAGTCTTTGCCCATGCCTTTGCTTTTGCTTTGCTTTGCTGATTGTGGGCTGTTGCTGGTGCTCTTGCTGTTGCTGTTGCTGTTGCACTTTTCGCCAAGTCATGCAAGGCGGTCAGCGGGTGGCAGGGGACGACAATCACCCTGAGATATTGTGTAATCGCCCACGTTGATTTATCTCGTTTAAGTGACTCCGAAACGGCAGCACTGCAACAGCAACAGCATCAGCAATTGCAGTTGCAATGACAGCGGCAACATCGCGCGATGACATCGAAAGTGTAATATAATAAGTTGCAATTGCCAGTGTGTGTATCTCCGTTTGTTGCCGCGGGTCGTGCACTCAGAGAGGTCGTGCTTCCGATGCTATTTGCCATGTCTTGGCATAACCACTTGCAAGCTCCTTTTTGGCCTTTTATCAATTTGAGCCTGGCAAGTTGTGAGGGTTGTTGTTTTGATGATGGTAAACGCGCTCGATTTCCGAAATATAAACTTATAAAAATATAAGTCGCTTGAAACTACCGCTTAGTGGGCGGTAATCGGGAAAGCAATCTTGATTCATCGTAATACTGACTCTTTCATAGACTGACAAAGAAATGTTCTTTCCAGGAGGTTGACATATGTATAGATACCTTTAGCAGATTTCATAAATATTAAAATAACATCTGTTCCTTACTTTCGCATCGGTAAGGAAATAAACATATAGTCCATGTCTGTTTGAAATTTTTAAATTGAAATTTATGTTCAGTGCCAGTTGCAAATATAAAGTTCGTGTACCAATTCGTTCTTTAAATGTCGGCCATATCCACTGTATTGACGCTAGGAGATTAGGCTGAAGATAAAGTTCGTTGTCTTGCAACTGAAAAGCCGAAAAAGACTCGATGAGTAAGTGGAAGAAAATGAAGTACCGTAAACATGTAGTGTTGGTTGAATGAAAAACCTTTTGAACATAAATCAAAATACGTTTTGGTCGCTCTGCTATTTGCATGTAACATATACCCACAGGTATATGTTATTCGAGGCAATCGTCTTTAGAAATCGCGTGTTTTTTTTATAAGTGTACACTGTGTTTTGATGCTTTAGTGTTTTCTTGGCAGATTTTGTATACGACTGCTGCAGTCTTTCGCGTGTTGGTTCTCTGGCGGGATTCCCGGTCTTCTGCTTGTTTGTACATATATATGCGAACCCCCTTTTCTCCTCTTACATTCTGTCCTTGTCGCTGCTGTCCTCCTGCTGTCTTCCCTTTTCGTTTTTGTTTTCCACTTGCGTGCTGCATTCCGCTGATGTCGGTGTCGTTTATCGAGAGTTTGTTGCGATGCCCAACATCAGGGGCCAAATTTCCATTGACTTCGATAAGCGGTATAATTTCTAAAAAGATGAGTTCAATAGACAAAATAAGAATATGTACGACCAGAAATAAGTGAGGTGTATTGTTATTAATACATACATATATAATCAAGTAAAAGCCCTCTTGATCATGGCACACCTAAATTCGTATTCTTTTTGCTTGCAACAACCATCCGTGCCCCCGCATGAGTGAGTGAGTGGTTGTGTGAAAAGCAGTTTAAACACGAAATTAGAGCCTCTCCGAGGTTCCCGATTCTCCCCGAAGGGAGCGCATTAAGTCGTAATAAATGCTGCCTGGTTGCATGCTTTGTACATTGACCTCAAAACGGAGCAAAGCCGCCGTGTGCGCGCCCCTTCCCCCTGCCACGCCTCTTTGGGCTGTATCTCTTCAGCTGGGATGCTGTTCCCTGGTTGTTGGCATTGTTTTTGTTGTTCTAGTTGTTGTTCGTGCACATTTTGCTAAATAGCTTCTATTTACGTTCCATGGAAAATGCAATTCGCAATTGTAGAATGCAGACTCTTTTCGCCGTTTGCAGTTGTTTTCCCTGCTCGCACGCTACTTTGTCTCTACAAACAATGGCTATATGGCTGGAGGAGGGGGTGGTGACGGCGGGCGGACTAGTTGCAGTACGTGCGCGACTTTTCGGGGCCATAAATCAAAAAGGCAAAACCCGAACCGGTCTCAAGCAGGGATTTTTTGGCTGAAGTCGGGGTTGGGGGAGTGAAAACAGCTATTAGGAAAAATTAGGCGAATGAAATGGCGGAAAAAGTGTGAAATAGCAGGGATTTAGGGACACATTTTTTTCCGCCCCTCAACTTTCGTAAGTTGAAGTGTGCGATTACACTAATACTATTTTGAGTTTTTCCGTACCCAATGTCGTACAAAATATTTAAATTATATATGAAAATAATGTATATGTATTCGTGCCTAGTTATGGATAGAAGAAATCATATCCGACCGATGTAGATCTAGGCATCTCTGACCGTACAAATATAAATTTGTCCGCATGAATATTAAAATTACGAATCTCAGTGTTCCTAAAGCCCTCGTTAGTTCATCTTTTTACCTATCACAAATCCTGCAAAACTCTTCTGCTTGTAGTCTAGAAACTTTAAATTTACAATTCTTGAATCTATCGATATGCAAATAACATGTCAAATCACAAATAAATTATATCATATTAAAATTTTTAAATAGTTTTAGTGCTTCACAAATAGAGTTCGTCGGACTGAATCTTAATTCCAATTAATAAATCTCACTCTTCAGTAGATTATTCAACACTTTAATTAGGGCTGTCGAGACAGGAAGTGCCATCCAGACGGCTGAAAGTGCCGAGACTCCACGGGCTCGCAATCCCTCCCCAAATATTCCATTCAGGGTCTGCCCCAGAGCACATTTGTGCAACAGATGCATAATTTATGCATCGCTTACACATCTCATGTGCAAATCGACGCGCCAGAATCATAGTGTACAAGCCCCGTTGGAAAGAAAACCAACAAACCGACAACTTAATGGCATTCTAATGCCGGCCACCAAAATCAAAATCATATTAGCCAAATGCCTGGATGCAGCGGCGCCCGCTGATGCCGTGCCCGATTTTGCATCTATTTCCTGAGCGCACTTTTGGGCCAGCCATCAGCCAACATCACATACACTGGAACGT</_appdata>
+	<feature>
+		<dbxref_id>
+			<dbxref>
+				<accession>CG9397</accession>
+				<db_id>
+					<db>
+						<name>Gadfly</name>
+					</db>
+				</db_id>
+			</dbxref>
+		</dbxref_id>
+		<is_analysis>0</is_analysis>
+		<name>1.28</name>
+v (verbose)		<organism_id>
+v			<organism>
+v				<genus>Drosophila</genus>
+v				<species>melanogaster</species>
+v			</organism>
+v		</organism_id>
+		<seqlen>951</seqlen>
+		<timeaccessioned>2004-08-16 21:42:54.395708</timeaccessioned>
+		<timelastmodified>2003-12-01 23:22:19</timelastmodified>
+v		<type_id>
+v			<cvterm>
+v				<cv_id>
+v					<cv>
+v						<name>SO</name>
+v					</cv>
+v				</cv_id>
+v				<name>gene</name>
+v			</cvterm>
+v		</type_id>
+		<uniquename>CG9397</uniquename>		
+		<feature_relationship>
+			<subject_id>
+				<feature>
+v					<dbxref_id>
+v						<dbxref>
+v							<accession>CG9397-RA</accession>
+v							<db_id>
+v								<db>
+v									<name>Gadfly</name>
+v								</db>
+v							</db_id>
+v						</dbxref>
+					</dbxref_id>
+					<is_analysis>0</is_analysis>
+					<md5checksum>7347cebf4b59ee0075666155e3affbb0</md5checksum>
+					<name>1.28-RA</name>
+					<organism_id>
+						<organism>
+							<genus>Drosophila</genus>
+							<species>melanogaster</species>
+						</organism>
+					</organism_id>
+A (NOT NEEDED FOR APOLLO)					<residues>TCGTAAAATGCAAGTTCATGGCGATATATATATACCAATTTGTGCAAACTGATGGGGAAAATCGGAATGGTAACACCATTTAAGGGCAGTGCGGCTAAAAATTGCTGACGAGCAACTTTCAGATTAATGCAATTCAAATTGGCTTTCCGTCGACTAACAATAAGCCGTTGGGAATAGCAGATGTGTGCTAAAGCAGATCCAGAGTTCTGGCAGCAGTTAACACCAATTAAAAGCGTCGTTATAGCAATAGTGCAGCAAACATAGAGGGAAAATGTCAGTCACTCAGCCAAAGGATACGGCATTAAAGACCAAGGAGTCGGCAGCTGAAGTAGCAGCCCCTCTGGCCCCACTCTCTGTCAAAACAGCAGGAGCAACGGGACGGAAAACTTTAACCTCCAGCGCGGCTTTGTCACTGTTTGATCAGCTGAAAAATAGCGTCAATACAAACAGTTTGACAATTGGCGCCGGCGTCGGCAACAACAGTAGCCCAGAAGCCACACCACCTATAACAGCACCAGCCAGTACAACCACCGCCTCCCCGATACTTACTCCCAAAAGCCCACCACCCACACCACCCATCAACAAAAGCCCGTCTCTGTCCTCCAATATTGAACTGAAGCCCCCGGCCAAACCCGCTCGGCCCTTTACCTCGCCCAGCACTATTGGAATCGTGCAGGGTACCAAACGGGGGGTGGGCGGAGTTTTTGGCGGGTTTGGAGCCCAAGCCGCCAAATTGGATATAAACGCATTGCGATCTCAGCTCTACCAGGGCGCCAGGAAGACTGCAACAACATCTCGAGTGGGAGTCGGCAAAACAACAACGGTGGCAACAGCCCCAAGAACAACTGGAGGAGAACGTGGCACAAAGGGGTCCAAGAAGAGATGTCTAGATCGGTACGACTCGTCGGAGTCATCAGACAGGTGAGTGCATGTCGTGGGCACACTACTGAA</residues>
+					<seqlen>951</seqlen>
+					<timeaccessioned>2004-08-16 21:42:55.016884</timeaccessioned>
+					<timelastmodified>2002-03-07 13:17:27</timelastmodified>
+V...					<type_id>
+						<cvterm>
+							<cv_id>
+								<cv>
+									<name>SO</name>
+								</cv>
+							</cv_id>
+							<name>mRNA</name>
+						</cvterm>
+					</type_id>
+					<uniquename>CG9397-RA</uniquename>					
+					<feature_relationship>
+A						<rank>1</rank>
+						<subject_id>
+							<feature>
+R (REDUNDANT)								<is_analysis>0</is_analysis>
+								<name>1.28:1</name>
+R,V,A...								<organism_id>
+									<organism>
+										<genus>Drosophila</genus>
+										<species>melanogaster</species>
+									</organism>
+								</organism_id>
+A?								<seqlen>951</seqlen>
+								<timeaccessioned>2004-08-16 21:42:55.407228</timeaccessioned>
+								<timelastmodified>2004-08-16 21:42:55.407228</timelastmodified>
+V								<type_id>
+									<cvterm>
+										<cv_id>
+											<cv>
+												<name>SO</name>
+											</cv>
+										</cv_id>
+										<name>exon</name>
+									</cvterm>
+								</type_id>
+								<uniquename>1.28:1</uniquename>								
+								<featureloc>
+									<fmax>2015531</fmax>
+									<fmin>2014580</fmin>
+A									<is_fmax_partial>0</is_fmax_partial>
+A									<is_fmin_partial>0</is_fmin_partial>
+A									<locgroup>0</locgroup>
+A									<rank>0</rank>
+									<srcfeature_id>
+										<feature>
+											<organism_id>
+R,A,V...												<organism>
+													<genus>Drosophila</genus>
+													<species>melanogaster</species>
+												</organism>
+											</organism_id>
+A?,V											<type_id>
+												<cvterm>
+													<cv_id>
+														<cv>
+															<name>SO</name>
+														</cv>
+													</cv_id>
+T (NOT NEEDED FOR TRANSACTION)...A?													<dbxref_id>
+														<dbxref>
+															<accession>SO:0000105</accession>
+															<db_id>
+																<db>
+																	<name>SO</name>
+																</db>
+															</db_id>
+														</dbxref>
+...T													</dbxref_id>
+													<name>chromosome_arm</name>
+												</cvterm>
+											</type_id>
+											<uniquename>2Rnew</uniquename>
+										</feature>
+									</srcfeature_id>
+									<strand>1</strand>
+								</featureloc>
+							</feature>
+						</subject_id>
+V						<type_id>
+							<cvterm>
+								<cv_id>
+									<cv>
+										<name>relationship type</name>
+									</cv>
+								</cv_id>
+								<name>partof</name>
+							</cvterm>
+						</type_id>
+					</feature_relationship>					
+A? I think we need little or none of protein for apollo?					<feature_relationship>
+is the start and stop where we get translation start and stop - that
+    might be all we need?...						<subject_id>
+so almost all of this feature rel we dont need...							<feature>
+A								<dbxref_id>
+A...									<dbxref>
+....										<accession>CG9397-PA</accession>
+										<db_id>
+											<db>
+												<name>Gadfly</name>
+											</db>
+										</db_id>
+									</dbxref>
+								</dbxref_id>
+								<is_analysis>0</is_analysis>
+								<md5checksum>3e3d551e134b8a385613683f60ddfc74</md5checksum>
+								<name>1.28-PA</name>
+								<organism_id>
+									<organism>
+										<genus>Drosophila</genus>
+										<species>melanogaster</species>
+									</organism>
+								</organism_id>
+								<residues>MSVTQPKDTALKTKESAAEVAAPLAPLSVKTAGATGRKTLTSSAALSLFDQLKNSVNTNSLTIGAGVGNNSSPEATPPITAPASTTTASPILTPKSPPPTPPINKSPSLSSNIELKPPAKPARPFTSPSTIGIVQGTKRGVGGVFGGFGAQAAKLDINALRSQLYQGARKTATTSRVGVGKTTTVATAPRTTGGERGTKGSKKRCLDRYDSSESSDR</residues>
+								<seqlen>217</seqlen>
+								<timeaccessioned>2004-08-16 21:42:55.460619</timeaccessioned>
+								<timelastmodified>2004-08-16 21:42:55.460619</timelastmodified>
+								<type_id>
+									<cvterm>
+										<cv_id>
+											<cv>
+												<name>SO</name>
+											</cv>
+										</cv_id>
+										<name>protein</name>
+									</cvterm>
+								</type_id>
+								<uniquename>CG9397-PA</uniquename>								
+								<featureloc>
+this might be the only bit we need if this is our only way of getting
+    translation start and stop
+									<fmax>2015502</fmax>
+									<fmin>2014851</fmin>
+dont need the rest of this...									<is_fmax_partial>0</is_fmax_partial>
+									<is_fmin_partial>0</is_fmin_partial>
+									<locgroup>0</locgroup>
+									<rank>0</rank>
+									<srcfeature_id>
+										<feature>
+											<organism_id>
+												<organism>
+													<genus>Drosophila</genus>
+													<species>melanogaster</species>
+												</organism>
+											</organism_id>
+											<type_id>
+												<cvterm>
+													<cv_id>
+														<cv>
+															<name>SO</name>
+														</cv>
+													</cv_id>
+													<dbxref_id>
+														<dbxref>
+															<accession>SO:0000105</accession>
+															<db_id>
+																<db>
+																	<name>SO</name>
+																</db>
+															</db_id>
+														</dbxref>
+													</dbxref_id>
+													<name>chromosome_arm</name>
+												</cvterm>
+											</type_id>
+											<uniquename>2Rnew</uniquename>
+										</feature>
+									</srcfeature_id>
+									<strand>1</strand>
+								</featureloc>								
+T,V, A? Does apollo care about protein db xref? 								<feature_dbxref>
+...									<dbxref_id>
+										<dbxref>
+											<accession>FBpp0085439</accession>
+											<db_id>
+												<db>
+													<name>FlyBase</name>
+												</db>
+											</db_id>
+										</dbxref>
+									</dbxref_id>
+									<is_current>1</is_current>
+								</feature_dbxref>								
+								<feature_dbxref>
+									<dbxref_id>
+										<dbxref>
+											<accession>AAF57355.1</accession>
+											<db_id>
+												<db>
+													<name>GB_protein</name>
+												</db>
+											</db_id>
+										</dbxref>
+									</dbxref_id>
+									<is_current>1</is_current>
+								</feature_dbxref>								
+								<feature_dbxref>
+									<dbxref_id>
+										<dbxref>
+											<accession>CG9397-PA</accession>
+											<db_id>
+												<db>
+													<name>Gadfly</name>
+												</db>
+											</db_id>
+										</dbxref>
+									</dbxref_id>
+									<is_current>0</is_current>
+								</feature_dbxref>								
+								<feature_synonym>
+V,R!! THIS SYNONYM IS THE NAME ITSELF - REDUNDANT!									<is_current>1</is_current>
+									<is_internal>0</is_internal>
+									<pub_id>
+										<pub>
+											<type_id>
+												<cvterm>
+													<cv_id>
+														<cv>
+															<name>pub type</name>
+														</cv>
+													</cv_id>
+													<name>computer file</name>
+												</cvterm>
+											</type_id>
+											<uniquename>gadfly3</uniquename>
+										</pub>
+									</pub_id>
+									<synonym_id>
+										<synonym>
+											<name>CG9397-PA</name>
+											<type_id>
+												<cvterm>
+													<cv_id>
+														<cv>
+															<name>synonym type</name>
+														</cv>
+													</cv_id>
+													<name>synonym</name>
+												</cvterm>
+											</type_id>
+										</synonym>
+									</synonym_id>
+								</feature_synonym>
+							</feature>
+						</subject_id>
+						<type_id>
+							<cvterm>
+								<cv_id>
+									<cv>
+										<name>relationship type</name>
+									</cv>
+								</cv_id>
+								<name>producedby</name>
+							</cvterm>
+						</type_id>
+... END OF PROTEIN MOST OF WHICH WE DONT NEED					</feature_relationship>					
+					<featureloc>
+						<fmax>2015531</fmax>
+						<fmin>2014580</fmin>
+A						<is_fmax_partial>0</is_fmax_partial>
+A						<is_fmin_partial>0</is_fmin_partial>
+A						<locgroup>0</locgroup>
+A						<rank>0</rank>
+						<srcfeature_id>
+							<feature>
+								<organism_id>
+V									<organism>
+										<genus>Drosophila</genus>
+										<species>melanogaster</species>
+									</organism>
+								</organism_id>
+V,A?,T								<type_id>
+									<cvterm>
+										<cv_id>
+											<cv>
+												<name>SO</name>
+											</cv>
+										</cv_id>
+										<dbxref_id>
+											<dbxref>
+												<accession>SO:0000105</accession>
+												<db_id>
+													<db>
+														<name>SO</name>
+													</db>
+												</db_id>
+											</dbxref>
+										</dbxref_id>
+										<name>chromosome_arm</name>
+									</cvterm>
+								</type_id>
+								<uniquename>2Rnew</uniquename>
+							</feature>
+						</srcfeature_id>
+						<strand>1</strand>
+					</featureloc>					
+T...					<feature_dbxref>
+						<dbxref_id>
+							<dbxref>
+								<accession>FBtr0086103</accession>
+								<db_id>
+									<db>
+										<name>FlyBase</name>
+									</db>
+								</db_id>
+							</dbxref>
+						</dbxref_id>
+						<is_current>1</is_current>
+					</feature_dbxref>					
+T...					<feature_dbxref>
+						<dbxref_id>
+							<dbxref>
+								<accession>CG9397-RA</accession>
+								<db_id>
+									<db>
+										<name>Gadfly</name>
+									</db>
+								</db_id>
+							</dbxref>
+						</dbxref_id>
+						<is_current>0</is_current>
+					</feature_dbxref>					
+					<feature_synonym>
+						<is_current>1</is_current>
+						<is_internal>0</is_internal>
+V! ALL OF THIS IS JUST A SYNONYM AND AN OWNER						<pub_id>
+							<pub>
+								<type_id>
+									<cvterm>
+										<cv_id>
+											<cv>
+												<name>pub type</name>
+											</cv>
+										</cv_id>
+										<name>computer file</name>
+									</cvterm>
+								</type_id>
+								<uniquename>pavel</uniquename>
+							</pub>
+						</pub_id>
+						<synonym_id>
+							<synonym>
+								<name>CG9397-RA</name>
+								<type_id>
+									<cvterm>
+										<cv_id>
+											<cv>
+												<name>synonym type</name>
+											</cv>
+										</cv_id>
+										<name>synonym</name>
+									</cvterm>
+								</type_id>
+							</synonym>
+						</synonym_id>
+					</feature_synonym>					
+V...					<feature_synonym>
+						<is_current>1</is_current>
+						<is_internal>0</is_internal>
+						<pub_id>
+							<pub>
+								<type_id>
+									<cvterm>
+										<cv_id>
+											<cv>
+												<name>pub type</name>
+											</cv>
+										</cv_id>
+										<name>computer file</name>
+									</cvterm>
+								</type_id>
+								<uniquename>gadfly3</uniquename>
+							</pub>
+						</pub_id>
+						<synonym_id>
+							<synonym>
+								<name>CG9397-RA</name>
+								<type_id>
+									<cvterm>
+										<cv_id>
+											<cv>
+												<name>synonym type</name>
+											</cv>
+										</cv_id>
+										<name>synonym</name>
+									</cvterm>
+								</type_id>
+							</synonym>
+						</synonym_id>
+					</feature_synonym>					
+V...					<featureprop>
+						<rank>0</rank>
+						<type_id>
+							<cvterm>
+								<cv_id>
+									<cv>
+										<name>property type</name>
+									</cv>
+								</cv_id>
+								<name>sp_comment</name>
+							</cvterm>
+						</type_id>
+						<value>Imperfect match to REAL SP with corresponding FBgn</value>
+					</featureprop>					
+isnt this a dbxref?, V					<featureprop>
+						<rank>0</rank>
+						<type_id>
+							<cvterm>
+								<cv_id>
+									<cv>
+										<name>property type</name>
+									</cv>
+								</cv_id>
+								<name>protein_id</name>
+							</cvterm>
+						</type_id>
+						<value>AAF57355</value>
+					</featureprop>					
+V...					<featureprop>
+						<rank>0</rank>
+						<type_id>
+							<cvterm>
+								<cv_id>
+									<cv>
+										<name>property type</name>
+									</cv>
+								</cv_id>
+								<name>owner</name>
+							</cvterm>
+						</type_id>
+						<value>pavel</value>
+					</featureprop>
+				</feature>
+			</subject_id>
+V...			<type_id>
+				<cvterm>
+					<cv_id>
+						<cv>
+							<name>relationship type</name>
+						</cv>
+					</cv_id>
+					<name>partof</name>
+				</cvterm>
+			</type_id>
+		</feature_relationship>		
+		<featureprop>
+A			<rank>0</rank>
+V...			<type_id>
+				<cvterm>
+					<cv_id>
+						<cv>
+							<name>property type</name>
+						</cv>
+					</cv_id>
+					<name>comment</name>
+				</cvterm>
+			</type_id>
+			<value>Gene prediction data only::DATE:2002-03-12 18:43:38::TS:1015976618000</value>			
+V...			<featureprop_pub>
+				<pub_id>
+					<pub>
+						<type_id>
+							<cvterm>
+								<cv_id>
+									<cv>
+										<name>pub type</name>
+									</cv>
+								</cv_id>
+								<name>computer file</name>
+							</cvterm>
+						</type_id>
+						<uniquename>pavel</uniquename>
+					</pub>
+				</pub_id>
+			</featureprop_pub>
+		</featureprop>		
+ETCETERA...		<featureprop>
+			<rank>0</rank>
+			<type_id>
+				<cvterm>
+					<cv_id>
+						<cv>
+							<name>property type</name>
+						</cv>
+					</cv_id>
+					<name>sp_status</name>
+				</cvterm>
+			</type_id>
+			<value>Curator examined, accepted</value>
+		</featureprop>		
+		<featureprop>
+			<rank>0</rank>
+			<type_id>
+				<cvterm>
+					<cv_id>
+						<cv>
+							<name>property type</name>
+						</cv>
+					</cv_id>
+					<name>cyto_range</name>
+				</cvterm>
+			</type_id>
+			<value>42B2-42B2</value>
+		</featureprop>		
+		<featureprop>
+			<rank>0</rank>
+			<type_id>
+				<cvterm>
+					<cv_id>
+						<cv>
+							<name>property type</name>
+						</cv>
+					</cv_id>
+					<name>gbunit</name>
+				</cvterm>
+			</type_id>
+			<value>AE003789</value>
+		</featureprop>		
+T...		<feature_dbxref>
+			<dbxref_id>
+				<dbxref>
+					<accession>CG9397-PA</accession>
+					<db_id>
+						<db>
+							<name>Gadfly</name>
+						</db>
+					</db_id>
+				</dbxref>
+			</dbxref_id>
+			<is_current>1</is_current>
+		</feature_dbxref>		
+T...		<feature_dbxref>
+			<dbxref_id>
+				<dbxref>
+					<accession>FBpp0085439</accession>
+					<db_id>
+						<db>
+							<name>FlyBase</name>
+						</db>
+					</db_id>
+				</dbxref>
+			</dbxref_id>
+			<is_current>1</is_current>
+		</feature_dbxref>		
+T...		<feature_dbxref>
+			<dbxref_id>
+				<dbxref>
+					<accession>AAF57355.1</accession>
+					<db_id>
+						<db>
+							<name>GB_protein</name>
+						</db>
+					</db_id>
+				</dbxref>
+			</dbxref_id>
+			<is_current>1</is_current>
+		</feature_dbxref>		
+T		<feature_dbxref>
+			<dbxref_id>
+				<dbxref>
+					<accession>FBtr0086103</accession>
+					<db_id>
+						<db>
+							<name>FlyBase</name>
+						</db>
+					</db_id>
+				</dbxref>
+			</dbxref_id>
+			<is_current>1</is_current>
+		</feature_dbxref>		
+T		<feature_dbxref>
+			<dbxref_id>
+				<dbxref>
+					<accession>CG9397-RA</accession>
+					<db_id>
+						<db>
+							<name>Gadfly</name>
+						</db>
+					</db_id>
+				</dbxref>
+			</dbxref_id>
+			<is_current>1</is_current>
+		</feature_dbxref>		
+T		<feature_dbxref>
+			<dbxref_id>
+				<dbxref>
+					<accession>FBan0009397</accession>
+					<db_id>
+						<db>
+							<name>FlyBase</name>
+						</db>
+					</db_id>
+				</dbxref>
+			</dbxref_id>
+			<is_current>1</is_current>
+		</feature_dbxref>		
+T		<feature_dbxref>
+			<dbxref_id>
+				<dbxref>
+					<accession>FBgn0010347</accession>
+					<db_id>
+						<db>
+							<name>FlyBase</name>
+						</db>
+					</db_id>
+				</dbxref>
+			</dbxref_id>
+			<is_current>1</is_current>
+		</feature_dbxref>		
+T		<feature_dbxref>
+			<dbxref_id>
+				<dbxref>
+					<accession>CG9397</accession>
+					<db_id>
+						<db>
+							<name>Gadfly</name>
+						</db>
+					</db_id>
+				</dbxref>
+			</dbxref_id>
+			<is_current>1</is_current>
+		</feature_dbxref>		
+		<feature_synonym>
+			<is_current>0</is_current>
+			<is_internal>0</is_internal>
+V			<pub_id>
+				<pub>
+					<type_id>
+						<cvterm>
+							<cv_id>
+								<cv>
+									<name>pub type</name>
+								</cv>
+							</cv_id>
+							<name>computer file</name>
+						</cvterm>
+					</type_id>
+					<uniquename>gadfly3</uniquename>
+				</pub>
+			</pub_id>
+V			<synonym_id>
+				<synonym>
+					<name>1.28</name>
+					<type_id>
+						<cvterm>
+							<cv_id>
+								<cv>
+									<name>synonym type</name>
+								</cv>
+							</cv_id>
+							<name>synonym</name>
+						</cvterm>
+					</type_id>
+				</synonym>
+			</synonym_id>
+		</feature_synonym>		
+		<feature_synonym>
+			<is_current>0</is_current>
+			<is_internal>0</is_internal>
+V			<pub_id>
+				<pub>
+					<type_id>
+						<cvterm>
+							<cv_id>
+								<cv>
+									<name>pub type</name>
+								</cv>
+							</cv_id>
+							<name>computer file</name>
+						</cvterm>
+					</type_id>
+					<uniquename>gadfly3</uniquename>
+				</pub>
+			</pub_id>
+V			<synonym_id>
+				<synonym>
+					<name>deformed</name>
+					<type_id>
+						<cvterm>
+							<cv_id>
+								<cv>
+									<name>synonym type</name>
+								</cv>
+							</cv_id>
+							<name>synonym</name>
+						</cvterm>
+					</type_id>
+				</synonym>
+			</synonym_id>
+		</feature_synonym>		
+		<featureloc>
+			<fmax>2015531</fmax>
+			<fmin>2014580</fmin>
+A			<is_fmax_partial>0</is_fmax_partial>
+A			<is_fmin_partial>0</is_fmin_partial>
+A			<locgroup>0</locgroup>
+A			<rank>0</rank>
+			<srcfeature_id>
+				<feature>
+A					<organism_id>
+						<organism>
+							<genus>Drosophila</genus>
+							<species>melanogaster</species>
+						</organism>
+					</organism_id>
+A					<type_id>
+						<cvterm>
+							<cv_id>
+								<cv>
+									<name>SO</name>
+								</cv>
+							</cv_id>
+							<name>chromosome_arm</name>
+						</cvterm>
+					</type_id>
+					<uniquename>2Rnew</uniquename>
+				</feature>
+			</srcfeature_id>
+			<strand>1</strand>
+		</featureloc>
+	</feature>
+
+T!!! WE ARE NOW INTO RESULTS - NONE OF THIS FROM HERE DOWN NEEDS TO GO IN
+	TRANSACTIONS (the only exception may be result tags which
+	would actually go on the result sequence NOT the result feats
+	- but correct me if im wrong but these arent going into chado
+	yet - will they - is there a place for them in chado?)
+	<feature>
+		<is_analysis>1</is_analysis>
+		<name>247254-247255-AE003789.4-dummy-promoter</name>
+V		<organism_id>
+			<organism>
+				<genus>Computational</genus>
+				<species>Result</species>
+			</organism>
+		</organism_id>
+A?		<seqlen>0</seqlen>
+A?		<timeaccessioned>2004-07-29 03:57:50.775833</timeaccessioned>
+A?		<timelastmodified>2004-07-29 03:57:50.775833</timelastmodified>
+V		<type_id>
+			<cvterm>
+				<cv_id>
+					<cv>
+						<name>SO</name>
+					</cv>
+				</cv_id>
+				<name>match</name>
+			</cvterm>
+		</type_id>
+		<uniquename>:1268571</uniquename>		
+		<analysisfeature>
+			<analysis_id>
+				<analysis>
+					<program>promoter</program>
+	does apollo show promoters in general?
+A?					<programversion>1.0</programversion>
+					<sourcename>dummy</sourcename>
+A?					<sourceversion>1.0</sourceversion>
+A					<timeexecuted>2004-05-11 15:04:11</timeexecuted>
+				</analysis>
+			</analysis_id>
+		</analysisfeature>		
+		<feature_relationship>
+			<subject_id>
+				<feature>
+					<organism_id>
+A!! -- THIS IS A FLYBASE SHORTCOMING - ALL RESULT ORGANISMS JUST SAY
+    COMPUTATIONAL RESULT
+ 						<organism>
+							<genus>Computational</genus>
+							<species>Result</species>
+						</organism>
+					</organism_id>
+V					<type_id>
+						<cvterm>
+							<cv_id>
+								<cv>
+									<name>SO</name>
+								</cv>
+							</cv_id>
+							<name>match</name>
+						</cvterm>
+					</type_id>
+					<uniquename>:4652178</uniquename>					
+R? WE HAVE THIS ABOVE					<analysisfeature>
+						<analysis_id>
+							<analysis>
+								<program>promoter</program>
+								<programversion>1.0</programversion>
+								<sourcename>dummy</sourcename>
+								<sourceversion>1.0</sourceversion>
+								<timeexecuted>2004-05-11 15:04:11</timeexecuted>
+							</analysis>
+						</analysis_id>
+						<rawscore>0.918476</rawscore>
+					</analysisfeature>					
+					<featureloc>
+						<fmax>2013629</fmax>
+						<fmin>2013627</fmin>
+A						<is_fmax_partial>0</is_fmax_partial>
+A						<is_fmin_partial>0</is_fmin_partial>
+A						<locgroup>0</locgroup>
+A						<rank>0</rank>
+						<srcfeature_id>
+							<feature>
+V								<dbxref_id>
+									<dbxref>
+										<accession>2R</accession>
+										<db_id>
+											<db>
+												<name>Gadfly</name>
+											</db>
+										</db_id>
+									</dbxref>
+								</dbxref_id>
+								<organism_id>
+V									<organism>
+										<genus>Drosophila</genus>
+										<species>melanogaster</species>
+									</organism>
+								</organism_id>
+								<type_id>
+V									<cvterm>
+										<cv_id>
+											<cv>
+												<name>SO</name>
+											</cv>
+										</cv_id>
+										<name>chromosome_arm</name>
+									</cvterm>
+								</type_id>
+								<uniquename>2Rnew</uniquename>
+							</feature>
+						</srcfeature_id>
+						<strand>1</strand>
+					</featureloc>
+				</feature>
+			</subject_id>
+V			<type_id>
+				<cvterm>
+					<cv_id>
+						<cv>
+							<name>relationship type</name>
+						</cv>
+					</cv_id>
+					<name>partof</name>
+				</cvterm>
+			</type_id>
+		</feature_relationship>
+	</feature>
+	<feature>
+		<is_analysis>1</is_analysis>
+		<name>RH26018.3prime-AE003789.4-na_dbEST.same.dmel-sim4</name>
+V		<organism_id>
+			<organism>
+				<genus>Computational</genus>
+				<species>Result</species>
+			</organism>
+		</organism_id>
+A		<seqlen>0</seqlen>
+		<timeaccessioned>2004-07-29 08:57:00.718534</timeaccessioned>
+		<timelastmodified>2004-07-29 08:57:00.718534</timelastmodified>
+		<type_id>
+			<cvterm>
+				<cv_id>
+					<cv>
+						<name>SO</name>
+					</cv>
+				</cv_id>
+				<name>match</name>
+			</cvterm>
+		</type_id>
+		<uniquename>:2657207</uniquename>		
+		<analysisfeature>
+			<analysis_id>
+				<analysis>
+					<program>sim4</program>
+					<programversion>1.0</programversion>
+					<sourcename>na_dbEST.same.dmel</sourcename>
+					<sourceversion>1.0</sourceversion>
+					<timeexecuted>2004-07-15 20:17:40</timeexecuted>
+				</analysis>
+			</analysis_id>
+		</analysisfeature>		
+		<feature_relationship>
+			<subject_id>
+				<feature>
+					<organism_id>
+						<organism>
+							<genus>Computational</genus>
+							<species>Result</species>
+						</organism>
+					</organism_id>
+					<type_id>
+						<cvterm>
+							<cv_id>
+								<cv>
+									<name>SO</name>
+								</cv>
+							</cv_id>
+							<name>match</name>
+						</cvterm>
+					</type_id>
+					<uniquename>:7323967</uniquename>					
+					<analysisfeature>
+						<analysis_id>
+							<analysis>
+								<program>sim4</program>
+								<programversion>1.0</programversion>
+								<sourcename>na_dbEST.same.dmel</sourcename>
+								<sourceversion>1.0</sourceversion>
+								<timeexecuted>2004-07-15 20:17:40</timeexecuted>
+							</analysis>
+						</analysis_id>
+						<rawscore>96</rawscore>
+					</analysisfeature>					
+					<featureloc>
+						<fmax>654</fmax>
+						<fmin>0</fmin>
+						<is_fmax_partial>0</is_fmax_partial>
+						<is_fmin_partial>0</is_fmin_partial>
+						<locgroup>0</locgroup>
+
+ALRIGHT IM GETTING CONFUSED HERE - WHATS QUERY SEQ - WHATS HIT SEQ -
+AND WHATS ALIGNMENT SEQ - IS THERE ALIGNMENT SEQUENCE HERE? DOESNT
+SEEM LIKE IT
+
+						<rank>1</rank>
+						<residue_info>AATCTGAAAGCGAAAGAGACGCTCTATGCGATGCAAGATCGCTTAAATACATAGTGAATTGTTATCTTAAATAATAAAACTATGAGTCAGAATGACACTCGCGCCCAGCGTCAGCGCGAGCATGACGAACGCCGACTCTCAATTCAGCGCAACAACGCGTACTTCTCCTACGTCTCACCGACAATCCCAAACGCAGACATCGAGCGGTCAATAACCCATAGCCCAGGAAACCTTCTTCTACCAACAAATCAAGAAAGAGCCCGCTCCTGCTCTCCCGCTCTATTGGCTCCGACAGAAGCCCCGCTACCTCCAACAACAACAGCTGGAGAGGGACCGGCAGCCCGCTCTGCCTCGTCATCGGCTGCACCCGCTCACGGTCTGACTAAGTCAGCGAAAGCAAAACCGCTAGCAATAAACGGTACTGCTGCACTGCCAGCAAAACAAAACGAAAACGTAAACAAAAAAGCTGGGTCGACCTGGCAGACTGGAATGGACCGCTACATTACAATAAAGCGAAAGCTCAGCCCGGAAAATTCAGATTTGGGAAACAAGCCGAAAAATACACGCGACAACTCTACCTTGATCAAAAATGTAGCCCCTGCAAATACCAACAGATTTGCCTTGCTGGTAGATACCGCTGAGGACGTGCCGCTG</residue_info>
+						<srcfeature_id>
+							<feature>
+								<is_analysis>1</is_analysis>
+								<name>RH26018.3prime</name>
+								<organism_id>
+									<organism>
+										<genus>Computational</genus>
+										<species>Result</species>
+									</organism>
+								</organism_id>
+								<residues>CAGCGGCACGTCCTCAGCGGGATCTACCCTCAAGGCAAATCTGTTGGTATTTGCAGGGGCTACATTTTTGATCAAGGTAGAGTTGTCGCGTGTATTTTTCGGCTTGTTTCCCAAATCTGAATTTTCCGGGCTGAGCTTTCGCTTTATTGTAATGAAGCGGTCCATTCCAGTCTGCCAGGTCGACCCAGCTTTTTTGTTCACGTTTTCGTTTTGTTTTTCTGGTAGTGCAGCAGTACCGTTTATTGCTTGCGGTTTTGCTTTCGCTGACTTAGTCAGACCGTGAGCGGGTGCAGCCGATGACGAGGTAGAGCGGGCTGTCGGTCCCTTTCCAGCTGTTGTTGTTGGAGGTAGCGGGGCTTCTGTCGGAGCCAGTAGAGCGGGAGAGCAGGAGCGCGCTCTTTCTTGATTTGTTGGCAGAAGAAGGTTTCCTGGGCTATGTGTTATTGACCGCTCGATGTCTGCGTTTGGGATTGTTGGTGAGACGTAGGAGAAGTACGCGTTGTTGCGTTGAATTGAGAGCCGGCGTTCGTCATGCTCGCGCTGACGCTGAGCGCGAGTGTCGCTCTGACTCATAGTTTTATTATTTAAGATAACAAATCACTATATATTTAAGCGATCTTGCATCGTATAGAGCGTCTCTTTCGCTTTCGGATT</residues>
+								<timeaccessioned>2004-06-30 04:10:46.855082</timeaccessioned>
+								<timelastmodified>2004-06-30 04:10:46.855082</timelastmodified>
+								<type_id>
+									<cvterm>
+										<cv_id>
+											<cv>
+												<name>SO</name>
+											</cv>
+										</cv_id>
+										<name>match</name>
+									</cvterm>
+								</type_id>
+								<uniquename>RH26018.3prime</uniquename>								
+								<featureprop>
+									<rank>0</rank>
+									<type_id>
+										<cvterm>
+											<cv_id>
+												<cv>
+													<name>property type</name>
+												</cv>
+											</cv_id>
+											<name>description</name>
+										</cvterm>
+									</type_id>
+									<value>gb|CK135150|bdgp|RH26018.3prime DESCRIPTION:&quot;RH26018.3prime RH Drosophila melanogaster normalized Head pFlc-1 Drosophila melanogaster cDNA clone RH26018 3, mRNA sequence.&quot; organism:&quot;Drosophila melanogaster&quot; (02-DEC-2003)</value>
+								</featureprop>
+							</feature>
+						</srcfeature_id>
+						<strand>1</strand>
+					</featureloc>					
+					<featureloc>
+						<fmax>2010995</fmax>
+						<fmin>2010341</fmin>
+						<is_fmax_partial>0</is_fmax_partial>
+						<is_fmin_partial>0</is_fmin_partial>
+						<locgroup>0</locgroup>
+						<rank>0</rank>
+						<residue_info>AATCTGAAAGCGAAAGAGACGCTCTATGCGATGCAAGATCGCTTAAATACATAGTGAATTGTTATCTTAAATAATAAAACTATGAGTCAGAATGACACTCGCGCCCAGCGTCAGCGCGAGCATGACGAACGCCGACTCTCAATTCAGCGCAACAACGCGTACTTCTCCTACGTCTCACCGACAATCCCAAACGCAGACATCGAGCGGTCAATAACCCATAGCCCAGGAAACCTTCTTCTACCAACAAATCAAGAAAGAGCCCGCTCCTGCTCTCCCGCTCTATTGGCTCCGACAGAAGCCCCGCTACCTCCAACAACAACAGCTGGAGAGGGACCGGCAGCCCGCTCTGCCTCGTCATCGGCTGCACCCGCTCACGGTCTGACTAAGTCAGCGAAAGCAAAACCGCTAGCAATAAACGGTACTGCTGCACTGCCAGCAAAACAAAACGAAAACGTAAACAAAAAAGCTGGGTCGACCTGGCAGACTGGAATGGACCGCTACATTACAATAAAGCGAAAGCTCAGCCCGGAAAATTCAGATTTGGGAAACAAGCCGAAAAATACACGCGACAACTCTACCTTGATCAAAAATGTAGCCCCTGCAAATACCAACAGATTTGCCTTGCTGGTAGATACCGCTGAGGACGTGCCGCTG</residue_info>
+						<srcfeature_id>
+							<feature>
+								<dbxref_id>
+									<dbxref>
+										<accession>2R</accession>
+										<db_id>
+											<db>
+												<name>Gadfly</name>
+											</db>
+										</db_id>
+									</dbxref>
+								</dbxref_id>
+								<organism_id>
+									<organism>
+										<genus>Drosophila</genus>
+										<species>melanogaster</species>
+									</organism>
+								</organism_id>
+								<type_id>
+									<cvterm>
+										<cv_id>
+											<cv>
+												<name>SO</name>
+											</cv>
+										</cv_id>
+										<name>chromosome_arm</name>
+									</cvterm>
+								</type_id>
+								<uniquename>2Rnew</uniquename>
+							</feature>
+						</srcfeature_id>
+						<strand>-1</strand>
+					</featureloc>
+				</feature>
+			</subject_id>
+			<type_id>
+				<cvterm>
+					<cv_id>
+						<cv>
+							<name>relationship type</name>
+						</cv>
+					</cv_id>
+					<name>partof</name>
+				</cvterm>
+			</type_id>
+		</feature_relationship>
+	</feature>
+	<feature>
+		<is_analysis>1</is_analysis>
+
+... MORE RESULTS ...
+
+
+</chado>
+

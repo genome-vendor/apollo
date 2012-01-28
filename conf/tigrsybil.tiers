@@ -1,0 +1,418 @@
+# This file describes to Apollo how different features should be displayed.  
+# There are two types of records: tier records and type lines.
+# Tiers are groupings of one or more types to be displayed together.
+
+# [Tier] fields and the default values
+# label :  false  (Group tier label)
+# visible : true
+# expanded : false
+# sorted : false
+# maxrows : maximum number of rows to show for this tier--default 0 means all
+# labeled : false
+
+# The order in which tiers are listed in this file determines 
+# their vertical display order
+# (the first tier is displayed closest to the central axis).
+# The fields for a Type or Tier record can appear in any order, one per line.
+
+# TYPE fields
+#  tiername : the tier this type appears in
+#  typename : label for this type
+#  resulttype : data type(s) to be included this type
+#  color : can be a standard color name (e.g. red) or an R,G,B triplet (default gray)
+#  utr_color : color used for utr regions. Only works with
+#              DrawableGeneFeatureSet. (default black)
+#  usescore : default true  # use score to set the height of this glyph
+#  minscore : 0 # minimum score for scaling height
+#  maxscore : 100 # maximum score for scaling height
+#  glyph : what glyph to use (mandatory).  Current choices include
+# DrawableGeneFeatureSet (exons connected by peaked introns),
+# DrawableResultFeatureSet (exons connected by straight lines),
+# DoubleHeadedArrow, Triangle, Zigzag, ThinRectangle.
+#  column : names of column(s) in detail table.  Choices include
+# include GENOMIC_RANGE, GENOMIC_LENGTH, MATCH_RANGE, MATCH_LENGTH,
+# SCORE, NAME, READS.  You can also specify column names not in all caps
+# that correspond to properties of the features present in the data (e.g.
+# query_frame).
+#  sortbycolumn : row order in table determined by this column
+#  reversesort : Sort table rows in reverse order?  (default false)
+#  groupby : GENE method to use for grouping features (GENE, SINGLE, HOMOLOGY)
+#  weburl : optional, URL for pulling up web pages about this type of result
+#  freshdate : date after which sequences of this type are considered "new" 
+# (the dates are found in the sequence descriptions)
+#  idformat : format of IDs for this kind of annotation (regexp, e.g. CG\d+)
+#  annot_type : for annotations, the result types that generate this type of annotation
+
+// --------------------------------------------------------
+// Genomic sequence - standard Apollo tier
+// --------------------------------------------------------
+//glyph : apollo.gui.drawable.DrawableGeneFeatureSet
+
+[Tier]
+tiername : Sequence
+expanded : true
+
+[Type]
+label : Sequence
+tiername : Sequence
+datatype : sequence
+datatype : SEQUENCE
+glyph : DrawableResultFeatureSet
+color : 255,255,102
+column : NAME
+column : GENOMIC_RANGE
+weburl : http://
+
+[Tier]
+tiername : Annotation
+expanded : true
+
+[Type]
+label : Gene
+tiername : Annotation
+datatype : gene
+datatype : transcript
+datatype : exon
+glyph : DrawableGeneFeatureSet
+color : 51,102,255
+name_method : TigrSybilNameAdapter
+column : GENOMIC_RANGE
+column : ID
+column : NAME
+sortbycolumn : GENOMIC_RANGE
+
+[Tier]
+tiername : CDS features
+
+[Type]
+label : CDS
+tiername : CDS features
+datatype : CDS
+datatype : cds
+glyph : ThinRectangle
+color : 255,0,0
+column : GENOMIC_RANGE
+column : ID
+column : NAME
+sortbycolumn : GENOMIC_RANGE
+
+[Tier]
+tiername : SNPs - UTR
+
+[Type]
+label : SNPs - UTR
+tiername : SNPs - UTR
+datatype : SNP - UTR
+glyph : DrawableResultFeatureSet
+color : 51,255,51
+column : NAME
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+weburl : http://
+
+[Tier]
+tiername : SNPs - coding
+
+[Type]
+label : SNPs - coding
+tiername : SNPs - coding
+datatype : SNP - coding
+glyph : DrawableResultFeatureSet
+color : red
+column : NAME
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+weburl : http://
+
+[Tier]
+tiername : SNPs - intronic
+
+[Type]
+label : SNPs - intronic
+tiername : SNPs - intronic
+datatype : SNP - intronic
+glyph : DrawableResultFeatureSet
+color : blue
+column : NAME
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+weburl : http://
+
+[Tier]
+tiername : SNPs - intergenic
+
+[Type]
+label : SNPs - intergenic
+tiername : SNPs - intergenic
+datatype : SNP - intergenic
+glyph : DrawableResultFeatureSet
+color : 200,200,200
+column : NAME
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+weburl : http://
+
+[Tier]
+tiername : NUCmer 3.0 lma2
+expanded : true
+
+[Tier]
+tiername : NUCmer3 3.0 t_cruzi
+expanded : true
+
+[Tier]
+tiername : PROmer 3.0 lma2
+expanded : true
+
+[Type]
+label : PROmer 3.0 lma2
+tiername : PROmer 3.0 lma2
+datatype : PROmer 3.0 lma2
+glyph : DrawableResultFeatureSet
+color : 155,101,101
+column : NAME
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : score
+weburl : http://
+
+//glyph : apollo.gui.drawable.DrawableResultSeqFeature
+[Tier]
+tiername : PROmer 3.0 t_cruzi
+expanded : true
+
+[Type]
+label : PROmer 3.0 t_cruzi
+tiername : PROmer 3.0 t_cruzi
+datatype : PROmer 3.0 t_cruzi
+glyph : DrawableResultFeatureSet
+color : 205,151,151
+column : NAME
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : score
+weburl : http://
+
+[Tier]
+tiername : PROmer 3.0 t_brucei
+expanded : true
+
+[Type]
+label : PROmer 3.0 t_brucei
+tiername : PROmer 3.0 t_brucei
+datatype : PROmer 3.0 t_brucei
+glyph : DrawableResultFeatureSet
+color : 255,201,201
+column : NAME
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : score
+weburl : http://
+
+[Tier]
+tiername : peffect
+expanded : true
+
+[Type]
+label : peffect
+tiername : peffect
+datatype : peffect
+glyph : DrawableResultFeatureSet
+color : 181,130,160
+column : NAME
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : score
+weburl : http://
+
+[Tier]
+tiername : region lma2
+expanded : true
+
+[Type]
+label : region 1.0 lma2
+tiername : region lma2
+datatype : region 1.0 lma2
+glyph : DrawableResultFeatureSet
+color : 110,50,111
+column : NAME
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : score
+weburl : http://
+
+[Tier]
+tiername : region t_cruzi
+expanded : true
+
+[Type]
+label : region 1.0 t_cruzi
+tiername : region t_cruzi
+datatype : region 1.0 t_cruzi
+glyph : DrawableResultFeatureSet
+color : 160,100,181
+column : NAME
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : score
+weburl : http://
+
+[Tier]
+tiername : region t_brucei
+expanded : true
+
+[Type]
+label : region 1.0 t_brucei
+tiername : region t_brucei
+datatype : region 1.0 t_brucei
+glyph : DrawableResultFeatureSet
+color : 210,150,231
+column : NAME
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : score
+weburl : http://
+
+[Tier]
+tiername : Start Codon
+
+[Type]
+label : startcodon_frame1
+tiername : Start Codon
+datatype : codons
+datatype : startcodon_frame1
+glyph : SiteCodon
+color : 34,220,34
+column : NAME
+column : GENOMIC_RANGE
+sortbycolumn : NAME
+
+[Type]
+label : startcodon_frame2
+tiername : Start Codon
+datatype : codons
+datatype : startcodon_frame2
+glyph : SiteCodon
+color : 34,220,34
+column : NAME
+column : GENOMIC_RANGE
+sortbycolumn : NAME
+
+[Type]
+label : startcodon_frame3
+tiername : Start Codon
+datatype : codons
+datatype : startcodon_frame3
+glyph : SiteCodon
+color : 34,220,34
+column : NAME
+column : GENOMIC_RANGE
+sortbycolumn : NAME
+
+[Tier]
+tiername : Stop Codon
+
+// Gaps (runs of Ns) are now shown as red squiggles at the axis
+[Type]
+label : stopcodon_frame1
+tiername : Stop Codon
+datatype : codons
+datatype : stopcodon_frame1
+glyph : SiteCodon
+color : red
+column : NAME
+column : GENOMIC_RANGE
+sortbycolumn : NAME
+
+[Type]
+label : stopcodon_frame2
+tiername : Stop Codon
+datatype : codons
+datatype : stopcodon_frame2
+glyph : SiteCodon
+color : red
+column : NAME
+column : GENOMIC_RANGE
+sortbycolumn : NAME
+
+[Type]
+label : stopcodon_frame3
+tiername : Stop Codon
+datatype : codons
+datatype : stopcodon_frame3
+glyph : SiteCodon
+color : red
+column : NAME
+column : GENOMIC_RANGE
+sortbycolumn : NAME
+
+[Tier]
+tiername : Sequence selection
+
+[Type]
+label : Sequence selection
+tiername : Sequence selection
+datatype : Sequence selection
+glyph : DrawableResultFeatureSet
+color : orange
+column : NAME
+sortbycolumn : NAME
+
+[Tier]
+tiername : Do Not Show
+
+[Type]
+label : Gap
+tiername : Do Not Show
+datatype : gap:gap
+glyph : DrawableResultFeatureSet
+color : white
+column : SCORE
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+
+[Tier]
+tiername : NUCmer3 lma2
+
+[Type]
+label : NUCmer 3.0 lma2
+tiername : NUCmer3 lma2
+datatype : NUCmer 3.0 lma2
+glyph : DrawableResultFeatureSet
+color : 101,101,155
+column : NAME
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : score
+weburl : http://
+
+[Tier]
+tiername : NUCmer 3.0 t_cruzi
+
+[Type]
+label : NUCmer 3.0 t_cruzi
+tiername : NUCmer 3.0 t_cruzi
+datatype : NUCmer 3.0 t_cruzi
+glyph : DrawableResultFeatureSet
+color : 151,151,205
+column : NAME
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : score
+weburl : http://
+
+[Tier]
+tiername : NUCmer 3.0 t_brucei
+
+[Type]
+label : NUCmer 3.0 t_brucei
+tiername : NUCmer 3.0 t_brucei
+datatype : NUCmer 3.0 t_brucei
+glyph : DrawableResultFeatureSet
+color : 201,201,255
+column : NAME
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : score
+weburl : http://

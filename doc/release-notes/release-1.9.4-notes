@@ -1,0 +1,2 @@
++ Can now add/delete dbxrefs from the annotation info editor
++ Fixed GFF3 adapter ontology dbxref behavior of stripping the database from the id

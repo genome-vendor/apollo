@@ -1,0 +1,40 @@
+// Synteny style
+
+//the location of the types file (a file)
+Types		        "ensj.tiers"
+
+// Whether to show the annotation view, default false.
+// ShowAnnotations "true"
+// How much of the screen should annotations take up relative to results
+// If this is not set it will be 50% annotations, 50% results.
+// Should only be set if ShowAnnotations is true
+//PercentSpaceForAnnotations  "35"
+// Whether to display the result view. If not in config file defaults to true.
+ShowResults		"true"
+// Whether to allow editing, default: false (takes out the editing menu options) 
+//EnableEditing		"true"
+// Whether to enable the navigation manager - default false
+EnableNavigationManager "false"
+
+EdgematchColor "black"
+
+FeatureLoadSize "20000000"
+
+//
+//All the species-specific information that actually allows Synteny to happen.
+//The adapter classes are used to actually build the adapter
+//guis in the synteny adapter's tabs. The rest of it is default
+//information for the various gui's.
+
+"Name.Elegans" "Caenorhabditis elegans" 
+"Name.Elegans-Briggsae" "Compara" 
+"Name.Briggsae" "Caenorhabditis briggsae"
+
+"Species.Elegans.DataAdapter" "apollo.dataadapter.ensj.EnsJAdapter"
+
+"Species.Briggsae.DataAdapter" "apollo.dataadapter.ensj.EnsJAdapter"
+
+"Species.Elegans-Briggsae.DataAdapter"  "apollo.dataadapter.synteny.SyntenyComparaAdapter"
+"Species.Elegans-Briggsae.querySpecies" "Elegans"
+"Species.Elegans-Briggsae.hitSpecies"   "Briggsae"
+

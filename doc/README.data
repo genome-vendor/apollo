@@ -1,0 +1,63 @@
+$Id: README.data,v 1.1 2007/05/03 13:34:15 briano Exp $
+
+These are notes on data issues, not Apollo bugs but problems due to
+missing or incorrect input to Apollo. 
+
+
+Missing from GAME XML
+=============================
+A lot of the fields that blast hits should have (such as "identity" and
+"expect") are missing from the GAME XML data we get from Indiana (and
+also from the Chado XML examples I was given).  This is not an Apollo
+bug, but rather a data issue.  [4/13/05: Sima emailed Don about this.]
+
+Sian reported:
+
+Could not delete Cyp6d5-RA from Cyp6d5 because drawable was not found
+java.lang.NullPointerException
+        at java.lang.String.<init>(Unknown Source)
+        at apollo.datamodel.Comment.clone(Comment.java:59)
+        at apollo.datamodel.AnnotatedFeature.clone(AnnotatedFeature.java:153)
+        at apollo.datamodel.SeqFeature.cloneFeature(SeqFeature.java:304)
+        at apollo.util.FeatureList.cloneList(FeatureList.java:154)
+        at apollo.editor.AnnotationEditor.synchTranscripts(AnnotationEditor.java:446)
+        at apollo.editor.AnnotationEditor.synchOldAnnots(AnnotationEditor.java:434)
+        at apollo.editor.AnnotationEditor.setSelections(AnnotationEditor.java:427)
+        at apollo.editor.AnnotationEditor.setSelections(AnnotationEditor.java:353)
+        at apollo.gui.menus.AnnotationMenu.<init>(AnnotationMenu.java:98)
+
+(She got this same exception over and over--for some reason, in
+Comment.clone person was coming in null.  I put in a null pointer check,
+but need to figure out why person is null.)
+
+MG: so it turns out the game file sian was using somehow lacked a
+person for the person entirely. whats even more mysterious is its
+impossible that this came from the game adapter as the game adapter
+will print out "null" for person if there isnt one, in other words the
+game adapter will always print a comment person, so the source of this
+file can not be from the game adapter. this leaves 2 possibilities 1)
+C2G or 2) the file somehow got corrupted. both seem unlikely but i
+cant see what else it could be. nomis null pointer tolerance at least
+makes it so apollo doesnt freak out - and a println warning is
+issued. basically its a faulty data issue and it doesnt appear to be
+an apollo issue.
+
+Data from Indiana CGI
+=======================
+If you ask the Indiana cgi for data by chromosome region (e.g.,
+2L:10000-20000), you get an entire scaffold that includes the requested
+gene or region--not the actual region requested.  According to Victor,
+they don't have time to fix this, so it will probably stay that way.
+
+Mismatched coordinates
+========================
+Chromosome arm coordinates in data from IU Apollo cgi don't match
+coordinates from NCBI (so if you try to, for example, take a gene
+sequence, BLAST it at NCBI against the chromosomes, and then overlay the
+BLAST hits on that region in Apollo, it won't line up right).
+
+BLAST Results in Anopheles data
+===========================
+BLAST results in Harvard's Anopheles data had spans on both + and -
+strands, which led to bad behavior if you tried to create annotations
+from those results.

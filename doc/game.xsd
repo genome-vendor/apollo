@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <!--
+    The rng file is the home of the GAME XML schema.  game.xsd can be
+    derived from it using trang (see schema-notes), as can game.rnc if you
+    want the compact format.  Therefore, any modifications to the schema
+    should be made to the rng file first.
+  -->
+  <!--
+    Schema for GAME XML, v1.0.
+    Note that this schema is liberal--it is possible to construct GAME XML
+    files that Apollo's GAME XML parser doesn't like but yet are
+    validated by this schema.
+        
+    Started by Sohel Merchant at RGD; edited and commented by Suzanna
+    Lewis; edited and commented by Andrew Dalke; extensively revised by
+    Nomi Harris 11/2004
+  -->
+  <!--
+    Note on entities: some XML files include non-standard entities for
+    representing Greek letters, e.g. &tgr;.  Theoretically, all nonstandard
+    entities should be defined in the XML stream itself.  This is not the
+    case with the Apollo data because Apollo has code to deal with these
+    entities.  It turns out to be non-trivial to make the schema deal with
+    entities that are nonstandard and not defined in the XML input, so if
+    you try to validate a GAME XML file that includes these Greek entities,
+    you will unfortunately get a fatal error.  NH, 12/07/2004
+  -->
+  <xs:element name="game">
+    <xs:complexType>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element ref="seq"/>
+        <xs:element ref="map_position"/>
+        <xs:element ref="annotation"/>
+        <xs:element ref="computational_analysis"/>
+        <xs:element ref="transaction"/>
+        <xs:element ref="deleted_transcript"/>
+        <xs:element ref="changed_gene"/>
+      </xs:choice>
+      <xs:attribute name="version" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="seq" type="seqType"/>
+  <xs:element name="map_position">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="arm"/>
+        <xs:element ref="chromosome"/>
+        <xs:element ref="organism"/>
+        <xs:element ref="span"/>
+      </xs:choice>
+      <xs:attribute name="seq" use="required" type="xs:string"/>
+      <xs:attribute name="type" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="span" type="spanType"/>
+  <xs:element name="annotation">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="name"/>
+        <xs:element ref="type"/>
+        <xs:element ref="date"/>
+        <xs:element ref="property"/>
+        <xs:element ref="synonym"/>
+        <xs:element ref="gene"/>
+        <xs:element ref="dbxref"/>
+        <xs:element ref="comment"/>
+        <xs:element ref="description"/>
+        <xs:choice>
+          <xs:element ref="feature_set"/>
+          <xs:element ref="feature_span"/>
+	  <xs:element ref="seq_relationship"/>
+        </xs:choice>
+      </xs:choice>
+      <xs:attribute name="problem" type="xs:boolean"/>
+      <xs:attribute name="id" use="required" type="xs:NMTOKEN"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="date" type="dateType"/>
+  <xs:element name="property" type="propertyType"/>
+  <xs:element name="gene">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="name"/>
+        <xs:element minOccurs="0" ref="dbxref"/>
+      </xs:sequence>
+      <xs:attribute name="association" type="xs:string"/>
+      <xs:attribute name="id" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="dbxref" type="dbxrefType"/>
+  <xs:element name="comment" type="commentType"/>
+  <xs:element name="description" type="xs:string"/>
+  <xs:element name="feature_set" type="feature_setType"/>
+  <xs:element name="feature_span" type="feature_spanType"/>
+  <xs:element name="computational_analysis">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="program"/>
+        <xs:element ref="database"/>
+        <xs:element ref="version"/>
+        <xs:element ref="type"/>
+        <xs:element ref="property"/>
+        <xs:element ref="date"/>
+        <xs:choice>
+          <xs:element ref="result_set"/>
+          <xs:element ref="result_span"/>
+        </xs:choice>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="result_set" type="result_setType"/>
+  <xs:element name="result_span" type="result_spanType"/>
+  <xs:element name="transaction">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="date"/>
+        <xs:element ref="author"/>
+        <xs:element ref="object_class"/>
+        <xs:element ref="operation"/>
+        <xs:element ref="before"/>
+        <xs:element ref="after"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="before">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="annotation_id"/>
+        <xs:element ref="id"/>
+        <xs:element ref="transcript_name"/>
+        <xs:element ref="name"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="after">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="annotation_id"/>
+        <xs:element ref="id"/>
+        <xs:element ref="transcript_name"/>
+        <xs:element ref="name"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="deleted_transcript">
+    <xs:complexType>
+      <xs:attribute name="id" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="changed_gene">
+    <xs:complexType>
+      <xs:attribute name="id" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="position" type="int"/>
+  <xs:element name="base" type="xs:string"/>
+  <xs:element name="organism" type="xs:string"/>
+  <xs:complexType name="result_spanType">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="name"/>
+      <xs:element ref="type"/>
+      <xs:element ref="score"/>
+      <xs:element ref="output"/>
+      <xs:element ref="seq_relationship"/>
+    </xs:choice>
+    <xs:attribute name="id" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="output" type="outputType"/>
+  <xs:element name="seq_relationship" type="seq_relationshipType"/>
+  <!--
+    Note that some values should really be restricted to a particular
+    type.  For example, sometimes scores appear as type=score, value=12345,
+    and we'd want to reject value=FOO, but we can't constrain value like
+    that because in other cases it represents other types of data.
+  -->
+  <xs:element name="value" type="xs:string"/>
+  <xs:element name="version" type="xs:string"/>
+  <xs:element name="id" type="xs:string"/>
+  <xs:element name="annotation_id" type="xs:string"/>
+  <xs:element name="type" type="xs:string"/>
+  <xs:complexType name="outputType">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="type"/>
+      <xs:element ref="value"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="spanType">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="start"/>
+      <xs:element ref="end"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:element name="arm" type="xs:string"/>
+  <xs:simpleType name="int">
+    <xs:restriction base="xs:int"/>
+  </xs:simpleType>
+  <xs:element name="text" type="xs:string"/>
+  <xs:element name="synonym" type="xs:string"/>
+  <xs:complexType name="dbxrefType">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="xref_db"/>
+      <xs:element ref="db_xref_id"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:element name="author" type="xs:string"/>
+  <xs:element name="object_class" type="xs:string"/>
+  <xs:element name="database" type="xs:string"/>
+  <xs:complexType name="feature_spanType">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="name"/>
+      <xs:element ref="type"/>
+      <xs:element ref="seq_relationship"/>
+    </xs:choice>
+    <xs:attribute name="produces_seq" type="xs:string"/>
+    <xs:attribute name="type" type="xs:string"/>
+    <xs:attribute name="id" type="xs:NMTOKEN"/>
+  </xs:complexType>
+  <xs:element name="program" type="xs:string"/>
+  <xs:complexType name="commentType">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="text"/>
+      <xs:element ref="person"/>
+      <xs:element ref="date"/>
+      <xs:element ref="internal"/>
+    </xs:choice>
+    <xs:attribute name="internal">
+      <xs:simpleType>
+        <xs:restriction base="xs:NMTOKEN">
+          <xs:enumeration value="true"/>
+          <xs:enumeration value="false"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="id" type="xs:NMTOKEN"/>
+  </xs:complexType>
+  <xs:element name="internal" type="xs:boolean"/>
+  <xs:element name="chromosome" type="xs:string"/>
+  <xs:complexType name="feature_setType">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="name"/>
+      <xs:element ref="type"/>
+      <xs:element ref="author"/>
+      <xs:element ref="date"/>
+      <xs:element ref="synonym"/>
+      <xs:element ref="comment"/>
+      <xs:element ref="description"/>
+      <xs:element ref="property"/>
+      <xs:choice>
+        <xs:element ref="feature_set"/>
+        <xs:element ref="feature_span"/>
+      </xs:choice>
+      <xs:element ref="seq"/>
+    </xs:choice>
+    <xs:attribute name="id" type="xs:NMTOKEN"/>
+    <xs:attribute name="problem" type="xs:boolean"/>
+    <xs:attribute name="produces_seq" type="xs:string"/>
+    <xs:attribute name="type" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="person" type="xs:string"/>
+  <xs:element name="operation" type="xs:string"/>
+  <xs:element name="transcript_name" type="xs:string"/>
+  <xs:complexType name="seqType">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="name"/>
+      <xs:element ref="organism"/>
+      <xs:element ref="potential_sequencing_error"/>
+      <xs:element ref="dbxref"/>
+      <xs:element ref="description"/>
+      <xs:element ref="residues"/>
+    </xs:choice>
+    <xs:attribute name="type" type="xs:string"/>
+    <xs:attribute name="focus" type="xs:boolean"/>
+    <xs:attribute name="md5checksum" type="xs:string"/>
+    <xs:attribute name="length" type="xs:NMTOKEN"/>
+    <xs:attribute name="id" use="required" type="xs:string"/>
+    <xs:attribute name="version" type="xs:NMTOKEN"/>
+  </xs:complexType>
+  <xs:element name="potential_sequencing_error">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element ref="type"/>
+        <xs:element ref="position"/>
+        <xs:element ref="base"/>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+  <xs:complexType name="result_setType">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="name"/>
+      <xs:element ref="score"/>
+      <xs:element ref="seq_relationship"/>
+      <xs:element ref="output"/>
+      <xs:element ref="result_set"/>
+      <xs:element ref="result_span"/>
+    </xs:choice>
+    <xs:attribute name="id" type="xs:string"/>
+  </xs:complexType>
+  <xs:element name="score" type="xs:float"/>
+  <xs:complexType name="propertyType">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="type"/>
+      <xs:element ref="value"/>
+    </xs:choice>
+  </xs:complexType>
+  <xs:complexType name="dateType">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute name="timestamp" use="required" type="xs:NMTOKEN"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:element name="alignment" type="xs:string"/>
+  <xs:complexType name="seq_relationshipType">
+    <xs:choice minOccurs="0" maxOccurs="unbounded">
+      <xs:element ref="span"/>
+      <xs:element ref="alignment"/>
+    </xs:choice>
+    <xs:attribute name="seq" use="required" type="xs:string"/>
+    <xs:attribute name="type">
+      <xs:simpleType>
+        <xs:restriction base="xs:NMTOKEN">
+          <xs:enumeration value="query"/>
+          <xs:enumeration value="subject"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:element name="name" type="xs:string"/>
+  <xs:element name="db_xref_id" type="xs:string"/>
+  <xs:element name="xref_db" type="xs:string"/>
+  <xs:element name="end" type="int"/>
+  <xs:element name="start" type="int"/>
+  <xs:element name="residues" type="xs:string"/>
+</xs:schema>

@@ -1,0 +1,5 @@
+Change between release 1.8.0 (4/2008) and release 1.9.0 (5/2008):
+
++ Added Preferences editor
++ Added popup menu for changing color of graphs and removing graphs in graph display
++ Various bug fixes

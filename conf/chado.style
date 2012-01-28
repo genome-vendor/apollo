@@ -1,0 +1,13 @@
+// chado.style--style file for displaying (FlyBase) ChadoXML data.
+
+// For now, chadoXML adapter uses fly style.
+ImportStyle             "conf/fly.style"
+
+// Different AnnotationBackgroundColor for debugging.
+// pale lavender (to differentiate from game.style while debugging)
+// AnnotationBackgroundColor "204,204,255"
+// (Let it default to game.style's aqua when not debugging)
+
+EnableNavigationManager "false"
+
+// Be sure that the last line of this file ends with a newline.

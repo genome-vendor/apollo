@@ -1,0 +1,1808 @@
+# Tiers for EnsJ data
+
+# This tier is for showing new analysis results that you layer on with
+# "Add analysis result".  I tried putting it at the beginning (before the
+# Annotation tier) but that led to a weird display bug.
+[Tier]
+tiername : New analysis results
+expanded : true
+labeled : true
+
+[Type]
+label : New analysis results
+tiername : New analysis results
+glyph : DrawableResultFeatureSet
+color : 255,0,255
+usescore : true
+column : SCORE
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+
+
+[Tier]
+tiername : Sequence
+expanded : true
+
+[Type]
+typename : Sequence
+tiername : Sequence
+resulttype : sequence
+resulttype : SEQUENCE
+resulttype : contig
+glyph : DrawableResultFeatureSet
+color : 255,255,102
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+reversesort : false
+weburl : http://www.ensembl.org/*/contigview?contig=
+
+[Tier]
+tiername : TargetGene
+expanded : true
+labeled : true
+
+[Type]
+typename : TargetGene
+tiername : TargetGene
+resulttype : TargetTranscript
+glyph : DrawableGeneFeatureSet
+color : 204,0,204
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+reversesort : false
+groupby : GENE
+weburl : http://www.ensembl.org/*/geneview?transcript=
+
+[Tier]
+tiername : RNAGene
+expanded : true
+labeled : true
+
+[Type]
+typename : EnsemblRNAGene
+tiername : RNAGene
+resulttype : miRNA_KNOWN_ensembl
+resulttype : miRNA_NOVEL_ensembl
+resulttype : misc_RNA_KNOWN_ensembl
+resulttype : misc_RNA_NOVEL_ensembl
+resulttype : Mt_rRNA_NOVEL_ensembl
+resulttype : Mt_tRNA_NOVEL_ensembl
+resulttype : rRNA_NOVEL_ensembl
+resulttype : scRNA_KNOWN_ensembl
+resulttype : scRNA_NOVEL_ensembl
+resulttype : snoRNA_KNOWN_ensembl
+resulttype : snoRNA_NOVEL_ensembl
+resulttype : snRNA_KNOWN_ensembl
+resulttype : snRNA_NOVEL_ensembl
+resulttype : miRNA_PREDICTED_ensembl
+resulttype : misc_RNA_PREDICTED_ensembl
+resulttype : rRNA_PREDICTED_ensembl
+resulttype : snRNA_PREDICTED_ensembl
+resulttype : snoRNA_PREDICTED_ensembl
+glyph : DrawableGeneFeatureSet
+color : 139,102,139
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+column : PHASE
+groupby : GENE
+weburl : http://www.ensembl.org/*/geneview?transcript=
+
+[Type]
+typename : EnsemblRNAPseudoGene
+tiername : RNAGene
+resulttype : miRNA_pseudogene_NOVEL_ensembl
+resulttype : misc_RNA_pseudogene_NOVEL_ensembl
+resulttype : Mt_tRNA_pseudogene_NOVEL_ensembl
+resulttype : rRNA_pseudogene_KNOWN_ensembl
+resulttype : rRNA_pseudogene_NOVEL_ensembl
+resulttype : scRNA_pseudogene_NOVEL_ensembl
+resulttype : snoRNA_pseudogene_KNOWN_ensembl
+resulttype : snoRNA_pseudogene_NOVEL_ensembl
+resulttype : snRNA_pseudogene_KNOWN_ensembl
+resulttype : snRNA_pseudogene_NOVEL_ensembl
+resulttype : tRNA_pseudogene_KNOWN_ensembl
+resulttype : tRNA_pseudogene_NOVEL_ensembl
+glyph : DrawableGeneFeatureSet
+color : 255,187,255
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+column : PHASE
+groupby : GENE
+weburl : http://www.ensembl.org/*/geneview?transcript=
+
+[Tier]
+tiername : IgSegment
+expanded : true
+labeled : true
+
+[Type]
+typename : EnsemblIgSegment
+tiername : IgSegment
+resulttype : C_segment_KNOWN_ensembl
+resulttype : D_segment_KNOWN_ensembl
+resulttype : J_segment_KNOWN_ensembl
+resulttype : V_segment_KNOWN_ensembl
+resulttype : V_segment_NOVEL_ensembl
+glyph : DrawableGeneFeatureSet
+color : 139,69,0
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+column : PHASE
+groupby : GENE
+weburl : http://www.ensembl.org/*/geneview?transcript=
+
+[Tier]
+tiername : Pseudogene
+expanded : true
+labeled : true
+
+[Type]
+typename : EnsemblPseudogene
+tiername : Pseudogene
+resulttype : pseudogene_KNOWN_ensembl
+resulttype : pseudogene_NOVEL_ensembl
+glyph : DrawableGeneFeatureSet
+color : 77,77,77
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+column : PHASE
+groupby : GENE
+weburl : http://www.ensembl.org/*/geneview?transcript=
+
+[Tier]
+tiername : Gene
+expanded : true
+labeled : true
+
+[Type]
+typename : EnsemblGene
+tiername : Gene
+resulttype : ensembl
+resulttype : protein_coding_KNOWN_ensembl
+resulttype : protein_coding_NOVEL_ensembl
+resulttype : protein_coding_KNOWN_BY_PROJECTION_ensembl
+glyph : DrawableGeneFeatureSet
+color : 204,51,0
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+column : PHASE
+groupby : GENE
+weburl : http://www.ensembl.org/*/geneview?transcript=
+
+[Type]
+typename : EnsemblGeneR
+tiername : Gene
+resulttype : ensembl_r
+glyph : DrawableGeneFeatureSet
+color : 51,204,0
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+column : PHASE
+groupby : GENE
+weburl : http://www.ensembl.org/*/geneview?transcript=
+
+[Type]
+typename : Hugo
+tiername : Gene
+resulttype : hugo
+glyph : DrawableGeneFeatureSet
+color : 204,51,0
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+column : PHASE
+reversesort : false
+groupby : GENE
+weburl : http://www.ensembl.org/*/geneview?gene=__ID.__
+
+[Type]
+typename : HugoR
+tiername : Gene
+resulttype : hugo_r
+glyph : DrawableGeneFeatureSet
+color : 51,204,0
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+column : PHASE
+groupby : GENE
+weburl : http://www.ensembl.org/*/geneview?gene=__ID.__
+
+[Type]
+typename : Swissprot
+tiername : Gene
+resulttype : swiss
+glyph : DrawableGeneFeatureSet
+color : 204,51,0
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+column : PHASE
+reversesort : false
+groupby : GENE
+weburl : http://www.ensembl.org/*/geneview?gene=__ID.__
+
+[Type]
+typename : SwissprotR
+tiername : Gene
+resulttype : swiss_r
+glyph : DrawableGeneFeatureSet
+color : 51,204,0
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+column : PHASE
+groupby : GENE
+weburl : http://www.ensembl.org/*/geneview?gene=__ID.__
+
+[Type]
+typename : Sptrembl
+tiername : Gene
+resulttype : sptrembl
+glyph : DrawableGeneFeatureSet
+color : 204,51,0
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+column : PHASE
+reversesort : false
+groupby : GENE
+weburl : http://www.ensembl.org/*/geneview?gene=__ID.__
+
+[Type]
+typename : SptremblR
+tiername : Gene
+resulttype : sptrembl_r
+glyph : DrawableGeneFeatureSet
+color : 51,204,0
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+column : PHASE
+groupby : GENE
+weburl : http://www.ensembl.org/*/geneview?gene=__ID.__
+
+[Type]
+typename : Embl
+tiername : Gene
+resulttype : embl
+glyph : DrawableGeneFeatureSet
+color : 51,204,0
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+reversesort : false
+groupby : GENE
+weburl : http://srs.ebi.ac.uk/srs6bin/cgi-bin/wgetz?-page+qResult+-e+[EMBL-Gene:__ID__]+-vn+1
+
+[Type]
+typename : EmblR
+tiername : Gene
+resulttype : embl_r
+glyph : DrawableGeneFeatureSet
+color : 204,51,0
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+groupby : GENE
+weburl : http://srs.ebi.ac.uk/srs6bin/cgi-bin/wgetz?-page+qResult+-e+[EMBL-Gene:__ID__]+-vn+1
+
+[Type]
+typename : Locus
+tiername : Gene
+resulttype : locus
+glyph : DrawableGeneFeatureSet
+color : 51,204,0
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+reversesort : false
+groupby : GENE
+weburl : http://srs.ebi.ac.uk/srs6bin/cgi-bin/wgetz?-page+qResult+-e+[EMBL-Gene:__ID__]+-vn+1
+
+[Type]
+typename : TGE_gw
+tiername : Gene
+resulttype : TGE_gw
+glyph : DrawableGeneFeatureSet
+color : 51,204,0
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+reversesort : false
+groupby : GENE
+weburl : http://srs.ebi.ac.uk/srs6bin/cgi-bin/wgetz?-page+qResult+-e+[EMBL-Gene:__ID__]+-vn+1
+
+[Type]
+typename : similarity_genewise
+tiername : Gene
+resulttype : similarity_genewise
+glyph : DrawableGeneFeatureSet
+color : 51,204,0
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+reversesort : false
+groupby : GENE
+weburl : http://srs.ebi.ac.uk/srs6bin/cgi-bin/wgetz?-page+qResult+-e+[EMBL-Gene:__ID__]+-vn+1
+
+[Type]
+typename : exonerate_e2g
+tiername : Gene
+resulttype : exonerate_e2g
+glyph : DrawableGeneFeatureSet
+color : 51,204,0
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : ESTGene
+expanded : true
+labeled : true
+
+[Type]
+typename : ESTGene
+tiername : ESTGene
+resulttype : genomewise
+glyph : DrawableGeneFeatureSet
+color : blue
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+column : PHASE
+reversesort : false
+groupby : GENE
+weburl : http://www.ensembl.org/*/geneview?transcript=
+
+[Type]
+typename : ESTGene_r
+tiername : ESTGene
+resulttype : genomewise_r
+glyph : DrawableGeneFeatureSet
+color : 0,0,175
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+column : PHASE
+groupby : GENE
+weburl : http://www.ensembl.org/*/geneview?transcript=
+
+[Tier]
+tiername : Prediction
+expanded : true
+
+[Type]
+typename : Genscan
+tiername : Prediction
+resulttype : genscan
+resulttype : GENSCAN
+glyph : DrawableResultFeatureSet
+color : 0,153,153
+usescore : true
+minscore : 0.0
+scorethreshold : -1.0
+column : score
+column : GENOMIC_RANGE
+reversesort : false
+groupby : GENE
+
+[Type]
+typename : tRNA
+tiername : Prediction
+resulttype : TrnaScan
+glyph : DrawableResultFeatureSet
+color : red
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : score
+column : GENOMIC_RANGE
+reversesort : false
+
+[Tier]
+tiername : Slam
+expanded : true
+
+[Type]
+typename : Slam
+tiername : Slam
+resulttype : slam
+resulttype : Slam
+glyph : DrawableResultFeatureSet
+color : 0,153,153
+usescore : true
+minscore : 0.0
+scorethreshold : -1.0
+column : score
+column : GENOMIC_RANGE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : RFAM
+expanded : true
+
+[Type]
+typename : RFAM
+tiername : RFAM
+resulttype : RFAM
+glyph : DrawableResultFeatureSet
+color : 0,153,153
+usescore : true
+minscore : 0.0
+scorethreshold : -1.0
+column : score
+column : GENOMIC_RANGE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : mRNA
+sorted : true
+maxrows : 7
+
+[Type]
+typename : EMBLrna
+tiername : mRNA
+resulttype : vertebrate_mRNA_eg
+resulttype : embl_vertrna
+glyph : DrawableResultFeatureSet
+color : 51,153,0
+usescore : true
+minscore : 0.0
+scorethreshold : -1.0
+column : score
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_RANGE
+reversesort : false
+weburl : http://www.ebi.ac.uk/cgi-bin/emblfetch?__ID__
+
+[Tier]
+tiername : Protein
+sorted : true
+maxrows : 7
+
+[Type]
+typename : Protein
+tiername : Protein
+resulttype : sptr
+resulttype : blastp
+resulttype : wublastp
+resulttype : Swall
+resulttype : UniProt
+resulttype : Uniprot
+glyph : DrawableResultFeatureSet
+color : 255,153,0
+usescore : true
+minscore : 0.0
+scorethreshold : -1.0
+column : score
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_RANGE
+reversesort : false
+weburl : http://www.ebi.ac.uk/cgi-bin/swissfetch?
+
+[Tier]
+tiername : VertRNA
+expanded : true
+sorted : true
+maxrows : 7
+
+[Type]
+typename : EMBLVertRNA
+tiername : VertRNA
+resulttype : wublastx
+resulttype : vert
+resulttype : Vertrna
+resulttype : tblastn
+resulttype : wutblastn
+glyph : DrawableResultFeatureSet
+color : 51,153,0
+usescore : true
+minscore : 0.0
+scorethreshold : -1.0
+column : score
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_RANGE
+reversesort : false
+weburl : http://www.ebi.ac.uk/cgi-bin/emblfetch?__ID.__
+
+[Tier]
+tiername : Unigene
+sorted : true
+maxrows : 7
+
+[Type]
+typename : Unigene
+tiername : Unigene
+resulttype : unigene.seq
+glyph : DrawableResultFeatureSet
+color : red
+usescore : true
+minscore : 0.0
+scorethreshold : -1.0
+column : score
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_RANGE
+reversesort : false
+weburl : http://www.ncbi.nlm.nih.gov/UniGene/clust.cgi?ORG=__ID.__&CID=__ID__
+
+[Tier]
+tiername : EST
+
+[Type]
+typename : EST
+tiername : EST
+resulttype : EST_eg
+resulttype : dbest
+resulttype : EST
+glyph : DrawableResultFeatureSet
+color : 153,153,255
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : NAME
+column : score
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_RANGE
+reversesort : false
+weburl : http://www.ebi.ac.uk/cgi-bin/emblfetch?__ID.__
+
+[Tier]
+tiername : Markers
+expanded : true
+
+[Type]
+typename : Markers
+tiername : Markers
+resulttype : Marker
+glyph : DrawableResultFeatureSet
+color : magenta
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+reversesort : false
+weburl : http://www.ensembl.org/perl/markerview?marker=
+
+[Tier]
+tiername : EnsemblMarkerIds
+visible : false
+expanded : true
+
+[Type]
+typename : EnsMarkerIds
+tiername : EnsemblMarkerIds
+resulttype : Mapprimer130
+resulttype : epcr
+glyph : DrawableResultFeatureSet
+color : 50,50,50
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+reversesort : false
+
+[Tier]
+tiername : Variation
+expanded : true
+maxrows : 7
+
+[Type]
+typename : SNP
+tiername : Variation
+resulttype : Variation
+glyph : DrawableResultFeatureSet
+color : 102,102,255
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+reversesort : false
+weburl : http://www.ensembl.org/perl/snpview?snp=
+
+[Tier]
+tiername : CPGIsland
+expanded : true
+
+[Type]
+typename : cpgisle
+tiername : CPGIsland
+resulttype : cpg
+glyph : DrawableResultFeatureSet
+color : 130,0,130
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+column : score
+reversesort : false
+
+[Tier]
+tiername : Exonerate
+expanded : true
+sorted : true
+maxrows : 7
+
+[Type]
+typename : Exonerate gapped
+tiername : Exonerate
+resulttype : exonerate_gapped
+glyph : DrawableResultFeatureSet
+color : cyan
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_RANGE
+reversesort : false
+weburl : http://trace.ensembl.org/perl/traceview?tracedb=0&traceid=
+
+[Tier]
+tiername : trace
+sorted : true
+maxrows : 7
+
+[Type]
+typename : trace
+tiername : trace
+resulttype : trace
+glyph : DrawableResultFeatureSet
+color : 255,102,255
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+weburl : http://trace.ensembl.org/perl/traceview?tracedb=0&traceid=
+
+[Tier]
+tiername : human_refseq_protein
+expanded : true
+
+[Type]
+typename : human_refseq_protein
+tiername : human_refseq_protein
+resulttype : human_refseq_protein
+resulttype : human_refseq
+glyph : DrawableResultFeatureSet
+color : 204,0,102
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+weburl : http://www.sanger.ac.uk/srs6bin/cgi-bin/wgetz?[REFSEQ-ID:__ID__]
+
+[Tier]
+tiername : human_swall_protein
+expanded : true
+
+[Type]
+typename : human_swall_protein
+tiername : human_swall_protein
+resulttype : human_swall_protein
+glyph : DrawableResultFeatureSet
+color : 255,51,153
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+weburl : http://www.ebi.ac.uk/cgi-bin/swissfetch?
+
+[Tier]
+tiername : refseq_cdna
+expanded : true
+
+[Type]
+typename : refseq_cdna
+tiername : refseq_cdna
+resulttype : refseq_cdna
+glyph : DrawableResultFeatureSet
+color : 153,51,255
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+weburl : http://www.sanger.ac.uk/srs6bin/cgi-bin/wgetz?[REFSEQ-ID:__ID__]
+
+[Tier]
+tiername : other_swall_protein
+labeled : true
+
+[Type]
+typename : other_swall_protein
+tiername : other_swall_protein
+resulttype : other_swall_protein
+resulttype : other_protein
+glyph : DrawableResultFeatureSet
+color : 204,204,255
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+weburl : http://www.ebi.ac.uk/cgi-bin/swissfetch?
+
+[Tier]
+tiername : combined-protein_cdna
+
+[Type]
+typename : combined-protein_cdna
+tiername : combined-protein_cdna
+resulttype : combined-protein_cdna
+glyph : DrawableResultFeatureSet
+color : 153,0,153
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+weburl : http://www.sanger.ac.uk/srs6bin/cgi-bin/wgetz?[libs={embl swissprot refseq}-ID:__ID__]
+
+[Tier]
+tiername : FirstEF
+
+[Type]
+typename : FirstEF
+tiername : FirstEF
+resulttype : FirstEF
+resulttype : firstef
+resulttype : firstEF
+glyph : DrawableResultFeatureSet
+color : gray
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+reversesort : false
+groupby : SINGLE
+
+[Tier]
+tiername : Repeat
+
+[Type]
+typename : Repeat
+tiername : Repeat
+resulttype : repeat
+resulttype : RepeatMask
+resulttype : RepeatMasker
+resulttype : repeatrasker
+resulttype : RepeatMasker_SINE
+resulttype : RepeatMasker_LINE
+glyph : DrawableResultFeatureSet
+color : gray
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+reversesort : false
+groupby : SINGLE
+
+[Tier]
+tiername : Dust
+
+[Type]
+typename : Dust
+tiername : Dust
+resulttype : Dust
+glyph : DrawableResultFeatureSet
+color : gray
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+reversesort : false
+groupby : SINGLE
+
+[Tier]
+tiername : TRF
+
+[Type]
+typename : TRF
+tiername : TRF
+resulttype : TRF
+glyph : DrawableResultFeatureSet
+color : gray
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+reversesort : false
+groupby : SINGLE
+
+[Tier]
+tiername : stopcodon_frame1
+
+[Type]
+typename : stopcodon_frame1
+tiername : stopcodon_frame1
+resulttype : codons
+resulttype : stopcodon_frame1
+glyph : DrawableTerminalCodon
+color : red
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : stopcodon_frame2
+
+[Type]
+typename : stopcodon_frame2
+tiername : stopcodon_frame2
+resulttype : codons
+resulttype : stopcodon_frame2
+glyph : DrawableTerminalCodon
+color : red
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : stopcodon_frame3
+
+[Type]
+typename : stopcodon_frame3
+tiername : stopcodon_frame3
+resulttype : stopcodon_frame3
+glyph : DrawableTerminalCodon
+color : red
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : Annotation
+expanded : true
+labeled : true
+maxrows : 100
+
+[Type]
+typename : Annotation
+tiername : Annotation
+resulttype : gene
+resulttype : transcript
+resulttype : exon
+resulttype : transposon
+resulttype : tRNA
+glyph : DrawableGeneFeatureSet
+color : 255,215,0
+scorethreshold : -1.0
+column : GENOMIC_RANGE
+column : EVIDENCE
+reversesort : false
+groupby : GENE
+
+[Type]
+typename : AnnotatedEnsembl
+tiername : Annotation
+resulttype : ensembl_gene
+glyph : DrawableGeneFeatureSet
+color : 255,215,0
+scorethreshold : -1.0
+column : GENOMIC_RANGE
+column : EVIDENCE
+reversesort : false
+groupby : GENE
+
+[Type]
+typename : Otter
+tiername : Annotation
+resulttype : otter
+glyph : DrawableGeneFeatureSet
+color : 255,215,0
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+column : EVIDENCE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : human_mrna
+expanded : true
+
+[Type]
+typename : human_mrna
+tiername : human_mrna
+resulttype : human_mrna
+glyph : DrawableResultFeatureSet
+color : 51,204,0
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : human_cdna
+expanded : true
+
+[Type]
+typename : human_cdna
+tiername : human_cdna
+resulttype : human_cdna
+glyph : DrawableResultFeatureSet
+color : 51,204,0
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : mouse_mrna
+expanded : true
+
+[Type]
+typename : mouse_mrna
+tiername : mouse_mrna
+resulttype : mouse_mrna
+glyph : DrawableResultFeatureSet
+color : 51,204,0
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : mouse_cdna
+expanded : true
+
+[Type]
+typename : mouse_cdna
+tiername : mouse_cdna
+resulttype : mouse_cdna
+glyph : DrawableResultFeatureSet
+color : 51,204,0
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : mouse_swall
+expanded : true
+
+[Type]
+typename : mouse_swall
+tiername : mouse_swall
+resulttype : mouse_swall
+glyph : DrawableResultFeatureSet
+color : 204,204,0
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : mouse_protein
+expanded : true
+
+[Type]
+typename : mouse_protein
+tiername : mouse_protein
+resulttype : mouse_protein
+glyph : DrawableResultFeatureSet
+color : 204,204,0
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : human_protein
+expanded : true
+
+[Type]
+typename : human_protein
+tiername : human_protein
+resulttype : human_protein
+glyph : DrawableResultFeatureSet
+color : 204,204,0
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : blastn
+
+[Type]
+typename : blastn
+tiername : blastn
+resulttype : blastn
+glyph : DrawableResultFeatureSet
+color : 255,204,102
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : blastall
+expanded : true
+
+[Type]
+typename : blastall
+tiername : blastall
+resulttype : blastall
+glyph : DrawableResultFeatureSet
+color : 255,0,204
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : primate
+
+[Type]
+typename : primate
+tiername : primate
+resulttype : primate
+glyph : DrawableResultFeatureSet
+color : 102,102,255
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : genebuilder
+expanded : true
+
+[Type]
+typename : genebuilder
+tiername : genebuilder
+resulttype : genebuilder
+glyph : DrawableResultFeatureSet
+color : 204,0,0
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : tblastx
+
+[Type]
+typename : tblastx
+tiername : tblastx
+resulttype : tblastx
+glyph : DrawableResultFeatureSet
+color : 204,255,51
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : blastx
+
+[Type]
+typename : blastx
+tiername : blastx
+resulttype : blastx
+glyph : DrawableResultFeatureSet
+color : 127,255,0
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : swir
+
+[Type]
+typename : swir
+tiername : swir
+resulttype : swir
+glyph : DrawableResultFeatureSet
+color : 127,255,0
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : no_type
+
+[Type]
+typename : no_type
+tiername : no_type
+resulttype : no_type
+glyph : DrawableResultFeatureSet
+color : 127,255,0
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : dbsts
+
+[Type]
+typename : dbsts
+tiername : dbsts
+resulttype : dbsts
+glyph : DrawableResultFeatureSet
+color : 127,255,0
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : TGE_e2g
+
+[Type]
+typename : TGE_e2g
+tiername : TGE_e2g
+resulttype : TGE_e2g
+glyph : DrawableResultFeatureSet
+color : 51,204,0
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : Riken_BMG
+
+[Type]
+typename : Riken_BMG
+tiername : Riken_BMG
+resulttype : Riken_BMG
+glyph : DrawableResultFeatureSet
+color : 153,0,0
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : TGW
+
+[Type]
+typename : TGW
+tiername : TGW
+resulttype : TGW
+glyph : DrawableResultFeatureSet
+color : 204,204,0
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : combined_gw_e2g
+
+[Type]
+typename : combined_gw_e2g
+tiername : combined_gw_e2g
+resulttype : combined_gw_e2g
+glyph : DrawableResultFeatureSet
+color : 153,0,153
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : e-PCR
+
+[Type]
+typename : e-PCR
+tiername : e-PCR
+resulttype : e-PCR
+glyph : DrawableResultFeatureSet
+color : 255,153,0
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : FPC_BMG
+
+[Type]
+typename : FPC_BMG
+tiername : FPC_BMG
+resulttype : FPC_BMG
+glyph : DrawableResultFeatureSet
+color : 255,51,51
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : intron
+
+[Type]
+typename : intron
+tiername : intron
+resulttype : intron
+glyph : DrawableResultFeatureSet
+color : 51,51,251
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : three_prime
+
+[Type]
+typename : three_prime
+tiername : three_prime
+resulttype : three_prime
+glyph : DrawableResultFeatureSet
+color : 51,251,51
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : five_prime
+
+[Type]
+typename : five_prime
+tiername : five_prime
+resulttype : five_prime
+glyph : DrawableResultFeatureSet
+color : 251,51,51
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : utr5
+
+[Type]
+typename : utr5
+tiername : utr5
+resulttype : utr5
+glyph : DrawableResultFeatureSet
+color : 251,251,51
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : utr3
+
+[Type]
+typename : utr3
+tiername : utr3
+resulttype : utr3
+glyph : DrawableResultFeatureSet
+color : 51,251,251
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : missutr3
+
+[Type]
+typename : missutr3
+tiername : missutr3
+resulttype : missutr3
+glyph : DrawableResultFeatureSet
+color : 125,125,0
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : missutr5
+
+[Type]
+typename : missutr5
+tiername : missutr5
+resulttype : missutr5
+glyph : DrawableResultFeatureSet
+color : 0,125,125
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : endtrans
+
+[Type]
+typename : endtrans
+tiername : endtrans
+resulttype : endtrans
+glyph : DrawableResultFeatureSet
+color : red
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : starttrans
+
+[Type]
+typename : starttrans
+tiername : starttrans
+resulttype : starttrans
+glyph : DrawableResultFeatureSet
+color : green
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : synteny
+sorted : true
+maxrows : 7
+
+[Type]
+typename : synteny
+tiername : synteny
+resulttype : synteny
+glyph : DrawableResultFeatureSet
+color : 255,102,255
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+weburl : http://www.ensembl.org/__ID:__/contigview?contig=__ID__
+
+[Tier]
+tiername : GenePair
+visible : false
+
+[Type]
+typename : GenePair
+tiername : GenePair
+resulttype : gene_pair
+glyph : DrawableResultFeatureSet
+color : red
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : CDS
+
+[Type]
+typename : CDS
+tiername : CDS
+resulttype : cds
+glyph : DrawableResultFeatureSet
+color : green
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+
+[Tier]
+tiername : String
+
+[Type]
+typename : String
+tiername : String
+resulttype : String
+glyph : DrawableResultFeatureSet
+color : black
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+
+[Tier]
+tiername : Eponine
+sorted : true
+maxrows : 7
+
+[Type]
+typename : Eponine
+tiername : Eponine
+resulttype : Eponine
+glyph : DrawableResultFeatureSet
+color : blue
+scorethreshold : -1.0
+column : score
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+reversesort : false
+groupby : SINGLE
+
+[Tier]
+tiername : SimplePeptide
+sorted : true
+maxrows : 7
+
+[Type]
+typename : SimplePeptide
+tiername : SimplePeptide
+resulttype : prints
+resulttype : pfscan
+resulttype : Signalp
+resulttype : tmhmm
+resulttype : ncoils
+resulttype : scanprosite
+resulttype : Seg
+resulttype : Pfam
+resulttype : Superfamily
+glyph : DrawableResultFeatureSet
+color : 255,100,0
+scorethreshold : -1.0
+column : score
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+reversesort : false
+
+[Tier]
+tiername : syntenyd
+sorted : true
+maxrows : 7
+
+[Type]
+typename : dna-dna-align
+tiername : syntenyd
+resulttype : dna-dna-align
+glyph : DrawableResultFeatureSet
+color : blue
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+
+[Tier]
+tiername : syntenyp
+sorted : true
+maxrows : 7
+
+[Type]
+typename : protein-protein-align
+tiername : syntenyp
+resulttype : protein-protein-align
+glyph : DrawableResultFeatureSet
+color : red
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : SCORE
+reversesort : false
+

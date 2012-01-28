@@ -1,0 +1,135 @@
+Changes between release 1.5.3 (August 18, 2005) and release 1.6.0
+(November 3, 2005):
+
+Bug fixes:
+
+Annotation labels don't slide along as you scroll if you're revcomped.
+
+Stop codon dragging off by one: if you select a stop codon and drag it
+onto a transcript, it comes down one base to the left of where it should
+(on both strands).
+
+If you start by loading a small region, start/stop codons don't show up
+until you zoom (or hit reset).  If you load the same region from an
+already-started Apollo (by "Open new"), they *do* show up.
+
+When you are zoomed in the main display and can see the translation of an
+annotation on the reverse strand, if you scroll to the stop codon,
+suddenly the translation disappears.
+
+If you try to create a new annot that overlaps with a non-coding annot,
+it now doesn't mistakenly try to make the new annot a "transcript" of the
+non-coding annot.
+
+Also, it no longer will ask you if you want to merge your new annot with
+second-tier annots (e.g. protein_binding_sites).  This behavior is
+prevented by putting using "overlap_method : NoOverlap" in tiers file.
+
+You can now drag results into a gene UTR and it will make a separate gene
+- before it merged with the existing gene.
+
+Prohibit creation of out-of-range annots (menu option no longer appears
+if you're out of range).
+
+Sequence window now copes with residueless results (it shows the genomic
+sequences, and the "Result sequence" radiobutton is disabled.)
+
+Fixed: change to non-consensus splice adds orange triangle but annotation
+info editor (AIE) doesn't indicate non-consensus or have approval check
+box if splice is not in the coding region.
+Also fixed position of orange splice triangle for starting exons.
+
+Fixed: Can't move feature to other strand if there exists no feature of
+that type on other strand
+
+
+Improvements:
+
+Steve added ability to change overall look & feel (LAF) on the fly
+(e.g. on a Mac, you can choose "MacOS" (Aqua) or Metal).
+
+Zoom panel more compact (leaving more horizontal room for region
+description and more vertical room for info panel).
+
+Mouse wheel vertically scrolls result or annotation panel (if your cursor
+is over one of them).
+
+Can set warnOnEdit for annot types or whole tiers.  User are warned if
+they try to edit annots that have warnOnEdit=true (e.g. second-tier annots).
+
+Generalized stop_codon_readthrough (can now be any residue):
+The property stop_codon_redefinition_as_selenocysteine now preserves the
+U.  The stop_codon_readthrough property can now have a boolean
+(true/false) value or a character for the replacement amino acid.  If it
+is "true", the affected stop codon will show up as the generic
+readthrough aa, X.  If it is a character (e.g. "Q"), it will show up as
+that character in the Apollo display and also will be saved that way in
+the ChadoXML (or GAME XML) file.  The annotation info editor just has a
+checkbox for "readthrough stop codon" (yes/no), which is checked if the
+stop_codon_readthrough property is non-false and non-empty or
+stop_codon_redefinition_as_selenocysteine property is true--thus, you
+can't tell the difference between 'U' and 'X' inside the annot info
+editor, nor can you set a specific readthrough residue from inside
+Apollo.
+
+mRNA sequences now have associated protein features (proteins used to
+just be sequences--now they are features in their own right, paving the
+way for more protein-aware editing capability).  Proteins can therefore
+have properties and synonyms.
+
+Apollo transactions can now be captured inside a GAME file (not just in
+separate file).  (Configurable in style file.)
+
+Chado loader now does lazy sequence loading (much faster).
+
+Chado JDBC read adapter more configurable.
+
+First big step towards breaking the tyranny of gene/transcript/exon
+datamodels:  if you set
+DO-ONE-LEVEL-ANNOTS "true"
+in apollo.cfg, Apollo creates one-level annotations when appropriate
+(e.g. tiling_path_fragments) rather than promoting them to phony
+three-level annots.
+Note that this changes the GAME specification.  Data written out with
+this flag set to true has GAME version 1.1 (rather than 1.0).
+For this release, DO-ONE-LEVEL-ANNOTS is set to "false" so as not to
+cause problems for Harvard.
+
+
+ChadoXML adapter or FlyBase-specific bug fixes and improvements:
+
+Fxied problem with stop codon not being recognized after gene is changed
+(when data was loaded from a ChadoXML file).
+
+The Mosquito files have regions that include a -- in the name, e.g.
+     <!-- Analysis of: REGION: MOZ2a--chromosome:2R:28480000-28685000 -->
+When this is written inside a comment, the XML parser sees the -- and expects
+to see the end of the comment and gets upset when that doesn't happen.
+So we'll change "--" to "-" if it appears in seq_name before writing it in
+a comment.
+
+Give -RX suffixes to first-tier annots only.  (The real test for
+whether to add a suffix should be whether this is a three-level annot
+(vs. a one-level annot like "promoter").  Mark is planning to add an
+option to the tiers file to say whether a type is one-level or
+three-level.)
+[Also note that the suffix assignment works properly when you create a
+new annotation, but if you create a first-tier annot, which has
+transcript suffixes, and then change it to a second-tier annot type, it
+won't strip off the transcript suffixes.]
+
+Sequences (e.g. peptides) need to be able to have Synonyms.
+[mRNA sequences now have associated protein features that can have
+Synonyms, so we can roundtrip peptide synonyms.]
+
+Taking ownership of a peptide (by editing it) also (erroneously) gave you
+ownership of its synonyms.  The synonym owners now stay as they were.
+
+Fixed: When 2 annotations are merged into a new gene model some of the
+synonym and dbxref info appears to be going missing.
+
+Unknown fields were being saved as featureprops--roundtrip them as
+fields instead (as they came in), e.g.
+   <is_obsolete>0</is_obsolete>
+
+

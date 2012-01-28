@@ -1,0 +1,11 @@
+WritableRegion=TEST3677
+ReadableRegion=AE003642.3
+xzReadableRegion=BACR10J23
+// change this to useXML?
+xCorbaSource=xml
+CorbaIOR=http://www.fruitfly.org/~cjm/apollo_server.ior
+xCorbaIOR=http://localhost/~cjm/apollo_server.ior
+xxxCorbaIOR=file:/home/cjm/public_html/apollo_server.ior
+CorbaSource=xml
+
+

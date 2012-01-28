@@ -1,0 +1,61 @@
+6/17/2003
+Bugs fixed in internal release 1.3.3 or release 1.3.4:
+
+Improved out-of-memory check
+
+Made the window around a requested gene bigger and configurable
+(get_xml_from_gadfly.pl now takes an optional half-window-size argument).
+Also added window around gene when zooming from Annotation or Bookmarks
+menu.
+
+Got rid of HaveSequenceHack stuff.
+
+Serial file adapter (apollo.backup) now working, even if region doesn't
+have sequence.
+
+Exon and transcript type bug fixed (type was erroneously saved as "gene"
+for both of those).
+
+Find by name now looks for the exact string specified; if it doesn't find
+anything, it looks for features whose name starts with the string that
+was requested.
+
+Naming of new transcripts fixed:
+If I load smaller-example-no-seq.xml, there's a gene labeled
+fzy:CG4274-RA.  If I duplicate the transcript (or drag down a feature to
+create a new transcript), the new transcript is labeled (CG4274):fzy-RB.
+Isn't it a little weird that it flipped the name and the synonym?
+Shouldn't it stick with the original order?  (Sima says yes.)
+
+When you click on a sequence match (in Find) or a restriction enzyme
+match, it doesn't zoom in quite so much, so you can now see the context
+of the match.
+
+Fixed restriction enzyme search (didn't work on Ensembl data, gave funny
+results on some GAME regions).
+
+Fixed problem with internal comment checkbox.
+
+Clean up comment text to make sure it doesn't contain control
+characters, because those choke the XML reader.
+[Done, but it's not clear that this will prevent the problem Harvard had
+with control characters in the XML, since it seems like the text editing
+panel doesn't even let you enter control characters, so I'm not sure how
+they got in there in the first place.]
+
+Allow multiple annotation info windows to be open at once.
+
+Inside annotation info editor, if user selects an overhanging gene and
+then tries to commit changes, warn and let them cancel the save.
+
+Add proxy dialog box button to GAMEAdapter (like the one in
+EnsCGIAdapterGUI).  [Not sure how to test this, since we don't use
+proxies.]
+
+Fixed history for GFF sequence file.
+
+Improved error handling if user specifies a bad Location or (in GFF
+adapter) specify a "sequence file" that's not in the right format.
+
+Fixed Ensembl CGI adapter on Mac (wasn't working at all on Macs running
+JDK1.4--had to do with handling of URL redirection).

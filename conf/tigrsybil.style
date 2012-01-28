@@ -1,0 +1,204 @@
+// Style for Chado adapter
+
+// Each line should have two strings, separated by one or more spaces.
+// The first string is a key and the second is the key's value.
+// It is necessary to put quotes around the strings if they contain
+// punctutation characters or spaces.
+// Both slash-star and slash-slash comments are accepted.
+// Blank lines are ignored.
+
+// The name of the types file (a file--expected to be in the user's ~/.apollo directory
+// or in the APOLLO_ROOT/conf directory)
+Types		        "tigrsybil.tiers"
+
+// at the moment datbase is database on the server used - 4th field in
+// chado-adapter.cfg file - might want to switch this to db label as
+// db names not necasarily unique across servers
+// i think these are now irrelevant as style is all captured in chado-adapter.xml
+DatabaseToStyle "chado -> fly.style"
+// indiana server db called chado_r3.2                
+DatabaseToStyle "chado_r3.2 -> fly.style"
+// cshl test server
+DatabaseToStyle "flybase -> fly.style"
+
+
+// Other (default) name adapter is apollo.dataadapter.organism.DefaultNameAdapter
+// (Others will be added later).
+// uncomment when name adapters are legal in style file again
+//NameAdapterInstall	"TigrSybilNameAdapter"
+
+// Whether to show the annotation view, default false.
+ShowAnnotations         "true"
+
+// Whether to display the result view, default true.
+ShowResults		"true"
+
+// Whether to allow editing, default false.  Set to true to try creating/editing annotions.
+EnableEditing		"true"
+
+// Whether to enable the navigation manager, default false.
+EnableNavigationManager "true"
+
+// List of chromosomes for pulldown menu in navigation bar and load-by-location data adapter
+//Chromosomes             "2L,2R,3L,3R,4,X,2h,3h,4h,Xh,Yh,U"
+
+// Note: colors can be the standard Java colors (black, blue, cyan, darkGray,
+// gray, green, lightGray, magenta, orange, pink, red, white, yellow)
+// or an R,G,B value
+
+// Background color for annotations
+AnnotationBackgroundColor "221,221,255"
+
+// Background color for results
+// Note that if you change FeatureBackgroundColor to white, as some people prefer,
+// you'll probably want to change EdgematchColor to black.
+FeatureBackgroundColor  "black"
+
+// Color for highlighting edges of results that line up
+EdgematchColor          "white"
+
+// Width of edgematch lines (default is 2)
+EdgematchWidth          "1"
+
+// Color for showing name labels in result panels (default is magenta)
+FeatureLabelColor       "white"
+
+// Color for showing name labels in annotation panels (default is black)
+AnnotationLabelColor    "black"
+
+// CoordBackgroundColor is for the background of the central axis (default white)
+CoordBackgroundColor    "white"
+
+// CoordForegroundColor is for the numbers on the axis (default black)
+CoordForegroundColor    "black"
+
+// If this is true, then annotations are colored by user color.
+// Default is false--all annotations are the same color, as set in tiers file.
+// If you set EnableEditing to true, you should set UserTranscriptColouring
+// to true as well.
+UserTranscriptColouring "false"
+
+// For selection rectangle around selected features
+SelectionColor          "255,0,102"  // pinkish-red
+
+// Whether to show sequencing gaps in cDNAs as dashed lines (default is false)
+DashSets                "true"
+
+// For showing dashed lines in ESTs to represent sequence gaps
+SequenceGapColor        "231,255,51"
+
+// Whether to show feature rectangles in 3D (default false).  Generally, programmers think
+// the 3D effect is cool and biologists find it annoying.
+Draw3D                  "false"
+
+// Whether to draw outlines around feature rectangles (default false).
+DrawOutline             "false"
+
+// Canned comments for use by annotators
+AnnotationComment "Only one EST supports this alternative transcript"
+AnnotationComment "EST data support existence of multiple transcripts"
+AnnotationComment "Unconventional splice site postulated"
+AnnotationComment "GC splice donor site postulated"
+AnnotationComment "Gene prediction data only"
+AnnotationComment "5' terminus extended to first start codon; no experimental data confirming this prediction"
+AnnotationComment "3' terminus extended to first stop codon; no experimental data confirming this prediction"
+AnnotationComment "EST data suggest additional 3' exon(s)"
+AnnotationComment "EST data suggest additional 5' exon(s)"
+AnnotationComment "Flag Cambridge: gene merge (internal view only)" 
+AnnotationComment "Flag Cambridge: gene split (internal view only)"
+AnnotationComment "Evidence indicates that 3' UTR overlaps 5' UTR of downstream gene; extends to coordinate AE00 :  (based upon 3' extent of  )"
+AnnotationComment "Although this gene model is supported by multiple pieces of evidence, the computed ORF is questionable because it is much smaller than the predicted transcript"
+AnnotationComment "tRNA type: putative tRNA-___ <fill aminoac.> implied by tRNAScan-SE analysis. (internal view only)"
+AnnotationComment "Multiple ESTs homologous to non-coding strand of this gene"
+AnnotationComment "DGC clone appears problematic:  incomplete CDS"
+AnnotationComment "DGC clone appears problematic:  unspliced intron"
+AnnotationComment "DGC clone appears problematic:  chimeric"
+AnnotationComment "DGC clone appears problematic:  contains transposon sequences"
+AnnotationComment "First Priority for Reannotation (internal view only)"
+AnnotationComment "Transposon inserted in intron" 
+AnnotationComment "Gene split based on BLASTX data"
+AnnotationComment "Gene split based on EST data"
+AnnotationComment "Gene merge based on BLASTX data; no experimental evidence for splice sites"
+AnnotationComment "Gene merge based on EST data"
+AnnotationComment "Flag Cambridge: new annotation == existing FB gene FBgn (internal view only)"
+AnnotationComment "Flag Cambridge: discistronic gene (internal view only)"
+AnnotationComment "Flag Cambridge: DGC clone not consistent with gene report (internal view only)"
+AnnotationComment "Flag Cambridge: DGC clone not consistent with gene report (internal view only)"
+AnnotationComment "EST data support existence of multiple transcripts due to variable use of mini-exons"
+AnnotationComment "EST data support existence of multiple transcripts due to variable use of 5' exons"
+AnnotationComment "EST data support existence of multiple transcripts due to variable use of poly-A sites"
+AnnotationComment "5' exon not determined (no ATG translation start identified)"
+AnnotationComment "Unconventional translation start"
+AnnotationComment "Translation start as per FBrf"
+AnnotationComment "EST data support dicistronic gene model"
+AnnotationComment "May be component of a dicistronic gene; available data inconclusive"
+AnnotationComment "Hand editing required (internal view only)"
+AnnotationComment "Probable mutation in sequenced strain: premature stop"
+AnnotationComment "Probable mutation in sequenced strain:  [other]"
+AnnotationComment "Known mutation in sequenced strain"
+AnnotationComment "EST <fill clone name> from opposite strand used to extend gene model"
+AnnotationComment "Although multiple ESTs support this model, read-through of predicted intron results in shorter CDS"
+AnnotationComment "Putative repetitive region: the region matches several EST and P insertions that map to various locations in the genome"
+AnnotationComment "CDS edit:  sequencing error (internal view only)"
+AnnotationComment "CDS edit:  possible [] stop codon suppression could cause production of [] residue protein (internal view only)"
+AnnotationComment "CDS edit:  mutation in sequenced strain (internal view only)"
+AnnotationComment "CDS edit:  [other]"
+AnnotationComment "Short CDS OK (internal view only)"
+AnnotationComment "Shares UTR: 5' UTR shared with downstream gene"
+AnnotationComment "Shares UTR: 3' UTR shared with downstream gene"
+AnnotationComment"Transposon overlap OK (internal view only)"
+
+// The user name in the annotation info window uses these colors.
+// The project field is optional, but can be used for public viewing
+// to protect the identity of individual curators.
+UserInfo "user=Manatee:color=51,102,255"  // dark blue (default annotation color) 
+// Add your own UserColor here!
+
+// Peptide status
+// The first field is the precedence
+// The second field is the font which in turn is composed of 3 fields
+//      fontname,fontstyle,fontsize (10 is the default)
+//              fontstyle can be 0,1,2,3 (plain, bold, italic, bolditalic)
+// This font overrides the DefaultFeatureLabelFont for these features
+// The third field indicates whether or not it is something that a
+//      curator may assert
+// The fourth field is the string for menus, since part of this is coming
+// from a program (SonOfSam).  It needs to be coordinated with that as well
+// and let us hope that the : (colon) is never used in the text because
+// that would mess up the parsing
+// Font Arial was switched to Dialog because Red Hat did not support it
+//PeptideStatus "2:Dialog,0,10:true:curator examined, accepted"
+//PeptideStatus "2:Dialog,2,10:true:curator examined, unresolved"
+//PeptideStatus "0:Dialog,3,10:true:not analyzed"
+//PeptideStatus "0:Dialog,3,10:false:computational analysis failed"
+//PeptideStatus "3:Dialog,0,10:false:perfect match to swissprot real (computational)"
+//PeptideStatus "3:Dialog,0,10:false:not in swissprot real (computational)"
+//PeptideStatus "1:Dialog,1,10:false:Imperfect match to SwissProt real (computational)"
+//PeptideStatus "1:Dialog,1,10:false:Possible incorrect identifier (computational)"
+
+// Fonts are composed of 3 comma-delimited fields: 
+// fontname,fontstyle,fontsize (10 is the default)
+// fontstyle can be 0,1,2,3 (plain, bold, italic, bolditalic) 
+// Arial,0,10 was switched to Dialog,0,10 because Red Hat did not support Arial.
+// DefaultFeatureLabelFont is used for annotations with unknown
+// PeptideStatus (e.g. pseudogenes) as well as feature labels. 
+// The PeptideStatus annotation fonts are used for the label of the
+// annotation as well as the font in the the gene menu. 
+DefaultFeatureLabelFont "Dialog,0,10"
+
+// Default font for Apollo. Axis numbers use default font, and it's also
+// used for residues inside features when you zoom in.
+DefaultFont "Dialog,0,10"
+
+// DNA and Amino Acid sequence font for Exon Detail Editor
+ExonDetailEditorSequenceFont "Dialog,0,12"
+
+// Colors for the two alternating background stripes of the exon detail editor
+ExonDetailEditorBackgroundColor1 "gray"
+ExonDetailEditorBackgroundColor2 "black"
+
+// Alternating colors for exons in the exon detail editor
+ExonDetailEditorFeatureColor1 "0,102,255"  // medium blue
+ExonDetailEditorFeatureColor2 "0,0,180" // dark blue
+
+// Be sure to put a newline at the end of the last line of this file

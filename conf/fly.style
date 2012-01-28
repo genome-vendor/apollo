@@ -1,0 +1,176 @@
+// Style for Drosophila data.
+// Inherits from game.style.
+// Each line should have two strings, separated by one or more spaces.
+// The first string is a key and the second is the key's value.
+// It is necessary to put quotes around the strings if they contain
+// punctutation characters or spaces.
+// Both slash-star and slash-slash comments are accepted.
+// Blank lines are ignored.
+
+// Import the generic GAME style and then add to it.
+ImportStyle             "game.style"
+
+// The name of the types file (expected to be in the user's ~/.apollo directory
+// or in the APOLLO_ROOT/conf directory)
+Types		        "fly.tiers"     // formerly called game.tiers
+
+// Organism to use when writing out ChadoXML (if not already specified
+// for the individual feature)
+Organism                "Drosophila melanogaster"
+
+// These are now intended to be set in the tiers file, but in case
+// they're missing from the tiers (e.g. because you are using an old
+// tiers file) this will fill in the defaults for Drosophila data.
+// (Can we get rid of this now?)
+//NameAdapterInstall      "apollo.config.FlyNameAdapter"
+//OverlapDefinition       "apollo.config.ORF_Overlap"
+
+// Other (default) option is apollo.config.DefaultDisplayPrefs
+DisplayPreferences      "apollo.config.FlyDisplayPrefs"
+
+// List of chromosomes for pulldown menu in navigation bar and load-by-location data adapter
+Chromosomes             "2L,2R,3L,3R,4,X,2h,3h,4h,Xh,Yh,U"
+
+// Used to pull up annotation reports (from annotation info panel or
+// "Get more info about feature from Web" right-mouse popup menu option)
+ExternalRefURL "http://flybase.net/.bin/fbidq.html?"
+
+// Whether to enable an http connection with igb (via selection)
+EnableIgbHttpConnection "false"
+
+// Note that http://flybase.net/cgi-bin/apollo.cgi now serves Chado XML
+// If you want GAME XML, http://flybase.net/apollo-cgi/chado2apollo.cgi
+// will work for a short time (until 7/15/2006).
+GeneURL "http://flybase.net/cgi-bin/apollo.cgi?gene="
+BandURL "http://flybase.net/cgi-bin/apollo.cgi?band="
+RangeURL "http://flybase.net/cgi-bin/apollo.cgi?range="
+// Can't query by scaffold or sequence anymore
+
+AnnotationComment "DGC clone appears problematic: [DGC: ] incomplete CDS"
+AnnotationComment "DGC clone appears problematic: [DGC: ] unspliced intron"
+AnnotationComment "DGC clone appears problematic: [DGC: ] chimeric"
+AnnotationComment "DGC clone appears problematic: [DGC: ] contains transposon sequences"
+AnnotationComment "cDNA data support dicistronic gene model (gene cassette)"
+AnnotationComment "May be component of a dicistronic gene; available data inconclusive"
+AnnotationComment "Shares 5' UTR (gene cassette)"
+AnnotationComment "Shares 3' UTR"
+AnnotationComment "Known mutation in sequenced strain"
+AnnotationComment "Probable mutation in sequenced strain: premature stop"
+AnnotationComment "Probable mutation in sequenced strain:  [other]"
+AnnotationComment "Multiple ESTs homologous to non-coding strand of this gene"
+AnnotationComment "Gene split based on protein alignment (BLASTX) data"
+AnnotationComment "Gene split based on EST/cDNA data"
+AnnotationComment "Gene merge based on protein alignment (BLASTX) data"
+AnnotationComment "Gene merge based on EST/cDNA data"
+AnnotationComment "EST data support existence of additional transcripts due to variable use of mini-exons"
+AnnotationComment "EST data support existence of additional transcripts due to variable use of 5' exons"
+AnnotationComment "EST data support existence of additional transcripts due to variable use of poly-A sites"
+AnnotationComment "multiphase exon accepted (internal view only)"
+AnnotationComment "multiphase exon provisional (internal view only)"
+AnnotationComment "Flag Cambridge: gene merge (internal view only)" 
+AnnotationComment "Flag Cambridge: gene split (internal view only)"
+AnnotationComment "Flag Cambridge: new annotation == existing FB gene FBgn (internal view only)"
+AnnotationComment "Flag Cambridge: dicistronic gene (internal view only)"
+AnnotationComment "Flag Cambridge: gene cassette with shared 5' UTR (internal view only)"
+TranscriptComment "GC splice donor site postulated"
+TranscriptComment "Unconventional splice site postulated"
+TranscriptComment "Unconventional translation start"
+TranscriptComment "Translation start as per FBrf"
+TranscriptComment "Transcript model based on protein alignment (BLASTX); no experimental evidence for splice sites"
+TranscriptComment "5' terminus extended to first start codon"
+TranscriptComment "3' terminus extended to first stop codon"
+TranscriptComment "5' exon not determined (no ATG translation start identified)"
+TranscriptComment "Only one EST supports this alternative transcript"
+TranscriptComment "Alternative transcript based upon gene prediction data"
+TranscriptComment "Although multiple ESTs support this alternative transcript, read-through of predicted intron results in shorter CDS"
+TranscriptComment "Dicistronic transcript; indicated CDS corresponds to []"
+TranscriptComment "Monocistronic transcript; encodes []"
+TranscriptComment "CDS edit:  sequencing error (internal view only)"
+TranscriptComment "CDS edit:  possible [] stop codon suppression could cause production of [] residue protein (internal view only)"
+TranscriptComment "CDS edit:  mutation in sequenced strain (internal view only)"
+TranscriptComment "CDS edit:  [other] (internal view only)"
+TranscriptComment "Alternative polyA site; do not extend 3' end (internal view only)"
+TranscriptComment "no ATG start accepted (internal view only)"
+TranscriptComment "no ATG start provisional (internal view only)"
+TranscriptComment "short CDS accepted (internal view only)"
+TranscriptComment "short CDS provisional (internal view only)"
+TranscriptComment "downstream ATG start accepted (internal view only)"
+TranscriptComment "downstream ATG start provisional (internal view only)"
+TranscriptComment "short intron accepted (internal view only)"
+TranscriptComment "short intron provisional (internal view only)"
+TranscriptComment "unusual splice accepted (internal view only)"
+TranscriptComment "unusual splice provisional (internal view only)"
+TranscriptComment "transposon in intron (internal view only)"
+TranscriptComment "transposon overlaps transcript (internal view only)"
+TranscriptComment "Transposon overlap OK (internal view only)"
+TranscriptComment "tRNA in intron (internal view only)"
+TranscriptComment "CDS overlap same strand accepted (internal view only)"
+TranscriptComment "CDS overlap same strand provisional (internal view only)"
+TranscriptComment "CDS overlap opposite strand accepted (internal view only)"
+TranscriptComment "CDS overlap opposite strand provisional (internal view only)"
+
+// The user name in the annotation info window uses these colors.
+// The project field is optional, but can be used for public viewing
+// to protect the identity of individual curators.
+UserInfo "user=suzi:project=FlyBase:color=25,25,112:full-name=Suzanna Lewis"
+UserInfo "user=sima:project=FlyBase:color=255,255,0:full-name=Sima Misra"
+UserInfo "user=joshk:project=FlyBase:color=0,0,255:full-name=Josh Kaminker"
+UserInfo "user=crosby:project=FlyBase:color=152,251,152:full-name=Madeline Crosby"
+UserInfo "user=bmatthew:project=FlyBase:color=255,105,180:full-name=Beverley Matthews"
+UserInfo "user=leyla:project=FlyBase:color=255,215,0:full-name=Leyla Bayraktaroglu"
+UserInfo "user=tupy:project=FlyBase:color=0,204,255:full-name=Jon Tupy"
+UserInfo "user=simonp:project=FlyBase:color=130,69,174:full-name=Simon Prochnik"
+UserInfo "user=cdsmith:project=FlyBase:color=255,153,0:full-name=Chris Smith"
+UserInfo "user=pavel:project=FlyBase:color=255,215,0:full-name=Pavel Hradecky"
+UserInfo "user=campbell:project=FlyBase:color=0,204,204:full-name=Kathy Campbell"
+UserInfo "user=mhuang:project=FlyBase:color=204,102,255:full-name=Mei Huang"
+UserInfo "user=andy:project=FlyBase:color=100,175,255:full-name=Andy Schroeder"
+UserInfo "user=brian:project=FlyBase:color=204,204,0:full-name=Brian Bettencourt"
+UserInfo "user=nomi:project=FlyBase:color=0,204,0:full-name=Nomi Harris"
+UserInfo "user=sian:project=FlyBase:color=204,51,153:full-name=Sian Gramates"
+UserInfo "user=stpierre:project=FlyBase:color=5,150,175:full-name=Susan St. Pierre"
+UserInfo "user=FlyBase:color=51,102,255"  // deep blue (default annotation color) 
+// Add your own UserColor here!
+
+// Peptide status
+// The first field is the precedence
+// The second field is the font which in turn is composed of 3 fields
+//      fontname,fontstyle,fontsize (10 is the default)
+//              fontstyle can be 0,1,2,3 (plain, bold, italic, bolditalic)
+// This font overrides the DefaultFeatureLabelFont for these features
+// The third field indicates whether or not it is something that a
+//      curator may assert
+// The fourth field is the string for menus, since part of this is coming
+// from a program (SonOfSam).  It needs to be coordinated with that as well
+// and let us hope that the : (colon) is never used in the text because
+// that would mess up the parsing
+// Font Arial was switched to Dialog because Red Hat did not support it
+PeptideStatus "2:Dialog,0,10:true:curator examined, accepted"
+PeptideStatus "2:Dialog,2,10:true:curator examined, unresolved"
+PeptideStatus "0:Dialog,3,10:true:not analyzed"
+PeptideStatus "0:Dialog,3,10:false:computational analysis failed"
+PeptideStatus "3:Dialog,0,10:false:perfect match to swissprot real (computational)"
+PeptideStatus "3:Dialog,0,10:false:not in swissprot real (computational)"
+PeptideStatus "1:Dialog,1,10:false:Imperfect match to SwissProt real (computational)"
+PeptideStatus "1:Dialog,1,10:false:Possible incorrect identifier (computational)"
+
+// ResultTag appears in the right-mouse menu for results, to let you
+// attach a tag to the result.
+// String before : in ResultTag must match a Type from tiers file.
+// You can have multiple ResultTags for each result type, and multiple
+// result types for each tag.
+// ResultTags should probably be moved to the tiers file shouldnt they?
+ResultTag "EST Same Strain, EST Different Strain, Fly EST All, DGC cDNA, Community GB:comment: incomplete CDS"
+ResultTag "EST Same Strain, EST Different Strain, Fly EST All, DGC cDNA, Community GB:comment: genomic DNA"
+ResultTag "EST Same Strain, EST Different Strain, Fly EST All, DGC cDNA, Community GB:comment: hybrid sequence, genomic and cDNA"
+ResultTag "EST Same Strain, EST Different Strain, Fly EST All, DGC cDNA, Community GB:comment: unspliced intron"
+ResultTag "EST Same Strain, EST Different Strain, Fly EST All, DGC cDNA, Community GB:comment: chimeric clone"
+ResultTag "EST Same Strain, EST Different Strain, Fly EST All, DGC cDNA, Community GB:comment: reverse transcriptase error"
+ResultTag "EST Same Strain, EST Different Strain, Fly EST All, DGC cDNA, Community GB:comment: contains transposon sequences"
+ResultTag "EST Same Strain, EST Different Strain, Fly EST All, DGC cDNA, Community GB:comment: significant strain polymorphisms"
+
+// Which genetic code to use. Currently only valid values are "1"(universal) 
+// & "6" (paramecium). others can be added as needed. 1 is default.
+GeneticCode "1"
+
+// Be sure that the last line of this file ends with a newline.

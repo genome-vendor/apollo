@@ -1,0 +1,245 @@
+---------------
+HIGHER PRIORITY
+---------------
+
+if retrieving a seq/range that is out of range - the operations goes
+ahead - ends up with an empty sequence and then thows an exception is
+site view:
+Finding start/stop codons...
+java.lang.StringIndexOutOfBoundsException: String index out of range: 0
+        at java.lang.String.charAt(String.java:444)
+        at apollo.gui.genomemap.SiteView._createSites(SiteView.java:293)
+        at apollo.gui.genomemap.SiteView.changeSites(SiteView.java:170)
+        at apollo.gui.genomemap.SiteView.setVisible(SiteView.java:164)
+        at apollo.gui.genomemap.StrandedZoomableApolloPanel.setCurationSet(StrandedZoomableApolloPanel.java:281)
+        at apollo.gui.synteny.GuiCurationState.setCurationSet(GuiCurationState.java:185)
+        at apollo.gui.synteny.CurationManager.setCompositeDataHolder(CurationManager.java:78)
+        at apollo.gui.synteny.CompositeApolloFrame.loadData(CompositeApolloFrame.java:76)
+        at apollo.main.LoadUtil.doLoad(LoadUtil.java:187)
+        at apollo.main.LoadUtil.access$100(LoadUtil.java:33)
+        at apollo.main.LoadUtil$1.finished(LoadUtil.java:136)
+        at apollo.gui.SwingWorker$1.run(SwingWorker.java:109)
+
+
+dashed yellow result lines for game adapter results - need that in
+chado as well (eg LD10168:contig1 in cact) (LD08295:contig1/contig2 in
+heix) - somehow contigs are getting lumped into one result set
+presently adapter lumps spans into sets via names - contig feat set
+spans have different names
+[waiting on resultset featlocs]
+
+result feats part of result 'transcript' that is out of range not
+being retrieved - should they be? yes
+[waiting on resultset featlocs]
+
+i'm noticing some slight oddities in tier layout when i load with the
+chado adapter.  they're reminiscent of the layout problems that we saw
+with suzi's recent attempt to fix an obscure tier bug (some of the tiers
+looked partially collapsed, even though they were supposed to be
+expanded).  suzi has reverted that fix to how it was, and the tier layout
+now looks fine when i load from the game adapter, but if i load cact from
+chado, the tier just above the purple ones appears to have mixed dark
+green, bright green, and (strangely) light green (the EST color).  the
+weirdest thing is that if i try to select the light green results,
+they're not really there--they don't appear in the detail panel list.
+the light green EST tier also appears to have dark green results mixed
+in/overlayed, and again, you can't seem to click on them.
+SD03793:contig1
+LD08295:contig1 (in heix gene)
+problem is spans from different result sets with same name
+[waiting on resultset featlocs]
+
+---------------
+MEDIUM PRIORITY
+---------------
+
+null pointer on chado adapter gui (initial load from command line,
+then a save, then trying to do a new load):
+java.lang.NullPointerException
+        at apollo.dataadapter.chado.ChadoAdapterGUI.setOperation(ChadoAdapterGUI.java:117)
+        at apollo.dataadapter.chado.ChadoAdapter.getUI(ChadoAdapter.java:280)
+        at org.bdgp.swing.widget.DataAdapterChooser.getUsableAdapterList(DataAdapterChooser.java:542)
+        at org.bdgp.swing.widget.DataAdapterChooser.show(DataAdapterChooser.java:172)
+        at apollo.gui.DataLoader$DataChooserThread.run(DataLoader.java:399)
+        at apollo.gui.DataLoader.getData(DataLoader.java:300)
+        at apollo.gui.DataLoader.getCompositeDataHolder(DataLoader.java:254)
+        at apollo.gui.DataLoader.getCompositeDataHolder(DataLoader.java:111)
+        at apollo.gui.LoadUtil$1.construct(LoadUtil.java:93)
+        at apollo.gui.SwingWorker$2.run(SwingWorker.java:116)
+        at java.lang.Thread.run(Thread.java:534)
+
+
+Change queries to use featureslice function. actually featureslice
+function doesnt deal with overlap - write new function that deals with overlap.
+
+If you select an annotation from the Annotations menu, the name in the
+bottom colored label of the detail panel is incorrect (it's the name of a
+different annotation). 
+I think the problem here is that proteins (-PA) slipped into annot menu and
+i dont think they should be in there. works fine for transcripts.
+
+get feat prop descriptions on demand - slows up hit query
+
+try out the other 2 indiana servers (leave them in config for public?)
+
+
+get annot owner colors working - need to query for owner - not sure
+where that is in schema
+
+examine how much description retrieval slows things down (also seq retrieval)
+
+make genomic seq lazy
+
+merge sim4 and blastx masked queries - be able to put multiple
+programs in addSearchHits?
+
+add laziness option for retrieving target seqs
+
+sort out/refactor/merge/rename Sequence and GAMESequence and
+AbstractSequence - put range stuff as optional stuff in AbstractSequence?
+
+do history per database - this also means changing history on changing
+databases (new ground but should be easy)
+-- for sequence have the history be database-seqtype specific, where
+   it would change history on either changing db or seq type
+
+adapter gui needs to recover from sql exceptions - just hangs now
+
+query by location
+
+cyto query - not featureloc'd - feature relationship - see shu/cjm
+email on how to retrieve this
+
+should target seqs be cached? presently there are 2 made if 2 feats
+hit the same target 
+
+Config all the things we say need configging - theres a bunch
+where to config - probably the style file:
+CFG1) feature loc implementation
+CFG3) should stuff in chado_adapter.cfg migrate to style?
+CFG4) seq types to query on (top level feature) in chado adapter
+gui (tigr:assembly,super-contig fb:gene, golden_path_region
+CFG4b) need to config seq types display label - eg golden_path_region so
+type needs to be displayed as "scaffold" 
+CFG5)tigr and fb have different ways of doing feature types - config
+this?
+CFG6) analysis feature column to use for score
+CFG9) config padding of queries (eg gene 5 kb padding in fb)
+CFG10) all the stuff in getCurationSet() needs to be configged
+
+gene query needs to pad out 5 kb - config
+
+Merge configging of database (conf/chado-adapter.cfg) into apollo.cfg?
+(or style?)
+
+Make database config in chado-adapter.cfg tag value like tiers file:
+[Database]
+  label : "Chado Cryptococcus database (chado_crypt)"    
+  jdbcdriver : "apollo.dataadapter.chado.jdbc.SybaseChadoAdapter"
+  jdbcserver : "jdbc:sybase:Tds:dbserver.tigr.org:2025"
+  server-database(?): "chado_crypt"
+  feature-filter : "%neoformans%"
+  [login :  "flybase"]
+  [password :  ""]
+[Database]
+  jdbcdriver : jdbcdriverwithspecsprovidedbyuser
+....
+
+Add optional password to db config file.
+
+chromosome not coming in from fb adapter
+
+put in all the history in gui with drop down lists (excluding password
+of course)
+
+Get golden_path_region list doesnt work
+
+Exception on expanding transcript in annot tree in annot info:
+java.lang.NullPointerException
+        at apollo.datamodel.Exon.outsideOfRegion(Exon.java:66)
+        at apollo.datamodel.Exon.toString(Exon.java:73)
+        at javax.swing.tree.DefaultMutableTreeNode.toString(DefaultMutableTreeNode.java:1229)
+
+have features appear as they are loaded - this would be awesome! and i
+dont think it will be too hard
+
+refactor description property
+
+Window title includes chromosome but not range--e.g. if you load cact, it
+says 2L; should say 2L:16266113-16329185.
+
+--------------
+LOWER PRIORITY
+--------------
+annot info:
+finished - crp has it checked in game not jdbc - actually its checked
+in gadfly but not r3.2 - hmmmm - not sure if its in chado then - dont
+think it is - not in feat props
+
+CT14888 (release2 annot - blue) in AE003689 result seq is peptide
+spaced - not so in game adapter
+
+config gene padding? put in adapter gui?
+
+sequence query - needs blast script
+
+revisit cds query stuff
+
+cds and gene are bringing in sequence - do it on demand optionally?
+check this i dont think they actually have sequence in fb chado
+
+adapter gui:
+take out custom db prompt by default - power user can config it back
+in if they want
+coupled with that - take out jdbc driver and url and chado driver
+class by default as well as things the user doesnt need to see?
+
+do we need the sequence field in the adapter gui? - i think its for
+list retrieval
+
+class apollo.dataadapter.chado.ChadoAdapter: warning - failed to read
+/users/nomi/apollo/conf/chado-adapter.cfg - happens for me not crabber
+
+gene predictions dont have analysis tier in data model - does it need
+it? synteny is the only reason i can think of off hand that relies on
+tier level feature set - and gene predictions arent involed in synteny
+at this point- is there other reasons im missing - i thought it caused
+transcript lines to happen - so i put it in for search hits - but i
+was wrong
+probably should as its causing the label in the evidence panel to be
+numbered for all gene predics - not separately for each program - see
+FlyDisplayPrefs.getBioTypeForDisplay 
+
+on failing to find kripke got exceptions - should make more graceful:
+class apollo.dataadapter.chado.jdbc.PostgresChadoAdapter: exception connecting to Chado database at JDBC URL jdbc:postgresql://kripke.lbl.gov/chado
+org.postgresql.util.PSQLException: The connection attempt failed because Exception: java.net.UnknownHostException: kripke.lbl.gov
+Stack Trace:
+java.net.UnknownHostException: kripke.lbl.gov
+        at java.net.PlainSocketImpl.connect(PlainSocketImpl.java:153)
+        at java.net.Socket.connect(Socket.java:452)
+        at java.net.Socket.connect(Socket.java:402)
+        at java.net.Socket.<init>(Socket.java:309)
+        at java.net.Socket.<init>(Socket.java:124)
+        at org.postgresql.core.PGStream.<init>(PGStream.java:47)
+        at org.postgresql.jdbc1.AbstractJdbc1Connection.openConnection(AbstractJdbc1Connection.java:197)
+        at org.postgresql.Driver.connect(Driver.java:139)
+        at java.sql.DriverManager.getConnection(DriverManager.java:512)
+        at java.sql.DriverManager.getConnection(DriverManager.java:171)
+        at apollo.dataadapter.chado.jdbc.JdbcChadoAdapter.getConnection(JdbcChadoAdapter.java:198)
+        at apollo.dataadapter.chado.jdbc.JdbcChadoAdapter.init(JdbcChadoAdapter.java:126)
+        at apollo.dataadapter.chado.ChadoAdapter.getJdbcChadoAdapter(ChadoAdapter.java:312)
+        at apollo.dataadapter.chado.ChadoAdapter.getCurationSet(ChadoAdapter.java:161)
+        at apollo.dataadapter.chado.ChadoAdapterGUI.doOperation(ChadoAdapterGUI.java:145)
+        at org.bdgp.swing.widget.DataAdapterChooser.doCommitWithExceptions(DataAdapterChooser.java:355)
+
+null pointer in ede due to a lack of sequence:
+java.lang.NullPointerException
+        at org.bdgp.util.DNAUtils.translate(DNAUtils.java:433)
+        at org.bdgp.util.DNAUtils.translate(DNAUtils.java:392)
+        at org.bdgp.util.DNAUtils.translate(DNAUtils.java:368)
+        at apollo.gui.detailviewers.exonviewer.BaseEditorPanel.attachTranscripts(BaseEditorPanel.java:1377)
+
+RE54776 DCG dark green feature in AE003689 result seq has peptide
+spacing though its nucleotide seq. - not a chado bug - also happens in regular.
+
+[Just another CVS branch test]

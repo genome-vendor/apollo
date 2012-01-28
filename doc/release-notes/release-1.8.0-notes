@@ -1,0 +1,45 @@
+Changes between release 1.7.0 (1/2008) and release 1.8.0 (4/2008):
+
++ Added 'undo' support
+  + Note to developers: the internal transaction system had to be revamped
+    to add this support.  The transactions generated now are quite different
+    than the previous transactions, so if you have custom code that relies
+    on them, it will probably break =(
+
++ GFF3 adapter
+  + Many bug fixes
+  + Added 'append' functionality
+
++ ChadoXML bugfixes
+
++ Added navigation bar support for FlybaseChadoXML
+
++ Chado adapter
+  + Redesigned Chado writeback mechanism, now mostly non-specific RDBMS
+    for writing
+    + Unfortunately there still needs to be some PostgreSQL specific calls
+      since many of the Chado GMOD tools currently expect PostgreSQL to be
+      the RDBMS, so they make PostgreSQL specific calls (e.g. nextval() on
+      sequence types).  If these sequence objects are not updated on the
+      Apollo side, they will be out of synch with the corresponding primary
+      keys, thus causing issues if the GMOD Chado loading tools are used as
+      well =(  Hopefully Chado will eventually move away from being targeted
+      toward PostgreSQL specifically...
+    + The Chado writeback mechanism now works on a 'diff' based approach,
+      rather than the old transaction based approach.  This change was needed
+      since the transaction system was changed considerably for use by the
+      undo mechanism
+  + Bugfixes to Chado reading and optimizations for retrieving data
+  + Fixed Chado adapter GUI not displaying correctly and appearing to
+    have non-functional textfields
+
++ Improved graph support
+  + Supports .sgr and .wig graph data (.wig deflines are only partially
+    supported)
+  + Added graph(s) panel to own resizable panel (allows resizing of graphs -
+    but currently all graphs are treated as a single unit, so they are all
+    resized together)
+  + Added location/score hovering popups for graphs
+  + Added color customizing for .sgr/.wig data
+
++ Other misc bugfixes

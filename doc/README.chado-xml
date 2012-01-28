@@ -1,0 +1,130 @@
+$Id: README.chado-xml,v 1.4 2007/05/03 13:34:15 briano Exp $
+
+Viewing Chado XML adapter code:
+========================
+See:
+
+http://cvs.sourceforge.net/viewcvs.py/gmod/apollo/src/java/apollo/dataadapter/chadoxml/ChadoXmlAdapter.java?view=markup
+http://cvs.sourceforge.net/viewcvs.py/gmod/apollo/src/java/apollo/dataadapter/chadoxml/ChadoXmlWrite.java?view=markup
+
+Apollo and Chado XML Macros
+=======================
+Don't forget that the Chado XML reader can only handle un-macroized Chado
+XML.  If you feed it macroized Chado XML, it tries to recognize that and
+complain and exit, but it's possible that it would not recognize it and
+would just choke and die.
+
+Chado Needs to Know the Region
+==========================
+ChadoXML input must include an _appdata section to identify the
+region - Apollo needs to know the chromosome (arm), start, and end for the
+region.
+
+Round-tripped Data
+==========================
+Things that are not roundtripped by the Chado XML adapter:
+
+- Although flat fields like <is_obsolete> are now roundtripped properly
+(as properties inside Apollo) when they are attached to features, in some
+ChadoXML data the <is_obsolete> and <is_relationshiptype> fields are now
+also appearing inside type_id records, where they are NOT currently being
+preserved.  [Andy and Pinglei say: ok to leave them out.  So be aware
+that fields inside type_id records will not be roundtripped.]
+- Doesn't yet handle feature_cvterms (falls into "non-Apollo data" category)
+- Doesn't yet handle feature_pubs (falls into "non-Apollo data" category)
+- Genome sequencing errors not roundtripped (never got example).
+- CV type for results is hardcoded to "match"
+- Subject strand in result pairs hardcoded to 1
+- Organism ID for results is hardcoded to "Computational Result".
+
+Also see the accompanying small.roundtripped file.
+
+Features without Strands
+=========================
+Unstranded features are forced onto the best-guess strand for display
+purposes and then written back out unstranded like they came in.
+
+Properties
+======================
+Properties that can be changed inside Apollo (either by the user or
+ automatically by Apollo):
+
+- plus_1_translational_frameshift
+- minus_1_translational_frameshift
+- non_canonical_start_codon (calculated automatically--NOT roundtripped
+from input)
+- missing_start_codon (can be calculated automatically)
+- missing_stop_codon (can be calculated automatically)
+- non_canonical_splice_site (can be calculated automatically)
+- owner
+- comment
+- status ("all done"/"not done"--can be changed using the "Finished?"
+ checkbox in AIE)
+- dicistronic (not written in output if value is "false")
+- stop_codon_readthrough (Corresponds to "Readthrough stop codon" checkbox
+  in AIE.  You cannot set the specific readthrough residue in Apollo, but
+  it will be roundtripped if it is specified in the input.)
+- stop_codon_redefinition_as_selenocysteine (this cannot be set explicitly;
+  it is determined by Apollo if the readthrough stop codon is U.)
+- sp_status (peptide status, e.g. "curator examined, accepted"--can be
+ changed in AIE by using "Evaluation of peptide" pulldown list)
+- problem (actually two different things inside Apollo--for annotations and
+  transcripts, problem can be true or false, and can be set with the "Is
+  problematic?" checkbox in the AIE.  For results, "problem" comes in with
+  a string that is represented inside Apollo as a result tag.  Only data
+  types that have result tags defined in the style file will show up
+  crosshatched in the display when they have a "problem" field, and will
+  allow you to add/change the result tag with a menu option.)
+
+Subject Strand
+==================
+When writing results that have a query and a subject, subject strand is
+hardcoded to 1.
+
+Write an Organism
+==================
+When writing out features, always try to write an organism.  If organism
+is missing from feature, try to get from parent (all the way up to refseq
+of whole region).
+
+synonym_sgml
+=====================
+A synonym_sgml property is added to every synonym.  If synonym_sgml is
+not included in the synonym record, the synonym name itself is used.
+
+  /** There are certain type names in GAME that are different in Chado, so in
+   *  case the data came in from GAME, Apollo converts the type.
+   *   from:                                   to:
+   *    cdna                                    cDNA
+   *    transcript                              mRNA
+   *    pseudotranscript                        mRNA
+   *    transposon                              transposable_element
+   *    aa                                      protein
+   *    misc. non-coding RNA                    ncRNA
+   *    microRNA                                nuclear_micro_RNA_coding_gene
+   *    miscellaneous curator's observation     remark
+  */
+
+Flat Fields
+================
+In order to roundtrip arbitrary flat fields (e.g.,
+<is_obsolete>0</is_obsolete>), they are stored inside Apollo as
+properties (key=value) with "field:" (FIELD_LABEL in ChadoXmlAdapter)
+prepended to the value, so the example would be stored as
+"is_obsolete=field:0".  ChadoXmlWrite then looks for properties with
+the "field:" prefix and dumps them back out as flat fields rather than
+properties.  I made the GAME writer do the same, in case the user reads
+ChadoXML and wants to save as GAME.  (I did not add this to any other
+adapter, but I don't think any of the others write out properties.)
+
+Constants
+=================
+Constants for use by ChadoXmlWrite are now defined in fly.style (and can be
+changed - currently they match the defaults defined in ChadoXmlWrite).
+
+TypeIDOntology               "SO"           // For type_ids
+IDForDbxref                  "SO:0000105"   // SO id for dbxrefs
+DefaultChadoDatabase         "FlyBase"      // For xrefs, in case we can't figure out db
+DefaultSynonymAuthor         "gadfly3"
+DefaultSynonymPubType        "computer file"
+FeaturepropCV                "annotation property type"

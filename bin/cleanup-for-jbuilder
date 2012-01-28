@@ -1,0 +1,24 @@
+#!/usr/local/bin/perl
+
+# Some .javas won't compile, and JBuilder gets in a snit about that.
+
+$APOLLO_ROOT = $ENV{"APOLLO_ROOT"};
+
+&print_and_do("rm -rf $APOLLO_ROOT/src/java/jalview/*java  $APOLLO_ROOT/src/java/jalview/*/*java");
+&print_and_do("rm -rf $APOLLO_ROOT/src/java/apollo/dataadapter/das/*java");
+&print_and_do("rm -rf $APOLLO_ROOT/src/java/apollo/dataadapter/das/simple/*java");
+&print_and_do("rm -rf $APOLLO_ROOT/src/java/apollo/dataadapter/ensj/*java");
+&print_and_do("rm -rf $APOLLO_ROOT/src/java/apollo/dataadapter/otter/*java");
+&print_and_do("rm -rf $APOLLO_ROOT/src/java/apollo/dataadapter/synteny/*java");
+&print_and_do("rm -rf $APOLLO_ROOT/src/java/apollo/gui/drawable/DrawableDisplayTool.java");
+&print_and_do("rm -rf $APOLLO_ROOT/src/java/apollo/test/TestApollo.java");
+&print_and_do("rm -rf $APOLLO_ROOT/src/java/apollo/analysis/SeqAnalysisTest.java");
+
+# Given a command, print it and then call system() to execute it.
+sub print_and_do {
+     local($cmd) = @_;
+     ($this_prog = $0) =~ s/.*\///;
+
+     print "$this_prog: $cmd\n";
+     system($cmd);
+}

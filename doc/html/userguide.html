@@ -1,0 +1,3897 @@
+<html>
+
+<head>
+<title>Apollo User Guide</title>
+</head>
+
+<body bgcolor="#FFFFFF">
+
+<H1 align=center>Apollo User Guide </H1>
+
+<CENTER><img SRC="images/apollosplash.gerry.jpg" width=529 height=240>
+<h2>Version 1.10.x<br>February 2009</h2>
+</CENTER>
+
+<h1>Table of Contents</h1>
+<a href="#Introduction">Introduction</a><BR>
+<UL>
+<LI><a href="#Community">The Apollo community</a><BR>
+<LI><a href="#Bugs">Reporting bugs</a><BR>
+<LI><a href="#mailing">Apollo mailing list</a><BR>
+</UL>
+<a href="#Download">Installing Apollo</a><BR>
+<a href="#StartingUp">Starting up</a>
+<UL>
+<LI><a href="#StartingUnix">Unix</a><BR>
+<LI><a href="#StartingWindows">Windows or Mac</a><BR>
+<LI><a href="#FirstView">The first view of Apollo</a>
+<LI><a href="#stdout">Text output from Apollo</a>
+</UL>
+<a href="#Loading">Loading Data</a>
+<UL>
+<LI><a href="#ReadingXML">Reading Drosophila annotations</a><BR>
+<LI><a href="#ChadoXMLAdapter">Reading Chado XML files</a><BR>
+<LI><a href="#ChadoAdapter">Reading data directly from a Chado database</a><BR>
+<LI><a href="#ReadingGFF">Reading Ensembl GFF files</a><BR>
+<LI><a href="#ReadingGFF3">Reading GFF3 files</a><BR>
+<LI><a href="#Reading_Ensembl_via_ensj">Reading Ensembl schema databases</a><BR>
+<LI><a href="game-synteny.html">Reading cross-species comparative data in
+                        GAME XML format and from chado JDBC
+				(synteny viewer)</a><BR>
+<LI><a href="#ReadingGenbank">Reading GenBank or EMBL data</a><BR>
+<LI><a href="#AnalysisAdapter">Reading raw analysis results</a><BR>
+<LI><a href="#Layering">Layering data</a><BR>
+<LI><a href="#CommandLine">Command-line arguments</a><BR>
+<LI><a href="#Styles">Styles</a><BR>
+</UL>
+<a href="#DisplayPanels">The display panels</a>
+<UL>
+<LI><a href="#MainWindow">The main window</a>
+<UL>
+<LI><a href="#AnnotationsVsResults">Annotations vs. results</a><BR>
+<LI><a href="#Splitters">Splitters</a><BR>
+<LI><a href="#Zooming">Zooming and scrolling</a><BR>
+<LI><a href="#MovingMouse">Moving using the mouse--centering the display</a><BR>
+<LI><a href="#ZoomToSelected">Zoom to selected</a><BR>
+<LI><a href="#GuideLine">The guide line</a><BR>
+<LI><a href="#ShowReverse">Showing reverse complement</a><BR>
+<LI><a href="#ShowStrand">Forward and reverse strands</a><BR>
+<LI><a href="#FeatureDetail">Feature detail panels</a><BR>
+</UL>
+<li><a href="#Preferences">Preferences editor</a></li>
+<LI><a href="#ApolloWindows">Apollo windows</a><BR>
+<LI><a href="#WebBrowser">Apollo and Web browsers</a><BR>
+<LI><a href="#Selection">Selection</a>
+<UL>
+<LI><a href="#SingleFeature">Selecting a single feature</a><BR>
+<LI><a href="#MultipleFeature">Selecting multiple features</a><BR>
+<LI><a href="#ShiftSelecting">Adding to a selection</a><BR>
+<LI><a href="#Deselecting">Deselecting</a><BR>
+</UL>
+<LI><a href="#Annotations">Finding out more about annotations and results</a><BR>
+<UL>
+<LI><a href="#Linkout">Get info about features via Web</a><BR>
+<LI><a href="#AnnotationInfo">Annotation info</a><BR>
+<LI><a href="#AnnotationTree">The annotation tree</a><BR>
+<LI><a href="#AnnotationMenu">Annotation menu</a><BR>
+<LI><a href="#Bookmarks">Bookmarks</a><BR>
+</UL>
+</UL>
+</UL>
+<a href="#SearchFunctions">Search functions</a>
+<UL>
+<LI><a href="#FindingBase">Finding a specific base</a><BR>
+<LI><a href="#FindingFeature">Finding a feature</a><BR>
+<LI><a href="#FindingSequence">Finding a subsequence</a><BR>
+<LI><a href="#RegExp">Using regular expressions</a><BR>
+</UL>
+<a href="#FeatureDisplay">Specifying which features to display</a>
+<UL>
+<LI><a href="#CollapsedView">Collapsed view</a><BR>
+<LI><a href="#ExpandedView">Expanded view</a><BR>
+<LI><a href="#HidingFeature">Hiding features</a><BR>
+<LI><a href="#ShowingFeature">Showing features</a><BR>
+<LI><a href="#ResizeFeature">Resizing features</a><BR>
+<LI><a href="#DashSets">Showing sequencing gaps in ESTs<BR>
+<LI><a href="#NewSeqs">Hits to new sequences<BR>
+<LI><a href="#FeatureLabels">Showing feature labels</a><BR>
+<LI><a href="#BackgroundColor">Background colors</a><BR>
+<LI><a href="#EvidencePanelOrientation">Changing orientation of evidence panel</a><BR>
+</UL>
+<a href="#SequenceLevelFeatures">Sequence level features</a>
+<UL>
+<LI><a href="#ShowSequence">Showing the genomic sequence</a><BR>
+<LI><a href="#SequenceWindow">Translating and saving sequence</a><BR>
+<UL>
+<LI><a href="#SavingSeq">Saving whole sequence</a><BR>
+</UL>
+<LI><a href="#StartStopCodons">Start and stop codons</a><BR>
+<LI><a href="#EdgeMatches">Edge matches</a><BR>
+<LI><a href="#SpliceSites">Non-consensus splice sites</a></h3>
+<LI><a href="#Analyses">Analyses: GC content and restriction sites</a><BR>
+<li><a href="#Analyses-remote">Analyses: Remote analysis services</a></li>
+<ul>
+  <li><a href="#NCBI-BLAST">NCBI BLAST</a></li>
+  <li><a href="#NCBI-PRIMER-BLAST">NCBI Primer BLAST</a></li>
+</ul>
+<LI><a href="#Jalview">Viewing alignments</a><BR>
+<LI><a href="#Graphs">Viewing graph data</a><BR>
+</UL>
+<a href="#Printing">Printing to file - Postscript output</a><BR>
+<a href="#Links">Links to useful sequence analysis sites</a><BR>
+<a href="#Help">Apollo help</a><BR>
+<a href="#SoftwareUpdates">Checking for Apollo software updates</a><BR>
+<a href="#MouseFunctions">Summary of mouse functions</a>
+<P>
+<a href="#Edit">Using Apollo to edit annotations</a>
+<UL>
+<LI><a href="#Saving">Saving your annotations</a><BR>
+<LI><a href="#Autosaving">Autosaving</a><BR>
+<LI><a href="#TranscriptColoring">Transcript coloring</a><BR>
+<LI><a href="#CreatingGene">Creating a new annotation</a><BR>
+<LI><a href="#ModifyingGene">Modifying gene models</a><BR>
+<LI><a href="#FlippingResult">Changing the strand of a result</a><BR>
+<LI><a href="#ResultTag">Tagging a result with a comment</a><BR>
+<LI><a href="#AnnotationText">Editing annotation text</a><BR>
+<LI><a href="#ExonDetailEditor">Exon detail editor</a><BR>
+<UL>
+<LI><a href="#EDEConfig">Configuration options for the Exon Detail Editor</a><BR>
+<LI><a href="#EDEUsing">Using the Exon Detail Editor</a><BR>
+<LI><a href="#frame_shifts">Setting translational frame shifts</a><BR>
+<LI><a href="#seq_errors">Indicating genomic sequencing errors</a><BR>
+</UL>
+<LI><a href="#SequenceAligner">Sequence Aligner</a><BR>
+<UL>
+<LI><a href="#SEQDNAView">The DNA view for the Sequence Aligner</a><BR>
+<LI><a href="#SEQAAView">The AA view for the Sequence Aligner</a><BR>
+</UL>
+</UL>
+<a href="#Configuration">Configuring Apollo</a><BR>
+<UL>
+<LI><a href="#apollo.cfg">apollo.cfg</a><BR>
+<LI><a href="#StyleFiles">Style files</a><BR>
+<LI><a href="#TiersFiles">Tiers files</a><BR>
+</UL>
+<a href="#source">Getting the source code</a><BR>
+<a href="#Adapting">Adapting Apollo</a><BR>
+<a href="#Contributed">Contributed Apollo Documentation</a><BR>
+<a href="#acknowledgements">Acknowledgements</a><BR>
+
+<hr size=0>
+<h1>
+<a NAME="Introduction"></a>Introduction</h1>
+<P> 
+Apollo is a genomic annotation viewer and editor.  It was originally
+developed as a collaboration between the Berkeley Drosophila Genome Project
+(part of the FlyBase consortium)
+and The Sanger Institute in Cambridge, UK.
+It was used by the
+FlyBase biologists to construct the <a href=http://www.fruitfly.org/annot/release3.html>Release 3</a> and 4 annotations</a> on the finished
+<i>Drosophila melanogaster</i> genome, and has also been a primary vehicle
+for sharing these annotations with the community.  
+<P>
+Apollo allows researchers to explore genomic
+annotations at many levels of detail, and to perform expert annotation
+curation, all in a graphical environment.  
+It is a Java
+application that is easy to install and run on Windows, Mac OS X, or any Unix-type system
+(including Linux).
+Apollo is currently supported by NIH grant 1R01GM080203-01 from the National Institute of General Medical Sciences (NIGMS).
+<P>
+The current Apollo team is:
+<UL>
+<li>Ed Lee (leader and chief developer)</li>
+<li>Nomi Harris</li>
+<li>Mark Gibson</li>
+<li>Suzanna Lewis</li>
+</UL>
+<P>The original Apollo developers were:
+<P>
+<UL>
+<li>Steve Searle</li>
+<li>Michele Clamp</li>
+<li>Suzanna Lewis</li>
+<li>John Richter</li>
+</UL>
+<P>
+Other contributors have included:
+<UL>
+<LI>Sima Misra</LI>
+<li>Guanming Wu</li>
+<li>Jonathan Crabtree (Chado JDBC adapter)</li>
+<li>Vivek Iyer</li>
+<li>Craig Melsopp</li>
+<LI>Chris Mungall</LI>
+<li>Colin Wiel</li>
+<li>Chris Wilks</li>
+<li>Olivier Arnaiz</li>
+<LI>and all the FlyBase curators</LI>
+</UL>
+
+<a NAME="Community"></a><h3>The Apollo community</h3>
+
+An increasing number of research groups are using Apollo as a starting
+point for customizing their own annotation visualization tool. Because
+Apollo was developed from the beginning to serve the needs of two
+groups working on different organisms (fruitfly and human) with different
+types of data, it was specifically designed to be flexible and
+extensible. 
+The <a href=http://www.gmod.org>Generic Model Organism Database (GMOD) project</a>, which
+aims to provide a complete ready-to-use toolkit for analyzing whole
+genomes, has adopted Apollo as its annotation workbench.
+Apollo is Open Source; the Apollo source code is all available at
+<a href=http://sourceforge.net/project/showfiles.php?group_id=27707>
+SourceForge</a> as part of the <a href=http://sourceforge.net/projects/gmod/>GMOD project</a>.
+
+<a NAME="Bugs"></a><h3>Reporting bugs</h3>
+Apollo is still under active development, and there are still many
+bugs--some we know about, and some we don't.  
+The bugs we know about are listed in the <a href="http://sourceforge.net/tracker/?func=browse&group_id=27707&atid=462763">SourceForge Apollo bug tracker</a>.
+If you encounter a problem that is not in the list of reported bugs, please 
+<a href=http://sourceforge.net/tracker/?func=add&group_id=27707&atid=462763>
+submit a new bug report</a> or ask on the <a href=#mailing>Apollo mailing list</a>.
+Please be as specific as possible when you
+report bugs--tell us which version of Apollo you're running, what dataset you were looking at, what operating system
+you're on (including the version number), and what you did that caused the bug.  Also send us the
+output from the Java console (see the section on <a href=#stdout>Text output
+from Apollo</a>).
+<P>
+When you report a bug, <b>be sure to include your email address</b>.  We may
+need to ask you questions in order to track down the bug, and you'll probably want
+to know when we've fixed it.  You will not be added to any mailing lists or sent
+any other correspondence.
+<P>
+Mac users, please note:  the top-level menu item that says "About Apollo" purports
+to tell you the Apollo version number, but in fact it's telling you the version number
+of the installer.  To get the correct Apollo version number, use the "About" item from Apollo's
+Help menu.
+
+<a NAME="mailing"></a><h3>Apollo mailing list</h3>
+
+If you are interested in discussing Apollo with other users, you can join the <a
+href=http://mail.fruitfly.org/mailman/listinfo/apollo>Apollo mailing list</a>.  Traffic is low,
+and your email address will not be made publicly visible or used for any other purpose.  In order to reduce spam on the
+list, you must join in order to send messages to the list.
+To unsubscribe from the mailing list, use <a href=http://mail.fruitfly.org/mailman/listinfo/apollo>the same Web form</a>.
+
+<P> 
+<h1>
+<a NAME="Download"></a>Installing Apollo</h1>
+<P> 
+Apollo is a Java application that you can download and run on your
+computer (Windows, Linux, or Mac OS X--earlier Mac versions are not
+supported).  You can get Apollo <a href=http://www.fruitfly.org/annot/apollo/>here</a>.
+When you
+install Apollo, a JVM is bundled with it, unless you are on Mac OS X.
+<h3>Getting the appropriate Java on a Mac</h3>
+Apollo is now set up to run with JDK1.5 or 1.6, so make sure you have one of these versions of Java installed.
+You will need Mac OS X 10.4+ to install JDK1.5.  Please see <a href=http://www.apple.com/softwareupdate>Apple's instructions on how to do this</a>, using Software Updates.
+(Apollo cannot run on older versions of Mac OS X.)
+<P>
+Some versions of Mac OS X have Java issues--standalone
+Java applications (such as Apollo) may unexpectedly quit or not
+launch. You can perform a simple test to verify whether your computer is
+experiencing this issue. If it is, you will need to reinstall one or two
+Java software updates to resolve the issue. Please <a target=_new
+href=http://docs.info.apple.com/article.html?artnum=301380>look here</a>
+for help.
+<p>
+
+<h3>Memory use</h3>
+
+Apollo uses a lot of memory, largely due to the sheer size of the
+annotation data.  In order to use Apollo, your computer will need to have
+at least 256Mb of RAM.  Moreover, even if you have that much memory, you
+will probably find that if you try to run more than one instance of
+Apollo at the same time, performance will suffer.  Also note that if you
+load a very large region, Apollo will use up more memory.
+<P>
+Keep in mind that other applications running on your
+computer also use memory, so you will get better performance if you shut down other applications (Photoshop, Word, etc.) before you launch Apollo.  
+
+<P>
+Apollo checks twice a minute to make sure you still  have enough free memory. 
+If the free memory is getting very low (less than 5% of the the value
+defined as "Memory" in apollo.cfg), you will get a warning.  If you have
+done or are planning to do any editing, you should save your work and
+then quit and restart Apollo.
+<P>
+If you load many large regions into Apollo (such as cytological bands),
+it is possible that it will run out of memory despite the memory checks.  Usually the behavior
+you'll see if this happens is that it will freeze up during loading, but
+sometimes other things will start to go wrong.  If you then look at the
+Java console, you may see "java.lang.OutOfMemoryError".  If this happens,
+you should exit Apollo and restart.
+
+<h1>
+<a NAME="StartingUp"></a>Starting up</h1>
+<P> 
+<h2>
+<a NAME="StartingUnix"></a>Unix</h2>
+From the directory where Apollo is installed, type
+<UL>
+<pre>./Apollo</pre>
+</UL>
+You should also be able to run Apollo from other directories by specifying the full path.
+<P>
+<h2>
+<a NAME="StartingWindows"></a>Windows or Mac</h2>
+Select the Apollo icon from your desktop or dock.
+<P>
+<B>Note for Mac users running Panther (10.3)</b>:
+Some security-related software updates on Panther interfere
+with Java and prevent Apollo from launching from the shortcut (you will see
+the icon bounce a few times and then stop, and no Apollo window comes up).  We are looking into
+how to address that, but there are two workarounds.  Either:
+<LI> Upgrade your Mac to Tiger or Leopard; or<BR>
+<LI> Launch Apollo from the command line.  First, start a Terminal window (Applications -&gt; Utilities -&gt; Terminal).  In the Terminal window, cd to the directory where you installed Apollo, usually /Applications/Apollo, and type ./bin/apollo (note the lowercase a):<BR>
+<pre><dd>cd /Applications/Apollo
+<dd>./bin/apollo</pre>
+You will see the text output from Apollo in the Terminal window, and an Apollo
+window should come up.
+<P>Note: if you want to run Apollo from the command line, it will not be able
+to control which version of the Java virtual machine your Mac defaults
+to using (as it does if you run the installed Apollo).  Please make sure that you are set up to use JDK version 1.5 or 1.6,
+rather than 1.3, which is the default on some older Macs.
+<br>
+<h2>
+<a NAME="FirstView"></a>The first view of Apollo</h2>
+<P> 
+When Apollo starts up you should see the Apollo splashscreen, which will stay up
+for a few seconds while the Apollo software loads.
+<P>
+<center><img SRC="images/apollosplash.gerry.jpg" alt="Apollo splash screen" width=529 height=240></center>
+<P>
+You should then see a window offering various ways to find the region you
+are interested in.  These will be discussed shortly.
+<P>
+<center><img SRC="images/loadgamefile.gif" width=601 height=186></center>
+<P>
+<h2><a NAME="stdout"></a>Text output from Apollo</h2>
+Sometimes it's important to see the text output from Apollo--the messages
+it prints to inform the user about what it's doing.
+This is particularly
+true if something's not working right and you want to report a bug.
+Both standard output (stdout) and standard error (stderr) messages are captured into log files.  They are located at:<br>
+<br>
+$APOLLO_ROOT/logs/stdout.log<br>
+$APOLLO_ROOT/logs/stderr.log<br>
+<br>
+where $APOLLO_ROOT is the location where Apollo was installed.  Note that stdout/stderr are only captured into log files if you installed Apollo with the installer program.  If you are running Apollo directly from the source code, stdout/stderr won't be redirected and will display on the terminal where you're invoking Apollo from.<br>
+<h1>
+<a NAME="Loading"></a>Loading Data</h1>
+<P> 
+<h3><a NAME="ReadingXML"></a>Reading data from a file</h3>
+The oldest and, in many ways, most fully-functional data adapter in
+Apollo is the GAME XML adapter.  The simplest
+way to try out Apollo is to choose the GAME XML adapter from the "Choose
+data source" start screen, and load data/example.xml (a GAME XML file that
+contains computational results and curated annotations for a region of the
+D. melanogaster genome), which is included with the Apollo distribution.
+
+<h3><a NAME="ReadingXML"></a>Reading Drosophila annotation data</h3>
+The annotations on the <i>Drosophila melanogaster</i> genome are now stored in a version of
+the Chado XML format.  Drosophila annotation data in Chado XML format can
+be read from a file or pulled transparently across the network from the
+FlyBase annotation database.
+<P>
+Apollo provides several ways to search for the Drosophila region you are interested in:
+<UL>
+<LI>Filename (e.g., <i>data/CG16983.chado.xml</i>)--filenames can use absolute or relative
+paths (relative paths are taken to refer to files inside the Apollo directory).  Please
+note that if you use the Browse button to select a file, you still need to hit the "Ok"
+button to begin loading the file.  (You can also enter an URL as a
+filename.)
+<P> A quick tip about the file chooser that is invoked by the Browse button:  by default, it comes up in a mode where
+you scroll horizontally to see all the available directories and files.  If you
+prefer vertical scrolling, click on the icon at the top right of the chooser window,
+which looks like two little squares, each followed by a line.
+<LI>Gene name (e.g., <i>cact</i>)--finds the region surrounding the gene
+<LI>Cytological band (e.g., <i>40B</i>).  Warning:  these are big and use
+up a lot of memory.
+<LI>Location: chromosome arm, start and end position (e.g., <i>3R 100000 300000</i>)
+</UL>
+<P>
+By clicking on the tabs labeled "Gene", "Cytology", etc., you can decide how you
+want to look for the region of interest.  Note that the FlyBase server will return
+the scaffold (~350Kb region) that is closest to your query, not the precise region
+you requested.
+<P>
+<center><img SRC="images/load-chado-xml.gif" width=710 height=248></center>
+<P>
+Note that except for the "File" search, all the searches go over the network to
+get the Drosophila annotations from the FlyBase server, so you must be connected to
+the internet to use them.  Sometimes it takes a while to fetch the data across the
+internet.  Sometimes, the database is down, or is so overloaded that you will get a message
+saying "can't connect to URL".  Another possible cause of that
+message is that you might have a firewall that prevents the data from getting to
+your computer.  If you use a proxy, be sure to set the proxy by clicking the "Proxy settings"
+button before trying to load data.
+<P>
+If you'd like to download all the FlyBase Drosophila
+annotation data to your computer so you can then access it locally via the File tab,
+please visit <a target=_new href=http://flybase.bio.indiana.edu/annot/>http://flybase.bio.indiana.edu/annot/</a>.
+
+<h3> <a NAME="ChadoXMLAdapter"></a>Reading Chado XML or GAME XML files</a></h3>
+
+The Chado XML adapter lets you read and write FlyBase-style
+Chado XML files with no macros.  A sample Chado XML file containing some Drosophila
+annotations, data/CG16893.chado.xml, is included with the Apollo distribution.
+<P>
+The Chado XML adapter has not yet been generalized for use with
+non-FlyBase data.  Also, it cannot yet handle macros, and it doesn't yet deal with
+some types of "non-Apollo" data such as feature_cvterms.
+Theoretically, you can use Apollo as a converter between Chado XML and GAME, but we are still
+debugging that conversion.  Please see <a target=todo href=../todo>doc/todo</a>
+for a list of known issues with the Chado XML adapter.
+<P>
+The <a href=http://www.fruitfly.org/annot/apollo/game.rng.txt>GAME XML</a> adapter
+was written to handle Drosophila data in the older GAME XML format.  You should be
+able to use it to read other types of annotation data in GAME XML format, but you
+will need to change the tiers file.
+<p>
+You can also write out two different GAME XML versions (1.0 and
+1.1). This is 
+configurable in style--set DO_ONE_LEVEL_ANNOTS "false" makes it save
+1.0, otherwise it saves 1.1.
+<p>
+
+<h3> <a NAME="ChadoAdapter"></a>Reading data directly from a Chado database</h3>
+The Chado JDBC adapter allows Apollo to read annotation data directly from a Chado
+database.  Using this adapter to read data from your Chado database will require modification
+of some configuration files.
+<P>
+If you want to try reading Drosophila annotations from the FlyBase Chado server (which might
+or might not still be running), select "Chado" from the data adapter
+list. There is only one database to choose: "FlyBase Chado Indiana
+public server". You can then choose "Type of Region" to be either
+"gene" or "golden_path_region." golden_path_region is a scaffold (it's
+the Sequence Ontology term for a scaffold). In the "Region ID" box, enter the
+gene name (if you selected type gene) or scaffold ID (if you selected
+golden_path_region). An example of a fruitfly gene is "cact". An
+example scaffold ID is AE003603. <p>
+The Chado adapter has known bugs that are described in
+<a target=todo href=../chado/chado-jdbc-todo>doc/chado/chado-jdbc-todo</a>. For example,
+if you request a region that doesn't exist, Apollo will
+seize up. Also the dashed contig result lines that are present from
+the GAME Adapter are not coming up yet. See chado-jdbc-todo for the full listing.
+<P>
+Also, if you ask the server for data by chromosome region (e.g.,
+2L:10000-20000), you may get an entire scaffold that includes the requested
+gene or region--not the actual region requested. This is a bug in the
+server, not Apollo (as of v. 1.6.5).
+<P>
+The Chado data adapter can do direct-to-database writeback. It converts the transactions to
+updates to the chado database, so only edited features are updated in the
+database. Currently this is working with the Chado Rice database (at Cold
+Spring Harbor). Adapting it to other Chado databases shouldn't be too
+hard.
+<P>
+If you are a developer who wants to enable Apollo to access your own Chado database,
+please see the section about <a href=#CustomizingChadoAdapter>customizing the
+Chado adapter</a>.
+
+<h3><a NAME="ReadingGFF"></a>Reading Ensembl GFF files</h3>
+ 
+<a href="http://www.sanger.ac.uk/Software/formats/GFF">GFF</a> format is
+a simple format for transferring genomic annotations.  A version of GFF (Ensembl GFF) is used at the
+Sanger Institute for storing the human annotations.
+<P>
+To read in an Ensembl GFF file, choose the "Ensembl GFF" option from the data adapter menu.
+You can type your GFF file name in the text box or press the Browse
+button to bring up a file chooser.  You can also enter a FASTA-format
+sequence file name to go with the GFF data.
+When you're ready, press the OK button and the GFF file (and sequence file, if
+you specified one)
+will be read in and the features displayed.
+<P>
+<center><img SRC="images/gff-adapter.gif" width=605 height=270></center>
+<P>If any of the features in the GFF file have types that are not recognized
+by Apollo they will be given a default pale yellow color.
+This can be changed in the <a href="#Preferences">Preferences</a>section.
+<P>
+Please note that there is more than one flavor of GFF, and Apollo only supports
+the Ensembl flavor (as described <a href=http://www.sanger.ac.uk/Software/formats/GFF>here</a>).
+Apollo does <i>not</i> understand the Artemis flavor of GFF.
+<P>
+Also note that Ensembl GFF format is not rich enough to support curated annotation, so even if you turn
+on editing, you will not be able to create and save curated annotations on GFF-format data.
+<P>
+Finally, note that although theoretically Apollo can be used to convert between data formats
+(e.g. GFF &lt;-&gt; GAME), in practice this is not foolproof.
+
+<h3><a NAME="ReadingGFF3"></a>Reading GFF3 files</h3>
+ 
+<a href="http://www.sequenceontology.org/gff3.shtml">GFF3</a> format is
+the current generation of a simple format for transferring genomic annotations. <P>
+To read in an GFF3 file, choose the "GFF3 format" option from the data adapter menu.  You can type your GFF3 file name in the text box or press the Browse button to bring up a file chooser.  You must either provide the sequence data in FASTA format or you will need to have the FASTA data embedded in the GFF3 file.  For the first option, make sure that "Embedded FASTA in GFF" is not checked and enter the FASTA file to go with the GFF3 data (you can browse for the file as well).  For the second option, make sure that "Embedded FASTA in GFF" is checked.  This will disable the "Sequence file" selection.  When you're ready, press the OK button and the GFF3 file and sequence data will be read in and the features displayed.
+<P>
+<center><img SRC="images/gff3-adapter.gif" width=605 height=271></center>
+<P>If any of the features in the GFF3 file have types that are not recognized
+by Apollo they will be given a default pale yellow color.
+This can be changed in the <a href="#Preferences">Preferences</a>section.
+<P>
+
+<h3><a name="Reading_Ensembl_via_ensj"></a>Reading Ensembl schema databases</h3>
+
+The Ensembl project has created public MySQL databases of annotated genomes for many  species - at time of writing this list includes human, mouse, mosquito, rat,  zebrafish, and fugu. Each species is stored in a separate, publicly accessible  database. The Ensembl adapter can read these databases, as well as any other ensembl-schema MySQL database. The Ensembl project's databases are at ensembldb.sanger.ac.uk, port 3306, accessible as user "anonymous".
+<P>
+To directly read Ensembl databases, use the File-&gt;Open menu as usual,   and choose "EnsJ - Direct Access for Ensembl Databases (Schema 32 and above)" from the pulldown (note that it may freeze up briefly as it sets up its configuration).
+<P>
+The EnsJ adapter is initially set to retrieve data from the Homo sapiens
+database at the ensembldb site, but because the database name changes frequently,
+the name that is hardcoded in the default Apollo history may no longer be valid.
+If you have trouble bringing up the EnsJ adapter, try removing your Apollo history
+(.apollo/apollo.history) and restarting Apollo.  Note that the list of
+databases may include some with schemas prior to the current one; if you
+try to read data from those, you will probably get an inscrutable error message.
+<P>
+After selecting a database (if the default one didn't work), you can select a region
+to look at.
+The "Location" menu allows you to choose a specific gene to view:
+either by stable id (e.g. "ENSG00000187981"),
+or by specifying a region of the chromosome (e.g. "Coordinate System: Chromosome (Version NCBI 35), SeqRegion: Chromosome 6, from 500,000 to 1,000,000"--choose "chromosome--NCBI35" for the coordinate system, "6" for the seq region name, and 500000-100000 for start-end).
+<P>
+To try out the EnsJ adapter, click the History pulldown list and select one of the pre-set regions.  The relevant fields will be filled in appropriately, so you can just hit "Ok" at the bottom of the window to load the data.
+<P><center><img SRC="images/ensj20_location.gif" width=462 height=419></center><P>
+Note that if you already had run a previous version of Apollo and thus
+have an apollo.history file in your .apollo directory, the pre-set EnsJ examples
+may not work right.  You can fix this by removing .apollo/apollo.history (so that
+the new default history takes its place) or by filling in the spaces in the Data
+Source panel by hand (see the next subsection).
+<P>
+Ensembl features are categorised into various types. In order to see any of these types in the region you loaded, you must expand the "Types" panel by pushing the "Show/Hide Types" button. You will see the following:
+<P><center><img SRC="images/ensj20_types.gif" width= height=></center><P>
+The numbers beside each type (e.g., Genes (34270)) are the number of features of that type in the whole Ensembl database. Select the types of features you want to see ("Genes" is a good starting point). You must select something from this panel. At this point you  should be ready to read data with the default data source configuration (human  data at the public servers on ensembldb). You can hit the "OK" button on the dialog,  and Apollo will bring up the selected annotations in your chosen region.
+<P>
+The "Types" button beside each feature type (eg "Gene Types...") will show a list of the different types of genes in the Ensembl database. For instance, in the homo sapiens database, there are many types such as protein_coding_KNOWN_ensembl and pseudogene_NOVEL_ensembl.
+These types can be loaded individually by selecting them from this list which is sorted alphabetically. If no types are selected, all types will be loaded.
+
+<h4>Data Source Configurations</h4>
+
+The Databases panel specifies where the ensembl database lives, and how
+to access it. We have set it up with some defaults, which should
+allow you to read human data "out of the box", but you might want to
+read ensembl data from some other species, or set up your own ensembl
+databases.
+<P>
+<P><center><img SRC="images/ensj20_database_config.gif" width= height=></center><P>
+<P>
+<b>Host</b>: The name of the host on which the ensembl databases live. The publicly accessible site (ensembldb.sanger.ac.uk)   is defaulted in this field. If you set up your own ensembl database, or can  see another ensembl database nearby, then you will change this field.
+<BR>
+<b>Port</b>: The port on which the database is "listening" for requests. For MySQL, this port is 3306 by default.
+<BR>
+<b>User</b>: Who Apollo should log in as. The databases on ensembldb all have "anonymous" as the user.
+<BR>
+<b>Password</b>: The public ensembl databases on ensembldb have no password for the user "anonymous", so you can leave this field blank.
+<BR>
+
+<b>Ensembl Database Name</b>: This dropdown is only populated when you
+attempt to open it. It shows all the ensembl databases available on the
+selected host. You, the user, must make an appropriate choice in this
+field appropriate to the value of the "Data Source" dropdown. We have
+defaulted the database to the current human core database
+("homo_sapiens_core_32_35e" at time of writing).
+<P>
+Please note:  the set of available ensembl databases is constantly changing,
+and your history may include databases that are no longer available, which
+can make the EnsJ adapter refuse to come up.  If this seems to be happening
+to you, remove your ~/.apollo/apollo.history and try restarting Apollo.
+
+<h4>Loading and saving manual annotations - otter format</h4>
+
+This functionality is still being redeveloped for the new EnsJ adapter.
+
+<h3>Reading cross-species comparative data</h3>
+
+The still-under-development <a href=game-synteny.html>Synteny</a> viewer in Apollo lets you view comparative
+analyses between two genomes.  There are several ways to read synteny data;
+currently, the default is GAME synteny, for which a pair of example files
+has been included with the Apollo distribution.
+Please see the <a href=game-synteny.html>GAME Synteny user guide</a>
+for more information.
+
+<h3><a NAME="ReadingGenbank"></a>Reading GenBank or EMBL format</h3>
+
+Apollo can now read GenBank and EMBL format from files or directly
+over the network (given an accession number).  GenBank format looks like this:
+<P>
+<pre>
+LOCUS       AY308719                1036 bp    DNA     linear   VRT 31-MAY-2004
+DEFINITION  Parus elegans mindanensis FMNH 357569 cytochrome b gene, partial
+            cds; mitochondrial gene for mitochondrial product.
+ACCESSION   AY308719
+...
+FEATURES             Location/Qualifiers
+     source          1..1036
+                     /organism="Parus elegans mindanensis"
+</pre>
+<P>
+EMBL format looks like this:<P>
+<pre>
+ID   DME9736    standard; genomic DNA; INV; 7411 BP.
+XX
+AC   AJ009736;
+</pre>
+<P>
+We are still working on this adapter.  In particular, reading as GenBank
+or EMBL and then saving in GenBank format doesn't perfectly preserve
+everything from the original source.
+<P>
+When you save in GenBank format, you have a choice of saving in a normal
+human-readable GenBank file (as in the example above) or in <a target=_new href=
+http://www.ncbi.nlm.nih.gov/Sequin/table.html>tabular format</a>,
+which is mostly used for submitting data to GenBank.  If you want to save in
+tabular format, you must supply a <i>directory</i> name, not a file name;
+multiple files will be saved in the directory.  To save in human-readable
+GenBank format, supply a file name.
+
+<h3><a NAME="AnalysisAdapter"></a>Reading raw analysis results</h3>
+
+The analysis adapter (called "Computational analysis results" in the data
+loader menu) is one of the newest additions to Apollo; it still is in
+progress and has many bugs, but we hope to have it working better soon.  It allows you to
+import raw analysis results into Apollo, view them in Apollo's graphical
+environment, and choose results to form the basis of curated annotations.
+This can be a good entry point for using Apollo to annotate your sequences,
+particularly if you don't have an easy way to get your data into Chado XML or GAME XML
+format.  (However, keep in mind that you are responsible for running
+your own sequence analyses--Apollo does not and will not act as a "back end"
+and run the analyses itself, because they are too system-dependent.)
+<P>
+Different tabs in the analysis adapter allow you to import various types of analysis results on your sequence:
+<UL>
+<LI> BLAST<BR>
+<LI> sim4<BR>
+<LI> blat<BR>
+<LI> FgenesH<BR>
+<LI> Genscan<BR>
+<LI> tRNAscanSE<BR>
+<LI> RepeatMasker
+</UL>
+Each one lets you specify a FASTA file containing the genomic query sequence
+that was used in the sequence analysis, and the tier and type to be used for
+displaying the data in Apollo.  Some of the analysis tabs offer filtering/processing
+options, such as the minimum threshold for including BLAST hits.
+<P>
+At the moment, many of the analysis parsers are not working right.
+Some of the sequence analysis programs, such as BLAT, seem to have
+changed their output format since the Apollo parsers were written.
+The BLAST and Genscan parsers seem to be the best ones right now.
+Stay tuned for more documentation and improved performance.  In the meantime,
+if you have questions about the analysis adapter, please contact the 
+<a href=#mailing>Apollo mailing list</a>.
+<P>
+The BLAST parser offers many filtering options.  In most cases, you can just
+leave those alone.  We hope in the future to reduce the complexity of the options.
+
+<h4>Loading BLASTN results</h4>
+
+There are many different variations of BLAST format.  The two main flavors of BLAST
+are NCBI BLAST and WU-BLAST.  Theoretically, Apollo's BLAST parser should figure
+out which BLAST flavor the input is and parse it correctly; in practice, even
+minor variations in BLAST output syntax can cause the parser to fail.  As of August 2005,
+the parser seems to be working pretty well on NCBI BLASTN 2.2.11 output from the NCBI
+blast server
+(<a target=_new href=http://www.ncbi.nlm.nih.gov/blast/Blast.cgi?CMD=Web&LAYOUT=TwoWindows&AUTO_FORMAT=Semiauto&ALIGNMENTS=50&ALIGNMENT_VIEW=Pairwise&CLIENT=web&DATABASE=chromosome&DESCRIPTIONS=100&ENTREZ_QUERY=%28none%29&EXPECT=10&FILTER=L&FORMAT_OBJECT=Alignment&FORMAT_TYPE=Text&NCBI_GI=on&PAGE=Nucleotides&PROGRAM=blastn&SERVICE=plain&SET_DEFAULTS.x=34&SET_DEFAULTS.y=8&SHOW_OVERVIEW=on&END_OF_HTTPGET=Yes&SHOW_LINKOUT=yes&GET_SEQUENCE=yes>http://www.ncbi.nlm.nih.gov/blast/Blast.cgi</a>).
+(This link is also available on Apollo's Links menu.)
+<P>
+Select "chromosomes" as the database.
+You can select an organism or category of organisms in the Options section.
+Be sure the last pulldown list on the first row of the Format section says "Plain text".
+When you save the BLAST hits, be sure to save as plain text (not HTML).
+Note that some Web browsers leave bits of HTML markup in the text even when you
+ask to save as text; another way to save the BLAST results that might work better
+is to select all the BLAST result text in the browser window (some browsers have
+"Select all" under the Edit menu), copy it, and paste it into a plain text file (be sure the
+lines don't wrap).
+<h3><a NAME="Layering"></a>Layering data</h3>
+
+Some of the data adapters are able to "layer" features that are from the
+same genomic region.  For example, you might have separate files of
+annotations and evidence in GAME or ChadoXML format.  Use the "Layer more
+results or annotations" from the File menu to add more features on top of
+what you've already loaded.  This only makes sense if the new data is
+from the same genomic region--if it's from a different region, you will
+probably get a blank popup error box.
+<P>
+Another popular use of the layering option is to add new analysis results
+for the current region--for example, maybe you BLASTed the currently displayed genomic
+sequence against a new database, and want to see the results displayed along
+with the other evidence.  To do this, use the "Layer more results or annotations"
+command from the File menu, and choose the "Computational analysis results"
+data loader from the pulldown list under "Choose data source".  
+<P>
+If you are preparing your own data files for layering, please note that
+you must identify the genomic region (e.g. chromosome arm) in each file (even if you don't include
+the sequence residues), so that Apollo knows where the features go.
+<P>
+The most common scenario for layering BLAST results is that you've already loaded
+the annotations for some genomic region (say, D. melanogaster 2L:12345-67890); you
+then BLASTN an EST against the D. melanogaster chromosomes (see the section on Loading BLASTN results above), and you want to see
+where it matches your currently loaded region.  To do this, use the "Computational analysis
+results" data adapter, and select the BLAST tab.  The checkbox that says "I used
+the current genomic sequence (or a portion thereof) as my BLAST query" should
+remain unchecked (the default) and you will not need to enter a genomic offset.
+<P><center><img SRC="images/layer-blast.gif"></center><P>
+When you load your BLAST results, Apollo will display
+only the hits against the currently loaded chromosome or chromosome arm (but some
+of them may be to a different region of the chromosome).  This capability is still
+under development and may not work perfectly.  Note that your region must contain
+a recognizable chromosome name in order for this to work.  If, for example,
+you've loaded data from a GFF file, it may not have a chromosome name.  Also note
+that BLAST assumes all query sequences are on the + strand--it doesn't have a
+notion of a query sequence being on the - strand.  The hits will therefore all
+show up relative to the + strand of the current region.
+<P>
+Another thing to be aware of (unless this has been fixed recently) is that the 
+chromosome coordinates on the D. melanogaster data from FlyBase don't match
+the coordinates from NCBI, so if you load a Drosophila region and try to layer
+NCBI BLAST hits, they will not show up in the right place--they'll appear
+somewhat shifted to the 3' end.  This is a data problem, not an Apollo bug,
+though there are very likely bugs in Apollo's BLAST parser as well.
+<P>
+If you BLASTed some or all of the current genomic sequence against a
+database at NCBI, you should check off "I used the current genomic sequence
+(or a portion thereof) as my BLAST query."  If you used only a portion of
+the current genomic sequence, enter the offset of the sequence you used from the starting position of the current genomic region (we plan to automate this offset calculation soon).
+
+<h2><a NAME="CommandLine"></a>Launching Apollo with command-line arguments</h2>
+Unix users can launch Apollo on a datafile by using the appropriate command-line arguments.  Use "--help"
+to get a list of the options.  Valid arguments are:
+<pre>
+  -i (or --inputFormat) input_format    Specify input format. 
+                                        [chadoDB|game|chadoxml|genbank|gff|backup]
+  -f (or --inputFile) filename          Specify filename (or URL) to read in 
+                                        (game,gff,gb,chadoxml,backup)
+  -u, --featureName=feature_name        Specify a feature name for input.  The type
+                                        of name will depend on --inputType
+  -l (or --location) location           Specify a location for input. 
+                                        Chromosome:start-end, e.g. chr1:1000-6000
+  -x (or --readGameFile) game_file      Read in a game file or URL.
+                                        (Shorthand for -i game -f gamefile)
+  -b (or --readBackupFile backup_file)  Read in a backup (serialized) file. 
+                                        (Shorthand for -i serialized -f serFile)
+  -s (or --sequenceFile) sequence_file  Specify FASTA sequence file to load with
+                                        gff file
+  -o (or --outputFormat) output_format  Specify output format. 
+                                        [chadoDB|game|chadoxml|genbank|gff|backup]
+  -w (or --writeFile) filename          Filename to write to
+  -n, --inputListFile=filename     Specify a file which contains a list of items
+                                   to query of type inputType. These will then
+                                   be queried with inputFormat and written out
+                                   to ouputFormat.
+  -k, --skipExistBatchEntry        If in batch mode, skip entry if the output
+                                   (file) already exists
+  -t, --inputType=type             Input type is dependent on input format. For
+                                   chadoDB use the seqTypes for the db being
+                                   loaded (e.g. chromosome_arm|chromosome, gene,
+                                   golden_path_region...
+  -U, --readDbUser=db_user         Username for the chado database you want to
+                                   read from/write to.
+  -D, --readDbPass=db_pass         Read in the password for the chado database
+                                   you want to read from/write to.
+  -F, --dbFlatFileOutput           Whether to dump database updates to an ad-hoc
+                                   flat file format.
+  -p, --inputFilesList=filename    Specify a file which contains a list of files
+                                   to process as inputFormat and to write to
+                                   outputFormat. Intended for batch loading
+                                   files into a DB (chado)
+  -? (or --help)                        Show this help message
+</pre>
+The command-line arguments changed starting with release 1.5.0, but for now
+most of the older command-line arguments (e.g. "-x" for reading GAME XML files) are also supported.
+The new command-line arguments start with a double dash ("--") if they are not single-letter arguments (this is a standard for most Unix commands).  Most of the arguments
+have a long form (with a double dash) and a short form (with a single dash).
+<P>
+Here are some examples of how you can launch Apollo from the command line:
+<pre>
+apollo --inputFormat chadoxml -f ~/apollo/data/CG16983.chado.xml
+apollo -i game -f data/example.xml
+apollo -i game -f http://flybase.net/cgi-bin/apollo.cgi?gene=cact
+apollo -i gff -f data/chr2.200000-400000.gff -s data/chr2.200000-400000.fasta
+apollo -i game -f data/example.game -o chadoxml -w example.chado
+</pre>
+<P>
+As the last example above shows, you can use the apollo command line to load data from
+one data source and save in a different format, (e.g. load from a chado
+DB and save in GAME XML format, or vice versa) without bringing up
+the Apollo GUI. Here is an example of loading
+from a chado database and saving in GAME XML format:
+<pre>
+apollo --inputFormat chadoDB --writeFile outfile.game
+</pre>
+Note that the information about the specific Chado database
+is specified in the
+chado-adapter.xml config file rather than on the command line.  Also,
+the "--outputFormat" argument is not needed because Apollo can figure out
+from the ".game" suffix that the file should be in GAME XML format.
+
+<h2><a NAME="WritingAdapters"></a>Writing your own data adapter</h2>
+
+If you are a software developer and would like to write a new data adapter for Apollo so it
+can read and/or write a different data format, please see the <a href=dataadapter_cookbook.html>Data Adapter
+Cookbook</a>.  Writing a new data adapter is nontrivial but doable.
+Also see the section in this document on <a href="#Adapting">Adapting Apollo</a>.
+
+<h2><a NAME="Styles"></a>Styles</h2>
+Apollo has a configuration file for each known data source.  This file is
+known as a "style" file.  When you choose a data source, Apollo automatically
+selects the right style file to help it display the data appropriately.  If you
+want to change some of the display parameters (e.g. the background color, names
+of data types, etc.) be sure to change the appropriate style file--e.g. the style file
+for the Drosophila data is called fly.style.  By default, the style files all live in the conf directory.
+See the section on <a href=#Configuration>configuration files</a> for more about what's
+in style files and how you can change it.
+<P>
+
+<h1>
+<a NAME="DisplayPanels"></a>The display panels</h1>
+
+<h2>The <a NAME="MainWindow"></a>main window</h2>
+ 
+<P>
+When Apollo has loaded the data for the region you selected, the <b>main window</b>
+will appear. Below, for example, the main window is displaying a portion
+of Drosophila chromosome arm 3R (but note that this is not current data).
+The top panel graphically
+displays the results and annotations.  The scale
+(in base pairs) goes across the middle of this panel.  All forward strand
+features are shown above the axis and reverse strand features are below the axis. 
+Each feature type can have a different
+color.  For instance, for the Drosophila data shown in the example below, annotated
+genes are blue, Genscan predictions are lavender, and BLASTX similarities to fly
+sequences are red.
+<P><center><img SRC="images/mainwindow.jpg" width=1000 height=704></center>
+<P>
+The feature types are grouped into <i>tiers</i>, conceptual groupings of related
+types that can be controlled as a unit and displayed in a single horizontal row.
+
+<h3><a NAME="AnnotationsVsResults"></a>Annotations vs. results</h3>
+<P>
+Each of the colored boxes in the main panel is a genomic feature.
+At the most basic level a feature consists of start and end coordinates on
+a piece of genomic sequence.  Much of the data we deal with can be
+organized into groups of features that we call <b>feature sets</b>.  For
+instance, a gene is made up of a set of exons which are represented as a
+group of features.  The exons belonging to a particular gene are joined by lines.
+<P>
+When you display Drosophila data, the main panel has a light blue region and a black
+region both above and below
+the central axis.  The black panels show the raw computational results that were obtained
+by running various analysis tools (GENSCAN, BLAST, etc.) on the Drosophila genome.
+The light blue panels closer to the axis show the annotations that
+were assigned by the biologists who studied all the results and decided where the genes and
+other important genetic features (e.g. transposons) are located.  The Ensembl human annotation data
+is different--it has not been hand-curated, so there is no distinction between "results" and
+"annotations".
+<P>
+The thin green and red vertical lines crossing the axis indicate
+the limits of the sequence in the current range.  Outside of this region,
+you will not see the DNA sequence when you zoom in.  Also, some editing functionality 
+is not available for annotations outside of the zone that has sequence.
+
+<h3><a NAME="Splitters"></a>Splitters</h3>
+
+The little red triangles on the left side of the main window are called splitters.
+They allow you to control the amount of real estate devoted to the annotation and result
+panels on each strand.  Drag the triangles up or down to adjust the panels.
+<P><center><img SRC="images/splitter.gif" width=108 height=46></center><P>
+
+To reset the panels to their original sizes, use the "Reset views" menu item in the View menu.
+<P>
+You can also adjust the horizontal size of the evidence panel on the left side of the
+main window by dragging the vertical drag bar.
+
+<h3><a NAME="Zooming"></a>Zooming and scrolling</h3>
+
+To zoom in for a closer view, use the x2 and x10 buttons.  To zoom out,
+use the x.1 and x.5 buttons.  
+When you've zoomed in as far as you can go, the x10
+and x2 buttons will become disabled.  (You wouldn't want to zoom in any 
+further than that, anyway; you can already see the individual bases at that zoom level.)
+You can reset to the original zoom level with the "Reset" button.  
+<P>
+To scroll horizontally, use the scrollbar just above the zoom buttons.
+The main panel also has vertical scrollbars--if
+there are many different results or annotations stacked up, you may need to scroll vertically to see
+all of them.  If you have a middle wheel on your mouse, you can use it
+to scroll the panels vertically.
+
+<h3><a NAME="MovingMouse"></a>Moving using the mouse--centering the display</h3>
+
+Often you want to center the panel on a feature and zoom into that feature. 
+Clicking the middle mouse button anywhere in the main panel will center
+the panel around that point.  If you now press the zoom buttons, you will
+stay centered around the selected position as you zoom in or out.
+<P>To move using the middle mouse button you can middle-click at the left or right sides of the main panel which will recenter
+the panel at that position and move the display by half a window.
+<P>If you are on a PC or Mac, please see the <a
+href=#MouseFunctions>summary of mouse functions</a> for a discussion about
+how to simulate right- and middle-mouse clicks.
+
+<h3><A NAME="ZoomToSelected"></A>Zoom to selected</h3>
+The "Zoom to selected" function zooms and centers the display so that the currently selected
+item(s) fill the entire view.  This function is in the View menu; its keyboard
+shortcut is ctrl-z.
+
+<P>
+<h3><A NAME="GuideLine"></A>The guide line</h3>
+<P>
+To turn on the "guide line", check the "Show guide line" checkbox in the View menu.
+A black vertical line will appear at your current location.  If you scroll, the
+line will move with you, helping you to remember where you were.  If you Zoom to
+selected, the guide line will reset to the selected location.
+
+<h3><a NAME="ShowStrand"></a>Forward and reverse strands</h3>
+
+Sometimes having both the forward and reverse strands visible takes up
+too much space, making it harder to see all the features.  To toggle
+strands on and off, use 'Show forward strand' and 'Show reverse strand'
+in the View menu.  The keyboard shortcut for Show/Hide Forward Strand is
+ctrl-f; the keyboard shortcut for Show/Hide reverse strand is ctrl-r.
+
+<h3>
+<a NAME="ShowReverse"></a>Showing reverse complement</h3>
+
+To avoid thinking backwards when looking at features on the reverse
+strand, the whole display (including the sequence) can be reverse complemented. 
+To do this select the 'Reverse complement' option in the View menu.  When
+the display is reverse complemented, the axis numbers turn red as a reminder.
+There is also a shortcut for performing a reverse complement:  simply type the
+letter 'r' with your cursor over the main window.
+<P>
+"Flip strands" does a reverse complement if both strands are currently displayed.
+If you were showing only one strand, "Flip strands" will show you the other strand,
+reverse complemented.  This allows you to look at the reverse strand above the axis,
+so you don't have to turn your computer upside-down.
+
+<h3>Inverting tier order</h3>
+If you type "o" with your cursor over the main window, or use the "Invert tier order"
+command in the Tiers menu, each panel will
+invert from top to bottom.  This is <i>not</i> the same as flipping strands--each strand stays
+where it was;
+only the vertical position of the features in each panel is flipped.
+
+<h3><a NAME="FeatureDetail"></a>Feature detail panels</h3>
+<P>
+If you click on a feature or features, it is selected (boxed in red) and more
+information about it will be displayed in the <b>detail panel</b> at the bottom
+of the main window.
+The
+left side of the detail panel shows the type of feature and its name, sequence range,
+and score.  The bottom right
+panel displays the coordinates of the selected features and possibly other information
+as well, 
+depending on the feature type.
+<P><center><img SRC="images/detail1.gif" width=800 height=124 alt="Detail panel"></center>
+<P>
+Each feature set only appears once in the lefthand panel so selecting
+a feature name in that panel may display a number of features in the right
+hand display.  For instance, if our genomic sequence has hit protein
+P33674 ten times we will only have one entry in the lefthand panel but
+selecting it will display ten rows in the righthand panel.
+<P> 
+
+<H2><a NAME="Preferences"></a>Preferences</H2>
+The Preferences editor can be accessed from the Edit menu (Edit-&gt;Preferences).
+It can be used for setting up some of the more useful settings for Apollo
+Style and Tiers files through a simple GUI.  The Preferences editor replaces
+the old "Style Preferences" editor (which was basically just a text editor
+requiring the user to know what are the valid key/value pairs) and the
+Types panel.  Note that it only supports a subset of all the configurable options for style/tiers files.  This subset should suffice for most users, but power users can always manually edit those files (as was done in previous versions of Apollo).  See <a href="#StyleFiles">Style files</a> and <a href="#TiersFiles">Tiers files</a> for more specific information about all supported options.<br>
+<br>
+The bottom of the editor provides 3 buttons:
+<ul>
+<li>Preview</li>
+<ul><li>Allows you to preview the changes made before actually applying the changes permanently.</li></ul>
+<li>Cancel</li>
+<ul><li>Cancels any changes made, reverting all changes to the previous states.</li></ul>
+<li>Save</li>
+<ul><li>Brings up a dialog for choosing where to save the configuration changes.  If Style is the currently selected tab, it will ask where to save the new Style file.  If Types is the currently selected tab, it will ask where to save the new Types file.  In both cases, a suggested file name will be provided, defaulting to storing to the ".apollo" directory in your home directory.  Note that if you override the suggested name for the Types file, Apollo will ask you to save the Style file as well (as the Style file needs to be updated to use the new Types file).</li></ul>
+</ul>
+The Preferences editor offers two panes to choose from:<br>
+<br>
+<h3>Style</h3><br>
+<center><img src="images/preferences_style.gif"></center><br>
+<br>
+The Style editor offers the following options:<br>
+<ul>
+<li>Tiers file</li>
+<ul><li>Displays the tiers file that is associated with this style.  It cannot be changed manually.  It will get updated automatically if you save the tiers file to another file.</li></ul>
+<li>Enable annotation editing?</li>
+<ul><li>If checked, allows annotations to be edited.</li></ul>
+<li>Annotations</li>
+<ul>
+<li>Show</li>
+<ul><li>If checked, display annotations.</li></ul>
+<li>Background color</li>
+<ul><li>Select the background color for the annotation tracks.</li></ul>
+<li>Label color</li>
+<ul><li>Select the label color for annotations.</li></ul>
+<li>Note that changing the label color will affect the label color in both background/label buttons.  Similarly, changing the background color will affect the background color in both background/label buttons.  This allows you to get an idea of what the colors will look like.</li>
+</ul>
+<li>Results</li>
+<ul>
+<li>Show</li>
+<ul><li>If checked, display results.</li></ul>
+<li>Background color</li>
+<ul><li>Select the background color for the result tracks.</li></ul>
+<li>Label color</li>
+<ul><li>Select the label color for results.</li></ul>
+<li>Note that changing the label color will affect the label color in both background/label buttons.  Similarly, changing the background color will affect the background color in both background/label buttons.  This allows you to get an idea of what the colors will look like.</li>
+</ul>
+<li>Canned annotation comments</li>
+<ul><li>Editable list of annotation comments used with the <a href="#AnnotationInfo">Annotation info editor</a>.</li></ul>
+<li>Canned transcript comments</li>
+<ul><li>Editable list of transcript comments used with the <a href="#AnnotationInfo">Annotation info editor</a>.</li></ul>
+</ul>
+<h3>Types</h3><br>
+<center><img src="images/preferences_types.gif"></center><br>
+<br>
+The Types editor offers the following options:<br>
+<ul>
+<li>Tier</li>
+<ul><li>Dropdown list of available tiers.  Click the "New" button to create a new tier.  Changing the selected tier will update the display with the settings for that tier.</li></ul>
+<ul>
+<li>Visible?</li>
+<ul><li>If checked, features in that tier will be visible.</li></ul>
+</ul>
+<ul>
+<li>Labeled?</li>
+<ul><li>If checked, features in that tier will have their labels visible.</li></ul>
+</ul>
+<ul>
+<li>Expanded?</li>
+<ul><li>If checked, all features in that tier will be displayed.  If not checked, overlapping features will be collapsed onto one another.</li></ul>
+</ul>
+<li>Drawing group</li>
+<ul><li>Dropdown list of available drawing groups for the currently selected tier.  Click the "New" button to create a new drawing group.  Changing the selected drawing group will update the display with the settings for that drawing group.</li></ul>
+<ul>
+<li>Shape</li>
+<ul><li>Dropdown list of available shapes for the selected drawing group.  Supported shapes are:</li>
+<ul>
+<li>DrawableGeneFeatureSet</li>
+<li>DrawableResultSet</li>
+<li>DoubleHeadedArrow</li>
+<li>Triangle</li>
+<li>Zigzag</li>
+<li>ThinRectangle.</li>
+</ul>
+</ul>
+</ul>
+<ul>
+<li>Match UTR color to background?</li>
+<ul><li>If selected, will match the UTR color to the background color, giving it a "transparent" look.  Only applicable if the shape is DrawableGeneFeature.  Will be disabled if another shape is selected.</li></ul>
+</ul>
+<ul>
+<li>Color</li>
+<ul><li>Select the color for the selected drawing group.</li></ul>
+</ul>
+<ul>
+<li>Scale height by score?</li>
+<ul><li>If selected, features with higher scores will be drawn taller than features with lower ones.</li></ul>
+</ul>
+<ul>
+<li>Minimum score to display</li>
+<ul><li>Minimum score cutoff for displaying features.  Any feature with a score below this cutoff will not be displayed.</li></ul>
+</ul>
+<ul>
+<li>URL</li>
+<ul><li>URL for linking out this drawing group.</li></ul>
+</ul>
+<li>Apply to following data types</li>
+<ul><li>Editable list of feature types that belong to this drawing group.</li></ul>
+</ul>
+<ul>
+<li>URL</li>
+<ul><li>URL for linking out this drawing group.</li></ul>
+</ul>
+</ul>
+<h2><a NAME="ApolloWindows">Apollo windows</a></h2>
+
+The "Window" menu in Apollo helps you keep track of the various Apollo windows that are
+open (such as the Types window).  You can bring an Apollo window to the top by choosing
+it from the Window menu.
+
+<h2><a NAME="WebBrowser">Apollo and Web browsers</a></h2> 
+
+Some Apollo commands (such as "Help" and "Get info about this feature via
+Web") direct your Web browser to bring up a particular Web page to show
+the requested information.  Apollo tries to guess which Web browser you
+use.  On Windows or Mac, it will bring up your default web browser
+(typically Internet Explorer on Windows or Safari on Mac).
+<P>
+
+On Unix (Linux/Solaris), the situation is a bit more complicated: there
+are many versions of Netscape and Mozilla, each of which behaves
+differently.  (On Solaris, for example, it no longer seems to be possible for
+Apollo to open a new Netscape--you must already have Netscape running in order
+for Apollo to access it.)
+We have tried to make Apollo make intelligent guesses about
+how to address your Web browser, but if it doesn't seem to be working
+right, you can explicitly add your Web browser path to your <a href="#apollo.cfg">apollo.cfg</a> file.  To do this, you can edit the
+apollo.cfg that lives in the conf directory under the directory where you
+installed Apollo, or you can create a directory in your home directory
+called .apollo and create a new file there called apollo.cfg.  The line
+you need to put in apollo.cfg specifies the path of your browser program:
+<pre>
+BrowserProgram          "/usr/local/bin/mozilla"
+</pre>
+(substituting the appropriate path of your web browser).
+
+<h2><a NAME="Selection"></a>Selection</h2>
+ 
+<h3><a NAME="SingleFeature"></a>Selecting a single feature</h3>
+
+Selecting one feature is as simple as clicking on that feature.
+You will know it's selected as it will have a red outline around it. 
+Selected features are described in the detail panels at the bottom of the main window.
+<P> 
+<h3>
+<a NAME="MultipleFeature"></a>Selecting multiple features</h3>
+<P>
+<P>
+You can select more than one feature using the the mouse by pressing
+the middle button and dragging the mouse around the features you want to
+select ("rubberbanding").  (If you are on a Windows or Mac platform, please see the <a
+href=#MouseFunctions>summary of mouse functions</a> for a discussion about
+how to simulate middle-mouse.)
+When you release the mouse, there may be a brief
+pause; then all the selected features will be outlined in red and they
+will all be listed in the detail panel.  
+<P>
+The shift key can be used to toggle features in or out of the selection.
+You can add features to the
+currently selected set by shift-clicking with the left mouse button (to
+add single features) or shift-middle-mouse-dragging (to add multiple features).
+To deselect one or more of the features you have selected while leaving the others
+selected, shift-click (or shift-middle-drag) the feature(s) you want to deselect.
+<BR>
+<B>Mac users please note:</B> there are Java bugs on Mac that make the rubberbands
+behave badly.  If you are running an older version of Mac OS X,
+you may notice a rubberbanding bug where
+the black rubberband rectangle is redrawn as you move the mouse, instead
+of just at the end when you release it, so you will see a concentric set of
+black rectangles.  On some version of Mac OS X,
+the rubberband may be slow and thick.  These are bugs in the JDK, not in Apollo.
+<P>
+By default, the selected features are sorted by start position (Range)
+in the detail panel on the lower left.
+You can change the sort by clicking (for forward sort) or shift-clicking (for
+reverse sort) on a column
+header.  For example, clicking on "Name" sorts the selected features
+in alphabetical order by name, and shift-clicking on "Score" sorts
+them in descending order by score.
+<P>
+If you click on an intron, the whole transcript is selected.  Double-clicking
+an exon also selects the whole transcript (all exons connected to the one
+you double-clicked).
+Double-clicking an intron belonging to a result selects all results of that
+particular type.
+
+<P> 
+<h3>
+<a NAME="ShiftSelecting"></a>Adding to a selection</h3>
+<P> 
+If the features you want to select are in multiple places, holding down
+the shift key before selecting them will add to the previous selection. 
+If you don't hold down the shift key when selecting new features,
+any previous selected features will be automatically deselected.  You can
+use the shift key with left mouse (to add individual features to the selected
+group) or with middle mouse (to rubberband more features).
+<P> 
+<h3>
+<a NAME="Deselecting"></a>Deselecting</h3>
+<P> 
+If you click on the background of the main panel, any
+features selected in red will be deselected.  However they will still
+be shown in the feature detail panels.
+
+<P> 
+<h2><a NAME="Annotations"></a>Finding out more about annotations and features</h2>
+
+If you select a feature and click the right mouse button, a popup menu
+will appear.  Many of the functions described in this section are accessed
+via the right-mouse popup menu.  Please see the section on <a
+href=#MouseFunctions>mouse functions</a> for a discussion of how to
+simulate right-mouse on various platforms.  Also note that it matters
+where your cursor is when you hit the right mouse button; in particular,
+you must have your cursor in the same strand as the selected features in
+order to perform functions on those features.
+
+<h3><a NAME="Linkout"></a>Get info about features via Web</h3>
+
+Many features originate from other databases (e.g. SwissProt, EMBL,
+Ensembl, GenBank) and we can learn extra information by looking up those
+features in their parent databases.  To load a web page with more
+information about a feature, select the feature in the main panel, right
+click on it, and use the right menu option 'Get info about this feature
+via Web'.  If an URL for this feature type has been registered in the
+types file, a Web page showing information about this feature will be
+brought up. For instance, selecting a sequence from GenBank will take 
+you to the report for that accession at GenBank. 
+<P>
+It can take a while for the new Web page to appear, as the information
+has to be sent over the network.  If your Web browser window was
+iconified or hidden, you may have to bring it back up to see the new
+information.  
+<P>
+Apollo sometimes has trouble figuring out how to talk to
+your Web browser.  Please see the section on <a href=#WebBrowser>Apollo
+and Web browsers</a> for more information.
+
+<h3><a NAME="AnnotationInfo"></a>Annotation info</h3>
+The "Annotation info" popup menu item brings up
+a window that has text information about the annotation.  (If you have 
+editing enabled, it
+will also allow you to <a href=#AnnotationText>add or change the text for an annotation</a>.)
+<P><img SRC="images/annotation_info_editor.gif" width=1000 height=655 hspace=10><P>
+Comments and properties associated with the annotation are shown in the scrollable 
+"Comments" panel, followed by comments and properties associated with individual transcripts belonging to the annotation. 
+<P>
+Above the "Comments" panel is a table listing database ID(s) for
+this annotation.  If you select an ID, more information about that database entry
+(if available) will appear in your <a href=#WebBrowser>Web browser</a>.
+<P>
+The "Follow selection" checkbox on the lower left side of the window is used to follow selections
+from other parts of Apollo. If it is checked, then when you select another
+annotation in the main Apollo window, the annotation info window
+will load that annotation, and if you select an annotation name in the annotation
+info window, the main window will scroll to show that annotation.
+<P>
+You can have multiple annotation info editors open at once.  If you make your
+changes in one editor, the annotation info for that annotation will 
+automatically get updated in all other open editor windows.
+<P>
+You can browse comments for each annotation by using the Annotation Tree at the
+left side of the Annotation info panel. By checking "Follow external 
+selection", you can select different annotations in the main window
+by clicking on their names in the Annotation 
+info panel.  The behavior is the same as the Annotation Tree window described 
+below.
+<h3><a NAME="AnnotationTree"></a>The Annotation Tree</h3>
+
+<table>
+<tr><td>
+<img SRC="images/annotation_tree.gif" width=400 height=302 hspace=10>
+</td><td>
+The Annotation Tree window provides an alternate way to explore the annotations.  You can bring up the Annotation Tree
+from the View menu.
+(Starting in version 1.4.0, the annotation tree is also integrated into
+the <a href=#AnnotationInfo>Annotation Info editor</a>.)  Annotations are
+listed in the left-to-right order in which they appear in the current region.
+<P>
+Click on an annotation name to scroll the main window to the beginning of that annotation.
+Double-clicking the annotation name will scroll the main window to the end of the annotation.
+After making an initial selection in the annotation tree by clicking on a gene name, you can use the arrow keys on your keyboard to navigate up and down the tree.
+If you right-mouse click over a gene name in the annotation tree,
+a menu item lets you bring up the annotation info window for that gene
+(if you weren't already in the annotation info window).
+</tr>
+<tr><td>
+<img SRC="images/annotation_tree_expanded.gif" width=372 height=186 hspace=10>
+</td><td>
+If you click on the + icon to the
+left of an annotation name, that item will expand to show all the transcripts for that gene.
+Clicking the + to the left of a transcript will show you the coordinates of the exons
+for that transcript.  You may also be able to use the right and left
+arrow keys on your keyboard (-&gt; and &lt;-) to expand and close nodes in the tree.
+<P>
+<B>Mac users please note:</B> On a Mac, you will see horizontal and vertical arrowheads instead
+of + and -.  To open or close a node, you must click on the <i>base</i> of the arrowhead,
+not the pointy end.
+</td></tr></table>
+
+<h3><a NAME="AnnotationMenu"></a>Annotation menu</h3>
+
+You can also select a gene or other annotation of interest from the
+Annotation menu, which is sorted alphabetically by name and colored by
+annotation type.  If the annotation name is in bold italics in this menu,
+it means that the annotation is unfinished.  When you select an
+annotation name, Apollo will zoom to show that annotation plus a window
+on each side.  Please note that sometimes Apollo fails to scroll
+vertically to the selected annotation (this is a known bug).
+
+<h3><a NAME="Bookmarks"></a>Bookmarks</h3>
+
+Apollo allows you to bookmark genes of interest so you can easily come back to them.
+Select a gene transcript and use Bookmarks -&gt; Add bookmark.  To revisit a gene,
+select its name from the Bookmarks menu.  The resulting view is as if you had
+selected the gene from the Annotation menu, as above.
+
+<h2>
+<a NAME="SearchFunctions"></a>Search functions</h2>
+
+<h3>
+<a NAME="FindingBase"></a>Finding a specific base</h3>
+
+If you know that your feature is at a specific base pair in the sequence
+you can use the find function to go straight to it.  From the Edit
+menu choose Find and a window will be displayed.
+<center>
+<P><img SRC="images/findbase_sm.gif" height=155 width=495></center>
+<P>Entering a base pair coordinate in the Position field and pressing Goto
+will center the main panel display on that base pair.
+
+<h3>
+<a NAME="FindingFeature"></a>Finding a feature</h3>
+
+If you have loaded a genomic region and you know a gene or a protein
+exists in there somewhere but you're not sure where, you can enter
+an accession or gene name in the Name field.  Pressing Find will search
+through all the features looking for one with that name.  If one (or
+several) are found they will be selected and the main panel will be centered on
+them.  Search is case-insensitive.  
+<P>
+The search by name adds an implicit wildcard (*) to the end of your search
+string.  It will first look for a feature with the exact name you specified
+(e.g. LD46133).  If nothing with that name is found, it will look for features
+whose names begin with that string (e.g. it might find LD46133.5prime).
+We plan to add more flexible handling of wildcards soon; for now, your search
+string should contain only the actual characters you're looking for.
+
+<h3>
+<a NAME="FindingSequence"></a>Finding a subsequence</h3>
+<P> 
+To search for occurrences of a DNA sequence in the current genomic region, enter it in the Sequence field on the Search window. All occurrences
+of that sequence found on the selected strand will be displayed in a table. 
+Selecting an entry from
+this table will zoom to show you the matching subsequence next to the axis.
+<center>
+<P><img SRC="images/findseq.gif" width=504 height=350></center>
+
+<h3><a NAME="RegExp"></a>Using regular expressions</h3>
+
+If you check the "Use Regular Expresions?" box, you can search for a
+sequence or a feature name that matches a pattern.  <a target=_new href=http://www.savarese.org/oro/docs/OROMatcher/Syntax.html>Regular expressions</a> are a way of specifying these patterns.
+<P>
+There is not space here to describe all the things you can do with
+regular expressions, but here is a simple example:  the user wants to find
+all subsequences that start with AAA, end with TTT, and have a run of C's and/or G's
+(in any order) in the middle.  The regular expression for that pattern is
+<pre>AAA[CG]+TTT</pre>
+A group of characters inside the square brackets means "any of these", and "+" means
+"one or more instance of the preceding expression".  Here are the results of that search:
+<center><P><img SRC="images/findseq.regexp.gif" width=504 height=350></center><P>
+
+Regular expressions can also be very useful when looking for features with a
+certain name--for example, if you are looking for an EST whose name starts with SD,
+you could search for "^SD.+" ("^" means that the pattern must match the beginning
+of the name; "." means any character).
+<P>
+Keep in mind that regular expression matching is "greedy", meaning that it tries to
+match the longest string it can.  So if you were, say, looking for the pattern
+"ATCG.*GGAC" in order to find sequences flanked by ATCG and GGAC, it might find a
+huge match because the string ATCG happened to be found near the beginning of the
+genomic region and GGAC happened to be found near the end, and then it wouldn't find
+any shorter matches in the region.  To prevent this from happening, you can specify
+the minimum and maximum values for a *--e.g. "ATCG.{0,20}GGAC", which would find
+sequences flanked by ATCG and GGAC with up to 20 bases in between.
+
+<h2>
+<a NAME="FeatureDisplay"></a>Specifying which features to display</h2>
+<P> 
+There can be many features on a piece of genomic sequence and
+the user may not want to see all of them all at once or maybe not in the
+maximum amount of detail.  Apollo allows the user to control the level of detail
+that is used.
+<P> 
+
+<h3>
+<a NAME="CollapsedView"></a>Collapsed view</h3>
+<P> 
+<center><img SRC="images/collapsed.gif" width=520 height=105></center>
+<P>
+In this view all the features are displayed but all the features belonging
+to a single tier are placed on the same line.  Therefore at any one point there may be several
+overlapping features piled on top of one another.  This can be useful
+in a zoomed-out view so the user can see at a glance the rough areas of
+genomic sequence that have features associated with them.  Since all
+the features are displayed in one row, screen space is conserved and more
+feature types can be seen at once.
+<P> 
+Collapsing a specific feature type can be done in two ways.  The user can
+select one of the features and right-click on it.  A popup menu will
+come up and selecting the 'Collapse tier' option will force all features
+of that type to be drawn on one line.   The other way to collapse
+features is to bring up the Preferences editor and uncheck the 'Expanded' checkbox for the desired feature type.
+To collapse all tiers, use the "Collapse all tiers" option from the Tiers menu.
+
+<h3>
+<a NAME="ExpandedView"></a>Expanded view</h3>
+<P> 
+When zoomed into a region, features often need to be seen in more detail. 
+The expanded view arranges all the features so none of them overlap. 
+This is essential when looking in more detail at the possible exon/intron
+structure implied by BLAST hits and for possible alternative splicing structures.  
+To expand the view of a feature type, select a feature of the type you want to expand and right click. 
+Select the 'Expand tier' option and all features of that type will be drawn non-overlapping.
+To expand all tiers, use the "Expand all tiers" option from the Tiers menu.
+<P> 
+The image below shows the same set of features as above but now the
+red and orange BLAST hits are expanded.
+<P>
+<center><img SRC="images/expanded.gif" width=471 height=211></center>
+<P> 
+
+<h3>
+<a NAME="HidingFeature"></a>Hiding features</h3>
+
+There are often features that you're not interested in that take
+up valuable screen space.  These can be hidden from view until you
+need them.  Select a feature of the type you wish to hide and
+right click.  Select the 'Hide tier' option from the popup menu and the features of that
+type will
+not be drawn.  This can also be done via the Preferences editor --just
+uncheck the 'Visible?' checkbox for the relevant feature type.
+<P>
+If you want every feature to disappear, select "Hide all tiers" from the Tiers menu.
+
+<h3>
+<a NAME="ShowingFeature"></a>Showing features</h3>
+
+If you want to reshow hidden features either use the Preferences editor and click the "Visible?" checkbox, or right click in the result background.  Select the 'Show tier'
+option from the popup menu and select the tier you want to show again.  To turn on all tiers,
+select "Show all tiers" from the Tiers menu.
+
+<h3>
+<a NAME="ChangingColor"></a>Changing color of a feature type</h3>
+
+To change the color of a feature type, you can use the 'Change color for
+this feature type' option in the right mouse popup menu, or you can use
+the Preferences editor.  If you change the color through the first method, the color
+change is only temporary to the current Apollo session, unless you save
+it via the the "Save type preferences" menu item in the File menu.
+
+<h3>
+<a NAME="ResizeFeature"></a>Resizing features</h3>
+The height of all the features can be increased or decreased with the "Increase tier height"
+and "Decrease tier height" options in the Tiers menu.  The keyboard shortcuts
+for these commands are "+" and "-" (don't use the control key--just + or - by itself).
+
+<h3>
+<a NAME="DashSets"></a>Showing sequencing gaps in ESTs</h3>
+By default, sequencing gaps in EST results are shown as dashed lines.  This is
+controlled by the DashSets option in the appropriate <a
+href=#Configuration>style file</a>.  The color of the dashed lines
+is set by the SequenceGapColor setting in the style file.
+<P>
+<center><img SRC="images/ests-with-gap.gif" width=179 height=34></center>
+
+<h3><a NAME="NewSeqs"></a>Hits to new sequences</h3>
+If a result type has a <a href=#Date>date</a> defined in the tiers file, then
+results of that type that represent hits (homologies) to sequences newer than that
+date are shown with a box around them (in the <a href=#EdgematchColor>edgematch color</a>).
+<P>
+<center><img SRC="images/new-seqs-boxed.gif" width=624 height=44></center>
+<h3>
+<a NAME="FeatureLabels"></a>Showing feature labels</h3>
+<P> 
+By default, annotations are labeled with their names, and other
+features are not labeled.  To turn on labels for a particular feature
+type, bring up the Preferences editor (Edit-&gt;Preferences) and check the
+'Labeled?' box for the feature type of interest.
+<P>
+At low zoom levels the
+labels may overlap so they are hard to read.  At high magnifications the
+labels are organized so they don't overlap each other.  (You can turn off
+this behavior by unchecking the "Avoid text overlaps" box in the View
+menu.)
+
+<h3>
+<a NAME="BackgroundColor"></a>Background colors</h3>
+
+The startup background colors for both portions of the main panel (Results and Annotations)
+can be set in the style file--see the <a href=#Configuration>Configuring Apollo</a> section.
+Once you have launched Apollo, the background color of the result panel can
+be inverted by choosing "Invert result background color" from the View
+menu.  You can change other colors with the <a href=#Prefs>Preferences editor</a>.
+
+<h3><a NAME="EvidencePanelOrientation"></a>Changing orientation of evidence panel</h3>
+
+The evidence panel that shows details about the currently selected features comes up
+by default in a vertical orientation at the left side of the main window.  If you prefer
+this panel to be oriented horizontally, select the "Make evidence panel horizontal" option
+from the View menu.  You can also set this option in the <a href=#Configuration>apollo.cfg</a> file (the option
+is called FrameOrientation).
+
+<h2>
+<a NAME="SequenceLevelFeatures"></a>Sequence level features</h2>
+
+By <b>sequence level features</b>, we mean features that only need to be displayed at the
+base pair level--start and stop codons and of course the sequence itself.  This section describes
+ways to look at features at this level of detail.
+<P> 
+
+<h3>
+<a NAME="ShowSequence"></a>Showing the genomic sequence</h3>
+
+If you're fed up with colored boxes and want to go right down to the
+genomic sequence, you need to zoom in far enough so there is room for the individual bases
+to appear near the axis.  The forward strand bases appear above the axis,
+and the reverse strand bases appear below the axis.  If the sequence is currently
+reverse-complemented, the axis and base numbers are shown in red.
+<P> 
+<center><img SRC="images/axis-and-bases.gif" width=359 height=56></center>
+<P>
+
+You can use the middle mouse button to rubberband a region of sequence immediately above or
+below the axis; the selected sequence will pop up in a new sequence window (unless
+you have selected too big a region).  You
+can then copy from the sequence window and paste into another application (e.g., a
+primer predictor), if desired.  If you have selected a very large region,
+you will be prompted to enter a filename to save the sequence as a FASTA file--you
+won't see it displayed in a sequence window.
+<P>
+<P><center><img SRC="images/axis-rubberband.gif" width=706 height=214></center><P>
+
+If you select a feature in the main panel, the region of sequence corresponding to that feature will
+be highlighted in the feature's color.  If you click your right mouse
+button near the axis,
+you will be offered another option: "Color bases by splice site potential".  This uses a two-color system for indicating splice site potential:  GT is colored orange and AG is blue. Note that when you are in splice site coloring mode, selecting
+features won't highlight them in color on the sequence.  To get that behavior back, right-mouse near the axis
+and select "Color by selected feature".
+
+<P><center><img SRC="images/color-by-splice-potential.jpg" width=367 height=46></center><P>
+
+The features that have sequence associated with them will also show their sequence when
+you have zoomed in enough.  Protein features (such as annotations) show their translated
+amino acid sequence, while other features show their DNA sequence.
+
+<P><center><img SRC="images/bases-in-features.gif" width=767 height=386></center><P>
+
+Please note that the sequences you see inside the result features do not
+represent actual sequence alignments.  If the alignment between the
+result and the genomic sequence includes insertions in the result
+sequence, the corresponding gap(s) will not appear in the genomic
+sequence, so the result residues will not be lined up correctly with the
+genomic sequence.  In order to see the correct, gapped alignment between
+results and genomic sequence, use <a href=#Jalview>Jalview</a>.
+<P>
+If the sequence letters are too tall to fit in the features, you can
+type '+' while over the main panel in order to increase the height of the feature rectangles.
+Sometimes if a feature is partially covered up, its sequence doesn't show up--you can
+get the sequence to show up (if the feature indeed has sequence associated with it)
+by clicking on the feature of interest to bring it to the foreground.
+
+<h3><a NAME="SequenceWindow"></a>Viewing, translating and saving sequence for selected features</h3>
+If you want to see the sequence of one or more features, select the features and
+then use the "Sequence..." option on the right-mouse popup menu.  (If "Sequence..."
+is grayed out, it means you haven't selected any features that have sequence
+associated with them.)  You can also use "Open new sequence window" from the View menu.
+<P> 
+<center><img SRC="images/sequence-window.gif" width=440 height=582></center>
+<P>
+The sequence window lets you translate the sequence to amino acids or view the virtual cDNA sequence
+(just the exons) or the coding sequence (from start of translation to stop).  
+The default display is amino acid sequence for gene annotations and result sequence
+for results that have sequence.
+Click
+the "Save as..." button to save the currently displayed sequence(s) as a multiple-FASTA
+file.
+<P>
+By default, the sequence window does not follow selections made in the main panel.
+To change this, you can check the "Follow external selection" checkbox.
+Then if you select new features in the main panel, their sequences will show up in
+the Sequence window.  You can launch a new sequence window directly from an
+existing one by clicking the "New sequence window..." button.
+<P>
+Please note that annotations at the very edges of the region you are
+looking at may be mostly outside the region (they are included in the
+region if they have even one base inside the region), in which case you
+won't see their translations as you zoom in and the Sequence menu item
+will be disabled.
+
+<h4><a NAME="SavingSeq"></a>Saving whole sequence</h4>
+
+The "Save sequence" menu item (in the File menu) lets you save the entire
+sequence of the current region as a FASTA-format file.
+
+<h3><a NAME="StartStopCodons"></a>Start and stop codons</h3>
+
+If Apollo has sequence loaded and you zoom in far enough, start and
+stop codons will be displayed in all six frames.
+The start codons are shown
+in green and the stop codons in red.
+If you are viewing a region downloaded from an Ensembl database, Apollo
+will fetch the sequence from the database so it can calculate the
+positions of the start/stop codons.
+<P> 
+<center><img SRC="images/startstop.gif" width=287 height=109></center>
+<P>
+When you select a whole transcript in the annotation panel and the start and
+stop codons are visible, the codons that correspond to the start and stop
+of translation for that transcript will be highlighted (boxed in red).
+Note that, at the moment, if you only select one exon, you will not see the
+start and/or stop codons used in that exon boxed in red.  We hope to fix
+that soon.
+<P> You can change the stop position in a transcript by selecting one of
+the stop codons in the start/stop zone and dragging it onto the transcript.
+
+<h3><a NAME="EdgeMatches"></a>Showing edge matches</h3>
+To help you to compare different features in detail, all features that
+have the same 5' or 3' boundary as the currently selected feature are highlighted
+with white lines at the edges of the feature boxes.  For example, in the screenshot
+below, the user has selected several purple exons; the edges in other features that
+match the edges in the purple exons are colored white.
+<P> 
+<center><img SRC="images/edge-match.gif" width=299 height=119></center>
+<P> 
+
+Edge match highlighting is enabled by default.  You can turn it off
+by unclicking "Show edge matches" in the View menu.  The color and width of
+the edge match highlighting can be controlled by options in the <a href=#Configuration>style</a> file.
+
+<h3>
+<a NAME="SpliceSites"></a>Non-consensus splice sites</h3>
+To help you identify splice sites that are unconventional, colored triangles
+appear in the annotation glyph.  In the example below, the unconventional 
+splice donor (not GT) is indicated with an orange triangle pointing to the left, 
+and the unconventional splice acceptor (not AG) is indicated with an orange 
+triangle pointing to the right.
+<P>
+<center><img SRC="images/splice-sites.gif" width=755 height=29></center>
+<P>
+To mark a non-consensus splice site "approved", bring up the annotation info
+editor on that transcript, and check the box that says "Approve
+non-consensus acceptor [or donor] in exon <i>k</i>."
+<P>
+Untranslated regions (UTRs) in a protein-coding gene are 
+indicated with transparent boxes; the 5' UTR is upstream of the start codon, 
+indicated in green, and the 3' UTR is downstream of the stop codon, 
+indicated in red.   The color of the UTRs can be set by the user in the 
+<a href=#TiersFiles>tiers</a> file.
+
+<h3><a NAME="Analyses"></a>Analyses: GC content and restriction sites</h3>
+
+If the region you are looking at has sequence associated with it, you can
+show a graph of GC content or find restriction sites.  Note that GFF files
+generally don't include sequence.
+
+<h4><a NAME="GCPlot"></a>Showing a GC graph</h4>
+
+Selecting "Show GC plot" from the Analysis menu will cause a graph of GC content
+to be displayed below the axis in the main panel.  As with the start and
+stop codons, if you retrieved features from an Ensembl database, Apollo will go back to the server to retrieve the sequence,
+since it needs the actual base pairs in order to calculate GC content.
+<P>
+<center><img SRC="images/gcgraph.gif" width=142 height=94></center>
+<P> 
+
+The GC analysis control window allows you to adjust the window
+length and the color used for the plot.
+
+<h4><a NAME="Restriction"></a>Showing restriction sites</h4>
+
+If you choose "Find restriction sites" from the Analysis menu, the analysis control
+window pops up with a list of restriction enzymes.  You can choose one or more of
+the restriction enzymes (use the control key to add to your selection).
+<P><center><img SRC="images/restriction-enzyme-selector.gif" width=350 height=252></center><P>
+The colors of the different restriction enzymes are chosen randomly each time.
+If you don't like the colors, kill the Analysis window and bring up
+a new one.
+<P>
+When you
+click "Digest", you will see the restriction enzyme sites near the central axis.
+<P><center><img SRC="images/restriction-sites.gif" width=266 height=69></center><P>
+Note that if you've selected more than one restriction enzyme to map, scrolling
+(or any operation that requires the Apollo window to redraw)
+may become very slow as Apollo struggles to redraw all the restriction
+sites.
+<P>
+The restriction enzyme selection window shows a table listing the positions
+and sizes of the restriction fragments resulting from your digest.  
+<P><center><img SRC="images/restriction-fragment-table.gif" width=594 height=116></center><P>
+
+If you click on one of the fragments in the table, the main window will highlight
+the fragment sequence and zoom to the beginning of it.
+<P><center><img SRC="images/restriction-fragment-selected.gif" width=809 height=81></center><P>
+
+If you check any "Select" boxes and then click "Show selected sequence
+fragments", the selected restriction fragment sequences will pop up in a
+sequence window.
+
+<h3><a name="Analyses-remote"></a>Remote analysis services</h3>
+
+Apollo supports analysis to remote analysis services.  This is an useful
+feature for those who may not wish to use their own hardware for doing the
+analysis.  This might be due to limited computing resources or not wanting
+to download and install the different software (and often accompanying
+databases which can be quite large).<br>
+<br>
+The supported analysis services can be accessed from the main menu, under
+"Analysis->Analyze sequence...", which will default to running the analysis
+on the currently loaded sequence<br>
+<br>
+<center><img src="images/analysis_menu.jpg"></center>
+<br>
+or by selecting an annotation, right-clicking to bring up the popup menu
+and selecting "Analyze region", which will default to running the analysis
+on the region containing the selected annotation(s).<br>
+<br>
+<center><img src="images/analysis_popup_menu.jpg"></center>
+<br>
+The requested analysis will be sent in the background, so you can continue
+to work as normal and Apollo will alert you once the analysis is completed.
+<br>
+<h4><a name="NCBI-BLAST"></a>NCBI BLAST</h4>
+You can run BLAST searches through NCBI's qBLAST service.  Select the
+"NCBI-BLAST" tab in the "Run Analysis" window.<br>
+<br>
+<center><img src="images/ncbi-blast.jpg"></center>
+<br>
+You can select the type of BLAST search from the "BLAST type" pulldown,
+with BLASTN (non-translating nucleotide to nucleotide),
+BLASTX (translating nucleotide to protein), and TBLASTN
+(translating nucleotide to translating nucleotide).  Note that since 
+TBLASTX needs to translate both the query and the subject in all six
+frames, it is quite slow.  The BLAST searches are done against NCBI's
+nr (non-redundant) database.
+
+<h4><a name="NCBI-PRIMER-BLAST"></a>NCBI Primer BLAST</h4>
+You can run <a href="http://www.ncbi.nlm.nih.gov/tools/primer-blast">
+NCBI's Primer BLAST</a> searches for primer identification.
+Select the "NCBI Primer-BLAST" tab in the "Run Analysis" window.<br>
+<br>
+<center><img src="images/ncbi-primer-blast.jpg"></center>
+<br>
+Note that Primer BLAST only supports regions up to 50kb in length.  If your
+genomic region is larger than that, you will need to either launch the analysis
+from selecting annotation(s) or set a smaller region by setting the values
+to "Genomic region" "Start" and "End".<br>
+<br>
+The "Remove pairs where each primer is not fully contained within distinct
+exons" post processing option is only available when launching the analysis
+when genes are selected.  This filter will remove any primer pairs where
+the forward and reverse primers are not fully contained within separate
+exons.<br>
+<br>
+Once the analysis is complete, the primer pairs (if any) will show up in
+the results panel.<br>
+<br>
+<center><img src="images/primer_pairs.jpg"></center>
+<br>
+Unfortunately there currently is no way to link cross-strand features in
+Apollo, so the pair is replicated in both the forward and reverse strands.
+The half arrow pointing to the right represents the forward primer and
+the half arrow pointing to the left represents the reverse primer.
+Clicking on any of the primers will give give you the fragment length
+in the information window.<br>
+<br>
+<center><img src="images/primer_info.jpg"></center>
+
+<h3><a NAME="Jalview"></a>Viewing alignments</h3>
+
+To let you examine the alignments between different features and the
+genomic sequence, Apollo has an interface to the Jalview multiple alignment viewer.
+<P>
+Jalview is
+invoked by choosing one or more features (results and/or annotations) 
+and selecting "Align selected features" or
+"Align same type features in region" from the right-mouse popup menu.
+"Align selected features" will align just the features you have selected.
+"Align same type features in region" will align the selected features
+plus any features that are the same type as any of the selected features
+and are within the same range (between the lowest and
+highest base pair in the selected features).
+<P>
+The selected sequences that qualify will come up in Jalview along
+with four additional sequences: the genomic sequence plus its three-frame
+translation.
+<BR>
+
+<P><center><img SRC="images/jalview-dna.gif"></center><P>
+
+Jalview can display DNA and/or peptide sequences.
+Amino acids are shown as single-letter codes followed by two spaces.
+
+<P><center><img SRC="images/jalview-protein.gif"></center><P>
+
+Jalview only displays features from one strand, the strand from which you
+invoked the popup menu. If there are no
+features selected on that strand the menu item will be disabled.
+<P>
+In the Drosophila (GAME XML) data, some results have alignment sequence
+and some do not.  Features that don't have sequences of their own come up with
+their corresponding genomic sequence, in which case you will see only the
+trivial and uninformative genomic-to-genomic alignment.  Sometimes it's useful
+to include some of these features in order to compare them with real alignments.
+<P>
+Ensembl data currently does
+not have alignment sequences that are accessible externally. This
+means that at present, if you use Jalview on Ensembl data, you will see
+only the corresponding genomic sequence for all the results, which is not
+very informative.  We hope that this will be fixed soon.
+<P>
+Features that are not entirely within the range of the entry currently
+loaded (overhangers) will not be displayed in Jalview, as there
+is no genomic sequence to align them to.
+<P>
+Sequences in Jalview can be selected by clicking on the sequence label on the
+left and deselected by clicking them again. 
+Selected sequences can be removed from the alignment display by selecting "Delete selected
+sequences" from the Edit menu. 
+"Invert sequence selection" will deselect all currently selected sequences and vice
+versa.
+<P>
+When you select a feature that has introns, or two or more features that
+do not overlap, Jalview displays them with gaps (dashes) between
+them. It does not display all of the genomic sequence of introns or gaps
+between features. It does show 9 or 10 bases of genomic sequence on
+both sides of
+the intron. This is so the user can see sequence relevant for splice
+sites.  
+<P>
+"Edit-&gt;Removed gapped columns" will remove the gapped columns (all
+dashes). So this will remove the gaps of the intron, but the genomic
+sequence of the intron remains.
+On our <a target=todo href=../todo>todo list</a> is adding a menu item to remove the whole intron,
+gaps and genomic.
+<P>
+Columns can be selected/deselected by clicking above the sequences. A red square
+will appear in the selected column. Apollo's main window will center
+to the genomic position of the column selected.
+Edit-&gt;Deselect all columns deselects all columns.
+Edit-&gt;Remove sequence left/right of selected columns will truncate
+all sequences to the left or right of the selected column.
+
+<P>Font type,size and style can be changed with the Font menu.
+Jalview is optimized for fixed width fonts, so Courier is the
+recommended font to use for speed. The non-fixed-width fonts
+(Helvetica and Times-Roman) can get a bit slow when displaying many sequences.
+<P>
+View-&gt;Boxes toggles showing the colored boxes.
+<P>
+View-&gt;Wrap alignment toggles wrapping of the alignment rather than
+showing it all on one line.
+Wrapped alignment is buggy. Sequence labels get blacked out and
+exceptions get thrown.
+<P>
+View-&gt;Black text makes the sequence text black (this is the default).
+View-&gt;Colour text makes the sequence text colored. You can only see
+this if "View-&gt;Boxes" is toggled off.
+<P>
+The Colour menu allows you to choose between three colour schemes. Zappo
+is the default (though because of a bug the checkbox is not checked).
+The Percent Identity Colour scheme colors for match/mismatch.  The "Set minimum percent identity for match..." menu item lets you set the minimum
+percent identity that counts as a match.
+<P>
+Calc menu:
+Sort by group is the default sorting. Peptides are one group, DNA
+features are another.  Many items in this menu don't work yet.
+<P>
+Jalview lets you choose any two sequences being aligned and look at
+a pairwise comparison.  For example, you could pick one of the BLASTX
+results and one of the frames of the translated genomic
+to select both), and then, under the Calc menu, choose "Pairwise
+alignments".
+<P><center><img SRC="images/pairwise-alignment.gif" width=537 height=325></center><P>
+If you select more than two sequences and choose "Pairwise alignments",
+Jalview will show pairwise alignments for each pair.
+
+<P>
+Please see the <a href=http://www.jalview.org/documentation.html>Jalview manual</a>
+for more information about Jalview, but note that not all of the functionality
+in the standalone version of Jalview described in that manual is available from within Apollo.
+<P>
+Also be aware that Jalview uses a lot of memory, and that if you launch multiple
+Jalview windows, Apollo may run out of memory.
+<P>
+Known Jalview bugs are listed in the <a target=todo href=../todo>doc/todo</a> file.
+If you encounter a problem that is not listed in that file, please report it via
+the <a href=http://sourceforge.net/tracker/?func=add&group_id=27707&atid=462763>
+SourceForge Apollo bug tracker</a> or via the <a href=#mailing>Apollo mailing list</a>.
+
+<h3><a name="Graphs"></a>Viewing graph data</h3>
+<p>
+Apollo now has rudimentary graph support.  To load tracks to your data, select "File -&gt; Layer more results or annotations...".  Choose "Graph data" as your data source.  Then select the file you want to load (you can also use the "Browse..." button to graphically navigate the file system.  Currently, Apollo only supports Affymetrix's IGB (".sgr") and UCSC Genome Browser's wiggle (".wig") formats.  Wiggle supports all 3 different structures (BED, variableStep, fixedStep).  It also supports loading of wiggle files with multiple tracks.  However, the track definition line parsing is still very basic, only supporting the "color" parameter.  This is useful when loading a wiggle file with multiple tracks, as each track has its own color.  You can also choose the color for the graph data by clicking on the "Choose color" button when loading your graph files.<br>
+<center><img src="images/adding_graph.gif"></center>
+<br>
+All graphs share the same resizable panel in the main Apollo window.  Resizing the panel will resize all graphs accordingly.  If you mouse over a region on the graph with a score associated with it, a popup box will show up showing the genome position and the score associated with that position.  Also, if you right click on a graph panel, you'll get a popup menu.  This menu has the following functions:<br>
+<ul>
+<li>Change color</li>
+<ul><li>Displays a color chooser and allows you to change the color of the graph.</li></ul>
+<li>Remove graph</li>
+<ul><li>Remove the graph from the current session.</li></ul>
+<li>Close this menu</li>
+<ul><li>Close the popup menu.</li></ul>
+</ul>
+<center><img src="images/graph_view.gif"></center>
+<h2>
+<a NAME="Printing"></a>Saving the Apollo screen as a postscript file</h2>
+<P> 
+Apollo can output a postscript file of the current display
+by selecting 'Print to File' from the File menu.   A dialog box
+will appear, letting you select the filename and the paper size.
+<P>
+To be honest, though, you're probably better off using a program that
+lets you "grab" windows to make screenshots.
+
+<H2><a NAME="Links"></a>Links to useful software analysis web sites</H2>
+
+For your convenience, the Links menu provides a brief "hotlist" of links to
+sequence analysis web sites that you may find useful.  When you select one of
+the links, your web browser will come up pointing to the selected site.  You can
+then copy and paste a sequence of interest into the web form.  To select the
+sequence you want to analyze, you can rubberband a region of sequence immediately above
+or below the central axis, or click on results of interest and then select "Sequence..."
+to see their sequence(s) in a popup window from which you can copy.
+
+<H2>
+<a NAME="Help"></a>Apollo help</H2>
+
+This user manual is available from Apollo by selecting "Apollo userguide..." from the Help menu.
+If you are reading this, you probably already knew that.  Just keep in mind that
+it may take a while for your web browser to bring up the user manual.
+
+<H2>
+<a NAME="SoftwareUpdates"></a>Checking for Apollo software updates</H2>
+
+One of the menu items in the Help menu directs your web browser
+to the page where you can download Apollo, so you can check whether there's a newer
+version that you might want to download.  You can check which version you currently have
+by using the "About" menu item in Apollo's Help menu.  (Please note that
+on Macs, there is an "About Apollo" menu item at the top of the screen.
+This will not tell you the true Apollo version number--it actually tells you
+the version number of the installer that was used to create the Apollo
+package.)
+
+<a name="MouseFunctions"></a>
+<H2>Summary of mouse functions</H2>
+Mouse buttons perform many functions in Apollo.  The table below summarizes the functions
+performed by the three mouse buttons, with and without holding down the
+shift key.
+<P>
+If you are on a Mac and have a single-button mouse, you can simulate a
+right mouse click by holding down the control or alt key while clicking
+the mouse, and you can simulate a middle mouse click by holding down the
+apple key while clicking the mouse.
+If you are trying to copy text from Apollo (for example, sequence
+residues from a Sequence window) to paste into another application, use
+ctrl-c to copy the text and apple-v to paste it (or, if you are trying to
+paste into a Web browser, you can use the 'Paste' command from the
+browser's Edit menu).
+<P>
+Please note that if you are running an old version of Mac OS X (10.2.2 or earlier),
+you may find strange mouse-button behavior.
+With a three-button mouse, you may find that the
+behavior of the right and middle buttons is switched.  If you have an old Mac
+and a five-button mouse, 
+both the left button and the middle (wheel) button are treated as the left button,
+while the two buttons on the far left side of the mouse are treated as the middle button.
+<P>
+On a Windows laptop you may find that the middle mouse button will pop
+up a little scrollbar.  To simulate middle mouse you might have to use the Alt key with the left
+mouse button.
+<P>
+<table border=1 cellpadding=4 cellspacing=1>
+<tr><th>Mouse key</th><th>Action</th></tr>
+<tr><td>Left</td><td>Select feature (or deselect if you're not over any features)</td></tr>
+<tr><td>Shift-Left</td><td>Add feature to current selection (or remove
+feature if it's already selected) </td></tr>
+<tr><td>Left drag</td><td>If you drag a feature into the annotation tier, it will be added as a new transcript (if editing is enabled)</td></tr>
+<tr><td>Shift-Left drag</td><td>If you shift-drag a feature onto an annotation, it will be added as a new exon (if editing is enabled)</td></tr>
+<tr><td>Middle click</td><td>Center display on clicked location</td></tr>
+<tr><td>Middle drag</td><td>Rubberband multiple features</td></tr>
+<tr><td>Shift-Middle drag</td><td>Rubberband multiple features, adding to current selection (or remove if they are already selected)</td></tr>
+<tr><td>Right</td><td>Popup menu</td></tr>
+<tr><td>Shift-Right drag</td><td>Tier drag--move currently selected tier</td></tr>
+</table>
+
+<P><HR><P>
+
+<H1><a name="Edit"></a>Using Apollo to edit annotations</H1>
+
+The previous sections have dealt with using Apollo as a browser.  If you are annotating
+a genome, you may be interested in using Apollo as a curation tool.  This section explains
+how to use Apollo's annotation curation and editing capabilities.  
+<P>
+If you want to edit annotations, Chado XML or <a href=http://www.fruitfly.org/annot/apollo/game.rng.txt>GAME XML</a> format works the best.  Ensembl GFF format
+(which is also used by the Ensembl server) is not a rich enough data format to
+use for curating annotations.  If you turn on editing in gff.style, you will find
+that it doesn't work right.
+
+<h2><a NAME="Saving"></a>Saving data</h2>
+
+After you create or edit annotations, you will probably want to save your work.
+To save the current dataset, select
+"Save as..." from the File menu.  If you know you want to save your data in
+the same file you read it from, you can use the "ctrl-s" shortcut to
+bypass the 'Save as' dialog.  ("Ctrl-a" is the shortcut for "Save
+as"--see the next paragraph about AskConfirmOverwrite.)
+<P>
+If the file you choose for saving your data already exists, Apollo will pop up
+a dialog box asking you if you really want to overwrite the file.  If you prefer
+not to be asked this question, you can put<br>
+<dd>AskConfirmOverwrite     "false"</dd>
+<P>in your <a href="#apollo.cfg">apollo.cfg</a> file.
+<P>
+Some data adapters (such as the GAME XML adapter and the Chado XML adapter) offer you the option to save only the curated annotations, only the computational results, or both.
+(You can then load and layer the annotations and results separately.)
+<P>
+A note about GAME XML formats:  in November 2005, we enabled the GAME Adapter
+to write (and read) one-level annotations (previously, these were inflated
+into phony three-level annotations) in a new version of GAME XML, v1.1 (the
+previous version was 1.0).  If you save your data in GAME 1.1, older GAME XML
+readers may not be able to read it.  Currently, the choice of GAME format is
+controlled by the DO-ONE-LEVEL-ANNOTS parameter in apollo.cfg ("false" means
+save GAME 1.0; true means save GAME 1.1).
+<P>
+Apollo supports several output formats, including <a
+href="http://www.sanger.ac.uk/Software/formats/GFF/">Ensembl GFF</a>
+format and <a href=http://www.fruitfly.org/annot/apollo/game.rng.txt>GAME XML</a>.  The GFF format is simpler (though less rich)
+and more compact.  It is a good format for representing simple computational
+results, but is not the best choice for saving annotations.
+<P>
+Note that although theoretically Apollo can be used to convert between data formats
+(e.g. GFF &lt;-&gt; GAME), in practice this doesn't work very well.  We are working on
+improving this interconversion.
+<P>
+We recently added the ability to save annotations in GenBank format.  There are
+two options:  <a target=_new href=
+http://www.ncbi.nlm.nih.gov/Sequin/table.html>tabular format</a> (which is useful mostly for making submissions directly
+to GenBank) or the more familiar "human-readable" format (see <a href=#ReadingGenbank>Reading GenBank/EMBL</a>).
+The GenBank writer is still being debugged--please report any problems to us.
+<P>
+Some of the data adapters (GAME XML, Chado XML) now save a separate transaction file
+when you save your data.  Transaction files describe the edits that were made in this
+session.  At the moment, these are only of interest to developers.
+Don't worry if you see error messages relating to the transaction file.  Your actual edits should
+all be saved in the data file you specified.
+
+<H3><a NAME="Autosaving"></a>Autosaving</H3>
+
+In order to protect against possibly losing changes that you've made to the annotations, Apollo automatically saves your data in a backup file in your .apollo directory every 20 minutes (that interval can be 
+changed in apollo.cfg).  Be aware that if you leave Apollo running for a long time, the
+autosave file (apollo.backup) will get bigger and bigger.
+<P>
+You can also save to a backup file at any time by selecting "Save as" from the File menu and
+choosing "Apollo backupfile" from the pulldown list of output formats.  When you reload
+the backup file, you should see all your data.  However, backup files are not guaranteed
+to work with different Apollo versions--you need to load them with the same version of
+Apollo that generated them.
+<P>
+Another thing to note about the backup format is that it is independent of the
+data adapter used--it can store data loaded by any Apollo data adapter.  However,
+in order to reload your data from the backup file, Apollo needs to know which style
+file to use to display the data appropriately.  By default, it uses fly.style; if
+you were not reading fly data, you may need to modify the style parameter in the
+DataAdapterInstall line for SerialDiskAdapter in your <a href="#apollo.cfg">apollo.cfg</a> file.
+
+<H3>General notes on editing</H3>
+
+Throughout the instructions on editing, a single left mouse click will
+select an exon, a double left mouse click or clicking on an intron
+selects a transcript. Use the shift key to select multiple features.  A
+right mouse click brings up the option menu. In some cases one can
+rubberband desired features by dragging with the middle mouse button held
+down.
+<P>
+A center click on a feature will bring that feature to the center of
+the view.
+<P>
+For many operations selecting an exon or the whole transcript achieves the
+same result.
+<P>
+If you have selected more than one transcript and you click the right mouse
+to bring up the popup menu, in most cases the command will apply to the transcript
+closest to where you clicked.
+<P>
+Note that the edges of the Apollo window may extend beyond the actual sequence
+region.  If you try to edit annotations in these out-of-range regions, you probably
+will get a popup message warning you that edits out of the current region may not
+get saved in the database.  However, it is possible to do edits out of range that
+don't trigger a warning.
+
+<H4><a NAME="TranscriptColoring"></a>Transcript coloring</H4>
+If UserTranscriptColoring is
+set to "true" in <a href="#apollo.cfg">apollo.cfg</a>, then each gene transcript is colored according to its creator.  By default, UserTranscriptColoring is off and
+all annotations are shown in the annotation color defined in the tiers file.
+The user colors (and which project the users belong to) are defined in the style file (e.g. conf/fly.style); you can add your own colors for
+the users who are annotating genes at your site.  The format of the user color lines is
+<pre>
+UserInfo "user=nomi:project=FlyBase:color=255,255,92"
+</pre>
+<P>
+Please note that currently user coloring applies only to protein-coding genes;
+other types of annotations are colored according to the color defined in the tiers file.
+
+<h3><a NAME="CreatingGene"></a>Creating an annotation</h3>
+To create a new annotation or transcript, you can simply select results on which to base the annotation and drag them
+into the light blue annotation zone.  
+As you drag the selected result(s), you will see a ghost image.  When you drop them,
+an annotation will be created.  If your selected result is of a type that would normally
+create a protein-coding gene (as specified in the tiers file), and if there is already a gene transcript whose ORF overlaps the
+ORF covered by the new transcript, your new gene model will be added to
+the existing gene as a new transcript.  (If instead you want to add a new
+annotation in a region where there is already an existing annotation,
+then instead of dragging you should use the right mouse
+popup menu option "Create new annotation".)
+<P>
+In the four screenshots below, the user has created a new gene transcript annotation
+based on a piece of evidence by choosing
+a bright green cDNA and dragged it down into the annotation area.
+You can see the "ghost" of the dragged cDNA moving down until it enters
+the blue annotation zone and then becomes a new transcript of the Hph gene.
+<P><center><img hspace=10 SRC="images/result-drag1.gif">
+<img hspace=10 SRC="images/result-drag2.gif">
+<img hspace=10 SRC="images/result-drag3.gif">
+<img hspace=10 SRC="images/result-drag4.gif">
+</center><P>
+
+If your new transcript overlaps two or more existing genes, and the CDS
+of the new transcript would overlap the existing genes in the same frame,  
+you will be asked whether you want to create a new overlapping gene, merge
+the two existing genes that overlap with each other, or add as a new
+transcript to one of the existing genes.
+<P>
+You can also use the right mouse popup menu options to create a new
+transcript or a new annotation.  "Add as gene transcript" will add a
+transcript to an existing gene (if there is one that overlaps) or create
+a new annotation--it is the same as dragging a result into the annotation
+panel.  "Add as gene transcript" assigns the transcript or annotation
+type based on the type of the result selected.
+<P>
+Another menu option, "Add as new transcript to selected gene," allows you
+to select an annotation and a result and add a new transcript, based on
+the result, to the selected annotation.  In order to activate that menu
+option, you must select an annotation and then shift-click to select the
+desired result.  Keep your mouse in the result (not annotation) zone and
+click the right mouse button to get the popup menu.
+<P>
+The menu option "Create new annotation" will always create
+a new annotation (rather than adding a new transcript to an existing annotation), even if there is already an existing annotation in
+the same region.
+When you select this option, you will get a pull-right menu of
+annotation types from which to choose.  If you have selected a result,
+its span(s) will be used as the basis of the new annotation.
+<P>
+<H4>Creating a new annotation with no evidence</H4>
+You can create a new single-span annotation with no supporting evidence.  Just right-click on an
+empty area in the blue annotation zone, and choose the "Create new annotation" menu item.  
+You will get a pull-right list of annotation types from which to choose.  The
+spot you clicked will be the 5' endpoint of the new annotation, and you will be asked to
+specify its length.
+<P>
+
+<h3><a NAME="ModifyingGene"></a>Modifying gene models</h3>
+
+When you create a new annotation from a result, the type of the new
+annotation will be determined by the result type (as specified in the
+tiers file).  You can use the <a href=#AnnotationInfo>Annotation Info
+editor</a> to change the annotation type, as well as other information
+about the annotation, such as its name and synonyms.
+
+<H4>Deleting exons</H4>
+To delete exons (or whole transcripts), select the unwanted feature(s) (you can use shift-click
+to select multiple features), click the right mouse to bring up the menu, and select "Delete feature".  (Note that when you click the right mouse button, you must have your cursor over the same strand as the selected feature.)
+<P>
+
+<H4>Adding exons to an existing transcript</H4>
+To add a result exon to an existing transcript, hold the shift key while dragging the result exon
+(or exons) onto the desired transcript.
+<P>
+<H4>Merge exons - will remove the intron between two exons.</H4>
+<P>
+1. select exon<BR>
+2. depress the shift key<BR>
+3. select another exon in the same transcript<BR>
+4. right click to bring up popup menu<BR>
+5. select 'merge exons'<BR>
+6. The two exons will merge into one exon. All introns between the two exons
+will disappear and exons that were between the two exons will be merged.
+
+<P>
+<H4>Split exon - will create a one base intron in the middle of an exon.</H4>
+<P>
+1. select an exon<BR>
+2. put cursor on exon where you want the intron to be and right click<BR>
+3. get popup menu<BR>
+4. select 'split exon'<BR>
+5. you may have to zoom in to see the intron (if you select on the exon
+again, only half should appear selected because of small intron). You
+can then drag the ends of the adjacent exons in the EDE to construct an intron of
+appropriate size.
+
+<P>
+<H4>Move exons to transcript - will move exons from one transcript to another.</H4>
+<P>
+1. select all of transcript A with a double left click (left
+mouse) (this option will only enable if the whole transcript is selected)<BR>
+2. depress shift key<BR>
+3. select exon(s) from transcript B <BR>
+4. right click in annotation zone to get popup menu<BR>
+5. select  'Move exons to transcript' <BR>
+6. The exons from B are removed from B and added to A. If they overlap
+with A's exons you have the option to merge the genes.<BR>
+Note: If all of A's and B's exons are selected it is equivalent to 
+"merge transcripts".
+
+<P>
+<P>
+<H4>Merge transcripts - merges all exons from two transcripts.</H4>
+<P>
+1. select exon or all of transcript A<BR>
+2. depress shift key<BR>
+3. select exon or all of transcript B <BR>
+4. right click in annotation zone to get popup menu<BR>
+5. select  'Merge transcripts' <BR>
+6. The two transcripts will be merged into one. Overlapping exons will
+be merged. Note that you will have the option to merge the genes if this 
+causes an overlap of the CDS in the same frame.
+
+<P>
+<H4>Split transcript - will remove the intron connecting two exons and
+create two separate transcripts.</H4>
+<P>
+1. select exon at one end of split location<BR>
+2. depress shift key<BR>
+3. select exon at other end of intron where you want the split to occur.<BR>
+4. right click and get popup menu<BR>
+5. select 'split transcript'<BR>
+6. intron will be removed and one transcript will be split into two
+separate transcripts.<BR>
+7. note that one of the newly split transcripts may be in a different vertical position,
+so you won't see it unless you scroll.
+
+<P>
+<H4>Set as 5' end</H4>
+<P>
+1. select exon in annotation zone that you wish to modify<BR>
+2. depress shift key<BR>
+3. select exon in results panel whose boundaries you wish to adopt<BR>
+4. right click in annotation or results panel to get popup menu<BR>
+5. select "set as 5' end"<BR>
+6. exon boundaries will be extended
+
+<P>
+<H4>Set as 3' end </H4>
+<P>
+1. select exon in annotation zone that you wish to modify<BR>
+2. depress shift key<BR>
+3. select exon in results panel whose boundaries you wish to adopt<BR>
+4. right click in annotation or results panel to get popup menu<BR>
+5. select "set as 3' end"<BR>
+6. exon boundaries will be extended
+
+<P>
+<H4>Set both ends</H4>
+<P>
+1. select exon in annotation zone that you wish to extend<BR>
+2. depress shift key<BR>
+3. select exon in results panel whose boundaries you wish to adopt<BR>
+4. right click in annotation or results panel to get popup menu<BR>
+5. select 'set both ends'<BR>
+6. exon boundaries will be extended<BR>
+
+<P>
+<H4>Duplicate transcript</H4>
+<P>
+1. select transcript<BR>
+2. right click to bring up option menu<BR>
+3. select 'Duplicate transcript'<BR>
+4. transcript will be duplicated and assigned a new suffix.
+Note that you may have to scroll to see the new transcript.
+
+<P>
+<H4>Calculating longest open reading frame</H4>
+<P>
+If you add or delete exons from a transcript, the open reading frame should be
+automatically recalculated.  You can also explicitly request it to be recalculated
+by using the "Calculate longest ORF" option from the right mouse popup menu.
+
+<P>
+<H3><a NAME="FlippingResult"></a>Changing the strand of a result</H3>
+If a result feature has been assigned the wrong strand you can move it to the
+other strand. Select the result feature, right click to get toe popup
+menu, and select "Move to other strand". The result will then
+be moved to the opposite strand.  (If you've selected more than one
+result, all of them will be moved.)
+
+<H3><a NAME="ResultTag"></a>Tagging a result with a comment</H3>
+Apollo allows you to tag results (of the types defined in the style file) by selecting
+from a list of comments that are also specified in the style.  These ResultTag
+lines look like this:
+<pre>
+ResultTag "DGC cDNA, Community GB:comment: incomplete CDS"
+</pre>
+
+What this means is that when you select a whole result (double-click) of type "DGC cDNA" or "Community GB",
+there will be a right-menu option that allows you to add a tag "comment: incomplete
+CDS".  These tags are saved in the XML as <output>s of type tag.
+<P>
+When a result has been tagged with a comment, it is crosshatched in hot pink:
+<P><img SRC="images/result-tagged.gif" width=177 height=31 hspace=10><P>
+<P>
+<H3><a NAME="AnnotationText"></a>Editing annotation text</H3>
+
+To bring up the annotation text editor for a transcript, choose the "Annotation info editor" option
+in the right-mouse popup menu.
+The annotation information window will appear for the selected gene/transcript,
+which allows the curator to 1) select a type of entity for the annotation,
+e.g. gene (protein-coding gene, the default), tRNA, transposable_element, etc.; 2) change the symbol, ID, or synonyms of the annotations or transcripts; or 3) add comments to annotations or individual transcripts. 
+<P><img SRC="images/annotation_info_editor.gif" width=1000 height=655 hspace=10><P>
+To add a new comment to the annotation, click the top "Edit [symbol] comments" 
+button.  To add a new comment to one of the transcripts, select the transcript 
+in the annotation tree at the left of the editor panel, then click the bottom 
+"Edit [transcript symbol] comments" button. 
+Either action will open a Comments popup window, allowing you to edit existing
+comments, by selecting an author/date pair in the upper window, or add a
+new comment, by clicking the "Add" button at the bottom.
+<P><img SRC="images/comment-editor.gif" width=584 height=502 hspace=10><P>
+
+When you add a new comment, you can either type in free text or use a canned 
+comment from the pulldown menu.  When you do that, the comment should appear 
+in the Comments panel in the main Annotation info editor display.  
+(Note that you can't edit the comment in the Comments panel in the main
+annotation info window, only in the Comments popup window.)
+
+<P>
+To edit an existing comment, select it from the list by author name and date.
+The comment text will appear in the righthand panel; edit it as desired in the 
+window, or click the "Delete" button to delete it. When you are finished 
+editing comments, click the "Close" button on the Comments popup window.
+
+<P>
+The annotation information editor also lets you add or delete synonyms 
+for the annotation or transcript; indicate whether the annotation or 
+transcript is problematic and/or dicistronic; or choose one of the 
+possibilities for Evaluation of Peptide.
+<P>
+To add new synonyms to an annotation or a transcript, click the "add"
+button in the appropriate Synonyms area.  A popup window will prompt you
+to enter the new synonym name.  You can delete existing synonyms by
+selecting one from the list of synonyms and clicking the "delete" button
+to the left of the synonym list.
+<P>
+All changes made in the Annotation Info Editor are saved immediately, without having to hit a button.  
+If you click "Undo" you will discard the most recent change you made in
+that Annotation Info Editor window.   
+Clicking "Undo" again and again will discard each change you made going 
+backwards in time. This goes for changes to comments as well as any
+other annotation info editor change. When you hit "Close", you close the
+window and can no longer Undo changes.
+
+<H4>Set owner</H4>
+To claim ownership of a transcript, select the transcript (or an exon belonging
+to the transcript) in the main Apollo window, right click to bring up the popup menu, and select "Set owner
+to [yourname]".  If you bring up the popup menu again on the same transcript,
+you will now see the option to disown the transcript.
+Note that if you make changes to a transcript's structure, you will automatically be
+set as the owner of that transcript (unless you then select "Disown" from
+the menu).
+
+<H4>Mark a transcript finished or unfinished</H4>
+After selecting a transcript (or an exon belonging to it), right click to bring up the popup menu.
+If the transcript is marked finished, you will see a menu option "Set [transcriptname] unfinished".
+If it is already finished, you will see "Set [transcriptname] completed".
+You can also mark a transcript finished/unfinished in the Annotation Info Editor.
+
+<H4>Change annotation or transcript symbol</H4>
+You can edit the annotation or transcript symbol in the annotation info window.
+The transcript symbol is expected to be the annotation symbol plus a legal
+suffix (-RA, -RB, etc.).
+
+<H4>Change annotation ID</H4>
+Privileged users are now allowed to change annotation IDs from the annotation
+info editor.
+<b>Changing annotation IDs within Apollo should be done with caution.  The
+ultimate arbiter of annotation IDs is the database management system that
+tracks all the annotations.  The IDs you assign within Apollo are only
+suggestions to the database software.</b>
+<P>
+The format of the ID must be appropriate for the type of annotation--for
+example, gene IDs must follow the format CG\d+, and P insertion IDs
+must follow the format FBti\d{7}.  These ID formats are defined in the
+tiers file.
+<P>
+If the format of the annotation symbol matches the format of the annotation
+ID (e.g. symbol is CG1234, id is CG1234) they are expected to match (i.e.
+it won't let you assign symbol=CG1234, id=CG9999).
+
+<H4>Indicating translation exceptions</H4>
+Certain exceptions in the translation of transcripts can be indicated in Apollo 
+using the annotation info editor.  For example, if a
+transcript has a readthrough stop codon, you can check the box 
+next to "Readthrough stop codon", click "Commit", and the 
+ORF will be extended to the next stop codon.  The specific residue for
+the readthrough stop codon cannot be defined from inside Apollo, but if it
+is indicated in the input (in GAME or ChadoXML format), it will be carried
+through.
+The original stop codon shows up in pink in the main display and in the 
+<a href=#ExonDetailEditor>Exon Detail Editor</a>.  You will see the
+replacement residue for the stop codon if you zoom in on the transcript
+in the main window, or use the Sequence window to look at the peptide sequence
+for the entire transcript.  (If you view the peptide sequence of an
+individual exon in the Sequence window, you will see a * for the 
+readthrough stop codon rather than the replacement residue.)
+<P><img SRC="images/selenocysteine.gif" width=241 height=76 hspace=10><P>
+Other translational exceptions, like <a href=#frame_shifts>frame shifts</a> or 
+<a href=#seq_errors>genomic sequencing errors</a>, are made using the Exon 
+Detail Editor (see below), but the exceptions are reported in the annotation
+info editor.  
+<P>
+If a +1 or -1 translational frame shift for the transcript has been indicated 
+using the Exon detail editor, the coordinate of the frame shift in the 
+sequence being viewed in Apollo appears next to "+1 translational frame 
+shift" or "-1 translational frame shift".  
+<P>
+If a transcript is missing a start codon, it will appear in the main 
+display with a green arrowhead, and if it is missing a stop codon, it will
+appear with a red arrowhead.
+<P><img SRC="images/no-start-codon.gif" width=272 height=125 hspace=10><P>
+This will also be indicated in the annotation info editor 
+next to "Missing start codon" or "Missing stop codon".  
+<P>
+If a gene uses an unconventional start codon, it will appear in purple,
+and the codon will appear in the annotation
+info editor next to "Unconventional start codon". The codon will be
+translated as a Methionine in the protein.
+
+<H4>Accepting non-consensus splice sites</H4>
+Exceptions to consensus GT-AG splice sites are indicated in the Apollo
+display (see <a href=#SpliceSites>Non-consensus splice sites</a>).
+Curators have the option of accepting non-consensus splice sites, to 
+indicate that they are not due to an annotation error, using the 
+annotation info editor.  For example, in the figure below, the curator 
+can check the box next to "Approve non-consensus acceptor in exon 4 and 
+donor in exon 3".
+<P><img SRC="images/accepting-splice-sites.gif" width=630 height=316 hspace=10><P>
+
+<h3><a NAME="ExonDetailEditor"></a>Exon Detail Editor</h3>
+
+The Exon Detail Editor can be invoked from the right-mouse popup menu
+when you select an annotation that has sequence associated with it.
+A separate window will appear that shows the reference nucleotide
+sequence centered around the selected feature. A separate line of
+sequence is displayed for each transcript that appears in the
+annotation zone in the region being viewed. The three-frame translation
+of the sequence is also displayed. The exons for each transcript are
+denoted on the sequence in blue with successive exons being shown in
+alternating light and dark blue shades (these colors are configurable--see <a href=#EDEConfig>configuring
+the Exon Detail Editor</a>).  The boundaries of
+these exons can be moved by left-clicking on the terminal nucleotide
+and dragging the mouse to either extend or shrink the exon.
+
+<P><center><img SRC="images/exon-detail-editor.gif" width=824 height=502></center><P>
+
+The graphic at the bottom of the exon editor window shows the exon
+structure of the selected transcript and the translation start and
+stop. The numbers on the exons indicate the translation reading frame
+for that exon: 1 refers to the top reading frame in the viewer, 2 is middle, 3 is
+bottom.  The black outline indicates the region of sequence that is current
+visible in the exon detail view.  You can click anywhere on this exon structure
+graphic to move the currently visible region (but note that if you click on a
+region that extends beyond the genomic region, the display may look weird).
+
+<P>
+If there are multiple annotations, multiple lines of sequence will show
+up with successive exons highlighted in alternating medium and dark blue
+shades. To determine which line of sequence
+corresponds to which annotation, click on the nucleotide sequence and
+look at the transcript name displayed in the transcript pulldown menu in
+the lower left corner. Translation length is also provided. The number of
+lines of sequence displayed corresponds to the maximum number of
+sequences that are needed to show for the whole strand. For example, if
+there is a gene with six transcripts on the current strand and you are
+looking at a gene with one transcript, you will see one line with the
+transcript and five sequence lines with no features in the region you're
+looking at.
+
+<P>
+Clicking on the graphic of the transcript will center the sequence
+around the region of the transcript that you clicked on. This is the
+easiest way to navigate in the exon detail editor window. Scrolling with the side bar
+shifts the sequence by one complete view (no overlap with previous
+view). Clicking on the top and bottom arrows moves one line of sequence
+at a time (including all aligning sequences).  You can also use the
+buttons near the bottom right of the window to move to the previous (5') or
+next (3') annotation.
+<P>
+The transcript pulldown menu lists all the transcripts of the current
+annotation (or, if this is a one-level annotation without transcripts,
+the current annotation name). Selecting a transcript in the pulldown will switch the focus of
+the exon editor window to that transcript.
+
+<P>
+You can always tell in the main viewer what region of sequence you are
+looking at in the exon detail editor because the region is bracketed by thin vertical
+lines in the main viewer. The color of the lines matches the color of
+the colored thick horizontal bar at the top of the exon editor window. (Multiple
+exon editor
+windows can be opened simultaneously. Each one is marked by a
+horizontal line of a different color.) You can navigate by
+clicking on the vertical lines(or between them if you are zoomed in)
+in the main viewer and dragging them
+horizontally. You must have the mouse pointer in the white sequence
+coordinate zone to be able to drag the vertical bars. If the mouse is
+in the results panel or the annotation zone, it will not work.
+<P>
+The "Clear search hits" button allows you to clear the results of
+a sequence search--see <a href=#EDEFindSequence>"Find sequence"</a> below.
+<P>
+The "Show introns in translation viewer" checkbox denotes whether to show
+introns in the transcript graphic. Turning off this option will show a
+transcript graphic devoid of introns.
+<P>
+The "Follow external selection" checkbox is used to follow selections
+from other parts of apollo. If it is checked, the exon detail editor
+will move to show the transcript you clicked on in the main window, as
+long as the transcript is on the same strand that the exon detail editor
+is currently showing.
+<P>
+
+To access the menu in the exon detail editor, right click on a nucleotide
+in the genomic sequence. A menu will appear and different options will be 
+enabled depending on where you clicked in the sequence window. For example,
+different options are available if you click on exon sequences vs.
+intron sequences.
+<P>
+
+<a name=EDEConfig></a>
+<H4>Configuration options for the Exon Detail Editor</H4>
+There are several display options for the Exon Detail Editor that can be set in the appropriate
+style file.  Please see <a href=#EDEConfigOptions>the table of style parameters</a>
+for more details.  These configurable parameters include <code>ExonDetailEditorSequenceFont</code>;
+<code>ExonDetailEditorBackgroundColor1</code> and <code>ExonDetailEditorBackgroundColor2</code> (for
+setting the colors of the background stripes); and <code>ExonDetailEditorFeatureColor1</code>
+and <code>ExonDetailEditorFeatureColor2</code> (for setting the two alternating colors
+of the exons).
+
+<a name=EDEUsing></a>
+<H3>Using the Exon Detail Editor</H3>
+The following options are possible in the exon detail editor.
+<P>
+<H4>Sequence...</H4>
+<P>
+1. Left click to select a transcript.<BR>
+2. Right click on exon detail editor window.<BR>
+3. Select 'Sequence...'<BR>
+4. A Sequence window will come up with the sequence for the selected
+feature, as with the "Sequence..." option from the annotation and result
+menus.
+<a name="EDEFindSequence"></a><H4>Find sequence</H4>
+<P>
+1. Right click in the exon detail editor window<BR>
+2. Left click on 'Find sequence'<BR>
+3. A window will pop up.<BR>
+4. Enter the sequence you're looking for in the 'Sequence' text area.
+You can use
+<a target=_new href=http://www.savarese.org/oro/docs/OROMatcher/Syntax.html>regular expressions</a>
+in your search string (see the section on <a href=#RegExp>using regular expressions</a>).<BR>
+5. Select 'is amino acid sequence' or 'is genomic sequence' as
+appropriate.<BR>
+6. Left click on 'Search'<BR>
+7. If the sequence is found in one or more locations, the coordinates
+will appear in separate boxes. If you click on one these coordinates,
+the exon editor will scroll to that site. The sequence that you searched for will
+be in the top line of the window and will be outlined in yellow.<BR>
+8. To turn off the yellow outlines, click "Clear search hits".<BR>
+<P>
+
+<P>
+<H4>Make intron - makes one base break</H4>
+<P>
+1. Right click on a base in an exon.<BR>
+2. Left click on 'Split'.<BR>
+3. A one base break (intron) is made in the exon at the base that you
+clicked on.  You can click and drag on the exons to trim the 3' edge
+of the upstream exon to an appropriate splice site donor, and trim 
+the 5' edge of the downstream exon to an appropriate splice site
+acceptor.
+<P>
+
+<H4>Create exon - creates exon with conserved boundaries</H4>
+<P>
+1. Right click on a base in an intron. (You cannot create an exon
+outside of the transcript in the exon detail editor. Use the main viewer.)<BR>
+2. Left click on 'Create exon'.<BR>
+3. An one base exon is created within the intron.  You can click and
+drag on the exon to extend the 5' and 3' edge to an appropriate splice 
+site acceptor and donor, respectively.
+<P>
+<H4>Delete exon</H4>
+<P>
+1. Right click on a base in an exon.<BR>
+2. Left click on 'Delete exon'.<BR>
+3. The exon that you clicked on will be deleted and the remaining exons
+will be joined to reform the transcript.
+<P>
+<H4>Merge with 5' exon - Deletes intron and merges exon with adjacent 5' exon.</H4>
+<P>
+1. Right click on a base in an exon.<BR>
+2. Left click on 'Merge with 5' exon'.<BR>
+3. The exon that you clicked on will be merged with the next exon in
+the 5' direction by deletion of the intervening intron. If there is no
+exon in the 5' direction, this option will not be highlighted.
+<P>
+<H4>Merge with 3' exon</H4>
+<P>
+1. Right click on a base in an exon.<BR>
+2. Left click on 'Merge with 3' exon'.<BR>
+3. The exon that you clicked on will be merged with the next exon in
+the 3' direction by deletion of the intervening intron. If there is no
+exon in the 3' direction, this option will not be highlighted.
+<P>
+<H4>Set as 5' end</H4>
+<P>
+1. Right click on a base in an exon.<BR>
+2. Left click on "Set as 5' end".<BR>
+3. The base that you clicked on will now be the 5' end of the exon.
+Other aspects of transcript structure will remain unchanged. The exon
+edge will be set at the base you specify regardless of the presence or
+absence of an appropriate consensus splice site adjacent to it.
+<P>
+<H4>Set as 3' end</H4>
+<P>
+1. Right click on a base in an exon.<BR>
+2. Left click on "Set as 3' end".<BR>
+3. The base that you clicked on will now be the 3' end of the exon.
+Other aspects of transcript structure will remain unchanged. The exon
+edge will be set at the base you specify regardless of the presence or
+absence of an appropriate consensus splice site adjacent to it.
+<P>
+<H4>Set start of translation</H4>
+<P>
+1. Right click on a base in an exon.<BR>
+2. Left click on 'Set start of translation'.<BR>
+3. The base that you clicked on will now be the first base of the
+translation initiation codon. You can set the translation start at any
+codon. If the start is an ATG, the site is marked in green.  If the 
+start is not an ATG, the site is marked in purple, and the Unconventional
+start codon will be listed in the Annotation info editor. Unconventional
+start codons are automatically translated as Methionines.
+<P>
+<H4>Notes about auto-setting of translation start and end</H4>
+If any of the following situations holds, Apollo auto-sets the translation start AND the translation end:
+<BR>
+<UL>
+<LI> The user specifically requests it with the main display third mouse popup 
+"Calculate longest ORF" option.<BR>
+<LI> It is a new gene<BR>
+<LI> It is a entirely new transcript for an existing gene (but not  
+a duplication; they inherit the start from the original transcript).<BR>
+<LI> It is the 3' transcript arising from a split.<BR>
+<LI> The exon containing the translation start is deleted.
+</UL>
+<P>
+Apollo auto-sets the translation end (but not the start) if:
+<BR>
+<UL>
+<LI> A new translation start is set from either the drag of a start codon
+onto the transcript or from the menu in the EDE.<BR>
+<LI> It is the 5' transcript arising from a split.<BR>
+<LI> There is a transcript merge.<BR>
+<LI> The exon edges (aka splice junctions) are modified.<BR>
+<LI> Any new exons are added.<BR>
+<LI> Any exons are deleted.<BR>
+</UL>
+<P>When Apollo decides to auto-set the translation start, this is what it does:
+<OL>
+<LI> Starting from the most 5' end of the transcript it scans for ATGs
+in all 3 frames of the mRNA transcript (introns removed).<BR>
+<LI> For the ATG encountered in each frame it attempts a translation
+using that as the starting point.<BR>
+<LI> The ATG that provides the longest predicted peptide is used.
+</OL>
+
+<a name="frame_shifts"></a><H4>Setting translational frame shifts</H4>
+A +1 translational frame shift can be set in the Exon Detail Editor by 
+selecting the nucleotide to be skipped, using the third mouse button
+popup, and selecting "Set +1 translational frame shift here".  The base
+will be highlighted in orange in the Exon Detail Editor, and Apollo will 
+skip over this base and move forward one frame, to continue the 
+translation of the sequence in the +1 frame over.  In the example below, 
+TCCTGAT is translated as Ser-Asp, and the translation frame shift goes
+from frame 2 to frame 3. The coordinate of the position is indicated in
+the annotation info editor.  Only one frame shift is allowed per transcript.
+<P><img SRC="images/frame-shift.gif" width=824 height=350 hspace=10><P>  
+<P>
+A -1 translational frame shift can be set in the Exon Detail Editor by
+selecting the nucleotide to be skipped, using the third mouse button
+popup, and selecting "Set -1 translational frame shift here". The base
+will be highlighted in orange, and the translation will move backwards
+one reading frame, by slipping back and re-reading the base pair just 
+upstream of the base pair at which the frame shift was selected.
+<P>
+To undo the frame shift, select the base, and with the third mouse popup,
+select "Remove [+1/-1] translation frame shift here".
+
+<a name="seq_errors"><H4>Indicating genomic sequencing errors</H4>
+A limited number of one base pair edits can be performed on the genomic 
+sequence, to allow the correct translation of a gene model. To delete
+a single base pair selected in the Exon Detail Editor, use the third 
+mouse popup menu, select "Adjust for sequencing error here", and select 
+"Deletion". The base pair will remain in the display, highlighted in
+orange, but any features overlapping this base pair (annotated transcripts,
+translated transcripts) will not include it.  
+<P><img SRC="images/seq-error-ede.gif" width=312 height=104 hspace=10><P>
+The change will be indicated in the Annotation info editor in the 
+lower right "Genomic sequencing errors" panel.
+<P><img SRC="images/seq-error.gif" width=386 height=311 hspace=10><P>
+To make an insertion in the genomic sequence, select a base pair, use 
+the third mouse popup menu, select "Adjust for sequencing error here", 
+and select "Insertion..."  A new popup will allow you to choose which 
+nucleotide to add at that position.
+<P><img SRC="images/insertion.gif" width=388 height=118 hspace=10><P>
+The new base pair will not appear in the display, but the position
+just downstream of the inserted base pair will be highlighted in 
+orange, and any features overlapping this base pair (annotated 
+transcripts, translated transcripts) will include it. A warning popup
+window will ask you to make sure you want to alter the translation of
+any features in this region.
+<P>
+To make a one base pair substitution, select the nucleotide to be changed
+in the Exon Detail Editor, use the third mouse popup menu, and select 
+"Adjust for sequencing error here", then "Substitution...".  A popup 
+will allow you to choose which nucleotide to substitute at that position.
+The new base will not appear in the display, but the position 
+will be highlighted in orange, and any features overlapping this base 
+pair (annotated transcripts, translated transcripts) will include it.
+You will also see the change noted in the "Genomic sequencing errors"
+section if you bring up the annotation info editor for that annotation.
+<P>
+To remove a change to the genomic sequence, select the highlighted base
+in the Exon Detail Editor, use the third mouse popup menu, and select
+"Remove [deletion/insertion/substitution]".
+<P>
+
+<h3><a NAME="SequenceAligner"></a>Sequence Aligner</h3>
+<P>
+The Sequence Aligner can be invoked from the right-mouse popup menu 
+when you select an annotation that has sequence associated with it.
+Upon selection a new Sequence Aligner window will open in the DNA view.
+This window can be switched between the DNA and AA view by selecting the
+'Switch to DNA view' or 'Switch to AA view' option in the main menu. These 
+windows are similar in that they both allow the user to modify genes manually 
+in direct reference to sequence alignment data, however they are different in 
+that they each display a different set of alignment data and each has a 
+slightly different layout. The capabilities of the Sequence Aligner are very 
+similar to that of the 
+<a href="#ExonDetailEditor">Exon Detail Editor</a>.
+<P>
+
+<h4><a NAME="SEQDNAView"></a>DNA View</h4>
+<P><img SRC="images/SEQDNAView.png" width=1000 height=600 hspace=10><P>
+
+The top panel for the DNA view is a translation of the genomic sequence in each of the
+three frames.
+<P>
+The panel just below holds the annotations. The background color can be used
+to determine the type of sequence that is contained in each region of the
+annotation. A steel blue background indicates a UTR region, light blue background
+indicates an exon region, and a black background with a blue line going through
+the middle indicates an intron. Other colorings such as start and stop codons,
+(green and red backgrounds) are similar to the EDE panel.
+The boundaries of the annotations 
+can be modified by left-clicking on the terminal nucleotide and dragging the
+mouse. Right clicking on the annotation will open up a menu which will provide
+options for making  modifications to the annotation.
+To the left of the annotations is a box which displays the name of the 
+first visible annotation on its row. When a name in one of the boxes has been 
+double clicked that annotation will be displayed in the overview.
+<P>
+Below the annotation panel is the address panel which displays the
+genomic coordinate every ten bases.
+<P>
+Below the address panel is the reference panel which has two rows. 
+The top row displays the reference sequence for the strand of the annotations 
+that are currently being viewed. The bottom row displays the reference sequence 
+for the strand of the sequence alignments currently being viewed. Switching 
+between strands for each of these two sets can be done by opening the 
+'DNA Menu' and selecting 'Switch Annotation Strand' or 'Switch Alignment 
+Strand.'
+<P>
+Below the reference panel are two buttons and a checkbox. The 'Prev Annotation'
+and 'Next Annotation' buttons scroll the window to the prev/next annotation 
+where prev is the annotation that would appear first if you were to scroll to 
+the left and next is the annotation that would appear first if you were to
+scroll to the right. The External Selection box (which is selected by default)
+will make the annotation in the overview window change whenever an annotation
+is selected in an outside window (unchecking the box will restrict this 
+behavior).
+<P>
+Below the buttons and checkbox is the alignment panel which contains all of the
+alignment data which has been imported. By default alignments have a background
+color which is the same as the color specified for their type in the settings.
+However, in order to highlight differences in an alignment when compared to
+the reference, when an alignment does not match the reference for a particular 
+base then the background color is turned black and the text color for the base
+is colored instead (colors are loosely based off of the Zappo color scheme seen
+at http://www.jalview.org/help.html). Where an alignment contains an insertion
+to the genomic you will notice a thin yellow line, if you right click on the
+line you will see the bases which make up the insertion. Other options that are
+available when right clicking on an alignment are to filter out all alignments
+of the same name, type, or frame. To the left of the alignment panel is a 
+header which contains the name, score and type information for the next 
+alignment visible on each row. Clicking on the column names (at the top) will
+cause the alignments to be sorted by the contents of that column.
+<P>
+Below the alignment panel is the overview panel which contains a high level
+view of the currently selected annotation. Each exon in the overview is marked 
+with the frame in which it resides. Above and below the annotation are light 
+blue lines of varying width, these lines represent an overview of the alignment 
+data. The thicker a line in a particular region, the more alignment data is 
+available at that point. Scrolling around the transcript can be sped up by 
+clicking on the region you want to see on the overview. The black shows the
+current location of the window in relation to the transcript.
+
+
+<h4><a NAME="SEQAAView"></a>AA View</h4>
+<P><img SRC="images/SEQAAView.png" width=1000 height=600 hspace=10><P>
+
+The AA view of the Sequence Aligner is very similar to the DNA view, the primary
+difference being that all the sequence data is translated into amino acids.
+In this view it is possible to look at the the annotations and alignments in 
+relation to any of the three frames.
+<P>
+In the annotation panel each exon is shown translated into the frame in which it
+belongs. This means that the sequence displayed may not align correctly to the 
+reference when the annotation being observed is in a different frame than the
+selected frame for the window. Unlike the DNA view, all edits done in the AA
+view will maintain the frame of the exon being modified. That is to say, all
+edits are in increments of three. Additionally, modification of the translation
+start will not cause any upstream exons to change frame. However, a few of the 
+editing options are not available (Set +1 shift, Set -1 shift, 
+Adjust for sequencing error).
+<P>
+Below the annotation view is the reference panel which has four rows.
+The top row is of the genomic translated into the selected frame. The
+three rows below that show what bases are used to make up each translated 
+amino acids.
+<P>
+The added radio buttons below the reference panel allow for easy switching
+between frames. 
+
+When moving through the selected annotation by clicking on the overview the 
+frame will automatically change to the that of the exon that has been clicked
+on.
+<P>
+
+<P><HR><P>
+
+<h1>
+<a NAME="Configuration"></a>Configuring Apollo</h1>
+
+<h3><a NAME="apollo.cfg"></a>apollo.cfg</h3>
+<P> 
+The main configuration file that Apollo reads when it starts up is called
+apollo.cfg.  The default location for apollo.cfg is in the conf directory
+inside Apollo's home directory.  Apollo will always read that apollo.cfg
+first.  If you create a .apollo directory in
+your home directory and place an apollo.cfg there, Apollo will read that
+second, thus allowing your personal changes to the default configuration to
+take precedence.  (You can also put personal
+modifications to the style and tiers file in your .apollo directory.  This is
+useful on multi-user systems where many people are sharing the same
+Apollo installation.)
+<P>
+If you edit any of the configuration files, be careful not to introduce
+line breaks in any of the lines.  (If you are using emacs, you may need
+do "M-x auto-fill-mode" to turn off auto-fill mode, which introduces line
+breaks into long lines.)
+<P>
+Note that if you make changes to your apollo.cfg file, you will need to shut
+down Apollo and restart it to see the changes.
+
+<h3><a NAME="StyleFiles"></a>Style files</h3>
+There is a configuration "style" file and a tiers file for each data source
+(called a Data Adapter) that Apollo knows about.  These are in the conf directory
+as well (though, as above, you can also have versions in your ~/.apollo directory).  The style file for the
+Drosophila annotations, which are in GAME XML format, is called fly.style
+(which imports the generic
+GAME XML style file, game.style, and then adds or overrides many of the parameters); the
+style file for Ensembl is ensembl.style.  The style file specifies the name of
+the tiers file, e.g. fly.tiers for the Drosophila annotations and ensj.tiers
+for the Ensembl/Otter adapter.  This may all sound complicated, but most users shouldn't need to do
+anything to these files.
+<P>
+The first column of each line in a style file contains property names that are recognized by Apollo. 
+The second column contains their values.
+<b>//</b> denotes the beginning of a comment, so any
+text after // up to the end of the line is ignored.
+Relative paths (those that start without a /) are relative to the
+directory where Apollo is installed (APOLLO_ROOT), except for paths that start with "~/".
+<P>
+If you want to make any changes to apollo.cfg or a style file, you can put just the
+lines that you've changed in your .apollo directory (or you can copy the whole file,
+including the lines you've changed and the lines you haven't--that's ok, too).  The
+tiers file is a little different, because the order of the lines is important, so if
+you want to change the tiers file, you will need a complete tiers file in your .apollo
+directory.
+<P>
+If you edit any of the configuration files, be sure not to add any additional newlines
+in the middle of lines (some editors will insert newlines if a line is too long); this
+will break the parser and Apollo will not be happy.
+<P>
+It is now possible to import other style files in a style file:
+<pre>ImportStyle "other.style"</pre>
+This causes everything in other.style to be included.  Anything you 
+want to change you can just add to the new style and it will override 
+the other style.  This can help reduce redundancy between style files.  (Be sure
+that you don't try to import a style file into itself!)
+
+<P>Here are the contents of the default apollo.cfg:
+<P>
+<UL>
+<pre>
+//JavaPath                  "/usr/lib/java"
+Memory                    "800M"
+//AdapterHistoryFile      "apollo.history"
+//AutosaveFile            "apollo.backup"
+AutosaveInterval          "20"
+// Current species-specific styles for GAMEAdapter are rice.style and fly.style
+// both of which import game.style, the generic GAME style file.
+// The default GAME style is fly.style, but if rice data is read, Apollo
+// will automatically switch to using rice.style.
+DataAdapterInstall	  "apollo.dataadapter.gamexml.GAMEAdapter" "fly.style"
+DataAdapterInstall        "apollo.dataadapter.chadoxml.ChadoXmlAdapter" "chado.style"
+DataAdapterInstall	  "apollo.dataadapter.ensj.EnsJAdapter" "ensj.style"
+PFetchServer              "vegadb.sanger.ac.uk"
+DataAdapterInstall	  "apollo.dataadapter.GFFAdapter" "gff.style"
+DataAdapterInstall	  "apollo.dataadapter.analysis.AnalysisAdapter" "fly.style"
+DataAdapterInstall	  "apollo.dataadapter.genbank.GenbankAdapter" "genbank.style"
+PublicSeqDbURL            "GenBank==www.ncbi.nlm.nih.gov/entrez/viewer.fcgi?db=nucleotide&val=*"
+PublicSeqDbURL            "EMBL==http://www.ebi.ac.uk/cgi-bin/dbfetch?db=EMBL&id=*"
+// The style for Chado is irrelevant as style is dealt with in chado-adapter.xml config file
+DataAdapterInstall        "apollo.dataadapter.chado.ChadoAdapter" "rice.style"
+DataAdapterInstall	  "apollo.dataadapter.synteny.SyntenyAdapter" "synteny-game.style"
+DataAdapterInstall	  "apollo.dataadapter.SerialDiskAdapter" "fly.style"
+
+//BrowserProgram          "/usr/local/bin/mozilla"
+AskConfirmOverwrite       "true"
+SiteShowLimit             "15"
+FastDrawLimit             "0.5"
+TextAvoidLimit            "1500"
+
+FrameOrientation          "horizontal"
+MainWindowWidth           "1000"
+
+OutputTransactionXML      "false"
+OutputChadoTransaction    "false"
+
+Karyotypes                "all.kary"
+CommandLineXmlFileFormat  "game"
+
+// Allows for a different style to be loaded for different species
+// load from the same adapter. (currently only GAME adapter uses this)
+SpeciesToStyle "Oryza sativa -&gt; rice.style"
+SpeciesToStyle "Drosophila melanogaster -&gt; fly.style"
+</pre>
+</UL>
+Other options are set (or overridden) in the style files.  Here are the options in
+game.style and fly.style (the style file for displaying Drosophila annotations).
+fly.style imports game.style; in the list below we have combined
+parameters from both style files to make a more convenient reference.
+<UL>
+<pre>
+ShowAnnotations           "true"
+ShowResults               "true"
+EnableEditing             "true"
+EnableNavigationManager   "true"
+AnnotationBackgroundColor "176,224,230"  // aqua
+FeatureBackgroundColor    "black"
+EdgematchColor            "white"
+EdgematchWidth            "2"
+FeatureLabelColor         "white"
+AnnotationLabelColor      "black"
+CoordBackgroundColor      "white"
+CoordForegroundColor      "black"
+UserTranscriptColouring   "false"
+SelectionColor            "255,0,102"  // pinkish-red
+EvidencePanelHeight       "175"
+DashSets                  "true"
+SequenceGapColor          "231,255,51"
+Draw3D                    "false"
+DrawOutline               "false"
+
+DefaultFeatureLabelFont "Dialog,0,10"
+DefaultFont "Dialog,0,12"
+ExonDetailEditorSequenceFont "Dialog,0,12"
+ExonDetailEditorBackgroundColor1 "gray"
+ExonDetailEditorBackgroundColor2 "black"
+ExonDetailEditorFeatureColor1 "0,102,255"  // medium blue
+ExonDetailEditorFeatureColor2 "0,0,180" // dark blue
+
+Types		          "fly.tiers"
+DisplayPreferences        "apollo.config.FlyDisplayPrefs"
+Organism                  "Drosophila melanogaster"
+Chromosomes               "2L,2R,3L,3R,4,X,2h,3h,4h,Xh,Yh,U"
+ExternalRefURL            "http://flybase.net/.bin/fbidq.html?"
+
+GeneURL "http://flybase.net/cgi-bin/apollo.cgi?gene="
+BandURL "http://flybase.net/cgi-bin/apollo.cgi?band="
+RangeURL "http://flybase.net/cgi-bin/apollo.cgi?range="
+
+AnnotationComment "DGC clone appears problematic: [DGC: ] incomplete CDS"
+[etc.]
+
+TranscriptComment "GC splice donor site postulated"
+[etc.]
+
+UserInfo "user=suzi:project=FlyBase:color=25,25,112:full-name=Suzanna Lewis"
+UserInfo "user=sima:project=FlyBase:color=255,255,0:full-name=Sima Misra"
+[etc]
+
+PeptideStatus "2:Arial,0,9:true:curator examined, accepted"
+[etc]
+
+ResultTag "EST Same Strain, EST Different Strain, Fly EST All, DGC cDNA, Community GB:comment: incomplete CDS"
+[etc]
+
+</pre>
+
+</UL>
+The table below explains the parameters that you can use in apollo.cfg:
+<P>
+<table border=2 cellspacing=2 cellpadding=3>
+<tr><th>Parameter</th><th>Explanation</th></tr>
+<tr>
+<td>JavaPath</td>
+<td>The path to the place where the bin/java executable lives (used by
+the bin/apollo script).  For example, on Mac OSX, java is /usr/bin/java,
+thus JavaPath is /usr (because bin/java is in /usr).<BR>
+If you've used the installer to install Apollo, it should have come
+bundled with the appropriate JVM, so you shouldn't need to change this (in fact,
+changing it will have no effect).
+</td>
+</tr>
+<tr>
+<td>Memory</td>
+<td>How much memory the JVM can use (used by the bin/apollo script).
+NOTE: if you are using the installed version of Apollo, this parameter
+will be ignored--the memory allocation is specified inside the installer.  However, this
+parameter is used when monitoring to make sure you're not about to run out of memory.
+</td>
+</tr>
+<tr>
+<td>AdapterHistoryFile</td>
+<td>File containing a history of recently used commands and settings.
+By default, if AdapterHistoryFile is not specified, Apollo will
+check to see if you have a ~/.apollo directory.  If so, it will save the history
+file there.  If not, it will save it in APOLLO_ROOT/data.  
+You can override these locations by setting AdapterHistoryFile to a different path.
+</td>
+</tr>
+<tr>
+<td>AutosaveFile</td>
+<td>The file to autosave to (when you have editing enabled).
+If AutosaveFile is not specified, Apollo will
+check to see if you have a ~/.apollo directory.  If so, it will save the autosave
+file there.  If not, it will save it in APOLLO_ROOT/data.
+You can override these locations by setting AutosaveFile to a different path.
+</td>
+</tr>
+<tr>
+<td>AutosaveInterval</td>
+<td>The number of minutes (e.g. "20") between autosaves of the current region
+in Apollo serial format.  This can (theoretically) be used to retrieve your session if Apollo
+or your machine crashes.  Set this to "none" to turn off autosaving.</td>
+</tr>
+<tr>
+<td>DataAdapterInstall</td>
+<td>These are the different file types and data sources that Apollo recognizes. 
+The first argument is the name of the java class that will be used to read from the
+data source.  The second is the style file associated with that datasource.  (Note
+that some data adapters may have more than one style file, customized for
+different organisms.  See the description SpeciesToStyle parameter.)
+<BR>The third (optional) argument to DataAdapterInstall overrides the label
+used to identify the data adapter in the pulldown list that is presented when you
+launch Apollo or Open a new dataset.
+</td>
+</tr>
+<tr>
+<td>BrowserProgram</td>
+<td>The name of the program you use to look at Web pages.  In general, you shouldn't
+need to change this.  If you are on Windows or Mac, Apollo should figure out how to
+launch your Web browser.  If you are on Linux, it assumes you have Mozilla; for other
+Unix systems, it assumes Netscape.<P>If you are having problems getting Apollo to
+launch your web browser, try setting BrowserProgram to the full path (e.g. /opt/local/netscape7).  See the section on <a href=#WebBrowser>web browsers</a> for more info.</td>
+</tr>
+<tr>
+<td>AskConfirmOverwrite</td>
+<td>If the file you choose for saving your data already exists, Apollo will pop up
+a dialog box asking you if you really want to overwrite the file.  If you prefer
+not to be asked this question, you can set AskConfirmOverwrite to false
+(default is true).
+</td>
+</tr>
+<tr>
+<td>SiteShowLimit</td>
+<td>How many bases per pixel have to be displayed before the start and
+stop codons are displayed.  If this is set to zero, no start/stop codons will be
+shown.</td>
+</tr>
+<tr>
+<td>FastDrawLimit</td>
+<td>Maximum number of features per pixel before features are merged together
+on the display to speed up drawing.  If you set this above one things
+get a little odd.</td>
+</tr>
+<tr>
+<td>TextAvoidLimit</td>
+<td>When labels are switched on, if there are greater than this number of
+bases per pixel some labels may overlap each other.  If the bases
+per pixel is less than this value, then the features and their labels are rearranged
+so nothing overlaps and all the labels can be read.  You may be able
+to set this value higher depending on the speed of your machine and the
+speed of your JVM.</td>
+</tr>
+<tr>
+<td>FrameOrientation</td>
+<td>The orientation (horizontal or vertical) used for the feature detail panel.
+Defaults to horizontal.</td>
+</tr>
+<tr>
+<td>MainWindowWidth</td>
+<td>Initial width (in pixels) of main Apollo window (default is 1000).
+If you set it too big, window will automatically be limited to the size of your screen.
+</td>
+</tr>
+<tr>
+<td>Karyotypes</td>
+<td>Karyotypes file, used for <a href=synteny.html>synteny view</a>.</td>
+</tr>
+<tr>
+<td>OutputTransactionXML</td>
+<td>Whether to save transactions in an Apollo .tnxml file.  Set this to true if you'd like to see these
+(mostly useful for developers, and for tracking deletions).
+</td>
+</tr>
+<tr>
+<td>OutputChadoTransaction</td>
+<td>Whether to save transactions in a Chado transaction file.  Set this to true if you'd like to see these
+(mostly useful for developers).
+</td>
+</tr>
+<tr>
+<td>CommandLineXmlFileFormat</td>
+<td>Default format to assume for XML files loaded from the command line without
+a <i>--inputFormat</i> parameter.  (Default is game; can set to "chado".)
+</td>
+</tr>
+<tr>
+<td>SpeciesToStyle</td>
+<td>Some data adapters (e.g. GAME XML adapter) are used to load data from
+different species.  This parameter lets you specify a style file corresponding
+to a species, e.g., "Oryza sativa -&gt; rice.style".
+</td>
+</tr>
+</table>
+<P>
+Here are the parameters that can be specified in a style file:
+<P>
+<table border=2 cellspacing=2 cellpadding=3>
+<tr><th>Parameter</th><th>Explanation</th></tr>
+<tr>
+<td>Types</td>
+<td>The location of the tiers file (usually called <i>stylename</i>.tiers) describing how to display the different feature
+types, including their order and colors. Expected to be in either the user's ~/.apollo
+directory or in Apollo's conf directory,
+along with the style files and apollo.cfg.</td>
+</tr>
+<tr>
+<td>NameAdapterInstall</td>
+<td>This is the class of the name adapter to use if the name_method lines are missing
+from the tiers file (that is where they are supposed to be specified now).  Specified here
+in case you have an old tiers file that doesn't include name_methods.
+Current options are apollo.config.FlyNameAdapter and apollo.config.DefaultNameAdapter.
+(This parameter shouldn't be needed anymore--it's moved to the tiers file.)
+<BR>
+</td>
+</tr>
+<tr>
+<td>OverlapDefinition</td>
+<td>Like name_method, this is now generally set in the tiers file by overlap_method.
+Current options are apollo.config.ORF_Overlap and SimpleOverlap.
+</td>
+</tr>
+<tr>
+<td>DisplayPreferences</td>
+<td>Name of class that has project-specific methods for naming features.  Currently available options are
+apollo.config.DefaultDisplayPrefs (the default) and 
+apollo.config.FlyDisplayPrefs (for Drosophila data).
+</td></tr>
+<tr>
+<td>ShowAnnotations</td>
+<td>Whether to show the curated annotations in a separate area.  (Ensembl
+doesn't have these.)  Default is true.
+</td>
+</tr>
+<tr>
+<td>Organism</td>
+<td>Default organism for this style (to be used when writing out data, especially
+in Chado XML format, for features that don't have an organism attribute).
+</td>
+</tr>
+<tr>
+<td>ShowResults</td>
+<td>Whether to show the raw computational results.</td>
+</tr>
+<tr>
+<td>EnableEditing</td>
+<td>If this option is turned on, it allows you to curate your own annotations.<br>
+Please note that this works for GAME XML data, but GFF is not structured enough
+to permit annotation curation.
+</td>
+</tr>
+<tr>
+<td>EnableNavigationManager</td>
+<td>Whether to show the navigation bar across the top of the main window--lets you
+go directly to the chromosome region you want.</td>
+</tr>
+<tr>
+<td>Chromosomes</td>
+<td>A list of valid chromosomes (or chromosome arms) for this organism.
+If this is left out, the chromosome pulldown menu will simply be replaced by
+a text box.</td>
+</tr>
+<tr>
+<td>AnnotationBackgroundColor</td>
+<td>Background color for the annotation panel.  Colors can be a default Java color name (e.g. "white" or "red") or an RGB triplet (e.g. "127,255,0").</td>
+</tr>
+<tr>
+<td>FeatureBackgroundColor</td>
+<td>Background color for the results panel.</td>
+</tr>
+<tr>
+<td>CoordBackgroundColor</td>
+<td>Background color for the axis and the GC plot.</td>
+</tr>
+<tr>
+<td>CoordForegroundColor</td>
+<td>The foreground color for the axis.</td>
+</tr>
+<tr>
+<td>UserTranscriptColouring</td>
+<td>Whether to color annotations by creator (default is false--all annotations are
+shown in the same color, as set in tiers file).</td>
+</tr>
+<tr>
+<a NAME="EdgematchColor"></a>
+<td>EdgematchColor</td>
+<td>When a feature is selected all other features that have the same boundaries
+are highlighted at their edges.  This defines the color they are
+highlighted in.</td>
+</tr>
+<tr>
+<td>EdgematchWidth</td>
+<td>The width in pixels of the highlights that mark the matching edges.  Default is 3.</td>
+</tr>
+<tr>
+<td>AnnotationLabelColor</td>
+<td>The color that is used to label annotations.</td>
+</tr>
+<tr>
+<td>FeatureLabelColor</td>
+<td>The color that is used to label features when you turn on labeling.</td>
+</tr>
+<tr>
+<td>SelectionColor</td>
+<td>When features are selected they are outlined to make them noticeable. 
+This is the color used for the outline.</td>
+</tr>
+<tr>
+<td>EvidencePanelHeight</td>
+<td>Height (in pixels) of the evidence panel below the main Apollo display.
+Default is 200.  Sensible values are between 150 and 350.</td>
+</tr>
+<tr>
+<td>DashSets</td>
+<td>Whether to use a dashed line to show sequence gaps in ESTs.  (Color of dashed line
+is controlled by SequenceGapColor.)  Default is false, but this is set to true in game.style.</td>
+</tr>
+<tr>
+<td>SequenceGapColor</td>
+<td>Color to use for showing dashed-line gaps in ESTs.</td>
+</tr>
+<tr>
+<td>Draw3D</td>
+<td>Whether to show feature rectangles in 3D (default is false).  Generally, programmers think the 3D effect is cool and biologists find it annoying.</td>
+</tr>
+<tr>
+<td>DrawOutline</td>
+<td>Whether to outline feature rectangles in the edgematch color
+(default is false).</td>
+</tr>
+<tr>
+<td>ExternalRefURL</td>
+<td>The URL used to fetch gene report Web pages.</td>
+</tr>
+<tr>
+<td>DatabaseList</td>
+<td>List of databases that will be offered to the user in a pulldown list
+when they load data.  Will go into various data retrieval URLs (GeneURL, etc.) in place of the %DATABASE% field.  (See fly.style for examples.)</td>
+</tr>
+<tr>
+<td>DatabaseToStyle</td>
+<td>Each database from the DatabaseList can optionally be mapped to a
+different style file (which may also point to a different tiers file)
+with this  parameter</td>
+</tr>
+<tr>
+<td>AnnotationComment</td>
+<td>A canned comment that can be added to an annotation.  You can have as many
+of these as you want, one to a line.</td>
+</tr>
+<tr>
+<td>TranscriptComment</td>
+<td>A canned comment that can be added to a transcript.  You can have as many
+of these as you want, one to a line.</td>
+</tr>
+<tr>
+<td>UserInfo</td>
+<td>If UserTranscriptColoring is turned on, each user's annotations will be shown
+in their user color.  Each line should include a username, project, and color, plus
+and optional full name.</td>
+</tr>
+<tr>
+<td>PeptideStatus</td>
+<td>This is complex because there is more than one thing that needs
+to be passed into the software.
+The first field is the precedence.
+The second field is the font which in turn is composed of 3 fields:
+fontname,fontstyle,fontsize (9 is the default).
+fontstyle can be 0,1,2,3 (plain, bold, italic, bolditalic).
+The third field indicates whether or not it is something that a
+curator may assert.
+The fourth field is the string for menus. Since part of this is coming
+from a program (SonOfSam), it needs to be coordinated with that as well
+and let us hope that the : (colon) is never used in the text because
+that would mess up the parsing.</td>
+</tr>
+<tr><td>DefaultFeatureLabelFont</td>
+<td>
+Fonts are composed of 3 comma-delimited fields: 
+fontname,fontstyle,fontsize (10 is the default).<BR>
+fontstyle can be 0,1,2,3 (plain, bold, italic, bolditalic) <BR>
+DefaultFeatureLabelFont is used for annotations with unknown
+PeptideStatus (e.g. pseudogenes) as well as feature labels. 
+The PeptideStatus annotation fonts are used for the label of the
+annotation as well as the font in the the gene menu. 
+</td></tr>
+<tr><td>DefaultFont</td>
+<td>
+Axis numbers use the default font, and it's also
+used for residues inside features when you zoom in.
+</td></tr>
+<tr>
+<td><a name=EDEConfigOptions>ExonDetailEditorSequenceFont</a></td>
+<td>
+Used to show sequence residues in the Exon Detail Editor.
+</td></tr>
+<tr><td>ExonDetailEditorBackgroundColor1, 2</td>
+<td>Colors for the two alternating background stripes in the EDE
+</td></tr>
+<tr><td>ExonDetailEditorFeatureColor1, 2</td>
+<td>Alternating colors for exons in the EDE
+</td></tr>
+<tr><td>ResultTag</td>
+<td>
+Comments that can be attached to results of the specified type(s).
+See the section on <a href="#ResultTag">tagging a result with a comment</a>
+for more information.
+</tr>
+<tr><td>FeatureLoadSize</td>
+<td>The maximum size of region that features can be fetched (default 1Mb).  This is valid only for
+the Ensembl/Otter method of fetching to limit the amount of network traffic and reduce the load time.  For regions greater than this size only genes and contigs are retrieved.
+</td></tr>
+<tr><td>GeneticCode</td>
+<td>
+Most organisms use genetic code "1" (which is the default); the only
+other genetic code available at the moment is paramecium, which uses "6"
+(this is defined in paramecium.style).
+</tr>
+<tr><td>Debug</td>
+<td>Whether to print lots of debugging messages (useful for developers).  Default is false.
+</td></tr>
+</table>
+
+<P> 
+<h2>
+<a NAME="TiersFiles"></a>Tiers file</h2>
+Each style has an associated tiers file, which contains details on how to display each type of data.
+A tier is a conceptual grouping of one or more types, which are displayed
+together in one row.
+The style file (e.g. fly.style) specifies the
+name of this configuration file (e.g. fly.tiers).  Normally you shouldn't need
+to change that.
+The tiers file format is as follows.
+<P>
+A <i>tier</i> record defines a set of feature types that will always
+be displayed together as a group.  They will be displayed in the same
+row if possible when the features are expanded but as close together as
+possible if they overlap.
+<P>
+A Tier record looks like this:
+<pre>
+[Tier]
+tiername : Annotation
+visible : true
+expanded : true
+maxrows : 0
+labeled : true
+curated : true
+warnonedit: false
+</pre>
+The Tier fields (which can appear in any order, after the initial [Tier] line)
+and their default values are as follows:
+<UL>
+<LI> label :  <i>false</i>  (Group tier label)<BR>
+<LI> visible : <i>true</i><BR>
+<LI> expanded : <i>false</i><BR>
+<LI> sorted : <i>false</i><BR>
+<LI> maxrows : maximum number of rows to show for this tier--default <i>0</i> means all<BR>
+<LI> labeled : <i>false</i> (whether features of this type show up with labels <i>if</i> tier is expanded (labels are not shown in collapsed state))<BR>
+<LI> curated : <i>false</i> (whether features of this type belong in the annotation panel, rather than the results panel).  For reverse-compatibility with older tiers files, this parameter is assumed to be <i>true</i> for the "Annotation" tier, but no others.  This parameter was introduced to permit more than one annotation tier (with arbitrary names).<BR>
+<LI> warnonedit : <i>false</i> (whether to warn user if they try to edit
+          annotations in this tier.  Can also appear in an individual
+          Type record.)
+</UL>
+<P>Following a tier record is one or more Type records that specify the different
+types that should appear in that tier.  A Type record starts with the line
+<pre>[Type]</pre>
+and is followed by type fields, in any order.  For example:
+<pre>
+[Type]
+tiername : Gene Prediction
+typename : Genscan
+resulttype : genscan:dummy
+resulttype : genscan
+color : 204,153,255
+usescore : true
+minscore : -1
+maxscore : 50
+glyph : DrawableResultFeatureSet
+column : SCORE 
+column : GENOMIC_RANGE 
+column : query_frame
+sortbycolumn : GENOMIC_RANGE
+weburl : http://genes.mit.edu/GENSCAN.html#
+</pre>
+
+The recognized type fields are as follows
+(most are optional).
+<P>
+<table border=2 cellspacing=2 cellpadding=3>
+<tr>
+<td>tiername</td>
+<td>the tier this type appears in (required)</td>
+</tr>
+<tr>
+<td>typename</td>
+<td>label for this type (required)</td>
+</tr>
+<tr>
+<td>resulttype</td>
+<td>data types that are included in this type (required).  These are determined by
+the names that are used to identify data types in the input.  For the Drosophila
+data, these names look like "sim4:na_gadfly.dros" or "blastx_masked:aa_SP.real.dros".</td>
+</tr>
+<tr>
+<td>color</td>
+<td>the color for this type can be a standard color name (e.g. red) or an
+R,G,B triplet (where each number can be between 0 and 255).  The default color,
+if unspecified, is a pale yellow.</td>
+</tr>
+<tr>
+<td>utr_color</td>
+<td>color used for untranslated regions (UTRs). Only works with
+DrawableGeneFeatureSet. The default is black.  If you'd like the UTRs to
+appear "transparent", set utr_color to the same color defined in the
+style file as AnnotationBackgroundColor.</td>
+</tr>
+<tr>
+<td>usescore</td>
+<td>Whether to use the score to scale the height of this type (default is true)</td>
+</tr>
+<tr>
+<td>minscore</td>
+<td>Minimum score for scaling height (default is 0)</td>
+</tr>
+<tr>
+<td>maxscore </td>
+<td>Maximum score for scaling height (default is 100)</td>
+</tr>
+<tr>
+<td>glyph</td>
+<td>Name of the glyph to use for displaying this type (required).<BR>
+Current choices include
+<b>DrawableGeneFeatureSet</b> (exons connected by peaked introns),
+<b>DrawableResultFeatureSet</b> (exons connected by straight lines),
+DoubleHeadedArrow, Triangle, Zigzag, ThinRectangle (a rectangular outline).</td>
+</tr>
+<tr>
+<td>column</td>
+<td>name(s) of column(s) to be shown in detail table for this type.<BR>Choices
+include GENOMIC_RANGE, GENOMIC_LENGTH, MATCH_RANGE, MATCH_LENGTH,
+SCORE, NAME, READS.  You can also specify column names not in all caps
+that correspond to properties of the features present in the data (e.g.
+query_frame).
+</td>
+</tr>
+<tr>
+<td>sortbycolumn</td>
+<td>Row order in table is determined by this column.</td>
+</tr>
+<tr>
+<td>reversesort</td>
+<td>Sort table rows in reverse order?  (default false)</td>
+</tr>
+<tr>
+<td>groupby</td>
+<td>GENE method to use for grouping features (GENE, SINGLE, HOMOLOGY)<BR>
+SINGLE is used for feature types that aren't grouped together (e.g. CPG
+islands).  HOMOLOGY is used for feature pairs that need to be grouped together 
+by hit ID.  Features that are identified as HOMOLOGY (e.g. any blast hit or similarity search result)
+have a start and end coordinate on the hit sequence as well as on the genomic
+GENE is used for
+genes that need to be grouped together by ID.
+</td>
+</tr>
+<tr>
+<td>weburl</td>
+<td>URL for pulling up web pages about this type of result,
+e.g. "http://www.ebi.ac.uk/cgi-bin/emblfetch?" or
+"http://www.ensembl.org/perl/geneview?gene=<EM><STRONG>ID.</STRONG></EM>"
+<BR>Only one web site can be specified.  The first example on the left
+is the simplest way to link out.   If the name of the feature
+is AC005663 then your browser will be directed to
+<i>http://www.ebi.ac.uk/cgi-bin/emblfetch?AC005663</i>--i.e., the name of the feature is tacked onto the end of the URL.
+<BR>More complicated URLs can be constructed.  In the second example
+we only want the feature name up to the first "." For example, the gene name is
+QZ9839.1 and our web site only wants QA9839.  The string <EM><STRONG>ID.</STRONG></EM> tells Apollo to truncate the name at the first ".".
+<BR>
+Because Apollo appends the feature ID to the end of the generic URL, you have to do a
+special trick for URLs that are not specific to individual results.  For example, all
+the GENSCAN results point to the main GENSCAN web page, http://genes.mit.edu/GENSCAN.html.
+In order to avoid having that URL broken when individual GENSCAN result IDs are appended to it,
+you can add a # at the end: http://genes.mit.edu/GENSCAN.html#.  Appending junk after the #
+will have no effect on the destination, so all the GENSCAN results will be appropriately
+directed to the same GENSCAN page.</td>
+</tr>
+<tr>
+<td><a NAME=Date>freshdate</td>
+<td>Date after which sequences of this type are considered "new" 
+(the dates are found in the sequence descriptions).<BR>
+The format of the freshdate can be 08-JUN-1999 or Wed May 15 00:00:00 PDT 2002.
+The freshdate is compared to the date found in the header lines of
+sequences that have hits in the data file.
+For Drosophila data, the expected format of the header lines is
+<br>
+gi||gb|AB003910|AB003910 Fruitfly DNA for 88F actin, complete cds. (08-JUN-1999)
+<br>
+where the date is formatted as DD-MMM-YYYY.  The results that represent
+hits to new sequences will be boxed in the display.
+</td>
+</tr>
+<tr>
+<td>idformat</td>
+<td>format of IDs for this kind of annotation (e.g., CG\d+ means the
+ID must start with the letters CG and end with one or more digits).</td>
+</tr>
+<tr>
+<td>annot_type</td>
+<td>When this result is promoted to an annotation, annot_type says
+which type of annotation it should become.</td>
+</tr>
+<tr>
+<td>overlap_method</td>
+<td>Method used to decide whether two transcripts overlap.  Current
+options are SimpleOverlap and ORF_Overlap.<BR>
+If not specified, uses the class defined in the style as OverlapDefinition.
+</td>
+</tr>
+<tr>
+<td>name_method</td>
+<td>Method used for naming features.  Current options are DefaultNameAdapter
+and FlyNameAdapter.<BR>
+If not specified, uses the class defined in the style as NameAdapterInstall.
+</td>
+</tr>
+<tr>
+<td>warnonedit</td>
+<td>(only relevant to annotations, not to results)
+Whether to warn user if they try to edit annotations of this type.  
+Can also appear at the Tier level.
+</td>
+</tr>
+<tr>
+<td>number_of_levels</td>
+<td>(only relevant to annotations, not to results)
+Traditional gene annotations are three-level: an annotation has transcripts
+which has exons.  Recently, Apollo started offering support for one-level annotations
+such as point mutations and enhancers.  Apollo now assumes that all
+annotation types are one-level EXCEPT for genes and pseudogenes, which are assumed
+(unless otherwise declared in the tiers file) to be three-level.  You can explicitly
+set the number of levels (1 or 3) for a type with a line like "number_of_levels: 3".
+</td>
+</tr>
+</table>
+</center>
+<h4>Saving your type preferences</h4>
+If you do File-&gt;Save type preferences... and
+save a new version of the tiers file, make sure the style file contains the new
+tiers file name.  For example, if you saved a new Drosophila types file as
+"my.tiers", then you'd need to change the Types line in fly.style to say
+<pre>
+Types		        "my.tiers"
+</pre>
+If you save to the suggested file name (e.g. ~/.apollo/fly.tiers), you shouldn't
+need to change your style file--the new tiers file will be used automatically
+the next time you start Apollo.
+<P>If you <a target=_new href=tiers.html>edit the tiers file manually</a>, be aware that each tier line and each type line must be a
+<i>single</i> line--if these lines contain newlines, they will not be
+parsed properly.
+
+<h2>Getting the source code</h2>
+<a NAME="source"></a>
+You can download the latest Apollo source code from
+<a href=http://sourceforge.net/projects/gmod>SourceForge</a>.  Each major release includes a
+<a href=http://sourceforge.net/project/showfiles.php?group_id=27707>tarfile of the 
+SourceForge</a>.  If you are going to be actively involved in changing the Apollo code, though, you are better off getting the up-to-the-minute code from <a href=http://sourceforge.net/cvs/?group_id=27707>
+SourceForge CVS</a>.
+<P>
+Here is the command you can use for checking out the whole Apollo
+distribution from sourceforge:
+<pre>
+setenv CVS_RSH ssh
+cvs -z3 -d:ext:myaccount@gmod.cvs.sourceforge.net:/cvsroot/gmod checkout -d apollo apollo
+</pre>
+For "myaccount", substitute your own SourceForge account name.  (It's a good
+idea to get a SourceForge account if you're going to be doing this--it's
+quick, free, and they don't send you spam.)  If you don't want to get an
+account on SourceForge, you can do an anonymous checkout; however,
+anonymous checkouts give you a version that's a few days out of date.
+To check out an anonymous version:
+<pre>
+cvs -d:pserver:anonymous@gmod.cvs.sourceforge.net:/cvsroot/gmod login
+cvs -d:pserver:anonymous@gmod.cvs.sourceforge.net:/cvsroot/gmod checkout -d apollo apollo
+</pre>
+<P>
+The "-d apollo" specifies the directory name you want the Apollo stuff to
+go in, so you can change that if you want to put it somewhere else.
+<P>
+After you've checked out the code, compiling it is straightforward:
+<pre>
+cd apollo
+setenv APOLLO_ROOT `pwd`
+cd src/java
+make clean  [only necessary if you've already compiled and then updated]
+make jar
+</pre>
+You can also use <a target=ant href=http://ant.apache.org/>Ant</a> (available free
+from http://ant.apache.org/) to
+compile the source.  It runs faster than make and is also easier to use if
+you're working on a Windows platform.
+<P>
+To run your newly compiled apollo say:
+<pre>
+~/apollo/bin/apollo
+</pre>
+(where ~/apollo is the directory where you've installed apollo--change
+as appropriate).  You won't be able to run "Apollo" (with a capital A) like
+you may have done if you used the installed version of Apollo.
+<P>
+Note that all these instructions assume that you're on a Unix-y
+system. If you're on Windows and you've already installed Apollo, you
+can stick your new apollo.jar in place of the old one.
+</p>
+
+<h2>Adapting Apollo</h2>
+<a NAME="Adapting"></a>
+
+An increasing number of groups are adapting Apollo in order to make it
+better fit their needs for genomic annotation editing.  Changes to Apollo
+range from <a target=_new href=tiers.html>adding new data types to the
+tiers file</a>, all the way to writing new data adapters and new gui
+components.
+<P>
+If you are interested in modifying Apollo, you will undoubtedly already have
+downloaded the source code (see previous section).
+Although Apollo has extensive user documentation,
+the documentation for developers is more spotty.
+Assuming you have the source checked out, you can look at the javadocs
+(make javadoc), which are sparse but might still be helpful.  If you are
+interested in data adapters, look at the data adapter "cookbook"
+(<a href=dataadapter_cookbook.html>doc/html/dataadapter_cookbook.html</a>).
+The <a href=http://genomebiology.com/2002/3/12/research/0082 target=_paper>Genome Biology
+paper about Apollo</a> has a diagram and discussion of the Apollo architecture.
+You can also look at the doc/README files for assorted pieces of Apollo information.
+<P>
+A note to developers about parameters in the style files:  as of v1.6.3,
+you can add arbitrary (key=value) parameters to the style files and Style.java
+will record them as generic parameters.  However, it is still up to the caller
+to ask for them by name (e.g. Config.getStyle().getParameter("typeIDOntology"))
+and to supply appropriate default values (because these generic parameters will
+have empty defaults).
+<P>
+<H3><a name=CustomizingChadoAdapter>Customizing the Chado JDBC adapter</a></H3>
+If you want to access your own Chado database, you will need to add or
+change text in the file conf/chado-adapter.xml in order to fill in the
+chadodb element. Here is an example:
+
+<pre><code>
+&lt;!-- Indiana public FlyBase server r3.2 --&gt;
+&lt;chadodb&gt;
+  &lt;name&gt;FlyBase Chado Indiana public server r3.2&lt;/name&gt;
+  &lt;adapter&gt;apollo.dataadapter.chado.jdbc.PostgresChadoAdapter&lt;/adapter&gt;
+  &lt;url&gt;jdbc:postgresql://bugbane.bio.indiana.edu:7302/chado_r3.2&lt;/url&gt;&lt;dbName&gt;chado_r3.2&lt;/dbName&gt;
+  &lt;dbUser&gt;flybase&lt;/dbUser&gt;
+  &lt;dbInstance&gt;flybaseInstance&lt;/dbInstance&gt;
+  &lt;style&gt;fly.style&lt;/style&gt;
+  &lt;sequenceTypes&gt;
+    &lt;type&gt;gene&lt;/type&gt;
+    &lt;type&gt;golden_path_region&lt;/type&gt;
+  &lt;/sequenceTypes&gt;
+&lt;/chadodb&gt;
+</code></pre>
+
+Add a similar entry to chado-adapter.xml describing your Chado
+database.
+  <ul>
+    <li> name is the label that will appear in the dropdown list of
+databases. <br>
+    </li>
+    <li> adapter identifies the Apollo class to use for your database.
+If your database uses Postgres, use
+apollo.dataadapter.chado.jdbc.PostgresChadoAdapter; if you are using
+Sybase use apollo.dataadapter.chado.jdbc.SybaseChadoAdapter. If you are
+using a different database vendor, try Postgres and Sybase to see if
+one of them works; if they do not, please contact the <a
+ href="#mailing">Apollo mailing list</a>. <br>
+    </li>
+    <li> url is the URL for your database server. <br>
+    </li>
+    <li> dbName is the database name to use on your server. <br>
+    </li>
+    <li> dbUser is the database user/login. <br>
+    </li>
+    <li> dbInstance identifies the type of Chado database (see step 3
+below). <br>
+    </li>
+    <li> style is the style configuration file for this database (see
+Support Protocol 2). <br>
+    </li>
+    <li> sequenceTypes are the database fields corresponding to
+top-level entries. Each top-level controlled vocabulary term is listed
+as a Type. </li>
+  </ul>
+You will also need to add or change text in the file
+conf/chado-adapter.xml to fill in the chadoInstance element.
+chadoInstance captures several things: a Java class to use, which
+controlled vocabularies to use, gene prediction programs, search hit
+programs, and a list of
+annotation types in your Chado database. Here is an example:
+
+<pre><code>
+&lt;chadoInstanceid="flybaseInstance"&gt;
+  &lt;clsName&gt;apollo.dataadapter.chado.jdbc.FlybaseChadoInstance&lt;/clsNam&gt;
+
+  &lt;featureCV&gt;SO&lt;/featureCV&gt;
+  &lt;relationshipCV&gt;relationship type&lt;/relationshipCV&gt; 
+  &lt;propertyTypeCV&gt;property type&lt;/propertyTypeCV&gt;
+
+  &lt;genePredictionPrograms&gt; 
+    &lt;program&gt;genscan&lt;/program&gt; 
+    &lt;program&gt;piecegenie&lt;/program&gt; 
+  &lt;/genePredictionPrograms&gt;
+
+  &lt;searchHitPrograms&gt;
+    &lt;program&gt;
+      &lt;name&gt;blat&lt;/name&gt;
+      &lt;source&gt;cDNA&lt;/source&gt;
+      &lt;version&gt;1.3&lt;/version&gt;
+    &lt;/program&gt;
+    &lt;program&gt;sim4&lt;/program&gt;
+    &lt;program&gt;%blastx%&lt;/program&gt;
+  &lt;/searchHitPrograms&gt;        
+  &lt;searchHitsHaveFeatLocs&gt;false&lt;/searchHitsHaveFeatLocs&gt;
+
+  &lt;oneLevelAnnotTypes&gt;
+    &lt;type&gt;promoter&lt;/type&gt;
+    &lt;type&gt;insertion site&lt;/type&gt;     
+    &lt;type&gt;transposable_element&lt;/type&gt;
+    &lt;type&gt;remark&lt;/type&gt;
+    &lt;type&gt;repeat_region&lt;/type&gt;      
+    &lt;type&gt;substitution&lt;/type&gt;
+    &lt;type&gt;nucleotide_deletion&lt;/type&gt;
+    &lt;type&gt;nucletide_insertion&lt;/type&gt;
+  &lt;/oneLevelAnnotTypes&gt;
+
+  &lt;threeLevelAnnotTypes&gt;
+    &lt;type&gt;gene&lt;/type&gt;
+    &lt;type&gt;pseudogene&lt;/type&gt;
+    &lt;type&gt;tRNA&lt;/type&gt;
+    &lt;type&gt;rRNA&lt;/type&gt;
+    &lt;type&gt;miRNA&lt;/type&gt;
+  &lt;/threeLevelAnnotTypes&gt;
+
+&lt;/chadoInstance&gt;
+</code></pre>
+
+clsName is the class name to be used for your Chado instance. There are
+currently three Chado instance classes:
+  <ul>
+    <li> apollo.dataadapter.chado.jdbc.TigrSybilChadoInstance<br>
+    </li>
+    <li> apollo.dataadapter.chado.jdbc.FlybaseChadoInstance<br>
+    </li>
+    <li> apollo.dataadapter.chado.jdbc.RiceInstance<br>
+    </li>
+  </ul>
+RiceInstance is the most up-to-date of the three, so start by trying
+that
+with your database; if it does not work, please contact the Apollo
+mailing list.
+  <p>featureCV, relationshipCV, and propertyTypeCV are the names of
+controlled vocabularies in chado (these tend to vary in different
+chado instantiations. </p>
+  <p>&lt;program&gt; can be defined in two ways:</p>
+  <ul>
+    <li><code>&lt;program&gt;program_name&lt;/program&gt;<code></li>
+    <li><code>&lt;program&gt;<br>
+        &nbsp;&nbsp;&lt;name&gt;program_name&lt;/name&gt;<br>
+        &nbsp;&nbsp;&lt;source&gt;data_source&lt;/source&gt;<br>
+        &nbsp;&nbsp;&lt;version&lt;data_version&lt;/version&gt;<br>
+        &lt;/program&gt;</code></li>
+  </ul>
+The second format can be used for filtering which data source/version to retrieve from the database (useful for viewing and dumping only a subset of all the data).  The <code>&lt;version&gt;</code> element is optional.
+  <p>genePredictionPrograms is a list of gene prediction programs to
+query
+for. </p>
+  <p>search hit programs is a list of similarity search programs to
+query for. </p>
+  <p>Search hits (parent feature sets, not hsp leaves) may or may not
+have
+feature locs associated with them in chado (rice has them, fly does
+not). If there are search hit feat locs, the jdbc adapter will
+retrieve out of range hsp/leaves that are associated with in range
+hits, otherwise it doesn't. </p>
+  <p>oneLevelAnnotTypes and threeLevelAnnotTypes list annotation types
+consisting of one and three levels. (Eventually this will be determined
+automatically.) One level annot types substitution,
+nucletide_insertion, and nucletide_deletion are treated special by
+apollo (though they are not by chado). These do not show up as features
+in the main window, rather they show up as sequence errors in the exon
+detail editor, with a base pair turned orange. The main window just
+displays an orange vertical line for these. <br>
+  </p>
+  <p>Select your database from the pull-down menu next to Chado
+Database.
+Then select a region to display. The list for Type of Region includes
+the
+sequenceTypes listed in chado-adapter.xml that correspond to the
+top-level types in your Chado database. For example, you may query the
+FlyBase Chado database by gene or by golden_path_region, a 250-350kb
+region of genomic sequence. Enter the identifier for the Type next to
+Region ID and click OK. Be patient; large regions may take time to
+retrieve. </p>
+<H3>More resources for the developer</H3>
+The data adapter "cookbook"
+(<a href=dataadapter_cookbook.html>doc/html/dataadapter_cookbook.html</a>) has some useful
+information.  Also see doc/random_developer_notes.txt
+and the <a target=_new href=http://www.fruitfly.org/annot/apollo/faq.html>Apollo FAQ</a>.
+<P>
+The <a href=#mailing>Apollo mailing list</a> is your best resource for asking questions about Apollo.
+<P>
+
+<h3>Contributed Apollo Documentation</h3>
+<a NAME="Contributed"></a>
+
+<H4>DNA Learning Center at Gramene</H4>
+There is a series of Quicktime recordings about using Apollo at <a href="http://www.dnalc.org/gramene/clips/">Gramene</a>.
+<p>
+
+<h2>Acknowledgements</h2>
+<a name="acknowledgements"></a>
+Apollo is supported by NIH grant 1R01GM080203-01 from the National Institute of General Medical Sciences (NIGMS).
+
+<p><hr><p>
+<!-- hhmts start -->
+Last modified: Thu Jul  2 10:56:36 2009
+<!-- hhmts end -->
+
+</body>
+</html>

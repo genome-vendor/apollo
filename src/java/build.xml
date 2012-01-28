@@ -1,0 +1,96 @@
+<!-- This is a Apache Ant build script for Apollo.
+
+     To build apollo's class files, execute "ant compile".
+     To produce an apollo.jar file in apollo/jars, execute "ant jar".
+     To clear out the classfiles directory, execute "ant clean."
+
+    For more information on Apache Ant, see:
+
+        http://ant.apache.org/
+-->
+
+
+<project name="apollo" default="compile" basedir=".">
+
+  <property name="src" value="." />
+  <property name="build" value="classfiles" />
+  <property name="lib" value="../../jars" />
+  <property name="data" value="../../data" />
+  <property name="images" value="../../data/images" />
+  <property name="conf" value="../../conf" />
+  <property name="jarfile" value="../../jars/apollo.jar"/>
+  <property name="obo-files" value="../../obo-files" />
+  <property name="javadoc" value="../../javadoc" />
+
+
+  <!-- The timestamp target writes out a new timestamp to
+       apollo/data/timestamp.-->
+  <target name="timestamp">
+    <tstamp>
+        <format property="TIMESTAMP" pattern="MMM d yyyy"/>
+    </tstamp>
+    <echo message="Updating ${data}/timestamp to reflect newest Apollo file:"/>
+    <echo message="${TIMESTAMP}"/>
+    <echo message="${TIMESTAMP}${line.separator}" file="${data}/timestamp"/>
+  </target>
+
+
+
+  <!-- The init target makes sure that the prerequisite directories exist. -->
+  <target name="init" depends="timestamp">
+    <mkdir dir="${build}" />
+  </target>
+
+
+
+  <!-- The classpath includes all the jar files in apollo/jars, excluding
+       apollo/jars/apollo.jar if it exists. -->
+  <path id="project.classpath">
+    <fileset dir="${lib}">
+      <include name="**/*.jar"/>
+      <exclude name="apollo.jar"/>
+    </fileset>
+  </path>
+
+
+  <!-- The compile target runs javac on all the java files, and saves them into        the classfiles directory. -->
+  <target name="compile" depends="init">
+    <javac srcdir="${src}" destdir="${build}" debug="yes">
+      <classpath refid="project.classpath"/>
+    </javac>
+  </target>
+
+
+
+  <!-- The jar target compiles everything, and produces an apollo.jar in
+       apollo/jars/apollo.jar.  -->
+  <target name="jar" depends="compile">
+     <jar destfile="${jarfile}">
+        <fileset dir="${build}"/>
+	<fileset file="${data}/apollosplash.gerry.jpg"/>
+        <fileset file="${data}/timestamp"/>
+        <fileset dir="${images}"/>
+	<fileset dir="${conf}/"/>
+        <fileset dir="${obo-files}/"/>
+     </jar>
+  </target>
+
+  <!-- The javadoc target generates javadoc in apollo/javadoc -->
+  <target name="javadoc">
+    <javadoc sourcepath="${src}" destdir="${javadoc}">
+      <package name="apollo.*" />
+      <classpath refid="project.classpath" />
+    </javadoc>
+  </target>
+
+
+  <!-- The clean target erases the classes and jar file -->
+  <target name="clean">
+    <delete dir="${build}"/>
+    <delete file="${jarfile}" />
+  </target>
+
+  <!-- clean and compile everything -->
+  <target name="build-all" depends="clean,compile"/>
+  
+</project>

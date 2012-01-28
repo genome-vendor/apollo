@@ -1,0 +1,8 @@
+// Style for GenBank/EMBL adapter is based on fly.style
+ImportStyle "fly.style"
+
+// GenBank/EMBL files have annotations but not results
+ShowResults		"false"
+
+// Background color for annotations
+AnnotationBackgroundColor "204,255,255"  // paler aqua

@@ -1,0 +1,1661 @@
+------------------------
+NEEDED NEW FUNCTIONALITY
+------------------------
+config out intron splice site thingy in annot info (?) (it is
+interesting info though - too high level for students? query adrian)
+
+put transactions in with game file(?)
+
+command line options for simultaneously reading chado and writing game
+-- err msgs - unspecified db, no default
+- save genbank
+
+hacking around the fact that apollo can only have "gene" in top level
+annot type for genes that are protein coding - this is the protein
+coding test basically - this contradicts SO - where tRNA, yada yada -
+have parents that are gene - need to gleen from SO or at least put in
+tiers: isProteinCoding true/false or just hasProtein
+ChadoTransTransform hack for writing:
+  private String getChadoType(SeqFeatureI feature) {
+    if (feature instanceof ExonI)
+      return feature.getFeatureType();
+    else if (feature instanceof Transcript) {
+      // Check parent
+      AnnotatedFeature parent = (AnnotatedFeature) feature.getParent();
+      if (parent.getFeatureType().equals("gene"))
+        return "mRNA";
+      else
+        return parent.getFeatureType();
+    }
+    else if (feature instanceof AnnotatedFeature) {
+      String type = feature.getFeatureType();
+      if (oneLevelAnnotTypes != null &&
+          oneLevelAnnotTypes.contains(type))
+        return type;
+      else
+        return "gene";
+    }
+JdbcChadoAdapter for reading:
+          String typeName = getFeatCvName(new Long(type_id));
+          if (currentGene != null && !typeName.equals("mRNA")) {
+            // Don't need this. It will be dependent on type
+            //currentGene.setBioType(typeName);
+            currentGene.setFeatureType(typeName);
+
+
+
+
+----------------------------
+issues from bdgp/tiling stuff
+-----------------------------
+
+put database in game - then do databaseToStyle
+
+have transaction xml writer (with game) pickup template file from
+chado-adapter.xml NOT from apollo.cfg
+
+get rid of apollocfg ChadoTransactionTemplate param - its still being
+used and shouldnt be - replaced by chado xml config
+
+pub for syns & comments needs to be worked out with sima already in
+pubs but as curated genome not curator
+
+owner (featureprop) for 1 level annots?
+
+chado db config inheritance? - probably not needed
+
+chado gui select progs, annots
+
+better history in chado gui
+
+name adapter protein suffix -> polypeptide
+
+get nav bar working
+
+annot info select listen assumes transcript
+1 level annot not highlighting on external selection
+
+
+in dropping repeat in annot-types.xml
+        ****** Adding new annotation ******
+Exception in thread "AWT-EventQueue-0" java.lang.NullPointerException: Can't accept feature type of null. Use SeqFeatureI.NO_TYPE or 'SeqFeatureI.NO_TYPE' instead.
+        at apollo.datamodel.Range.setType(Range.java:71)
+        at apollo.editor.AnnotationEditor.setTypeFromFeatures(AnnotationEditor.java:2534)
+        at apollo.editor.AnnotationEditor.newGeneSetup(AnnotationEditor.java:2480)
+        at apollo.editor.AnnotationEditor.addAnnotation(AnnotationEditor.java:2809)
+        at apollo.editor.AnnotationEditor.addGene(AnnotationEditor.java:2787)
+        at apollo.editor.AnnotationEditor.addGeneOrTranscript(AnnotationEditor.java:1978)
+        at apollo.editor.AnnotationEditor.addGeneOrTranscript(AnnotationEditor.java:1943)
+        at apollo.editor.AnnotationEditor.addGeneOrTranscript(AnnotationEditor.java:1929)
+        at apollo.gui.genomemap.AnnotationView.featureDrag(AnnotationView.java:165)
+        at apollo.gui.genomemap.AnnotationView.interpretDrop(AnnotationView.java:257)
+
+chromosomes not displaying if first thing - needs a refresh i think
+
+
+querying chromosomes on writeback (if load from cmd line)
+
+i think there was a template mix up after loading rice then fly - not
+sure
+
+need to query on program version as well as program
+
+merge config files! non-trivial - have made progress here - more to do
+
+
+chado transaction xml should be configged with a chado instance name
+rather than using "default" tag - in style...
+chado transaction xml isnt right - needs to get preamble stuff from
+chado instance - really messed with inheritance - not getting 1 level
+types - get from tiers?
+species->chadoInstance in style? or put species in chadoInstance itself?...
+apollo.dataadapter.chadoxml.ChadoTransactionXMLWriter needs to know
+1,3 level annot types to write out chado transactions proper. this is
+presently stored in chado-adapter.xml (yikes). so it looks in
+chado-adapter.xml for a chado instance that is the "default"
+(instance attribute yikes yikes) - and parses that xml element.
+this wont work for more than one species (& is kindof hacky).
+alternate solutions in order of hardness:
+1) put species as the instance attribute
+2) put 1,3 levels in style - would need to retrieve style for organism
+for writing as game does for read 
+3) put levelNumber in tiers - thats where it belongs - misleading
+because apollo does 3 levels no matter what
+4) get levels from SO file (or chado db?)
+
+
+1-level annots (for crm)
+-----------------------
+
+make game adapter make 1 level annots out of 3 level annots (game 1.0)
+that are configured to be 1 level annots - backwards compatibility!
+
+1 level annots are coming in with bad coordinates from jdbc
+
+evidence panel - sima requests putting data in right side panel (which
+expects transcripts hmmm....)
+
+when select from annot top menu selects a really wide range way beyond
+annot - actually i think this is natural padding - it just looks really
+bad in really small examples that im doing - not major but it should
+look for ends of cur set and not go beyond that
+
+ede translation viewer hard wired to transcript
+
+
+-----------------
+issues from cyril
+-----------------
+
+cyril needs transactions from seq edits - these transactions need to
+be reworked - presently they are on an exon feature - silly - perhaps
+on curation set or something - main seq? also they got dropped when
+writing out - transformer? tran manager?
+
+null check for analysis sourcename in making names for analysis on
+search hits (maybe put out warning message) - did i fix this?
+
+--------------
+important bugs
+--------------
+
+###synonym sgml has a non null constraint - so its needed for insert -
+but dont want it for lookup - actually its annoying - should sgml be
+read in for the synonym and roundtripped? no
+....
+##this brings up another and thats having fields that are needed for
+insert but not for lookup - the pub "curator" type is just that - if
+we are inserting a pub we want the type there - but if we are looking
+up a pub we dont want the type as we want to be open to uniquenames of
+other types - especially since theres a unique key on uniquename -
+yikes!
+....
+##same is true of deletes and unique key i think
+..
+##done in syn - pub needs it - cos of type
+
+
+
+
+12.1.05 - bug with adding exon & duplicating trans - in
+     rice/add-ex-and-dup-trans-bug
+Lookup Query: SELECT feature_id FROM feature WHERE organism_id=9 AND type_id=171 AND name='RICE000381:594-624'
+java.lang.IllegalStateException: Error in ChadoTransactionProcessor.commitLookup()
+Lookup query failed to return anything:
+ SELECT feature_id FROM feature WHERE organism_id=9 AND type_id=171 AND name='RICE000381:594-624'
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitLookup(JDBCTransactionWriter.java:259)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransformedTransactions(JDBCTransactionWriter.java:135)
+        at apollo.dataadapter.TransactionOutputAdapter.commitTransactions(TransactionOutputAdapter.java:97)
+        at apollo.dataadapter.chado.ChadoAdapter.commitChanges(ChadoAdapter.java:295)
+the issue is it thinks exon is shared and existing in chado - but its
+     not in chado yet - need to do a force on exon insert
+take out do-one-level-annots flag...?
+
+jdbc adapter should gleen 1 levelness from tiers file NOT
+chado-adapter file - redundant - its historical - chado-adapter 1
+level predates tiers - jdbc needs to get hip to new tiers
+
+AE.mergeTranscripts clones all the exons - this may be throwing drawables
+
+rice should at least retrieve tgt seq separately with cache rather
+than redundantly for every hit
+
+change architecture for cvterms? at least for feat prop - just make
+transactions for them as needed rather than having to keep template
+file up to date
+
+
+
+exons have to be queried before they are inserted! if you insert a new
+shared exon it will go in as unshared duplicate - yikes!!
+-- i dont think this is true - i think the second here might have been
+inserted independent of first - i dont know - dont have repeatable -
+it is suspicious that they have the same name prefix
+Insert: INSERT INTO feature (feature_id, organism_id, uniquename, type_id) VALUES (1936613, 9, 'RICE000280:2259-2362-temp', 171)
+shared exons are getting inserted unshared???
+rice=# SELECT * FROM feat_view WHERE type_id=171 AND name='RICE000280:2258-2362';
+         name         | uniquename | type_id | feature_id
+----------------------+------------+---------+------------
+ RICE000280:2258-2362 | RICE000296 |     171 |    1936613
+ RICE000280:2258-2362 | RICE000285 |     171 |    1936602
+-- actually i think i do have a repeatable and thats making a
+duplicate of an existing transcript - i think the problem might be
+that the new duplicates all have "temp" on them or something like that
+so it fails to see its shared???
+
+
+
+rice transposon had gene type - yikes - at least on commit ion trying
+ to delete it
+ check if this happens again or if it somehow has been fixed
+it might be that the delete transaction lost the type of the
+ transposon - look into this...
+
+
+refactor controller abs lazy seq.lazy loadCO & apollo frame - abs lazy
+seq has inner class that fires loazy load event to controller - uses
+config.getcontroller - ignores passed in controller right now - apollo
+frame lazy load listening object should be broken out into separate
+class or at least inner class? actually could be separate class in
+dataadapter package itself - lazy seq should just see lazy load
+interface which should be moved to dataadapter package (from
+gui.event) - i guess controller should register itself with
+dataadapter somehow(???) as the lazy seq listener - need this at
+dataadapter datamodel construction time - hmmmmmm.....
+actually maybe we dont even need the controller - the only thing that
+cares about lazy load is the lazy load listener - the controller is
+more harm than help here
+
+
+my trick of trying not to be redundant between 2
+configs isnt fully realized - both transactions for cvs are going in -
+fix this - but maybe its ok if its a renaming (confusing)
+
+fix getting of chado instance for writing chado
+transaction xml - now it goes for default - there should either be a
+speciesToInstance (in style?) or even better put species/org in the
+instance itself - though that means all the instances have to be
+parsed but thats no biggie - its not a very big file - the whole file
+needs to be parsed for instance inheritance as well
+
+
+jdbc read adapter for fly not setting prot end/translation stop from
+cds - letting apollo calculate - shouldnt do that - should use cds end
+which is protiein end - one less than translation stop
+
+i think this might be an old transcript that uses protein & not
+polypep and throws everything - see if can repeat with new transacript
+null pointer on duping transcript in rice/mid-oct/2-db-genes.game:
+        ****** DUPLICATING TRANSCRIPT ******
+Unable to set translation start to 0 for no_name, which has 1 exons:
+        Exon 0: 251-418
+no_name does not have translation start
+featureSet.getFeaturePosition: no_name (251-418) has no feature containing genomic_pos 0
+java.lang.NullPointerException
+        at apollo.config.GmodNameAdapter.setPeptideIdFromTranscript(GmodNameAdapter.java:417)
+        at apollo.config.GmodNameAdapter.setTranscriptId(GmodNameAdapter.java:404)
+        at apollo.editor.AnnotationEditor.setTransID(AnnotationEditor.java:2230)
+        at apollo.editor.AnnotationEditor.setTransNameAndId(AnnotationEditor.java:2189)
+        at apollo.editor.AnnotationEditor.duplicateTranscript(AnnotationEditor.java:2836)
+        at apollo.gui.menus.AnnotationMenu.actionPerformed(AnnotationMenu.java:473)
+AND this...(put check in for above) - peptide is null - shouldnt be - look into...
+no_name does not have translation start
+featureSet.getFeaturePosition: no_name (251-418) has no feature containing genomic_pos 0
+java.lang.NullPointerException
+        at apollo.editor.TransactionSubpart$PeptideIdSubpart.setValue(TransactionSubpart.java:244)
+        at apollo.editor.UpdateTransaction.setValue(UpdateTransaction.java:78)
+        at apollo.editor.UpdateTransaction.editModel(UpdateTransaction.java:73)
+        at apollo.config.GmodNameAdapter.setPeptideIdFromTranscript(GmodNameAdapter.java:432)
+        at apollo.config.GmodNameAdapter.setTranscriptId(GmodNameAdapter.java:404)
+        at apollo.editor.AnnotationEditor.setTransID(AnnotationEditor.java:2224)
+
+!!! - GmodNameAdapter.nameIsId is hardwired to CG - used in
+AE.splitGeneSetup !!! (look through name adap)
+
+
+did some looking into mergeGeneIdent issue where user can choose
+purged gene name which messes up object ids in tair - mergeGeneIdent
+called in 3 places - consolGenes, moveExToTrans & mergeExons -
+mergeExons will never cause merge (take out?) consolG & moveEx should
+do the naming query that mergeGeneIdent does and send in the
+appropriate from & to - thats the better answer and greatly simplifies
+mergeGeneIdent - it would get a toGene fromGene and possibly a new
+(temp) name - copyAnnotData and make syns of from - if new name !=
+toGene name make syns of old toGene name - this has to be done
+upstream of mergeGeneIdent as it has to be done before mv/consol start
+moving things around
+
+
+fail to delete remark - remark type is 194 but in chado this feature
+has a gene type - 87
+rice=# select name,type_id,uniquename,feature_id from feature where uniquename = 'RICE000131';
+    name    | type_id | uniquename | feature_id
+------------+---------+------------+------------
+ RICE000131 |      87 | RICE000131 |    1936458
+Lookup Query: SELECT feature_id FROM feature WHERE organism_id=9 AND uniquename='chr1' AND type_id=199
+Lookup Query: SELECT pub_id FROM pub WHERE uniquename='mgibson' AND type_id=438
+Delete Query: DELETE FROM feature WHERE organism_id=9 AND uniquename='RICE000131' AND type_id=194
+java.lang.IllegalStateException: JDBCTransactionWriter.commitDelete(): Cannot delete a row.
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitDelete(JDBCTransactionWriter.java:477)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransformedTransactions(JDBCTransactionWriter.java:134)
+        at apollo.dataadapter.TransactionOutputAdapter.commitTransactions(TransactionOutputAdapter.java:97)
+        at apollo.dataadapter.chado.ChadoAdapter.commitChanges(ChadoAdapter.java:293)
+        at apollo.dataadapter.AbstractApolloAdapter.commitChanges(AbstractApolloAdapter.java:306)
+        at
+        apollo.dataadapter.AbstractApolloAdapter.commitChanges(AbstractApolloAdapter.java:313)
+same with transposon:
+Delete Query: DELETE FROM feature WHERE organism_id=9 AND uniquename='RICE000155' AND type_id=217
+java.lang.IllegalStateException: JDBCTransactionWriter.commitDelete(): Cannot delete a row.
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitDelete(JDBCTransactionWriter.java:477)
+    name    | type_id | uniquename | feature_id
+------------+---------+------------+------------
+ RICE000155 |      87 | RICE000155 |    1936461
+(1 row)
+-- but not happening with other transposons or remarks - but both
+these examples were where remarks & transposon were overlapping other
+remakrs & transposon - this may be the issue - not sure - for now
+deleting these entries to get them out of the way - they may be due to
+a now fixed bug
+
+
+
+if you load from command line and then write with data adapter gui the
+gui is all messed up - as in blank
+
+there was a findDrawable in DrawableFeatureSet.addFeatureDrawable that
+was making building of tiers/feat-sets with lots of features
+incredibly slow - so i took it out. it was a correction for splits
+that were adding the same feature twice - so the split itself should
+be fixed and it shouldnt be taken care of in addFeatureDrawable. need
+to look into this.
+
+remarks at the top level seem to have type gene:
+SELECT f.name,uniquename,feature_id, c.name, is_analysis as an           FROM feature f, cvterm c     WHERE f.type_id = c.cvterm_id AND f.name = 'RICE000131';
+    name    | uniquename | feature_id | name | an
+------------+------------+------------+------+----
+ RICE000131 | RICE000131 |    1936458 | gene | f
+ 
+yikes thats a remark with type gene???? - its transcript child must have the type"
+
+
+
+on adding a duplicate synonym no transaction is created for it - but
+the gui still shows it. (doesnt get set in model - if cloase & bring
+up doesnt show dup - also if do rename of gene dup disappears)
+also merges with real genes (not temps) can create duplicate synonyms
+- i dont think that was so in past releases
+
+[from jdbc read]cant drag exon onto gene - nor use menu item - chado
+xml adapter had same problem - this is only true coming directly from
+a jdbc read - if from game read (classroom case) everythings fine -
+thus this is not so urgent (wont effect kids) but should be fixed at
+some point
+
+add-del.tnxml has an extra comment delete in the beginning??? - its
+actually from a previous edit/load - transactions not getting cleared
+on load!!! - see add-add-del.tnxml - i think this is due to not
+relaoding between sessions - but the coalescing might be a little funny
+
+if you bring up a game file with a temp annot that doesnt have
+transactions (a clearly funny state to be in - should have trans) and
+you change the range of the exon the transactions xml is all screwed
+up - this is not a very critical case - in fact its a wierdo case that
+shouldnt happen in the first place
+  <update author="mgibson" ts="Oct 14, 2005 2:44:31 PM">
+    <exon start="7" end="24" parentName="CG:temp1-RA" id="CG:temp1:7-24">
+      <LIMITS start="7" end="17" />
+    </gene> -- should end with exon
+  </update>
+
+
+[this is not critical as its just chado transactions saving - maybe
+catch the null pointer for now]
+chado trans fail on add-del: - this file is not just add & del - it
+has edits from previous sessions - no reload - need repeatable -
+actually the repeatble is to just load and save file
+Saved XML to /home/mgibson/apollo/dev/data/bugs/empty-comment/add-del.game
+Saving 3 transaction objects
+Saved annotation change transactions to /home/mgibson/apollo/dev/data/bugs/empty-comment/add-del.tnxml
+GAMEAdapter.saveTransactions() (chado): java.lang.NullPointerException
+java.lang.NullPointerException
+        at apollo.dataadapter.chado.ChadoTransactionTransformer.getRootType(ChadoTransactionTransformer.java:1135)
+        at apollo.dataadapter.chado.ChadoTransactionTransformer.generateFeatureTransaction(ChadoTransactionTransformer.java:1080)
+        at apollo.dataadapter.chado.ChadoTransactionTransformer.deleteCommentTransaction(ChadoTransactionTransformer.java:1006)
+        at apollo.dataadapter.chado.ChadoTransactionTransformer.transformDeleteSubpartTransaction(ChadoTransactionTransformer.java:964)
+        at apollo.dataadapter.chado.ChadoTransactionTransformer.transformDeleteTransaction(ChadoTransactionTransformer.java:1030)
+        at apollo.dataadapter.chado.ChadoTransactionTransformer.transform(ChadoTransactionTransformer.java:76)
+        at apollo.dataadapter.TransactionOutputAdapter.commit(TransactionOutputAdapter.java:86)
+        at apollo.dataadapter.gamexml.GAMEAdapter.saveTransactions(GAMEAdapter.java:347)
+        at apollo.dataadapter.gamexml.GAMEAdapter.commitChanges(GAMEAdapter.java:303)
+- this is due to TransactionXMLAdapter.loadDeleteTransaction which
+clones the feature as it assumes its a delete feature
+- even more curious you would think this would be repeatable doing
+just one delete and roundtripping but not so - hmm... investigate
+
+
+add & delete of comment not coalescing out - shouldt be too hard to
+get that should it? - is this due to timestamp - shouldnt the
+timestamp be the same - they arent always so
+
+
+
+
+i think rice peptide ids will not be carried through game - test this!
+
+[existing gene bug]
+on adding transcript to existing gene problem with exon:
+- this is either fixed or dont have a repeatable... keep an eye out
+- this still doesnt work - but it is for existing genes - wont be
+initial issue for teachers -- see test3/add-transcript.game
+Lookup Query: SELECT feature_id FROM feature WHERE organism_id=9 AND type_id=45 AND name='namechange:250-418'
+Insert: INSERT INTO feature (organism_id, type_id, name) VALUES (9, 45, 'namechange:250-418')
+java.sql.SQLException: ERROR: null value in column "uniquename" violates not-null constraint
+
+Problematic query: INSERT INTO feature (organism_id, type_id, name) VALUES (9, 45, 'namechange:250-418')
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.processException(JDBCTransactionWriter.java:375)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitInsert(JDBCTransactionWriter.java:341)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitForce(JDBCTransactionWriter.java:384)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransactions(JDBCTransactionWriter.java:127)
+        at apollo.dataadapter.TransactionOutputAdapter.commit(TransactionOutputAdapter.java:87)
+seen again... repeatable
+adding new trans failed - see test3/new-transcript.game - no
+uniquename given for exon insert - i think we need temp id
+Insert: INSERT INTO feature (organism_id, type_id, name) VALUES (9, 45, 'RICE000406:250-418')
+java.sql.SQLException: ERROR: null value in column "uniquename" violates not-null constraint
+
+
+on merging new trans to existing trans & committing:
+Lookup Query: SELECT pub_id FROM pub WHERE uniquename='mgibson' AND type_id=20306
+Insert: INSERT INTO feature (organism_id, uniquename, type_id, name) VALUES (9, 'RICE:temp1', 202, 'RICE:temp1')
+Insert: INSERT INTO featureloc (fmax, fmin, strand, srcfeature_id, feature_id) VALUES ('1257', '250', '1', 1, 280676)
+Lookup Query: SELECT synonym_id FROM synonym WHERE type_id=4 AND name='RICE000435' AND synonym_sgml='RICE000435'
+Insert: INSERT INTO feature_synonym (synonym_id, feature_id, pub_id, is_current, is_internal) VALUES (351135, 280676, 4, '1', '0')
+Lookup Query: SELECT synonym_id FROM synonym WHERE type_id=4 AND name='asf' AND synonym_sgml='asf'
+Insert: INSERT INTO feature_synonym (synonym_id, feature_id, pub_id, is_current, is_internal) VALUES (351136, 280676, 4, '1', '0')
+Lookup Query: SELECT synonym_id FROM synonym WHERE type_id=4 AND name='RICE000435' AND synonym_sgml='RICE000435'
+Insert: INSERT INTO feature_synonym (synonym_id, feature_id, pub_id, is_current, is_internal) VALUES (351135, 280676, 4, '1', '0')
+java.sql.SQLException: ERROR: duplicate key violates unique constraint "feature_synonym_c1"
+
+Problematic query: INSERT INTO feature_synonym (synonym_id, feature_id, pub_id, is_current, is_internal) VALUES (351135, 280676, 4, '1', '0')
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.processException(JDBCTransactionWriter.java:375)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitInsert(JDBCTransactionWriter.java:341)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransformedTransactions(JDBCTransactionWriter.java:124)
+        at apollo.dataadapter.TransactionOutputAdapter.commitTransactions(TransactionOutputAdapter.java:90)
+        at apollo.dataadapter.chado.ChadoAdapter.commitChanges(ChadoAdapter.java:283)
+but there is a synonym listed twice in the syns
+
+
+peptide spacing (look into see if trivial)
+sporatic! dont have repeatable - need to go back to some emails about this
+
+pinglei email about alternate types - in transcript not gene -
+- jdbc adapter
+- rice??? investigate! snoRNA...
+
+on moving an exon got a feat loc update with a null feat id (on fly
+data)
+    <featureloc op="update">
+        <strand>1</strand>
+        <feature_id>null</feature_id>
+        <fmax op="update">1090719</fmax>
+        <fmin op="update">1083283</fmin>
+    </featureloc>
+ 
+
+----
+docs
+----
+
+dataadapter cookbook about dataadapter input - Range, DataInput, StateInfo
+
+----------------------------------
+new functionality - lower priority
+----------------------------------
+jdbc read gui needs full history drop down with type, id and start and end
+
+refactor - move name adapters to editor - i think thats where they
+really belong - they do a lot of mod specific editing but they are
+still basically editors.
+
+
+
+---------------
+Editing in rice
+---------------
+on adding a new transcript to an exsitng gene the uniquename temp is
+sticking & not changing (this is not due to the dropped trigger -
+which is only for updates i think - as i tried it with the trigger installed)
+
+AE.setTransName calls AE.setTransID - this is ok for fly (i think) but
+this might be problematic for rice where trans ids are disassociated - investigate!
+
+temp ids will use old temp ids that were deleted - this could be an
+issue for coalescence - this is addressed in gmodnameadapter
+nextAnnotNumber but the code is obsolete as its using old style transactions.
+test this out - with deleting & adding & commiting
+
+gmod name adapter has a bunch of fly specific stuff in it - purge! 
+(investigate what this affects)
+
+FED.setupNameChange is no longer used - but its functionality is not
+totally replicated yet! - used to be called by save()
+
+insert protein is wrong - its inserting into uniquename the name of
+prot - uniquename should get a temp, name should be null?? or if we
+change to reflect gene name should be gene name with suffix
+
+new trans of existing gene name going in with -mRNA2, id with mRNA4
+whats up with that? this is from apollo not the trigger
+- now name is transcript1 and id is transcript2 - a little wierd but
+- gene rename caused transcript1 to jump to transcript2 - unnecasary
+no crisis (low priority)
+
+(low priority) splits not causing limit changing event. not urgent as
+splits in rice cause id change which causes genes to delete & insert
+so limit change would just coalesce out anyways (tair may need this - unclear)
+
+------
+commit
+------
+chado featureprop is loaded with redundant values - mgibson, dates, true
+bug in apollo? - its ok they are for different features - no cv for
+owners and whatnot
+
+if do a commit after a load from cmd line chado adapter gui comes up blank
+
+----
+undo
+----
+- check code everywhere for handleAnnotationChangeEvent - make sure it
+can handle compound events
+- exon? -- need exon name/id transaction to undo - dont think we need now?
+
+grey out/disable undo if no undos to do
+
+
+-----------
+name adapter
+------------
+GmodNameAdapter.nameIsId is very fly specific - look into this - how
+is it used and all - move to fly?
+
+-----------------
+DB issues (scott)
+-----------------
+insert trigger is producing redundant feature_synonyms on transcript
+insert. point to same syn with 2 different pubs (pub id 1,3 which are
+null,empty pubs)
+
+cant call for a gene to get a new id as needed on splits & merges
+where they get temped in apollo
+
+---------
+JDBC Read
+---------
+
+read in pub stuff for synonyms
+
+check for redundant syn names and drop them?
+
+would be nice if could select what features to get in adapter gui -
+predictions, hits, genes...
+
+with new db dump switch protein to polypeptide - make configurable
+need to also change chado transaction output and template xml file
+
+
+gene prediction name in evidence panel in the colored part is wrong -
+its taking the name of the first transcript for every trans in the
+strand - or so it seems
+
+
+i think the results query queries on the leaves(hsps) - needs to query
+on the hits/feat sets. this will need to be a configurable as hits in
+flybase dont have featlocs - but rice does (or at least should) -
+without this hits will be missing there out of range hsps.
+
+need to read (& save) result tags
+
+query transcript for isTranSpliced and do tran splice sorting if so
+after all exons added (as game adapter does) test out on fly's
+mod(mdg4) - the only known trans-spliced gene
+(dont think rice has any - low priority)
+
+protein is not in SOFA so how does this fly code work for rice??? -
+look into this! -- its getting it from SO - how???
+  public String getCdsSql(FeatureLocImplementation featLocImp) {
+    Long protCvId = getFeatureCVTermId("protein");
+- its hacked
+
+
+fly jdbc on cact - null pointer for null feature name:
+apollo.dataadapter.chado.jdbc.PostgresChadoAdapter@4571c5 addSearchHits sql = SELECT f.uniquename, fl.fmin AS query_fmin, fl.fmax AS query_fmax, fl.strand AS query_strand, tgtFeat.feature_id AS target_id, tgtFeat.uniquename AS targetName, tgtFeat.organism_id AS tgtOrganismId, tgtFeatLoc.fmin AS target_fmin, tgtFeatLoc.fmax AS target_fmax, tgtFeatLoc.strand AS target_strand, a.analysis_id, a.program, a.sourcename, a.programversion, af.rawscore, af.normscore, af.significance, af.identity, fl.residue_info AS query_residue_info, tgtFeat.residues as target_residues,(SELECT value FROM featureprop WHERE type_id=7 and feature_id=tgtFeat.feature_id) as tgtDescription,f.type_id as featureTypeId, tgtFeatLoc.residue_info AS target_residue_info FROM featureloc fl, feature f, analysisfeature af, analysis a, featureloc tgtFeatLoc, feature tgtFeat  WHERE fl.srcfeature_id = 3214121 AND fl.feature_id = f.feature_id  AND fl.feature_id = af.feature_id AND af.analysis_id = a.analysis_id AND f.feature_id = tgtFeatLoc.feature_id AND tgtFeatLoc.srcfeature_id != fl.srcfeature_id AND tgtFeatLoc.srcfeature_id = tgtFeat.feature_id  AND (a.program like 'sim4' OR a.program like '%blastx%') AND fl.fmax > 16283957 AND fl.fmin < 16347030 ORDER BY a.program, a.programversion, tgtFeat.organism_id , tgtFeat.uniquename
+java.lang.NullPointerException: Can't accept feature name of null. Use RangeI.NO_NAME instead.
+        at apollo.datamodel.Range.setName(Range.java:48)
+        at apollo.dataadapter.chado.jdbc.JdbcChadoAdapter._makeFeatureSet(JdbcChadoAdapter.java:2107)
+        at apollo.dataadapter.chado.jdbc.JdbcChadoAdapter.addSearchHits(JdbcChadoAdapter.java:1476)
+        at apollo.dataadapter.chado.jdbc.FlybaseChadoInstance.getCurationSet(FlybaseChadoInstance.java:296)
+        at apollo.dataadapter.chado.jdbc.FlybaseChadoInstance.getCurationSet(FlybaseChadoInstance.java:162)
+        at apollo.dataadapter.chado.jdbc.JdbcChadoAdapter.getCurationSet(JdbcChadoAdapter.java:1952)
+        at apollo.dataadapter.chado.ChadoAdapter.getCurationSet(ChadoAdapter.java:221)
+        at apollo.dataadapter.chado.ChadoAdapterGUI.doOperation(ChadoAdapterGUI.java:295)
+
+search hit speedups?
+-- configurable for outer join descriptions
+-- prequery for analysis ids (~25% speedup)
+
+have to fix the jdbc reader for annots - need to get feat sets - its
+still cutting out seq feats that are out of range but are part of in
+range feat sets - this is pretty crucial! flybase doesnt have this so
+it will need to be configured (high priority)
+this is true of 
+3) annotations
+
+
+-------------------------------------------------------------
+JDBC -> GAME with no database genes, minor stuff -- new genes
+(this is the case the students will first be dealing with)
+-------------------------------------------------------------
+[these bugs might be present for the other cases as well (jdbc and
+existing genes]
+
+game from rice name is lame - just "Chr1"
+
+hide game tabs for rice - just show file loader - dont need
+others. config in apollo.cfg?? game.style? rice.style? (low priority)
+
+bug with species->style - style is fixed after that point - needs to
+be able to move on (same would happen with synteny) - need to wipe out
+style on data load or something like that (low priority)
+
+
+------------------------------------------------------
+Bugs via jdbc->GAME with preexisting genes in database
+------------------------------------------------------
+[students will not initially deal with this, but will soon enough
+medium priority]
+
+exon range change not jiggy with how exons are id'd now (scotts id
+changes) :
+Lookup Query: SELECT feature_id FROM feature WHERE organism_id=9 AND uniquename='RICE00044                      0:1159-1257' AND type_id=45
+java.lang.IllegalStateException: JDBCTransactionWriter.commitUpdate(): cannot find record                       for updating.
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitUpdate(JDBCTransactio                      nWriter.java:395)
+        at
+        apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransformedTransactio                      ns(JDBCTransactionWriter.java:133)
+-- should be using name NOT uniquename - 
+rice=# SELECT f.name,uniquename,feature_id, c.name           FROM feature f, cvterm c     WHERE f.type_id = c.cvterm_id AND f.name like 'RICE000440%';
+          name          | uniquename | feature_id |  name
+------------------------+------------+------------+---------
+ RICE000440:2258-2362   | RICE000444 |     280682 | exon
+ RICE000440:1158-1257   | RICE000445 |     280683 | exon
+ RICE000440:250-418     | RICE000443 |     280681 | exon
+ RICE000440-transcript1 | RICE000441 |     280679 | mRNA
+ RICE000440             | RICE000440 |     280678 | gene
+ RICE000440-protein1    | RICE000442 |     280680 | protein
+(6 rows)
+and should be updating name NOT uniquename...
+    <feature op="update" id="RICE000440:1153-1257">
+        <organism_id>organism</organism_id>
+        <uniquename>RICE000440:1159-1257</uniquename>
+        <type_id>exon</type_id>
+        <uniquename op="update">RICE000440:1153-1257</uniquename>
+    </feature>
+
+
+unsahred to shared exon range change fails - lookup on shared exon is
+using wrong range - using apollo/base-oriented coords not chado
+interbase 
+Lookup Query: SELECT feature_id FROM feature WHERE organism_id=9 AND uniquename='chr1' AND type_id=199
+Lookup Query: SELECT pub_id FROM pub WHERE uniquename='mgibson' AND type_id=438
+Delete Query: DELETE FROM feature WHERE organism_id=9 AND type_id=171
+AND name='RICE000137:2258-2362'
+--- should be 2258-2374 - thus lookup fails
+Lookup Query: SELECT feature_id FROM feature WHERE organism_id=9 AND
+uniquename='RICE000137:2259-2374' AND type_id=171
+java.lang.IllegalStateException: Error in ChadoTransactionProcessor.commitLookup()
+Lookup query failed to return anything:
+ SELECT feature_id FROM feature WHERE organism_id=9 AND uniquename='RICE000137:2259-2374' AND type_id=171
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitLookup(JDBCTransactionWriter.java:237)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransformedTransactions(JDBCTransactionWriter.java:121)
+        at apollo.dataadapter.TransactionOutputAdapter.commitTransactions(TransactionOutputAdapter.java:97)
+        at apollo.dataadapter.chado.ChadoAdapter.commitChanges(ChadoAdapter.java:284)
+
+
+
+exon ids screwed up in general - need to use names not ids
+
+
+mergine new gene with old gene fails:
+Lookup Query: SELECT organism_id FROM organism WHERE genus='Oryza' AND species='sativa'
+Lookup Query: SELECT db_id FROM db WHERE name='null'
+Lookup Query: SELECT db_id FROM db WHERE name='DB:GR'
+Lookup Query: SELECT feature_id FROM feature WHERE organism_id=9 AND uniquename='chr1' AND type_id=199
+Lookup Query: SELECT pub_id FROM pub WHERE uniquename='mgibson' AND type_id=438
+Lookup Query: SELECT feature_id FROM feature WHERE organism_id=9 AND uniquename='RICE:temp1-transcript1' AND type_id=143 AND name='RICE:temp1-transcript1'
+java.lang.IllegalStateException: Error in ChadoTransactionProcessor.commitLookup()
+Lookup query failed to return anything:
+ SELECT feature_id FROM feature WHERE organism_id=9 AND uniquename='RICE:temp1-transcript1' AND type_id=143 AND name='RICE:temp1-transcript1'
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitLookup(JDBCTransactionWriter.java:237)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransformedTransactions(JDBCTransactionWriter.java:121)
+        at apollo.dataadapter.TransactionOutputAdapter.commitTransactions(TransactionOutputAdapter.java:97)
+        at apollo.dataadapter.chado.ChadoAdapter.commitChanges(ChadoAdapter.java:284)
+        at apollo.dataadapter.AbstractApolloAdapter.commitChanges(AbstractApolloAdapter.java:306)
+
+
+split choking on existing gene w 2 transcripts - on protein insert -
+rice0009 as uniquename seems wrong - i think it should be a temp id?
+i dont know
+TIME: Thu Jul 07 11:44:03 EDT 2005
+DEBUG:
+Insert: INSERT INTO feature (feature_id, organism_id, seqlen, uniquename, residues, type_id) VALUES (1936304, 9, '0', 'RICE000009', '', 720)
+
+java.sql.SQLException: ERROR: duplicate key violates unique constraint "feature_c1"Problematic query: INSERT INTO feature (feature_id, organism_id, seqlen, uniquename, residues, type_id) VALUES (1936304, 9, '0', 'RICE000009', '', 720)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.processException(JDBCTransactionWriter.java:400)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitInsert(JDBCTransactionWriter.java:361)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransformedTransactions(JDBCTransactionWriter.java:124)
+        at apollo.dataadapter.TransactionOutputAdapter.commitTransactions(TransactionOutputAdapter.java:90)
+        at apollo.dataadapter.chado.ChadoAdapter.commitChanges(ChadoAdapter.java:284)
+        at apollo.dataadapter.AbstractApolloAdapter.commitChanges(AbstractApolloAdapter.java:298)
+        at apollo.dataadapter.AbstractApolloAdapter.commitChanges(AbstractApolloAdapter.java:305)
+        at apollo.dataadapter.chado.ChadoAdapterGUI.doOperation(ChadoAdapterGUI.java:301)
+        at org.bdgp.swing.widget.DataAdapterChooser.doCommitWithExceptions(DataAdapterChooser.java:360)
+        at org.bdgp.swing.widget.DataAdapterChooser.doCommit(DataAdapterChooser.java:413)
+
+merge choke merging existing with temp taking temp name:
+Lookup Query: SELECT pub_id FROM pub WHERE uniquename='mgibson' AND type_id=438
+Lookup Query: SELECT feature_id FROM feature WHERE organism_id=9 AND uniquename='RICE:temp1-transcript2' AND type_id=143 AND name='RICE:temp1-transcript2'
+java.lang.IllegalStateException: Error in ChadoTransactionProcessor.commitLookup()
+Lookup query failed to return anything:
+ SELECT feature_id FROM feature WHERE organism_id=9 AND uniquename='RICE:temp1-transcript2' AND type_id=143 AND name='RICE:temp1-transcript2'
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitLookup(JDBCTransactionWriter.java:237)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransformedTransactions(JDBCTransactionWriter.java:121)
+        at apollo.dataadapter.TransactionOutputAdapter.commitTransactions(TransactionOutputAdapter.java:90)
+        at apollo.dataadapter.chado.ChadoAdapter.commitChanges(ChadoAdapter.java:284)
+        at apollo.dataadapter.AbstractApolloAdapter.commitChanges(AbstractApolloAdapter.java:298)
+        at apollo.dataadapter.AbstractApolloAdapter.commitChanges(AbstractApolloAdapter.java:305)
+        at
+        apollo.dataadapter.chado.ChadoAdapterGUI.doOperation(ChadoAdapterGUI.java:301)
+see test7/merge-old-new.game
+
+
+merge 2 existing genes: - exon doesnt have uniquename??
+Insert: INSERT INTO feature (feature_id, organism_id, type_id, name) VALUES (1936427, 9, 171, 'RICE000127:1158-1257')
+
+java.sql.SQLException: ERROR: null value in column "uniquename" violates not-null constraint
+
+Problematic query: INSERT INTO feature (feature_id, organism_id, type_id, name) VALUES (1936427, 9, 171, 'RICE000127:1158-1257')
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.processException(JDBCTransactionWriter.java:400)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitInsert(JDBCTransactionWriter.java:361)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitForce(JDBCTransactionWriter.java:409)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransformedTransactions(JDBCTransactionWriter.java:127)
+        at apollo.dataadapter.TransactionOutputAdapter.commitTransactions(TransactionOutputAdapter.java:97)
+        at apollo.dataadapter.chado.ChadoAdapter.commitChanges(ChadoAdapter.java:284)
+
+
+
+simple merge is choking:
+Delete Query: DELETE FROM feature_relationship WHERE subject_id=280761 AND object_id=280759 AND type_id=33
+Lookup Query: SELECT feature_id FROM feature WHERE organism_id=9 AND uniquename='RICE000525' AND type_id=74 AND name='RICE000524-transcript1'
+Lookup Query: SELECT feature_id FROM feature WHERE organism_id=9 AND type_id=45 AND name='RICE000524:1158-1257'
+Insert: INSERT INTO feature (organism_id, type_id, name) VALUES (9, 45, 'RICE000524:1158-1257')
+java.sql.SQLException: ERROR: null value in column "uniquename" violates not-null constraint
+
+Problematic query: INSERT INTO feature (organism_id, type_id, name) VALUES (9, 45, 'RICE000524:1158-1257')
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.processException(JDBCTransactionWriter.java:375)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitInsert(JDBCTransactionWriter.java:341)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitForce(JDBCTransactionWriter.java:384)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransformedTransactions(JDBCTransactionWriter.java:127)
+        at apollo.dataadapter.TransactionOutputAdapter.commitTransactions(TransactionOutputAdapter.java:90)
+        at apollo.dataadapter.chado.ChadoAdapter.commitChanges(ChadoAdapter.java:283)
+
+
+
+trigger for name is back in place (thought i had dropped it - did
+scott put it back in?) and its screing up the commit that assumes no
+trigger (for updating gene name from annot info): - or am i mixing up triggers?
+Update Query: UPDATE feature SET name='nametest' WHERE organism_id=9 AND uniquename='RICE000446' AND type_id=202 AND name='RICE000446'
+Lookup Query: SELECT synonym_id FROM synonym WHERE type_id=4 AND name='RICE000446' AND synonym_sgml='RICE000446'
+Lookup Query: SELECT feature_id FROM feature WHERE organism_id=9 AND uniquename='RICE000446' AND type_id=202 AND name='nametest'
+Insert: INSERT INTO feature_synonym (synonym_id, feature_id, pub_id, is_current, is_internal) VALUES (351155, 280684, 4, '1', '0')
+Update Query: UPDATE feature SET name='nametest-transcript2:temp' WHERE organism_id=9 AND uniquename='RICE000447' AND type_id=74 AND name='RICE000446-transcript1'
+java.lang.IllegalStateException: JDBCTransactionWriter.commitUpdate(): Cannot update. Update attempted but no row was effected. Check where clause.
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitUpdate(JDBCTransactionWriter.java:421)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransformedTransactions(JDBCTransactionWriter.java:133)
+        at apollo.dataadapter.TransactionOutputAdapter.commitTransactions(TransactionOutputAdapter.java:90)
+        at apollo.dataadapter.chado.ChadoAdapter.commitChanges(ChadoAdapter.java:283)
+-- either need to drop trigger (what about exons & proteins???) or
+need to take these updates out
+-- see test3/gene-name-change.tnxml - protein change is there - exon
+is not there!
+- one problem with going via trigger is that if a future transaction
+referred to the exon it would need to use the name the exon was
+changed to - it would need to query for it i suppose - might be best
+to drop the trigger again
+
+
+
+on adding 2 temp genes and merging them to existing gene it tried to
+insert gene without first deleting it:
+Lookup Query: SELECT feature_id FROM feature WHERE organism_id=9 AND uniquename='1' AND type_id=146
+Lookup Query: SELECT pub_id FROM pub WHERE uniquename='mgibson' AND type_id=20306
+Insert: INSERT INTO feature (organism_id, uniquename, type_id, name) VALUES (9, 'RICE000435', 202, 'RICE000435')
+java.sql.SQLException: ERROR: duplicate key violates unique constraint "feature_c1"
+
+Problematic query: INSERT INTO feature (organism_id, uniquename, type_id, name) VALUES (9, 'RICE000435', 202, 'RICE000435')
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.processException(JDBCTransactionWriter.java:375)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitInsert(JDBCTransactionWriter.java:341)
+
+
+so on gene name change protein and trans are getting temp names and
+they are sticking in the database - either shouldnt get temp names or
+db trigger should deal - & i think it should be the former
+- this is the db trigger that i dropped (update gene name) - but i
+dont think it will be too bad for apollo to get the transaction right
+rather than reinstating the trigger & supressing transactions - take
+the temp out and mimic the transcript name is all - if it gets too
+involved we should revert to trigger i guess
+
+(minor) if you delete transcript1 transcript2 remains transcript2 -
+should it? or should all the transcripts be renamed with transcript deletion?
+
+
+(this is mostly fixed - just exons left) 
+new name is failing (on existing gene - what about temp gene?): 
+Update Query: UPDATE feature SET name='newname-transcript2-temp' WHERE organism_id=9 AND uniquename='RICE000184' AND type_id=74 AND name='RICE000183-transcript1'
+java.lang.IllegalStateException: JDBCTransactionWriter.commitUpdate(): Cannot update.
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitUpdate(JDBCTransactionWriter.java:419)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransactions(JDBCTransactionWriter.java:133)
+so this is due to update transcript name transaction that is rendered
+useless and erroneous due to the trigger on gene naming. so either it
+has to be supressed or the trigger altered - scott has siad he will
+change the trigger.
+- well wait - so theres now new peptide transactions - but
+TransactionManager or chado seems to drop them - actually it seems
+chado drops them - see
+data/mini-stuff/1-exon/name-change/trans-suffix-prot.tnxml
+so maybe it would be easiest to just drop the transcript transaction
+for now as well - maybe do through compound - but compound gets
+flattened by TM for coalescing - ??? - hmmm - or just take out transcript name change
+on seeing a gene name change - its a little hacky but i dont see an
+obvious other answer until all the prot & exon stuff is working - ya
+know a transaction could have a compound tag/id that records what
+compound transaction (if any) it was a part of even after its been
+flattened and the compound trans is gone - hmmmmm.... - actually
+doesnt need the tag could just have a backwards pointer to compound -
+so even when "flattened" still remembers compound it came from -
+hmmmm... course the other question is how hard would it be to get the
+prot stuff working - also does scotts trigger do synonyms and all?
+scotts trigger doesnt do synonyms - i got peptide transactions working
+not doing exons yet - im thinking now it would be great to take names
+out of chado for derived subparts and use a function - waiting to hear
+what scott thinks - otherwise need to put in exon name transactions
+- was thinking could scrap redundant names in chado but scott said would be too
+inefficient - so i think im gonna scrap the tirgger for the transactions
+
+so right now jdbc adapter is loading protein uniquename (RICE0003) for
+protein name rather than protein name (RICE0001-protein1) - im not
+sure how much this matters - in fact we may in fact want the
+uniquename - we may need both?? - the only thing it would matter for is
+gene name change i think which is not implemented for proteins 
+- delete is triggered from gene, insert is before this happens - merge
+splits? merge splits cause wipeout and add. (not sure what this means)
+- it seems to be ok with prot id on gene rename
+
+splitting a gene with same name as id should temp both new genes - it
+doesnt - it does work for flybase CGs
+i think with splits both genes should be temped - and i think its
+broken - checking with sima
+- so temp genes spolit into temps - thats ok
+- id'd genes should split into temps - thats NOT ok
+- named genes should get :1 :2 - thats ok
+
+this also happens on just adding a transcript to a gene - that
+transcript has temp in it and that seems to be throwing things - cant
+tell if its apollo or chado - i think apollo - the lookup shouldnt be
+happening or something
+got this on merging 2 existing genes - i think this has to do with the
+transcript getting renamed to a temp name which then doesnt jibe with
+the database:
+Lookup Query: SELECT pub_id FROM pub WHERE uniquename='mgibson' AND type_id=20306
+Lookup Query: SELECT feature_id FROM feature WHERE organism_id=9 AND uniquename='RICE000207-transcript2-temp' AND type_id=74 AND name='RICE000207-transcript2-temp'
+java.lang.IllegalStateException: Error in ChadoTransactionProcessor.commitLookup()
+Lookup query failed to return anything:
+ SELECT feature_id FROM feature WHERE organism_id=9 AND uniquename='RICE000207-transcript2-temp' AND type_id=74 AND name='RICE000207-transcript2-temp'
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitLookup(JDBCTransactionWriter.java:237)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransactions(JDBCTransactionWriter.java:121)
+        at apollo.dataadapter.TransactionOutputAdapter.commit(TransactionOutputAdapter.java:87)
+        at apollo.dataadapter.chado.ChadoAdapter.commitChanges(ChadoAdapter.java:268)
+        at apollo.dataadapter.AbstractApolloAdapter.commitChanges(AbstractApolloAdapter.java:295)
+        at apollo.dataadapter.AbstractApolloAdapter.commitChanges(AbstractApolloAdapter.java:302)
+        at apollo.dataadapter.chado.ChadoAdapterGUI.doOperation(ChadoAdapterGUI.java:301)
+        at org.bdgp.swing.widget.DataAdapterChooser.doCommitWithExceptions(DataAdapterChooser.java:360)
+        at org.bdgp.swing.widget.DataAdapterChooser.doCommit(DataAdapterChooser.java:413)
+        at apollo.main.DataLoader$SaveAdapterChooser.doCommit(DataLoader.java:754)
+see file data/rice/merge-failure-non-temp/failure-transcript-temp/transcript-temp.ctn
+
+
+
+rice naming bug - on committing both a new transcript and a name
+change to an existing gene:
+Lookup Query: SELECT pub_id FROM pub WHERE uniquename='mgibson' AND type_id=20306
+Lookup Query: SELECT feature_id FROM feature WHERE organism_id=9 AND uniquename='RICE000006' AND type_id=202 AND name='WooshyWoosh'
+java.lang.IllegalStateException: Error in ChadoTransactionProcessor.commitLookup()
+Lookup query failed to return anything:
+ SELECT feature_id FROM feature WHERE organism_id=9 AND uniquename='RICE000006' AND type_id=202 AND name='WooshyWoosh'
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitLookup(JDBCTransactionWriter.java:232)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransactions(JDBCTransactionWriter.java:116)
+        at apollo.dataadapter.TransactionOutputAdapter.commit(TransactionOutputAdapter.java:87)
+        at apollo.dataadapter.chado.ChadoAdapter.commitChanges(ChadoAdapter.java:267)
+        at apollo.dataadapter.AbstractApolloAdapter.commitChanges(AbstractApolloAdapter.java:279)
+        at apollo.dataadapter.AbstractApolloAdapter.commitChanges(AbstractApolloAdapter.java:286)
+        at apollo.dataadapter.chado.ChadoAdapterGUI.doOperation(ChadoAdapterGUI.java:301)
+
+
+gene with 2 identical transcripts loaded from jdbc one has start stop,
+the other doesnt - sporatic - dont have repeatable
+
+failed merging what was at least one existing gene - possibly both
+existing - see rice/merge-failure
+
+fly name adapter.setName for genes does synonym setting as well - have
+to do event for that somehow - post-op or have name adapter fire
+event? - non-temp
+
+copyTranscriptData events -- need to get the non-temp synonym event -
+also does a copy annot data - not sure if theres any annot data to
+copy with temps - probably not
+not urgent since the high schoolers will have all temps at first
+
+exception on commit changing from repeat_region type (from db) to
+transposon
+Lookup Query: SELECT feature_id FROM feature WHERE organism_id=9 AND uniquename='chr1' AND type_id=146
+Lookup Query: SELECT pub_id FROM pub WHERE uniquename='mgibson' AND type_id=19352
+Delete Query: DELETE FROM feature WHERE organism_id=9 AND uniquename='repeat_region:000001' AND type_id=202
+java.lang.IllegalStateException: JDBCTransactionWriter.commitDelete(): Cannot delete a row.
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitDelete(JDBCTransactionWriter.java:416)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransactions(JDBCTransactionWriter.java:124)
+- i think this may be fixed - test it out
+
+
+-----------------------------------------
+Straight JDBC bugs (no game intermediate)
+-----------------------------------------
+[fix for gmod]
+
+dragging exon on top with shift drag is not making part of trans - not
+doing anything - it works on loads from game adapter - fails on loads
+from jdbc! how strange - this is what i probably thought was a windows
+bug!!! 
+- although this is in the low priority section its a pretty major bug
+otherwise
+- fixed this same bug for chado xml adapter. there the problem was
+that the results were being added to 2 different parent feature sets -
+which it shouldnt be, and so it no longer descended from the top annot
+of results.
+
+"add as new transcript to selected gene" is greyed out from a jdbc
+read (works fine after saving and loading game xml)
+- im pretty sure this is the same problem as the dragging problem
+above
+
+problem commiting existing exon range change:
+Lookup Query: SELECT feature_id FROM feature WHERE organism_id=9 AND uniquename='RICE000203:251-418' AND type_id=45
+java.lang.IllegalStateException: JDBCTransactionWriter.commitUpdate(): cannot find record for updating.
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitUpdate(JDBCTransactionWriter.java:395)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransactions(JDBCTransactionWriter.java:133)
+        at
+        apollo.dataadapter.TransactionOutputAdapter.commit(TransactionOutputAdapter.java:87)
+database seems to have range one different:
+rice=# select name,uniquename,type_id,feature_id from feature where name like 'RICE000203%';
+        name        | uniquename | type_id | feature_id
+--------------------+------------+---------+------------
+ RICE000203:250-418 | RICE000206 |      45 |     280419
+(1 row)
+
+
+on doing a merge of 2 exisiting genes and committing to db got probelm
+with exon - using exon name instead uniquename (oddly it uses
+uniquename on initial insert from temp):
+Lookup Query: SELECT feature_id FROM feature WHERE organism_id=9 AND type_id=45 AND name='ohmygosh:1158-1257'
+Insert: INSERT INTO feature (organism_id, type_id, name) VALUES (9, 45, 'ohmygosh:1158-1257')
+java.sql.SQLException: ERROR: null value in column "uniquename" violates not-null constraint
+
+Problematic query: INSERT INTO feature (organism_id, type_id, name) VALUES (9, 45, 'ohmygosh:1158-1257')
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.processException(JDBCTransactionWriter.java:375)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitInsert(JDBCTransactionWriter.java:341)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitForce(JDBCTransactionWriter.java:384)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransactions(JDBCTransactionWriter.java:127)
+        at apollo.dataadapter.TransactionOutputAdapter.commit(TransactionOutputAdapter.java:87)
+
+
+on commiting new temp gene if commit succeeds temp gene should get
+updated with new name from db in other words - Need to synch up id
+after temp id insert - this is killer for this
+category (using apollo with straight jdbc) - the workaround is that
+you have to reload after inserts (and type and id changes)
+
+changing a transposon (from db) to a trna causes exception:
+Lookup Query: SELECT cvterm_id FROM cvterm WHERE name='gene' AND cv_id=5
+...
+Lookup Query: SELECT cvterm_id FROM cvterm WHERE name='transposable_element' AND cv_id=5
+...
+Delete Query: DELETE FROM feature WHERE organism_id=9 AND uniquename='transposable_element:000002' AND type_id=202
+java.lang.IllegalStateException: JDBCTransactionWriter.commitDelete(): Cannot delete a row.
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitDelete(JDBCTransactionWriter.java:416)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransactions(JDBCTransactionWriter.java:124)
+        at apollo.dataadapter.TransactionOutputAdapter.commit(TransactionOutputAdapter.java:87)
+        at apollo.dataadapter.chado.ChadoAdapter.commitChanges(ChadoAdapter.java:252)
+        at apollo.dataadapter.AbstractApolloAdapter.commitChanges(AbstractApolloAdapter.java:232)
+-- its because its the wrong type id - 202 is for gene - should be
+using type id 173 for transposon - it is looked up
+-- but delete actually works - type change is messed up
+-- type change from CR from db to CG its deleting CG NOT CR - probably
+same error as above - using wrong id for delete
+Delete Query: DELETE FROM feature WHERE organism_id=9 AND uniquename='CG30079' AND type_id=202
+java.lang.IllegalStateException: JDBCTransactionWriter.commitDelete(): Cannot delete a row.
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitDelete(JDBCTransactionWriter.java:416)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransactions(JDBCTransactionWriter.java:124)
+        at apollo.dataadapter.TransactionOutputAdapter.commit(TransactionOutputAdapter.java:87)
+        at
+        apollo.dataadapter.chado.ChadoAdapter.commitChanges(ChadoAdapter.java:252)
+- i think this is due to the data not being synched with the db -
+hafta reload from db on type change in jdbc mode
+
+merging 2 real genes (non-temp) fails with chosing 2nd gene name -
+fails on name change - does it need an id event - doesnt have one.
+
+merging 2 real genes (non-temp) with 1st gene name succeeds first time - fails on
+redo as it tries to insert a synonym it already has - need to check
+for synonym existence.
+
+GN prefix for temp genes: 
+ok - i figured this - this only happened right after a writeback
+(without doing a load after the write) - the reason is on writeback
+the apollo apparently sets style - and it sets style to the style in
+apollo.cfg DataAdapterInstall NOT the style used on reading which
+comes from chado-adapter.xml - this needs to be fixed - for now i just
+set data adapter install to rice.style - it was tigr-sybil.style and
+that was creating all the problems - thats sufficient for now -
+revisit and fix this [priority low]
+
+
+--------
+SPLITS & MERGES
+-------
+split gene setup is doing synonyms that are not producing
+transactions/evts. this is not problematic at the moment because
+splits are delete & add, but eventually this will matter...
+
+copyTranscriptData is not producing transactions/events - used for
+splits and merges - used for merging transcripts with move exonToTrans
+- is that problematic? - look into - i think its ok for now because we
+do del & add it gets everything
+
+in splitTranscript if splitGene happens then need to remove
+transaction for updating transcript parent of original transcript
+split off as its just an artifact of the process not a real
+transaction and it gums up other things - it causes DrawableFeatureSet
+to spit out: "Did not have drawable for CG:temp2:3R:1195240-1196200-RB"
+chado adapter doesnt even see as it all gets coalesced out due to
+splits being add & del.
+eventual undo i dont think will be happy with it (the original add
+transcript would need to be preserved which i dont think it is)
+so at the moment it just means annoying message from DFS
+ 
+
+-------------------
+lower priority bugs
+-------------------
+
+seq errors(ede) that are not on a exon dont produce transaction
+because AE.setSequencingErrorPositions gets an empty list of exons -
+should a transaction be produced?
+
+need repeatable for funny commentator behavior on deleting comments - 
+sometimes deletes 1st & 2nd comment on deleting 2nd - sima saw this
+
+merging multi transcript genes is messed up - the transcript suffixes
+for ids and names are out of synch - but maybe that doesnt matter -
+only if id & name are different - so maybe its not that critical
+actually the example comes from annot-types I(3)82Fd which already has
+all the transcript id and name suffixes inconsistent to begin with -
+so this is not a new bug (it may not even be true of new data - who knows)
+
+AE.setTransName sets transcript id (guanming added) - this isnt quite right as it
+assume name and id are the same which isnt always the case - need to
+revisit this - and this is a name adapter issue - shouldnt be
+hardwired in annot editor! also i think ids should set names not vice
+versa if possible
+
+id and name changes need to be done with 2 different methods that are coordinated
+need central place so AIE and TM can take advantage as well
+need to test on case where name and id are different (even if id is
+temp id) [low priority]
+
+petide seq setAccessionNo wont set to null. but if the data was
+originally null then cant undo to it - funny situation - but only old
+data is like that - new example.xml never has null pep seq names
+
+sequence errors have no prevalue - AE.setExonSequencingErrorPosition -
+TransactionXML.saveUpdateTransaction requires a prevalue to do the
+transaction. it used throw a null pointer - i changed that to print a
+message and move on (transaction skipped). rice wont be using seq
+errors. fly doesnt use transactions. so this is not critical. i also
+question the need for prevalues in saving to xml. we need the prevaule
+for undo certainly - and there is no undo for seq errors right now so
+thats not critical. but if we are not gonna undo loaded transactions
+(which i think is the case) do we need the prevalue in the saved
+transaction at all?? i think the prevalue in that case would only be
+needed if it was needed to make the update to the db (like an id
+change) - to locate the record to update.
+- also seq errors can be ADD & DEL as well as UPDATE cant they? if its
+a seq error where their wasnt a seq error before isnt that an add not
+an update? if there was a seq error before its an update - and
+removing seq error is DELETE - seq error transactions need to be
+totally redone! but this is low priority as neither rice nor fly need
+them.
+- actually theres no update at all - just add & del is whats allowed
+in apollo - hafta see how these go into chado
+
+for now, and possible ever, coalescing flattens out compound
+transactions - this certainly makes coalescing easier. this means that
+transactions cant or at least shouldnt be undone after coalescing
+which happens at save time. i think this is an ok restriction for
+now. apollo needs to enforce this and im pretty sure it doesnt. if we
+want undo to go beyond saves this will need some work - in particular
+coalescing will need to deal with dipping into compounds.
+
+should compound transactions with only one transaction in them be
+stripped down to just the transaction? this can happen with longest
+orf in ChangeList
+
+if you change translation limits to something new and then back to way
+they were it doesnt coalesce out. i dont know how anal we want to get
+with our coalescing, but its something that doesnt need to be
+committed - but i guess its harmless to commit.
+
+transcript name also changes peptide name - event for that?
+       
+commentator comment text box needs to be refreshed on comment update
+merging 2 real genes (non-temp) fails with chosing 2nd gene name -
+fails on name change - does it need an id event - doesnt have one.
+
+merging 2 real genes (non-temp) with 1st gene name succeeds first time - fails on
+redo as it tries to insert a synonym it already has - need to check
+for synonym existence.
+
+jdbc read feat sets for tiers on gene predics and search hits
+
+the name adapters use annotation change log to get next annot number -
+are annot change logs still functioning? or does this need to be
+replaced by transaction manager - probably
+
+undo of stop codon selenocysteine doesnt always work after type change
+- but i think the bug is actually that it should be greyed out for
+certain types that dont have stop codons - and the change doesnt
+register when in that type - or something like that
+
+switching to remark type on type ids leads to double colon:
+remark::temp1:chr1 from a temp id (not a real id) - same with promoter
+and repeat - its fine with db commit though - just looks silly
+but its the colon from the prefix from the temping - you would hafta
+actively take out one of the colons to make it look pretty
+
+1st type change causes id update - a bit odd - but actually it still
+commits ok surprisingly
+
+escape ' in gene names before doing postgres insert - probably need to
+do this with postgres strings in general.
+
+annot info annot tree not refreshing on gene name change
+
+exception on loading fly with rice.tiers annot-types.xml - caused by
+generating transcript id where doesnt have one - i think
+curSet.getAnnots is null in GA.getAnnot 879. not urgent.
+java.lang.NullPointerException
+        at apollo.util.SeqFeatureUtil.populateFeaturesOfClass(SeqFeatureUtil.java:85)
+        at apollo.util.SeqFeatureUtil.getFeaturesOfClass(SeqFeatureUtil.java:77)
+        at apollo.config.DefaultNameAdapter.nextAnnotNumber(DefaultNameAdapter.java:275)
+        at apollo.config.DefaultNameAdapter.generateId(DefaultNameAdapter.java:76)
+        at apollo.dataadapter.gamexml.GAMEAdapter.getAnnot(GAMEAdapter.java:879)
+        at apollo.dataadapter.gamexml.GAMEAdapter.getAnnotations(GAMEAdapter.java:823)
+        at apollo.dataadapter.gamexml.GAMEAdapter.getCurationSet(GAMEAdapter.java:481)
+        at apollo.gui.DataLoader.getData(DataLoader.java:343)
+        at apollo.gui.DataLoader.getCompositeDataHolder(DataLoader.java:258)
+
+TM needs to deal with description events and dbxref events from merge
+(dont think these will actually happen in rice - dont think
+annot descriptions even occur in fly - but what do i know - just being
+complete)
+
+if you load from both game and jdbc (in either order) the transaction
+printout is doubled - i suspect whats going on is theres 2 transaction
+managers - the old transaction manager has not been cleaned up on
+loading from a different data adapter
+-- this has been fixed in GuiCurationState but its ugly and needs
+refactoring - basci problem is that each data adapter creates its own
+curation states with its own transaction managers - too much to deal
+with right now
+
+merge funny with same exon range - does an unnecasry updating of range
+
+jdbc not reading types. (??? not sure what i meant here ???)
+
+
+so for id undo for flybase im going to create the id transaction in
+the GEP and have the transaction edit the model - and it will be
+compound! - i think this is the way to go - and is actually probably
+easier than the hacks around it - transaction manager will not make a
+delete and insert transaction for the ACE because it will already have
+the transaction in tow - this contrasts with merges from AE that cause
+ID events that get turned into del & add in TM - cant have del & add
+for undo - no way to know thats an id undo - del & add was to hack
+around the fact that rice/chado didnt have way to update to a temp id,
+basically request a new id - i think it does now and this should be
+ammended - but for GeneEditPanel id changes it never gets updated to a
+temp id (or shouldnt at least) so dont have to worry about that issue
+- also rice doesnt allow id editing (its disabled) so we are ok on 2
+accounts - for integrated db del & add will have to be ammended to
+true id updates to temps for merges - since rice is not integrated
+(and no one else is using it) this is not pressing - but thats the
+state of things. - thought this was a good place to note that.
+
+----------------------------------
+no repeatables (may even be fixed)
+----------------------------------
+exception on splitting after much fiddling:
+java.lang.NullPointerException
+        at apollo.gui.drawable.DrawableFeatureSet.repairFeatureSet(DrawableFeatureSet.java:473)
+        at apollo.gui.genomemap.AnnotationView.handleAnnotationChangeEvent(AnnotationView.java:298)
+        at apollo.gui.Controller.handleAnnotationChangeEvent(Controller.java:187)
+        at apollo.editor.ChangeList.fireAnnotationChangeEvent(ChangeList.java:253)
+        at apollo.editor.ChangeList.executeChanges(ChangeList.java:241)
+-- no repeatable - work on getting repeatable
+
+sproatic class cast excpetion on saving to chado after loading from
+game - dont have repeatable
+
+sporatic bug - no repeatable - sometimes adding new transcript doesnt
+produce start and stops - even partials
+
+from ben:
+I added some annotations and added comments to them.  Then when I saved
+to the game_xml file it told me "Transactions cannot be saved".  When I
+reloaded the file that was saved, everything was there (that I could
+tell), even the comments.  
+In order to recreate this error msg, I had to add comments to a new
+annotation.  It also spewed this on the terminal:
+Added new transaction: class apollo.editor.AddTransaction
+Object class: TRANSCRIPT
+Operation: ADD
+Subpart: COMMENT
+Saved XML to data/test_game32.xml
+Save transaction objects: 4
+GAMEAdapter.saveTransactions(): java.lang.NullPointerException
+java.lang.NullPointerException
+        at apollo.dataadapter.gamexml.TransactionXMLAdapter.saveUpdateTransaction(TransactionXMLAdapter.java:289)
+        at apollo.dataadapter.gamexml.TransactionXMLAdapter.save(TransactionXMLAdapter.java:103)
+        at apollo.dataadapter.gamexml.GAMEAdapter.saveTransactionsInGAME(GAMEAdapter.java:365)
+        at apollo.dataadapter.gamexml.GAMEAdapter.saveTransactions(GAMEAdapter.java:321)
+        at apollo.dataadapter.gamexml.GAMEAdapter.commitChanges(GAMEAdapter.java:298)
+        at apollo.dataadapter.AbstractApolloAdapter.commitChanges(AbstractApolloAdapter.java:232)
+        at apollo.dataadapter.AbstractApolloAdapter.commitChanges(AbstractApolloAdapter.java:239)
+        at apollo.dataadapter.gamexml.GAMEAdapterGUI.doOperation(GAMEAdapterGUI.java:137)
+        at org.bdgp.swing.widget.DataAdapterChooser.doCommitWithExceptions(DataAdapterChooser.java:355)
+        at org.bdgp.swing.widget.DataAdapterChooser.doCommit(DataAdapterChooser.java:408)
+        at apollo.gui.DataLoader$SaveAdapterChooser.doCommit(DataLoader.java:701)
+        at org.bdgp.swing.widget.DataAdapterChooser$CommitRunnable.run(DataAdapterChooser.java:132)
+        at java.lang.Thread.run(Thread.java:534)
+-- dont have repeatable for this
+
+-------
+Testing
+-------
+test exon changes - ranges, merges, ...
+
+oh another test case - test what happens when name is edited on new temp gene and
+then committed - is commit using id or name - should be id - might not be
+- so on name change transcript name is updated as theres an explicit
+transcript name event
+peptide name does not get update - this needs to happen - no peptide
+has uniquename but no name - change this?
+exon name doesnt get updated and thats ok - exon name gets it from
+gene uniquename NOT gene name - since exon names are not displayed
+this is ok
+im thinking of having one event and transaction for gene name change -
+and then for chado make the other transactions? is that scadolous or
+sensible - is it bad to have (sub)transactions implicit in a
+transaction - certainly thats true of add gene and add transcripts -
+but how far to take that? then again gene name change always implies
+trans & peptide name change - do we really need to make transcripts
+for it - minimally we have to change the model and change the database.
+- so proteins have uniquenames but they dont have names in rice - but
+they do have names in fly - should they have names in rice?
+-undo name is working(hacked) - if user does 2 or more name edits in a
+row it will undo all of them at once - ok for now - refine this at
+some point
+- actually i think its better to spell out all the events - certainly
+easier for undo - refactor this at some point
+
+
+on add transcript and proteins seem to have their own inserts in ctn (at
+least after split) verify that the ids all come out ok (see failed-commit-3-exons.ctn)
+
+purge gene fires delete gene event - unclear if this may be problematic
+
+-----------------------------------------------
+bugs that i think are fixed but should make sure
+------------------------------------------------
+merge bug - dont have repeatble - on merging multi trans new temp
+genes picking 2nd gene name:(multi-trans-merge)
+Insert: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES (280608, 280607, 19977)
+org.postgresql.util.PSQLException: ERROR: duplicate key violates unique constraint "feature_c1"
+        at org.postgresql.util.PSQLException.parseServerError(PSQLException.java:139)
+        at org.postgresql.core.QueryExecutor.executeV3(QueryExecutor.java:152)
+        at org.postgresql.core.QueryExecutor.execute(QueryExecutor.java:100)
+        at org.postgresql.core.QueryExecutor.execute(QueryExecutor.java:43)
+that constraint is in feature??? - cant repeat this
+it happened again - still dont have a repeatble - but it tried to do
+the same insert twice - need to figure how this happens 
+Insert: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES (280253, 280251, 33)
+Insert: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES (280253, 280251, 33)
+
+merge bug - new multi trans - choose 1st gene name - extra transcript
+does not change name - probably not huge deal but should be fixed
+
+do splitGeneSetup events - i think i got these - should go through it
+thoroughly at some point
+
+transactions not right for splitting new gene - spurious deleting of
+temp gene - i think i got this - check it out
+
+merging:
+- on merging 2 1 exon genes doesnt ask name (goes thru purge gene) -
+nor move identifiers, syns
+- on merging multi trans gene transcript is keeping old gene name -
+not so in last release
+
+id and name edits dont commit to db - not a big deal for rice as rice
+doesnt need this - flybase would eventually need this if they ever
+went with jdbc
+
+split transcript is buggy in multi-transcript. drawable exons getting
+deleted (but not model) - i think this is fixed
+
+gene prediction lacking introns (i think this is after saving to game)
+i think this is fixed
+
+merge exons calls merge gene identifiers
+
+CG30037 split trans ended up with 3 genes - should be 2 - new bug or
+old? when you create them they have no start and stop - if you do cacl
+longest orf they get starts with missing 5 prime and missing 3 prime
+but then they merge ok
+
+
+
+
+----------
+NOT URGENT
+----------
+transaction manager exon update limits and exon update parent sets
+exon id - this should be done by annot editor eventually
+
+
+------------------------
+Annotation change events
+------------------------
+1)Limits need to be propigated from exon to trans and gene
+- bug - splitting exon in ede causing transcript limits event
+well it actually causes 2, A->B and then B->A - the transaction
+coalescer probably just knocks out 1st one - eventually both should be
+not fired - the loc analysis has to happen after the second event -
+this is a matter of taking out some execute changes - necessity for
+undo - annoying at the moment but not killer
+- update trans liimts going out on transcript delete - filter out and
+annot limits - for trans happens after exon delete but before trans
+delete - gene after trans delete but before gene delete
+2!!!)syn,dbxref,comments on trans & gene merges - is this happening on
+gene merge? (consolidateGenes(),copyTranscriptData())
+3) name propigation on gene/trans merges to exons (trans deleted)
+4) split gene - name propigation, limits, copy stuff(2)
+
+start stop of translation (protein start stop) - often effected by
+other changes - do this as post processing step like feat locs?
+should event be translation range rather than separate start and stop??
+- frameShift effects stop (fired as single change)
+- getLongestOrf fires start event but not stop event
+- deleting a gene causes lots of limit changes that are not needed -
+this would be solved by composite event
+- seq error
+
+replace stop in fed changes translation range - should fire event
+(compound - yikes)
+
+replace stop - repaint issue in main window
+
+get rid of replace events and all
+
+moveExonsToTranscript geneMerge case needs examining - is this now
+covered somewhere else?
+
+no seq error if not on transcript
+
+AE.splitGene!
+AE.genesMerged
+AE.endEdit
+
+does updating annotation name need to fire events for changing
+transcript name or is it implicit?
+
+check if old objects need cloning
+
+on transcript merge trans stop not being calculated
+
+null range on annot update
+
+-------------------------------
+Feature editor dialog events...
+-------------------------------
+
+Feature editor dialog - use clone feat to modify original feat (and
+get rid of replace)?
+
+a lot of edits not caught by isChanged and slip by on closing annot
+info window: trans.isProb, finished, stop codon
+
+EdiWinListener calls isChanged(af,af) twice - through isChanged() and
+save() - refactor
+
+AnnotView/drawables need to respond to REPLACE_STOP - or just get a
+repaint or something - stop not repainting to pink on readthrough stop
+in annot info
+
+changing type can mean a delete or add of protein - explicit event for
+this?
+
+sp_status (peptide evaluation) does not currently get
+preserved/saved/committed to apollo datamodel - this is an old feature
+used by berkeley not currently used by harvard - so i guess it should
+be fixed but it nothing urgent
+
+commit and cancel for comments?
+
+synonyms - new gui?
+
+synonyms - read only? only add on merges - no expicit adding -
+configurable - what does rice want - probably the same
+
+ids
+
+id needs an edit button that brings up a little dialog for editing the
+id with commit and cancel - same with synonyms and names
+
+gene id update trigger tran id update since we are using tran ids now
+do we need event or is this implicit? - minimally change model
+
+
+names
+
+add synonym on name change - both gene and transcript
+see FeatureEditorDialog.setUpNameChange - dont do with temp ids
+
+transcript names -> name adapter changeSeqNames changes peptide name
+
+undo name
+
+undo allin FED? - actually dont think we should do this as wont be
+applicable with full mutli window undo
+
+undo "command name"
+
+if save make coalesced trans un-undoable/disabled
+
+take undo out of ACE event - have fed talk to TM - for now straight -
+maybe use an interface later
+
+should "LAST MODIFIED" data in comments box change dynamically
+
+GeneEditPanel.commitNameChange calls GEP.updateTransNames which doesnt
+set model nor fire event - fix this - firing event is questionable -
+its implicit in gene name change - actually i think it does change the
+model just no event which may be ok
+
+do we need to send out events for transcript name as well on gene name
+- or is it implicit? exon name? - for now i guess we are ok since we
+are just deleting and adding new gene on splits with temp id update
+
+----------------------
+----------------------
+
+exception on id editing: - FED needs to put old id in oldString or
+something like that
+arning: editing IDs is considered dangerous!  Proceed at your own risk.
+java.lang.NullPointerException: Can't accept feature name of null. Use RangeI.NO_NAME instead.
+        at apollo.datamodel.Range.setName(Range.java:48)
+        at apollo.editor.TransactionManager.generateTransaction(TransactionManager.java:526)
+        at apollo.editor.TransactionManager.addTransaction(TransactionManager.java:96)
+        at apollo.editor.TransactionManager.handleAnnotationChangeEvent(TransactionManager.java:597)
+        at apollo.gui.Controller.handleAnnotationChangeEvent(Controller.java:187)
+        at apollo.gui.annotinfo.FeatureEditorDialog.fireAnnotEvent(FeatureEditorDialog.java:1138)
+        at apollo.gui.annotinfo.FeatureEditPanel.fireAnnotEvent(FeatureEditPanel.java:272)
+        at apollo.gui.annotinfo.GeneEditPanel.commitIdChange(GeneEditPanel.java:369)
+        at apollo.gui.annotinfo.GeneEditPanel.access$1600(GeneEditPanel.java:35)
+        at apollo.gui.annotinfo.GeneEditPanel$IDFocusListener.updateIdFromGui(GeneEditPanel.java:810)
+        at apollo.gui.annotinfo.GeneEditPanel$IDFocusListener.focusLost(GeneEditPanel.java:782)
+
+
+numbers are appearing for transcipt authors in FED (for mark but not
+guanming)
+
+gene query for rice not working (for mark, fine for guanming). queries
+with negative length for sequence.
+
+optimize addSearchHits jdbc query further - separate query for
+analysis table - separate query for descriptions?
+
+addSearchHits in jdbc reader has to be parameterized so it can handle
+both hits with feat locs(rice) and not(fly) - tigr?
+
+addSearchHits should do != with rank instead of srcfeat != as that
+will filter out self hits
+
+redo?
+
+eventually fed and AE should make transaction, 
+tell transaction to execute which modifies model and fires ACE
+rather than firing ace which makes trans
+this makes transactions responsoble for all modifying of model - 
+in lines with command pattern
+wait but how does this transaction end up in TM? via ACE?
+
+WE NEED TESTS!
+test cases:
+1) serialization
+2) gui to ace to transaction
+3) trans -> write apollo trans xml -> read a t x -> .equals?
+4) trans -> chado xml trans 
+   a) xort validate
+   b) eyeball file
+   c) diff with saved eyeballed file
+5) trans -> chado xml -> xort to chado -> jdbc read -> check values
+from trans
+6) jdbc read -> game save -> game read (jdbc and game jibing)
+
+test that gene and trans feat locs get updated properly on exon
+changes
+
+test that exons have names corresponding to new gene after merges
+
+if i add an exon to a trans that overlaps with another gene - but the
+orf doesnt overlap - no merge - but if i then compute longest orf and
+the orfs overlap no merge popup and no merge - shouldnt there be -
+send out email
+
+null pointer in tran manager when editing 2 annot infos on replace -
+replace should be getting scrapped so probably dont have to worry
+about this:
+java.lang.NullPointerException
+        at apollo.datamodel.Range.overlaps(Range.java:200)
+        at apollo.datamodel.Range.contains(Range.java:185)
+        at apollo.editor.TransactionManager.replaceSeqFeature(TransactionManager.java:112)
+        at apollo.editor.TransactionManager.addTransaction(TransactionManager.java:79)
+        at apollo.editor.TransactionManager.handleAnnotationChangeEvent(TransactionManager.java:249)
+        at apollo.gui.Controller.handleAnnotationChangeEvent(Controller.java:183)
+        at apollo.gui.annotinfo.FeatureEditorDialog.save(FeatureEditorDialog.java:771)
+        at apollo.gui.annotinfo.FeatureEditorDialog.commit(FeatureEditorDialog.java:405)
+        at apollo.gui.annotinfo.FeatureEditorDialog.access$000(FeatureEditorDialog.java:55)
+        at apollo.gui.annotinfo.FeatureEditorDialog$2.actionPerformed(FeatureEditorDialog.java:1013)
+        at javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:1786)
+
+
+
+flip results
+
+Edits that occur that dont result in an event need to have an event
+fired for them. (FeatureEditorDialog,AnnotEditor?)
+
+AnnotationEditor.addExons() and purgeExon changes owner and date of transcript and 
+does not throw an event for this 
+either there should be an event OR the transaction
+writer needs to deal with this
+
+look into this error message:
+class apollo.dataadapter.chado.ChadoAdapterGUI: makeUI() called with unsupported operation org.bdgp.io.IOOperation@158291
+
+I commit a new file called RiceChadoInstance and made some changes in JdbcChadoApater to prevent null exception throwing. To use it, you have to set ChadoInstance to "RICE" in tigrsybil.style. Try with Gene ZZ004400. I can save the opened results as a game file. However, during re-loading, I got the following info:
+Renaming transcript 9629.m03453 to use parent gene name 9629.t03326
+Renaming transcript 9629.m03454 to use parent gene name 9629.t03327
+
+DefaultNameAdapter needs to track its own ids created rather than 
+using the AnnotationChangeLog, but name adapter still needs to get
+last temp id at transaction xml load time.
+
+eventually will need events from start stop changes from type changes - but its not
+even working right yet and type change is currently a delete and add so doesnt even matter
+yet
+
+FeatureEditorDialog debatable changes:
+1)needs to fire events as they occur. Debatable.
+2)FeatureEditorDialog text fields need to be made uneditable and have a
+popup editor from an edit button. A) Name B) Symbol 
+C) Synonyms - could elaborate with an list editing gui
+this may not be necessary if we stick with paradigm of doing commit 
+- which guanming feels is the way to go
+
+
+require breaking into single elements before can change to flat types
+- pull up popup saying as much
+
+architecture change:
+transactions chould be like design pattern commands that do the actual
+editing for exec and undo of model - actually the transaction subpart
+subclass should probably do the actual editing. present architecture:
+
+Editor(FED,AE) edits model -> ACE -> Controller -> TM -> T
+
+new arch
+
+//  editor -> T -> edit model(w TS) ,  editor passes T to -> TM -> ACE -> Controller
+
+even better:
+
+editor -> T -> T.editModel (w TS)
+editor makes ACE (rename TransactionEvent) with Trans and fires to Controller
+Control -> TM...
+
+
+undo now:
+editor -> TM -> TUtil uses T to edit model
+
+new undo:
+editor -> TM -> T (edit model TS)  
+
+
+AnnotationChangeEvents are just events that hold Transaction objects! could even be
+renamed TransactionEvent!
+
+an event holds one or more transaction objects - and that would give
+us compound transactions - wait not quite - compound transactions have
+to be grouped somehow in TransactionManagers stack (to all get undo'd
+together) - still need to think about this

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<chado>
+  <cv op="lookup" id="property type">
+    <name>property type</name>
+  </cv>
+  <cv op="lookup" id="SO">
+    <name>SO</name>
+  </cv>
+  <cvterm op="lookup" id="exon">
+    <cv_id>SO</cv_id>
+    <name>exon</name>
+  </cvterm>
+  <cvterm op="lookup" id="mRNA">
+    <cv_id>SO</cv_id>
+    <name>mRNA</name>
+  </cvterm>
+  <cvterm op="lookup" id="gene">
+    <cv_id>SO</cv_id>
+    <name>gene</name>
+  </cvterm>
+  <organism op="lookup" id="Dmel">
+    <genus>Drosophila</genus>
+    <species>melanogaster</species>
+  </organism>
+  <cvterm op="lookup" id="comment">
+    <cv_id>property type</cv_id>
+    <name>comment</name>
+  </cvterm>
+  <cv op="lookup" id="relationship type">
+    <name>relationship type</name>
+  </cv>
+  <cvterm op="lookup" id="chromosome">
+     <cv_id>SO</cv_id>
+     <name>chromosome</name>
+  </cvterm>
+  <feature op="lookup" id="genomic sequence">
+     <uniquename>2L</uniquename>
+     <organism_id>Dmel</organism_id>
+     <type_id>chromosome</type_id>
+  </feature>
+  <!--      
+  <featureprop op='update'>
+     <feature_id>
+       <feature id="CG9397-RA">
+          <name>1.28-RA</name>
+          <uniquename>CG9397-RA</uniquename>
+          <organism_id>Dmel</organism_id>
+          <type_id>mRNA</type_id>
+      </feature>
+      </feature_id>
+      <value>this is a update test</value>
+      <value op='update'> woook hoooo</value>
+      <rank>1</rank>
+      <type_id>comment</type_id>
+  </featureprop>
+  -->
+  
+  <!-- the all purpose parent gene we will use for examples -->
+   <feature op="lookup" id="uber gene">
+      <uniquename>CG9397</uniquename>
+      <organism_id>Dmel</organism_id>
+      <type_id>gene</type_id>
+   </feature>
+
+  <!--apollo delete exon of a shared or unshared exon-->
+    <feature op="lookup" id="parent transcript">
+       <uniquename>CG9397-RA</uniquename>
+       <organism_id>Dmel</organism_id>
+       <type_id>mRNA</type_id>
+   </feature>
+    <feature op="lookup" id="exon to delete">
+       <uniquename>CG9397:12345-56789</uniquename>
+       <organism_id>Dmel</organism_id>
+       <type_id>exon</type_id>
+   </feature>
+   <cvterm op="lookup" id="part_of">
+       <name>part_of</name>
+       <cv_id>relationship type</cv_id>
+   </cvterm>
+   <feature_relationship op="delete">
+       <!-- have looked up the transcript ID from the database -->
+       <object_id>parent transcript</object_id>
+       <subject_id>exon to delete</subject_id>
+       <type_id>part_of</type_id>
+   </feature_relationship>
+   <!-- check triggers to make sure delete an exon in the feature_relationship type
+        will delete the exon in the feature table -->
+
+   <!-- adding a shared exon -->
+   <!-- reusing the transcript above (and will reuse for all of the examples -->
+   <!-- both organism_id and type_id are from the macros up above -->
+   <feature op="lookup" id="exon to insert">
+       <uniquename>CG9397:12345-56789</uniquename>
+       <organism_id>Dmel</organism_id>
+       <type_id>exon</type_id>
+   </feature>
+   <feature_relationship op="insert">
+      <object_id>parent transcript</object_id>
+      <subject_id>exon to insert</subject_id>
+      <type_id>part_of</type_id>
+   </feature_relationship>
+   
+   <!-- adding a brand new exon -->
+   <feature op="insert" id="brand new exon">
+      <uniquename>CG2222:8888-9999</uniquename>
+      <organism_id>Dmel</organism_id>
+      <type_id>exon</type_id>
+   </feature>
+   <featureloc op="insert">
+      <feature_id>brand new exon</feature_id>
+      <srcfeature_id>genomic sequence</srcfeature_id>
+      <strand>1</strand>
+      <fmin>8888</fmin>
+      <fmax>9999</fmax>
+   </featureloc>
+   <feature_relationship op="insert">
+      <object_id>parent transcript</object_id>
+      <subject_id>brand new exon</subject_id>
+      <type_id>part_of</type_id>
+   </feature_relationship>
+   
+   <!-- next, lets try updating the location of a single unshared exon -->
+   <!-- note that the name of the exon reflects where it was originally -->
+   <feature op="update" id="resized exon">
+      <uniquename>CG2222:8888-9999</uniquename>
+      <organism_id>Dmel</organism_id>
+      <type_id>exon</type_id>
+      <uniquename op="update">CG2222:1111-2222</uniquename>
+   </feature>
+   <featureloc op="update">
+      <feature_id>resized exon</feature_id>
+      <!-- while locgroup and rank are required to fully qualify the lookup
+           we will just use the feature_id and the defaults -->
+      <fmin op="update">1111</fmin>
+      <fmax op="update">2222</fmax>
+      <strand op="update">1</strand>
+   </featureloc>
+   <!-- pretending (for illustration) that resizing the exon also changed
+        the extent of the parent transcript and gene -->
+   <featureloc op="update">
+      <feature_id>parent transcript</feature_id>
+      <fmin op="update">111</fmin>
+      <fmax op="update">2222</fmax>
+      <strand op="update">1</strand>
+   </featureloc>
+   <featureloc op="update">
+      <feature_id>uber gene</feature_id>
+      <fmin op="update">111</fmin>
+      <fmax op="update">2222</fmax>
+      <strand op="update">1</strand>
+   </featureloc>
+      
+   <!-- resized an exon and both the previous and the current version of
+        the exon are shared -->
+   <feature op="lookup" id="previous shared exon">
+      <uniquename>CG2222:8888-9999</uniquename>
+      <organism_id>Dmel</organism_id>
+      <type_id>exon</type_id>
+   </feature>
+   <feature op="lookup" id="current shared exon">
+      <uniquename>CG2222:1111-2222</uniquename>
+      <organism_id>Dmel</organism_id>
+      <type_id>exon</type_id>
+   </feature>
+   <feature_relationship op="update">
+      <object_id>parent transcript</object_id>
+      <subject_id>previous shared exon</subject_id>
+      <subject_id op="update">current shared exon</subject_id>
+      <type_id>part_of</type_id>
+   </feature_relationship>
+     
+     
+</chado>

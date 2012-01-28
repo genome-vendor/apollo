@@ -1,0 +1,136 @@
+// Style for paramecium data, based on game.style
+ImportStyle "game.style" 
+
+GeneticCode "6"
+
+// The name of the types file (a file--expected to be in the user's ~/.apollo directory
+// or in the APOLLO_ROOT/conf directory)
+Types		        "paramecium.tiers"
+
+//HELP WHAT IS NEXT LINE?
+NameAdapterInstall "apollo.config.ParameciumNameAdapter"
+
+// Whether to enable the navigation manager, default false.
+EnableNavigationManager "false"
+
+// List of chromosomes for pulldown menu in navigation bar and load-by-location 
+// data adapter. data adapter gets this from chado-adapter.xml config. navigation
+// is not yet enabled. rice chado only chrom 1 at this point.
+// Chromosomes             "1, 2, 3, 4"
+
+// Whether to show the genes ID field in the annot info editor. default true.
+ShowIdField  "false"
+
+// Whether the transcript symbol should be editable in annotinfo. default true
+TranscriptSymbolEditable "false"
+
+// Whether to show the "Is Dicsitronic?" checkbox in annot info
+ShowIsDicistronicAnnotInfoCheckbox "false"
+
+// Whether to show the "Evauluation of Peptide" drop down list. This is more or less
+// a flybase specific dropdown list, where a peptide analysis program was run and the
+// curator could pick from the results (or something like that)       
+// also whether to show associated menu item in annotation menu
+//ShowEvaluationOfPeptideAnnotInfoList "false"
+ShowEvaluationOfPeptide "false"
+
+// Whether to display/use the isProblematic checkbox in annot info editor
+ShowIsProblematicAnnotInfoCheckbox "true"
+
+// Whether to display/use the "Finished?" checkbox in annot info
+// transcript panel. Indicates work on that transcript is done I think.
+ShowFinishedAnnotInfoCheckbox "true"
+
+// Show table in annot info that displays database cross references
+// for the annotation, that can potentially bring up web pages
+ShowDBCrossRefAnnotInfoTable "true"
+
+// Show "Replace stop codon with selenocysteine" checkbox in annot info
+ShowReplaceStopAnnotInfoCheckbox "false"
+
+// allow for translational frame shift editing in the exon detail editor
+// which also get displayed in the annot info editor. default is "true"
+EnableTranslationalFrameShiftEditing "true"
+
+// Allow for sequence error editing in exon detail editor, which also displays in
+// annot info editor. Default is "true".
+EnableSequenceErrorEditing "true"
+
+// Whether to show/use ownership menu item in annot menu for disowning
+// & owning annots. default is true.
+ShowOwnershipAnnotMenuItem "false"
+
+// Whether to show/use annot menu item for setting transcript
+// finished/unfinished - default is true
+ShowTranscriptFinishedAnnotMenuItem "false"
+
+// Display preferences LINDA
+DisplayPreferences "apollo.config.ParameciumDisplayPrefs"
+
+
+// This will add a menu item to the result popup menu that will bring
+// the link up as the other species (in synteny of course)
+// Presently this is specific to game synteny.
+AddSyntenyResultMenuItem "true"
+
+// Whether to show feature rectangles in 3D (default false).  Generally, programmers think
+// the 3D effect is cool and biologists find it annoying.
+Draw3D                  "true"
+
+
+// Canned comments for use by annotators
+AnnotationComment "Only one EST supports this alternative transcript"
+AnnotationComment "EST data support existence of multiple transcripts"
+AnnotationComment "Unconventional splice site postulated"
+AnnotationComment "GC splice donor site postulated"
+AnnotationComment "Gene prediction data only"
+AnnotationComment "5' terminus extended to first start codon; no experimental data confirming this prediction"
+AnnotationComment "3' terminus extended to first stop codon; no experimental data confirming this prediction"
+AnnotationComment "EST data suggest additional 3' exon(s)"
+AnnotationComment "EST data suggest additional 5' exon(s)"
+AnnotationComment "Flag Cambridge: gene merge (internal view only)" 
+AnnotationComment "Flag Cambridge: gene split (internal view only)"
+AnnotationComment "Evidence indicates that 3' UTR overlaps 5' UTR of downstream gene; extends to coordinate AE00 :  (based upon 3' extent of  )"
+AnnotationComment "Although this gene model is supported by multiple pieces of evidence, the computed ORF is questionable because it is much smaller than the predicted transcript"
+AnnotationComment "tRNA type: putative tRNA-___ <fill aminoac.> implied by tRNAScan-SE analysis. (internal view only)"
+AnnotationComment "Multiple ESTs homologous to non-coding strand of this gene"
+AnnotationComment "DGC clone appears problematic:  incomplete CDS"
+AnnotationComment "DGC clone appears problematic:  unspliced intron"
+AnnotationComment "DGC clone appears problematic:  chimeric"
+AnnotationComment "DGC clone appears problematic:  contains transposon sequences"
+AnnotationComment "First Priority for Reannotation (internal view only)"
+AnnotationComment "Transposon inserted in intron" 
+AnnotationComment "Gene split based on BLASTX data"
+AnnotationComment "Gene split based on EST data"
+AnnotationComment "Gene merge based on BLASTX data; no experimental evidence for splice sites"
+AnnotationComment "Gene merge based on EST data"
+AnnotationComment "Flag Cambridge: new annotation == existing FB gene FBgn (internal view only)"
+AnnotationComment "Flag Cambridge: discistronic gene (internal view only)"
+AnnotationComment "Flag Cambridge: DGC clone not consistent with gene report (internal view only)"
+AnnotationComment "Flag Cambridge: DGC clone not consistent with gene report (internal view only)"
+AnnotationComment "EST data support existence of multiple transcripts due to variable use of mini-exons"
+AnnotationComment "EST data support existence of multiple transcripts due to variable use of 5' exons"
+AnnotationComment "EST data support existence of multiple transcripts due to variable use of poly-A sites"
+AnnotationComment "5' exon not determined (no ATG translation start identified)"
+AnnotationComment "Unconventional translation start"
+AnnotationComment "Translation start as per FBrf"
+AnnotationComment "EST data support dicistronic gene model"
+AnnotationComment "May be component of a dicistronic gene; available data inconclusive"
+AnnotationComment "Hand editing required (internal view only)"
+AnnotationComment "Probable mutation in sequenced strain: premature stop"
+AnnotationComment "Probable mutation in sequenced strain:  [other]"
+AnnotationComment "Known mutation in sequenced strain"
+AnnotationComment "EST <fill clone name> from opposite strand used to extend gene model"
+AnnotationComment "Although multiple ESTs support this model, read-through of predicted intron results in shorter CDS"
+AnnotationComment "Putative repetitive region: the region matches several EST and P insertions that map to various locations in the genome"
+AnnotationComment "CDS edit:  sequencing error (internal view only)"
+AnnotationComment "CDS edit:  possible [] stop codon suppression could cause production of [] residue protein (internal view only)"
+AnnotationComment "CDS edit:  mutation in sequenced strain (internal view only)"
+AnnotationComment "CDS edit:  [other]"
+AnnotationComment "Short CDS OK (internal view only)"
+AnnotationComment "Shares UTR: 5' UTR shared with downstream gene"
+AnnotationComment "Shares UTR: 3' UTR shared with downstream gene"
+AnnotationComment"Transposon overlap OK (internal view only)"
+
+
+// Be sure that the last line of this file ends with a newline.

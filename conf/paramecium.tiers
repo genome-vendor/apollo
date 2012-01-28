@@ -1,0 +1,498 @@
+# This file describes to Apollo how different features should be displayed.  
+# There are two types of records: tier records and type lines.
+# Tiers are groupings of one or more types to be displayed together.
+
+# [Tier] fields and the default values
+# label :  false  (Group tier label)
+# visible : true
+# expanded : false
+# sorted : false
+# maxrows : maximum number of rows to show for this tier--default 0 means all
+# labeled : false
+
+# The order in which tiers are listed in this file determines 
+# their vertical display order
+# (the first tier is displayed closest to the central axis).
+# The fields for a Type or Tier record can appear in any order, one per line.
+
+# TYPE fields
+#  tiername : the tier this type appears in
+#  typename : label for this type
+#  resulttype : data type(s) to be included this type
+#  color : can be a standard color name (e.g. red) or an R,G,B triplet (default gray)
+#  utr_color : color used for utr regions. Only works with
+#              DrawableGeneFeatureSet. (default black)
+#  usescore : default true  # use score to set the height of this glyph
+#  minscore : 0 # minimum score for scaling height
+#  maxscore : 100 # maximum score for scaling height
+#  glyph : what glyph to use (mandatory).  Current choices include
+# DrawableGeneFeatureSet (exons connected by peaked introns),
+# DrawableResultFeatureSet (exons connected by straight lines),
+# DoubleHeadedArrow, Triangle, Zigzag, ThinRectangle.
+#  column : names of column(s) in detail table.  Choices include
+# include GENOMIC_RANGE, GENOMIC_LENGTH, MATCH_RANGE, MATCH_LENGTH,
+# SCORE, NAME, READS.  You can also specify column names not in all caps
+# that correspond to properties of the features present in the data (e.g.
+# query_frame).
+#  sortbycolumn : row order in table determined by this column
+#  reversesort : Sort table rows in reverse order?  (default false)
+#  groupby : GENE method to use for grouping features (GENE, SINGLE, HOMOLOGY)
+#  weburl : optional, URL for pulling up web pages about this type of result
+#  freshdate : date after which sequences of this type are considered "new" 
+# (the dates are found in the sequence descriptions)
+#  idformat : format of IDs for this kind of annotation (regexp, e.g. CG\d+)
+#  annot_type : for annotations, the result types that generate this type of annotation
+
+# DEFAULT type sets defaults for other types
+[Type]
+typename : DEFAULT
+usescore : false
+glyph : DrawableGeneFeatureSet
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+overlap_method : NoOverlap
+name_method : ParameciumNameAdapter
+weburl : http://paramecium.cgm.cnrs-gif.fr/cgi-bin/locus.pl?locus=
+
+[Tier]
+tiername : Annotation
+visible : true
+expanded : true
+maxrows : 0
+labeled : true
+
+[Type]
+tiername : Annotation
+typename : gene
+resulttype : gene
+resulttype : transcript
+resulttype : exon
+color : 51,102,255
+problematic_color : 255,255,0
+finished_color : 0,255,0
+# Default utr_color is "transparent" (same as AnnotationBackgroundColor defined in game.style)
+utr_color : 176,224,230
+usescore : false
+glyph : DrawableGeneFeatureSet
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+overlap_method : NoOverlap
+
+
+[Type]
+tiername : Annotation
+typename : pseudogene
+resulttype : pseudogene
+glyph : DrawableGeneFeatureSet
+color : 153,153,255
+usescore : false
+scorethreshold : -1.0
+column : GENOMIC_RANGE
+column : ID
+reversesort : false
+groupby : GENE
+overlap_method : NoOverlap
+
+[Tier]
+tiername : Problematic Genes
+visible : true
+
+[Type]
+tiername : Problematic Genes
+typename : Assembly Error
+resulttype : Presence_Of_INDELs:Presence_Of_INDELs
+usescore : true
+color : 220,200,0
+glyph : DrawableResultFeatureSet
+column : NAME
+column: GENOMIC_RANGE
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+
+[Type]
+tiername : Problematic Genes
+typename : Different Ohnologs
+resulttype : Different_Ohnologs:Different_Ohnologs
+usescore : true
+color : 220,100,0
+glyph : DrawableResultFeatureSet
+column : NAME
+column: GENOMIC_RANGE
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+
+[Tier]
+tiername : Gene Prediction
+visible : true
+expanded : true
+labeled : true
+
+[Type]
+tiername : Gene Prediction
+typename : Gaze
+resulttype : Gaze
+color : 255,0,0
+usescore : false
+glyph : DrawableResultFeatureSet
+column : SCORE
+column : GENOMIC_RANGE
+column : query_frame
+sortbycolumn : GENOMIC_RANGE
+synteny_link_type: SELF
+synteny_link_level: PARENT
+synteny_link_match_on: ID
+
+[Tier]
+tiername : Remapped Manual Annotations
+visible : true
+expanded : true
+labeled : false
+
+[Type]
+tiername : Remapped Manual Annotations
+typename : Perfect Remapped Manual Annotations
+resulttype : Remap_Manual_Annot_Perfect:Remap_Manual_Annot_Perfect
+color : 170,0,255
+glyph : DrawableResultFeatureSet
+column : SCORE
+column : GENOMIC_RANGE
+column : query_frame
+
+[Type]
+tiername : Remapped Manual Annotations
+typename : Remapped Manual Annotations With Mismatches
+resulttype : Remap_Manual_Annot_With_Mismatches:Remap_Manual_Annot_With_Mismatches
+color : 130,0,200
+glyph : DrawableResultFeatureSet
+column : SCORE
+column : GENOMIC_RANGE
+column : query_frame
+
+[Type]
+tiername : Remapped Manual Annotations
+typename : Remapped Manual Annotations With Gaps
+resulttype : Remap_Manual_Annot_With_Gaps:Remap_Manual_Annot_With_Gaps
+color : 100,0,150
+glyph : DrawableResultFeatureSet
+column : SCORE
+column : GENOMIC_RANGE
+column : query_frame
+
+[Type]
+tiername : Remapped Manual Annotations
+typename : Remapped Manual Annotations With Bad Structure
+resulttype : Remap_Manual_Annot_With_Bad_Structure:Remap_Manual_Annot_With_Bad_Structure
+color : 70,0,100
+glyph : DrawableResultFeatureSet
+column : SCORE
+column : GENOMIC_RANGE
+column : query_frame
+
+[Tier]
+tiername : EST
+expanded : false
+labeled : false
+visible : true
+
+[Type]
+tiername : EST
+typename : EST
+resulttype : cDNA:cDNA
+color : 100,50,0
+usescore : true
+minscore : 0
+maxscore : 100
+glyph : DrawableResultFeatureSet
+column : SCORE 
+column : expect 
+column : query_frame 
+column : GENOMIC_RANGE 
+column : MATCH_RANGE 
+column : GENOMIC_LENGTH 
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+
+[Tier]
+tiername : GenWise/Uniprot
+expanded : false
+labeled : false
+visible : true
+
+[Type]
+tiername : GenWise/Uniprot
+typename : GenWise/Uniprot matches
+resulttype : GWSUNI:GWSUNI
+color : 0,255,0
+usescore : true
+minscore : 0
+maxscore 100
+glyph : DrawableResultFeatureSet
+column : NAME
+column : SCORE
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+
+[Tier]
+tiername : Reciprocal best match Tetrahymena
+expanded : false
+labeled : false
+visible : true
+
+[Type]
+tiername : Reciprocal best match Tetrahymena
+typename : Reciprocal best match Tetrahymena
+resulttype : BLASTP_TETRA:BLASTP_TETRA
+color : 0,0,255
+usescore : true
+minscore : 0
+maxscore 100
+glyph : DrawableResultFeatureSet
+column : NAME
+column : SCORE
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+
+[Tier]
+tiername : Reciprocal best match with Other organisms
+expanded : false
+labeled : false
+visible : true
+
+[Type]
+tiername : Reciprocal best match with Other organisms
+typename : Reciprocal best match with Other organisms
+resulttype : BRH:BRH
+color : 150,0,150
+usescore : true
+minscore : 0
+maxscore 100
+glyph : DrawableResultFeatureSet
+column : NAME
+column : SCORE
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+
+
+[Tier]
+tiername : Protein domains
+expanded : false
+labeled : false
+visible : true
+
+
+
+[Type]
+tiername : Protein domains
+typename : Interpro Protein domains
+resulttype : InterproScan:InterproScan
+color : 255,255,0
+usescore : false
+minscore : 0
+maxscore 100
+glyph : DrawableResultFeatureSet
+column : NAME
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+weburl : http://www.ebi.ac.uk/interpro/IEntry?ac=
+
+[Tier]
+tiername : Sequencing error
+visible : true
+
+[Type]
+tiername : Sequencing error
+typename : Sequencing error
+resulttype : INDELS:INDELS
+usescore : false
+color : 255,1,130
+glyph : DrawableResultFeatureSet
+column : NAME
+column: GENOMIC_RANGE
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+
+[Type]
+tiername : Sequencing error
+typename : GAPS
+resulttype : GAPS:GAPS
+usescore : false
+color : 255,1,130
+glyph : DrawableResultFeatureSet
+column : NAME
+column: GENOMIC_RANGE
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+
+[Tier]
+tiername : Reads
+visible : true
+
+[Type]
+tiername : Reads
+typename : Reads
+resulttype : Read_mapping:Read_mapping
+color : 255,230,100
+glyph : DrawableResultFeatureSet
+column : SCORE
+column : GENOMIC_RANGE
+column : query_frame
+
+[Tier]
+tiername : Synteny
+visible : true
+
+#[Type]
+#tiername : Synteny
+#typename : Systeny WGD1
+#resulttype : WGD1:WGD1
+#color : 100,250,100
+#usescore : false
+#minscore : 0
+#maxscore : 100
+#glyph : DrawableResultFeatureSet
+#column : NAME
+#column : SCORE
+#column: GENOMIC_RANGE
+#column : MATCH_LENGTH
+#sortbycolumn : GENOMIC_RANGE
+#groupby : HOMOLOGY
+
+[Type]
+tiername : Synteny
+typename : Synteny with Nucmer analysis
+resulttype : Nucmer:Nucmer
+color : 180,250,100
+usescore : true
+minscore : 0
+maxscore : 100
+glyph : DrawableResultFeatureSet
+column : NAME
+column : SCORE
+column: GENOMIC_RANGE
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+synteny_link_type: SELF
+synteny_link_level: CHILD
+synteny_link_match_on: RANGE
+
+
+[Tier]
+tiername : Start Codon
+visible : true
+
+[Type]
+tiername : Start Codon
+typename : startcodon_frame1
+resulttype : codons
+resulttype : startcodon_frame1
+color : 34,220,34
+usescore : false
+glyph : SiteCodon
+column : NAME 
+column : GENOMIC_RANGE
+sortbycolumn : NAME
+
+[Type]
+tiername : Start Codon
+typename : startcodon_frame2
+resulttype : codons
+resulttype : startcodon_frame2
+color : 34,220,34
+usescore : false
+glyph : SiteCodon
+column : NAME 
+column : GENOMIC_RANGE
+sortbycolumn : NAME
+
+[Type]
+tiername : Start Codon
+typename : startcodon_frame3
+resulttype : codons
+resulttype : startcodon_frame3
+color : 34,220,34
+usescore : false
+glyph : SiteCodon
+column : NAME 
+column : GENOMIC_RANGE
+sortbycolumn : NAME
+
+[Tier]
+tiername : Stop Codon
+visible : true
+
+[Type]
+tiername : Stop Codon
+typename : stopcodon_frame1
+resulttype : codons
+resulttype : stopcodon_frame1
+color : red
+usescore : false
+glyph : SiteCodon
+column : NAME 
+column : GENOMIC_RANGE
+sortbycolumn : NAME
+
+[Type]
+tiername : Stop Codon
+typename : stopcodon_frame2
+resulttype : codons
+resulttype : stopcodon_frame2
+color : red
+usescore : false
+glyph : SiteCodon
+column : NAME 
+column : GENOMIC_RANGE
+sortbycolumn : NAME
+
+[Type]
+tiername : Stop Codon
+typename : stopcodon_frame3
+resulttype : codons
+resulttype : stopcodon_frame3
+color : red
+usescore : false
+glyph : SiteCodon
+column : NAME 
+column : GENOMIC_RANGE
+sortbycolumn : NAME
+
+
+
+[Tier]
+tiername : Sequence selection
+
+[Type]
+tiername : Sequence selection
+typename : Sequence selection
+resulttype : Sequence selection
+color : orange
+usescore : false
+glyph : DrawableResultFeatureSet
+column : NAME
+sortbycolumn : NAME
+
+
+
+

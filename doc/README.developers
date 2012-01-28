@@ -1,0 +1,292 @@
+$Id: README.developers,v 1.5 2007/05/24 03:17:28 scottcain Exp $
+
+Checking out apollo from SourceForge CVS:
+=========================================
+setenv CVS_RSH ssh
+cvs -z3 -d:ext:USERNAME@gmod.cvs.sourceforge.net:/cvsroot/gmod checkout apollo
+
+If you don't have an account at SourceForge, you can check out a anonymous copy:
+
+cvs -d:pserver:anonymous@gmod.cvs.sourceforge.net:/cvsroot/gmod login
+cvs -d:pserver:anonymous@gmod.cvs.sourceforge.net:/cvsroot/gmod -d apollo checkout apollo
+
+To check out a version from a specific date:
+
+cvs -z3 -d:ext:USERNAME@gmod.cvs.sourceforge.net:/cvsroot/gmod checkout -D 01/26/2004 -d apollo.Jan26 apollo
+
+If you don't want to have to type your SourceForge password every time
+you do a cvs command, read this:
+
+http://sourceforge.net/docman/display_doc.php?docid=761&group_id=1#overview
+
+config files--default and personal
+==================================
+To start up, Apollo needs to read a config file, which is usually called
+apollo.cfg (Ensembl's is called ensembl.cfg).  It first reads the
+apollo.cfg in APOLLO_ROOT/conf; it then looks in $HOME/.apollo, and if
+there is an apollo.cfg there (modifying some of the settings in 
+APOLLO_ROOT/conf/apollo.cfg) that one is read next.
+The style files follow a similar protocol:  the default ones in
+APOLLO_ROOT/conf are read first; then any modifications in the user's
+personal style files from $HOME/.apollo are applied.
+The tiers files work a bit differently, since they cannot be combined:
+Apollo looks for them first in $HOME/.apollo, and if they are not found
+there, it uses the default ones in APOLLO_ROOT/conf.
+Please see the userguide for more information about Apollo's very
+complicated config files.
+
+Setting which Java apollo uses
+==============================
+(Note that this applies only when you launch Apollo via the bin/apollo
+script, not when you use the version made by the installer.)
+If you have many versions of Java on your system and you want bin/apollo
+to use a certain version, you can change the JavaPath line in your
+apollo.cfg:
+
+On Solaris, java is /bin/java, thus JavaPath is just "/"
+On Linux, java is /usr/lib/java/bin/java, thus JavaPath is /usr/lib/java
+On Mac OS X, java is /usr/bin/java, thus JavaPath is /usr
+
+(It would probably make more sense to have JavaPath be the actual path to
+java, e.g.  /usr/lib/java/bin/java, but that would make this apollo.cfg
+incompatible with the Berkeley version.)
+
+Quick start
+===========
+To run apollo with the jar file supplied, run bin/apollo (which is in APOLLO_ROOT).
+It will let you choose a data adapter.
+
+To run on the GAME XML example file:
+
+  ./bin/apollo -i game -f data/example.xml
+
+To run on the example Sanger GFF file (if you're in APOLLO_ROOT)
+
+  ./bin/apollo -f data/chr2.200000-400000.gff -s data/chr2.200000-400000.fasta
+
+Type "apollo --help" for a full list of command-line options.
+
+Running without remaking the jar
+================================
+If you're a developer and want to run apollo directly from the class files without
+having to constantly remake the jar, use the "-c" argument to the bin/apollo script:
+
+       bin/apollo -c -i game -f data/example.xml
+
+Compiling Apollo Java code
+==========================
+Apollo should compile with Java version 1.4.  It no longer compiles with
+1.3 or 1.2.  (There are apparently some issues with compiling Apollo with
+JDK 1.5.)
+
+There is a Makefile in src/java.  To compile Apollo:
+ setenv APOLLO_ROOT /dir/where/you/have/apollo/installed
+
+Note that APOLLO_ROOT should NOT be set to the src/java directory--it
+should be the main Apollo directory, the parent of the src directory.
+
+ cd src/java
+ make jar
+
+If you've compiled earlier versions of apollo and then done an update,
+it's a good idea to say "make clean" before "make jar" to clean out the
+old class files.
+
+You can also use Ant (which is much faster than Make) to compile the
+Apollo code.  Ant uses the file src/java/build.xml.  Ant is available
+free from http://ant.apache.org/.
+
+TypesPanel
+====================
+When you select/deselect show in TypesPanel: 
+PropertyPanel calls TierProperty(setVisible(state).
+TierProperty notifies PropertyScheme observer which notifies
+TypesObserver via Oberver/Observable.
+TypesObserver fires handleTiersChangedEvent to Controller.
+Controller propigates to all TypesChangedListeners.
+FlexibleFeatureTierManager is a TypesChangedListener.
+FlexibleFeatureTierManager calls TierManager.doLayoutTiers()
+which calls FlexibleFeatureTierManager.layoutTiers()
+which calls CollapsedFeatureTierManager.layoutTiers()
+CFTM puts features into tiers.
+FFTM checks for tier visibility amongst other things, only adds tier
+if tier property is visible.
+
+At draw time FeatureView.paintView calls FV getVisualFeatures 
+which call FeatureTierManager getVisibleFeatures. FeatureTierManager
+uses TierManager.getNumVisible to figure how many tiers are
+visible. So if a tier is not visible its features will not be
+retrieved and they won't be drawn.
+
+Getting a curation set to the views
+===============================
+init time - getting a curation set to the views:
+ApolloRunner gets an ApolloDataI from the DataLoader.
+ApolloDataI is queried whether its single or multi-species.
+
+Single species:
+An ApolloFrame is constructed 
+   calls AF.jbinit which contructs a StrandedZoomableApolloPanel
+   SZAP constructor calls its jbinit
+
+ApolloFrame.loadGUI is called with the new
+CurationSet. 
+-> AF.setCurationSet
+-> StrandedZoomableApolloPanel.setCurationSet
+-> SZAP.setFeatureSet (prints "Making feature set" messages)
+-> FeatureView.setFeatureSet
+-> FlexibleFeatureTierManager is created
+-> superclass ScrollableTierView.setTierManager called with new FFTM 
+
+Multi species:
+CompositeApolloFrame is constructed with ApolloDataI
+ApolloDataI is either a CompositeDataHolder of a composite
+CurationSet. If its a composite CurationSet a CompositeDataHolder is
+created from the compostie CurationSet (it essentially wraps it)
+->initialiseApolloPanels is called
+->loadDataIntoPanels called with CompositeDataHolder. 
+CompositeDataHolders curation sets are iterated
+on. The StrandedZoomableApolloPanel for each species is
+retrieved from the instance variables hash map and SZAP.setCurationSet
+is called like the single species above.
+
+DrawableSeqFeature
+=============================
+DrawableSeqFeature.drawUnselected stack trace, regular apollo:
+
+        at apollo.gui.drawable.DrawableSeqFeature.drawUnselected(DrawableSeqFeature.java:526)
+        at apollo.gui.drawable.DrawableSeqFeature._draw(DrawableSeqFeature.java:272)
+        at apollo.gui.drawable.DrawableSeqFeature.draw(DrawableSeqFeature.java:181)
+        at apollo.gui.drawable.DrawableFeatureSet.draw(DrawableFeatureSet.java:381)
+        at apollo.gui.genomemap.FeatureView.paintView(FeatureView.java:128)
+        at apollo.gui.genomemap.FeatureView.paintView(FeatureView.java:89)
+        at apollo.gui.genomemap.SplitterView.paintView(SplitterView.java:187)
+        at apollo.gui.genomemap.LaidoutViewContainer.paintView(LaidoutViewContainer.java:115)
+        at apollo.gui.genomemap.SplitterView.paintView(SplitterView.java:184)
+        at apollo.gui.genomemap.ApolloPanel.paintComponent(ApolloPanel.java:625)
+        at javax.swing.JComponent.paint(JComponent.java:808)
+        at javax.swing.JComponent.paintChildren(JComponent.java:647)
+        at javax.swing.JComponent.paint(JComponent.java:817)
+        at apollo.gui.genomemap.StrandedZoomableApolloPanel.paint(StrandedZoomableApolloPanel.java:1410)
+        at javax.swing.JComponent.paintWithOffscreenBuffer(JComponent.java:4795)
+        at javax.swing.JComponent.paintDoubleBuffered(JComponent.java:4748)
+        at javax.swing.JComponent._paintImmediately(JComponent.java:4692)
+        at javax.swing.JComponent.paintImmediately(JComponent.java:4495)
+        at javax.swing.RepaintManager.paintDirtyRegions(RepaintManager.java:410)
+        at javax.swing.SystemEventQueueUtilities$ComponentWorkRequest.run(SystemEventQueueUtilities.java:117)
+        at java.awt.event.InvocationEvent.dispatch(InvocationEvent.java:178)
+...
+
+Similar for synteny:
+        at apollo.gui.drawable.DrawableSeqFeature.drawUnselected(DrawableSeqFeature.java:526)
+        at apollo.gui.drawable.DrawableSeqFeature._draw(DrawableSeqFeature.java:272)
+        at apollo.gui.drawable.DrawableSeqFeature.draw(DrawableSeqFeature.java:181)
+        at apollo.gui.drawable.DrawableFeatureSet.draw(DrawableFeatureSet.java:381)
+        at apollo.gui.genomemap.FeatureView.paintView(FeatureView.java:128)
+        at apollo.gui.genomemap.FeatureView.paintView(FeatureView.java:89)
+        at apollo.gui.genomemap.SplitterView.paintView(SplitterView.java:184)
+        at apollo.gui.genomemap.LaidoutViewContainer.paintView(LaidoutViewContainer.java:115)
+        at apollo.gui.genomemap.SplitterView.paintView(SplitterView.java:184)
+        at apollo.gui.genomemap.ApolloPanel.paintComponent(ApolloPanel.java:625)
+        at javax.swing.JComponent.paint(JComponent.java:808) 
+        at javax.swing.JComponent.paintChildren(JComponent.java:647)
+        at javax.swing.JComponent.paint(JComponent.java:817)
+
+        at apollo.gui.genomemap.StrandedZoomableApolloPanel.paint(StrandedZoomableApolloPanel.java:1410)
+
+These next 3 are all from SyntenyPanel's JSplitPane
+      at javax.swing.JComponent.paintChildren(JComponent.java:647) (JSplitPane super)
+      at javax.swing.JSplitPane.paintChildren(JSplitPane.java:1021)
+      at javax.swing.JComponent.paint(JComponent.java:817) (JSplitPane super)
+
+Next 2 JComponenta are the super class of SyntenyPanel:
+      at javax.swing.JComponent.paintChildren(JComponent.java:647) (SyntenyPanel)
+      at javax.swing.JComponent.paint(JComponent.java:817) (SyntenyPanel)
+
+        at javax.swing.JComponent.paintChildren(JComponent.java:647)
+        at javax.swing.JSplitPane.paintChildren(JSplitPane.java:1021)
+        at javax.swing.JComponent.paint(JComponent.java:817)
+        at javax.swing.JComponent.paintChildren(JComponent.java:647)
+        at javax.swing.JComponent.paint(JComponent.java:817)
+        at javax.swing.JComponent.paintChildren(JComponent.java:647)
+        at javax.swing.JComponent.paint(JComponent.java:817)
+        at javax.swing.JLayeredPane.paint(JLayeredPane.java:557)
+        at javax.swing.JComponent.paintChildren(JComponent.java:647)
+        at javax.swing.JComponent.paintWithOffscreenBuffer(JComponent.java:4802)
+        at javax.swing.JComponent.paintDoubleBuffered(JComponent.java:4748)
+        at javax.swing.JComponent.paint(JComponent.java:798)
+        at java.awt.GraphicsCallback$PaintCallback.run(GraphicsCallback.java:21)
+
+Setting new Style
+========================
+Clearing out old data, setting new style:
+In a data adapters getCurationSet they call super.clearOldData()
+super is AbstractApolloAdapter
+AAA.clearOldData sets the new style with Config.setStyle(getStyle())
+AAA then calls its DataListeners with the newData() method
+    (data listeners are added in ApolloFrame.addAsDataAdapterListener
+     which is called by ApolloRunner.loadMultiSpecies and
+     loadSingleSpecies which is after DataLoader.loadData - problem)
+ApolloFrame has an inner class ClearOutDataLIstener which is a
+            DataListener to AAA
+ClearOutDataListener calls StrandedZoomableApolloPanel.clearData()....
+
+
+The Synteny adapter
+=============================
+There are currently 3 different flavors of synteny adapters
+corresponding to gff, ensj, and game. gff loads links from a file
+provided by the user. game gets its link data from the species data
+itself - theres no separate source for the link data. How to get links
+from the game species data is configured in the tiers file (see
+synteny-game.tiers). ensj gets its links from a separate compara
+database. In ensj you can request an entry of interest on 1 species and
+it can then query compara for links to other species, and have the
+user choose. In game, you can load one species, and the linked
+features of that species can be used to load other species, as the
+information for loading other species is in the link itself. gff
+doesn't have anything clever about retrieving links, everything has to
+be explicitly set up by user - 2 species files and the link file
+between them.
+
+So how are these 3 ways sorted out by the synteny adapter?
+
+SyntenyAdapterGUI first queries its actNaively boolean which is set by
+the style param:
+
+ NaiveCrossSpeciesDataLoading "true"
+
+The default for this is false. This is presently only set in synteny
+gff styles, as thats what its for. actNaively means just blindly load
+the species and link data given to me, and don't try to do anything
+clever with the links. The species and link data is then loaded, and
+that's how the gff explicit case is handled.
+
+If its not "acting naively", the SyntenyAdapterGUI then queries if the
+adapter is of the game ilk - whether the species data holds the link
+data. The SyntenyAdapter is queried with speciesHasLinks(). The
+SyntenyAdapter then queries its subadapter with hasLinks(). The
+default for hasLinks in AbstractApolloAdapter is false. The
+GAMEAdapter overrides hasLinks and returns true. Presently the
+GAMEAdapter is the only adapter that overrides and returns true, as
+its the adapter that has been set up for providing links from its
+species data. In the future, other adapters could take on this
+functionality, as its not hardwired to game (as it was initially).
+
+If it's not acting naively and the species does not have links, then
+SyntenyAdapterGUI goes into ensj mode, and uses the ensj compara
+database to get all linking info.
+
+
+Testing
+======================
+At this point testing is extremely limited - nascent stages. Currently
+there are just a few tests, for example:
+
+- gene name undo
+- does a gene split - tests split name, tests for redundant gene synonyms and
+              redundant transcript synonyms
+
+Basically we are just adding tests as we hit bugs (we
+definitely need more tests!!!). To run just use the -t for the apollo
+script (with -c to run off classfiles).

@@ -1,0 +1,43 @@
+Here are some of the new additions since release 1.4.0:
+
+Put in red/green markers at axis to show where sequence/region ends.
+
+Separate canned comment lists for genes and transcripts.
+(They appear in game.style as AnnotationComments and TranscriptComments.)
+
+When tier is collapsed, don't show labels (even if labeling is turned
+on).
+
+Bev would like to start with smaller evidence panel.  Make this a
+configurable option (EvidencePanelHeight--default is 200; sensible values
+are between 150 and 350).
+
+Visual flag for non-standard spice sites (not GT/AG).
+
+Sequence window now lets you adjust +/- range for corresponding genomic
+sequence (code contributed by Sylvain Foret <foret@rsbs.anu.edu.au>)
+
+
+And here are some of the major bug fixes:
+
+Synteny GFF example--all red features come up labeled no_name (used to
+have ENST names)
+(Vivek says this is happening with a lot of the EnsJ features, too)
+
+If there is no ID format defined for a type, make sure annot info editor
+doesn't complain that ID is not in legal format.
+
+If you say "merge transcripts" to merge transcripts from different genes,
+it asks you if you want to merge the genes, but if you say "Don't merge",
+too bad, it merges them anyway!  It should ask earlier, when you can
+still abort the operation.
+(Same issue with "move exons to transcript".)
+
+Vertical scroll to selection working better (works from Annotation menu,
+but there are still some issues selecting result exons and zooming to
+selected).
+
+Frame-shifting bug noticed by Andy has been fixed.
+
+When using the 'adjust for sequencing error' functionality and you choose
+to insert or delete a base the transcript lengths now change as they should.

@@ -1,0 +1,324 @@
+[Tier]
+tiername : Annotation
+expanded : true
+labeled : true
+curated : true
+warnonedit : false
+
+# Default utr_color is "transparent" (same as AnnotationBackgroundColor defined in game.style)
+# (So if you change AnnotationBackgroundColor, be sure to change utr_color to match!)
+[Type]
+label : gene
+tiername : Annotation
+datatype : gene
+datatype : transcript
+datatype : exon
+glyph : DrawableGeneFeatureSet
+color : 51,102,255
+utr_color : 176,224,230
+overlap_method : ORF_Overlap
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+number_of_levels : 3
+
+[Type]
+label : tRNA
+tiername : Annotation
+datatype : tRNA
+glyph : DrawableResultFeatureSet
+color : 0,204,0
+overlap_method : ORF_Overlap
+column : GENOMIC_RANGE
+column : ID
+sortbycolumn : GENOMIC_RANGE
+
+[Type]
+label : snRNA
+tiername : Annotation
+datatype : snRNA
+glyph : DrawableResultFeatureSet
+color : 0,204,0
+overlap_method : ORF_Overlap
+column : GENOMIC_RANGE
+column : ID
+sortbycolumn : GENOMIC_RANGE
+
+[Type]
+label : snoRNA
+tiername : Annotation
+datatype : snoRNA
+glyph : DrawableResultFeatureSet
+color : 0,204,0
+overlap_method : ORF_Overlap
+column : GENOMIC_RANGE
+column : ID
+sortbycolumn : GENOMIC_RANGE
+
+[Type]
+label : ncRNA
+tiername : Annotation
+datatype : misc. non-coding RNA
+datatype : ncRNA
+glyph : DrawableResultFeatureSet
+color : 0,204,0
+overlap_method : ORF_Overlap
+column : GENOMIC_RANGE
+column : ID
+sortbycolumn : GENOMIC_RANGE
+
+[Type]
+label : rRNA
+tiername : Annotation
+datatype : rRNA
+glyph : DrawableResultFeatureSet
+color : 0,204,0
+overlap_method : ORF_Overlap
+column : GENOMIC_RANGE
+column : ID
+sortbycolumn : GENOMIC_RANGE
+
+[Type]
+label : miRNA
+tiername : Annotation
+datatype : microRNA
+datatype : miRNA
+glyph : DrawableResultFeatureSet
+color : 0,204,0
+overlap_method : ORF_Overlap
+column : GENOMIC_RANGE
+column : ID
+sortbycolumn : GENOMIC_RANGE
+
+[Type]
+label : pseudogene
+tiername : Annotation
+datatype : pseudogene
+glyph : DrawableResultFeatureSet
+color : 153,153,255
+overlap_method : ORF_Overlap
+column : GENOMIC_RANGE
+column : ID
+number_of_levels : 3
+
+[Type]
+label : transposable_element
+tiername : Annotation
+datatype : transposable_element
+glyph : DoubleHeadedArrow
+color : 255,0,203
+overlap_method : NoOverlap
+column : ID
+column : GENOMIC_RANGE
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+warnonedit : true
+number_of_levels : 1
+
+
+[Tier]
+tiername : Other annotated features
+# expand while testing
+expanded : true
+labeled : false
+curated : true
+warnonedit : true
+
+[Type]
+label : P insertion_site
+tiername : Other annotated features
+datatype : p_insertion
+datatype : P insertion_site
+datatype : transposable_element_insertion_site
+# There's an insertion_site in CG9884: P{PZ}oaf[E-32].  I assume it
+# belongs in this tier.
+datatype : insertion_site
+glyph : Triangle
+# Now hot pink--turquoise was too hard to see on aqua annotation background
+color : 255,0,203
+overlap_method : NoOverlap
+# column : SCORE
+column : ID
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+number_of_levels : 1
+
+[Type]
+label : remark
+tiername : Other annotated features
+datatype : miscellaneous curator's observation
+datatype : remark
+glyph : Zigzag
+color : 255,255,204
+overlap_method : NoOverlap
+column : GENOMIC_RANGE
+column : ID
+number_of_levels : 1
+
+# ARGS types
+[Type]
+label : rescue fragment
+tiername : Other annotated features
+datatype : rescue_fragment
+glyph : ThinRectangle
+color : 153,51,255
+overlap_method : NoOverlap
+column : ID
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+number_of_levels : 1
+
+[Type]
+label : point mutation
+tiername : Other annotated features
+datatype : point_mutation
+glyph : Triangle
+color : 0,102,204
+overlap_method : NoOverlap
+column : ID
+column : GENOMIC_RANGE
+sortbycolumn : GENOMIC_RANGE
+number_of_levels : 1
+
+[Type]
+label : protein binding site
+tiername : Other annotated features
+datatype : protein_binding_site
+glyph : DrawableResultFeatureSet
+color : 255,204,0
+overlap_method : NoOverlap
+column : ID
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+number_of_levels : 1
+
+[Type]
+label : sequence variant
+tiername : Other annotated features
+datatype : sequence_variant
+glyph : ThinRectangle
+color : 0,153,255
+overlap_method : NoOverlap
+column : ID      
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+number_of_levels : 1
+
+[Type]
+label : aberration junction
+tiername : Other annotated features
+datatype : aberration_junction
+glyph : Zigzag
+color : 153,0,51
+overlap_method : NoOverlap
+column : ID
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+number_of_levels : 1
+
+[Type]
+label : regulatory region
+tiername : Other annotated features
+datatype : regulatory_region
+glyph : DrawableResultFeatureSet
+color : 102,255,255
+overlap_method : NoOverlap
+column : ID
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+number_of_levels : 1
+
+[Type]
+label : region
+tiername : Other annotated features
+datatype : region
+glyph : DrawableResultFeatureSet
+color : 102,255,255
+overlap_method : NoOverlap
+column : ID
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+number_of_levels : 1
+
+[Type]
+label : oligonucleotide
+tiername : Other annotated features
+datatype : oligonucleotide
+glyph : DrawableResultFeatureSet
+color : 204,102,0
+overlap_method : NoOverlap
+column : ID
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+number_of_levels : 1
+
+[Type]
+label : DNA motif
+tiername : Other annotated features
+datatype : DNA_motif
+glyph : ThinRectangle
+color : 102,102,102
+overlap_method : NoOverlap
+column : ID
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+number_of_levels : 1
+
+[Type]
+label : enhancer
+tiername : Other annotated features
+datatype : enhancer
+glyph : DrawableResultFeatureSet
+color : 255,153,255
+overlap_method : NoOverlap
+column : ID
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+number_of_levels : 1
+
+[Type]
+label : mature peptide
+tiername : Other annotated features
+datatype : mature_peptide 
+glyph : DrawableResultFeatureSet
+color : 102,102,255
+column : ID
+overlap_method : NoOverlap
+column : GENOMIC_RANGE
+number_of_levels : 1
+
+[Type]
+label : signal peptide
+tiername : Other annotated features
+datatype : signal_peptide 
+glyph : DrawableResultFeatureSet
+color : 153,153,255
+overlap_method : NoOverlap
+column : ID
+column : GENOMIC_RANGE
+number_of_levels : 1
+
+[Tier]
+tiername : sequence
+expanded : true
+labeled : true
+
+[Type]
+label : sequence
+tiername : sequence
+datatype : sequence:dummy
+glyph : DrawableResultFeatureSet
+color : 51,102,255
+usescore : false
+column : GENOMIC_RANGE
+column : ID

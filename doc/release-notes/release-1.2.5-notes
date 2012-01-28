@@ -1,0 +1,19 @@
+In the last public release, we turned editing off by default--you could
+see the annotations, but not modify them or create new ones.  We have now
+fixed (we think) the killer annotation editing bugs (including many in
+the Exon Detail Editor, which Mark Gibson has been heroically debugging),
+so editing is turned on in this release.  Please note that editing only
+works with GAME XML data; GFF is not a rich enough format to allow
+annotation curation.  (You can try turning editing on in the GFF or
+Ensembl style files, but you will find it doesn't work very well.)  There
+are still many small editing issues (see doc/todo if you're interested)
+but overall it should work.
+
+Mark also fixed some memory leaks that were in the previous release.
+
+I cleaned up the mouse event handling code so the mouse buttons should
+work on all platforms.  Note that if you have a FIVE-button mouse on your
+Mac, both the right and middle buttons will behave as right mouse, and to
+do middle-mouse you have to use the buttons on the far left side of the
+mouse.  This was unfortunately unavoidable due to the way mouse events
+are reported on the Mac.  See the user manual for more information.

@@ -1,0 +1,4 @@
++ Bugfixes to Preferences editor
++ Added Preferences editor from popup menu on features (right-click) which will load the Preferences editor with the Types pane selected and the selected feature active
++ Added better behavior to Preview/Cancel/Save options in Preferences editor
++ Fixed feature_relationship.rank (either 1-based or always defaulted to 0) when writing to ChadoXML

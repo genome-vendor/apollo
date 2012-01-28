@@ -1,0 +1,47 @@
+Improvements and new features in release 1.3.1:
+
+- Various editing problems fixed (e.g. problem with "delete
+selection")
+
+- Better handling of overlapping and dicistronic annotations
+
+- Annotations that are not genes now show up in different
+colors.  There's still work to be done with this--for
+example, if you change the annotation type in the Annotation
+Info Editor, the rectangle in the annotation panel won't
+change color as it should.
+
+- I *think* I've now gotten the Annotation Info Editor
+working properly (it wasn't handling/saving all the edits
+correctly), although I have struggled so much with this
+gnarly bit of code that I would not be horribly surprised if
+more bugs turned up.
+
+- You can try the new alignment viewer!  Mark Gibson and
+Michele Clamp have been hard at work adapting her standalone
+alignment viewer, Jalview, for use in Apollo.  Don't be
+surprised if you notice bugs, as it's still under active
+development.
+
+Be aware that Jalview uses a lot of memory.  If you are
+opening a lot of them, you will probably run out of memory.
+However, the good news about that is that Apollo now
+monitors your memory use, and warns you if you are close to
+running out of memory, so you should be able to save your
+work and restart.
+
+- You can try out the Synteny viewer by loading the sample
+Synteny GFF files.  The Synteny viewer is still under
+development.  See the user manual for more information about
+it.  Please note that after you load the Synteny GFF files,
+you will not be able to load other types of data into the
+open Apollo--you will have to quit Apollo and restart.
+
+- The GFF adapter now lets you specify a FASTA sequence file
+to load along with the GFF file.  (The history for the FASTA
+box is not working yet.)
+
+New bug:
+Unfortunately, recovering data from autosaved backup files
+(only possible with the GAME adapter) is not currently
+working right.

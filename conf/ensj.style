@@ -1,0 +1,47 @@
+// style for EnsJ adapter
+// Most of the parameters are not specified here because the default
+// vaues are used.
+// For a more complete list of parameters, please see game.style.
+
+// The name of the types file (a file--expected to be in the conf directory)
+Types		        "ensj.tiers"
+
+// Whether to enable the navigation manager - default false
+EnableNavigationManager "true"
+
+// Whether to show the annotation view, default true.
+ShowAnnotations         "false"
+
+// So that the URL is generated correctly
+DisplayPreferences     "apollo.config.EnsjDisplayPrefs"
+
+// Background color for annotations
+AnnotationBackgroundColor "176,224,230"  // aqua
+
+// Background colors for results
+// Note that if you change FeatureBackgroundColor to white, as some people prefer,
+// you'll probably want to change EdgematchColor to black.
+FeatureBackgroundColor  "white"
+
+// Color for showing name labels in result panels (default is magenta)
+FeatureLabelColor       "black"
+
+// Color for highlighting edges of results that line up
+EdgematchColor          "black"
+
+// Are we allowing editing
+//EnableEditing         "true"
+EnableEditing           "false"
+
+// Draw outlines
+//DrawOutline            "true"
+
+// Maximum region size to fetch feature for. Genes are always loaded
+FeatureLoadSize          "1000000"
+
+// Canned comment
+AnnotationComment        "Gene prediction data only"
+
+// Annotation types
+// (Now handled in tiers file)
+//AnnotationTypes        "Known, Pseudogene, Putative, Novel_Transcript, Novel_CDS,  gene"

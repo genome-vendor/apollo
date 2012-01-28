@@ -1,0 +1,1350 @@
+# This file describes to Apollo how different features should be displayed.
+# There are two types of records: tier records and type lines.
+# Tiers are groupings of one or more types to be displayed together.
+
+# [Tier] fields and the default values
+# label :  false  (Group tier label)
+# visible : true
+# expanded : false
+# sorted : false
+# maxrows : maximum number of rows to show for this tier--default 0 means all
+# labeled : false
+
+# The order in which tiers are listed in this file determines
+# their vertical display order
+# (the first tier is displayed closest to the central axis).
+# The fields for a Type or Tier record can appear in any order, one per line.
+
+# TYPE fields
+#  tiername : the tier this type appears in
+#  typename : label for this type
+#  resulttype : data type(s) to be included this type
+#  color : can be a standard color name (e.g. red) or an R,G,B triplet (default gray)
+#  utr_color : color used for utr regions. Only works with
+#              DrawableGeneFeatureSet. (default black)
+#  usescore : default true  # use score to set the height of this glyph
+#  minscore : 0 # minimum score for scaling height
+#  maxscore : 100 # maximum score for scaling height
+#  glyph : what glyph to use (mandatory).  Current choices include
+# DrawableGeneFeatureSet (exons connected by peaked introns),
+# DrawableResultFeatureSet (exons connected by straight lines),
+# DoubleHeadedArrow, Triangle, Zigzag, ThinRectangle.
+#  column : names of column(s) in detail table.  Choices include
+# include GENOMIC_RANGE, GENOMIC_LENGTH, MATCH_RANGE, MATCH_LENGTH,
+# SCORE, NAME, READS.  You can also specify column names not in all caps
+# that correspond to properties of the features present in the data (e.g.
+# query_frame).
+#  sortbycolumn : row order in table determined by this column
+#  reversesort : Sort table rows in reverse order?  (default false)
+#  groupby : GENE method to use for grouping features (GENE, SINGLE, HOMOLOGY)
+#  weburl : optional, URL for pulling up web pages about this type of result
+#  freshdate : date after which sequences of this type are considered "new"
+# (the dates are found in the sequence descriptions)
+#  idformat : format of IDs for this kind of annotation
+#  annot_type : for annotations, the result types that generate this type of annotation
+
+[Tier]
+tiername : Annotation
+expanded : true
+maxrows : 0
+labeled : true
+
+[Type]
+typename : gene
+tiername : Annotation
+resulttype : gene
+resulttype : transcript
+resulttype : exon
+glyph : DrawableGeneFeatureSet
+color : 51,102,255
+# Default utr_color is "transparent" (same as AnnotationBackgroundColor defined
+in game.style)
+utr_color : 176,224,230
+usescore : false
+scorethreshold : -1.0
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+column : ID
+sortbycolumn : GENOMIC_RANGE
+reversesort : false
+idformat : CG\d+
+
+[Type]
+typename : transposable_element
+tiername : Annotation
+resulttype : transposable_element
+glyph : DoubleHeadedArrow
+color : 255,0,203
+usescore : false
+minscore : 0
+maxscore : 0
+column : GENOMIC_RANGE
+column : ID
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+idformat : TE\d+
+
+[Type]
+typename : remark
+tiername : Annotation
+resulttype : miscellaneous curator's observation
+glyph : Zigzag
+color : 255,255,204
+usescore : false
+scorethreshold : -1.0
+column : GENOMIC_RANGE
+column : ID
+reversesort : false
+groupby : GENE
+idformat : CR\d+
+
+[Type]
+typename : pseudogene
+tiername : Annotation
+resulttype : pseudogene
+glyph : DrawableGeneFeatureSet
+color : 153,153,255
+usescore : false
+scorethreshold : -1.0
+column : GENOMIC_RANGE
+column : ID
+reversesort : false
+groupby : GENE
+idformat : CR\d+
+
+[Type]
+typename : P insertion_site
+tiername : Annotation
+resulttype : p_insertion
+glyph : Triangle
+color : 0,204,204
+usescore : false
+scorethreshold : -1.0
+column : SCORE
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+idformat : FBti\d{7}
+
+[Type]
+typename : piggyBAC insertion_site
+tiername : Annotation
+resulttype : piggyBAC_insertion
+glyph : Triangle
+color : 102,102,255
+usescore : false
+scorethreshold : -1.0
+column : SCORE
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+idformat : FBti\d{7}
+
+[Type]
+typename : tRNA
+tiername : Annotation
+resulttype : tRNA
+glyph : DrawableResultFeatureSet
+color : 0,204,0
+usescore : false
+column : GENOMIC_RANGE
+column : ID
+sortbycolumn : GENOMIC_RANGE
+idformat : CR\d+
+
+[Type]
+typename : ncRNA
+tiername : Annotation
+resulttype : misc. non-coding RNA
+glyph : DrawableResultFeatureSet
+color : 0,204,0
+usescore : false
+column : GENOMIC_RANGE
+column : ID
+sortbycolumn : GENOMIC_RANGE
+idformat : CR\d+
+
+[Type]
+typename : rRNA
+tiername : Annotation
+resulttype : rRNA
+glyph : DrawableResultFeatureSet
+color : 0,204,0
+usescore : false
+scorethreshold : -1.0
+column : GENOMIC_RANGE
+column : ID
+sortbycolumn : GENOMIC_RANGE
+idformat : CR\d+
+
+[Type]
+typename : snRNA
+tiername : Annotation
+resulttype : snRNA
+glyph : DrawableResultFeatureSet
+color : 0,204,0
+usescore : false
+scorethreshold : -1.0
+column : GENOMIC_RANGE
+column : ID
+sortbycolumn : GENOMIC_RANGE
+idformat : CR\d+
+
+[Type]
+typename : snoRNA
+tiername : Annotation
+resulttype : snoRNA
+glyph : DrawableResultFeatureSet
+color : 0,204,0
+usescore : false
+scorethreshold : -1.0
+column : GENOMIC_RANGE
+column : ID
+sortbycolumn : GENOMIC_RANGE
+idformat : CR\d+
+
+[Type]
+typename : miRNA
+tiername : Annotation
+resulttype : microRNA
+glyph : DrawableResultFeatureSet
+color : 0,204,0
+usescore : false
+scorethreshold : -1.0
+column : GENOMIC_RANGE
+column : ID
+sortbycolumn : GENOMIC_RANGE
+idformat : CR\d+
+
+[Tier]
+tiername : New Fly Sequence
+visible : true
+maxrows : 0
+
+[Type]
+typename : New Fly Sequence
+tiername : New Fly Sequence
+resulttype : sim4:na_gb.dros.02-21-02_to_01-14-03
+glyph : DrawableResultFeatureSet
+color : 255,255,51
+minscore : 0.0
+maxscore : 100.0
+column : SCORE
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+weburl : http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=search&db=nucleotide&doptcmdl=GenBank&term=
+
+[Tier]
+tiername : Previous Releases
+
+[Type]
+typename : Release 2 GadFly
+tiername : Previous Releases
+resulttype : sim4:na_gadfly.dros
+resulttype : sim4:na_gadfly.dros.RELEASE2
+glyph : DrawableResultFeatureSet
+color : 102,173,255
+minscore : 0.0
+maxscore : 100.0
+column : SCORE
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+
+[Tier]
+tiername : Gene Prediction
+visible : true
+expanded : true
+
+[Type]
+typename : Genie
+tiername : Gene Prediction
+resulttype : piecegenie
+resulttype : piecegenie:dummy
+glyph : DrawableResultFeatureSet
+color : 153,51,255
+usescore : true
+minscore : 100
+maxscore 500
+column : SCORE
+column : GENOMIC_RANGE
+column : query_frame
+sortbycolumn : GENOMIC_RANGE
+weburl : http://www.fruitfly.org/seq_tools/genie.html#
+
+[Type]
+typename : Genscan
+tiername : Gene Prediction
+resulttype : genscan:dummy
+resulttype : genscan
+glyph : DrawableResultFeatureSet
+color : 204,153,255
+minscore : -1
+maxscore : 50
+column : SCORE
+column : GENOMIC_RANGE
+column : query_frame
+sortbycolumn : GENOMIC_RANGE
+weburl : http://genes.mit.edu/GENSCAN.html#
+
+[Type]
+tiername : Gene Prediction
+typename : Fgenesh
+resulttype : fgenesh:dummy
+color : 255,153,255
+usescore : true
+minscore : 100
+maxscore 500
+glyph : DrawableResultFeatureSet
+column : SCORE
+column : GENOMIC_RANGE
+column : query_frame
+sortbycolumn : GENOMIC_RANGE
+weburl : http://www.softberry.com/berry.phtml?topic=index&group=programs&subgroup=gfind#
+
+[Type]
+tiername : Gene Prediction
+typename : Heidelberg
+resulttype : HDP:dummy
+color : 153,153,255
+usescore : true
+minscore : 100
+maxscore 500
+glyph : DrawableResultFeatureSet
+column : SCORE
+column : GENOMIC_RANGE
+column : query_frame
+sortbycolumn : GENOMIC_RANGE
+weburl : http://HDFlyArray.zmbh.uni-heidelberg.de/cgi-bin/gbrowse#
+
+[Type]
+tiername : Gene Prediction
+typename : Genewise
+resulttype : sim4:dpseVivekmRNA.fasta
+color : 204,204,255
+usescore : true
+minscore : 100
+maxscore 500
+glyph : DrawableResultFeatureSet
+column : SCORE
+column : GENOMIC_RANGE
+column : query_frame
+sortbycolumn : GENOMIC_RANGE
+
+[Tier]
+tiername : Transposon result
+visible : true
+expanded : true
+
+[Type]
+typename : BDGP_TE
+tiername : Transposon result
+resulttype : JOSHTRANSPOSON:Sept
+resulttype : transposable_element
+color : 255,0,203
+usescore : false
+glyph : DoubleHeadedArrow
+column : NAME
+column : SCORE
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+weburl : http://www.fruitfly.org/p_disrupt/TE.html#
+annot_type : transposable_element
+
+[Tier]
+tiername : Dmel Sequence
+expanded : true
+
+[Type]
+typename : DGC cDNA
+tiername : Dmel Sequence
+resulttype : sim4:na_DGC.dros
+resulttype : sim4:na_cDNA.dros
+resulttype : sim4:na_DGC.in_process.dros
+glyph : DrawableResultFeatureSet
+color : 0,154,97
+minscore : 0.0
+maxscore : 100.0
+column : NAME
+column : SCORE
+column : description
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+groupby : HOMOLOGY
+weburl : http://weasel.lbl.gov/cgi-bin/EST/community_query/cloneReport.pl?id_type=0&id_value=
+
+[Type]
+typename : Community GB
+tiername : Dmel Sequence
+resulttype : sim4:na_gb.dros
+resulttype : mapgb:na_gb.dros
+resulttype : sim4:na_Adh.dros
+resulttype : sim4:na_adh.cDNAs.dros
+resulttype : sim4:na_ARGs.dros
+resulttype : sim4:na_ARGsCDS.dros
+glyph : DrawableResultFeatureSet
+color : 0,240,0
+usescore : true
+minscore : 0.0
+maxscore : 100.0
+column : SCORE
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+weburl : http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=search&db=nucleotide&doptcmdl=GenBank&term=
+freshdate: 31-JAN-2003
+
+[Type]
+typename : Community Error Report
+tiername : Dmel Sequence
+resulttype : sim4:na_users_i.dros
+glyph : DrawableResultFeatureSet
+color : 0,240,0
+usescore : true
+minscore : 0
+maxscore : 100
+column : SCORE
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+
+[Tier]
+tiername : Dmel EST
+
+[Type]
+typename : Dmel EST
+tiername : Dmel EST
+resulttype : sim4:na_EST.complete.dros
+resulttype : sim4:na_EST.all_nr.dros
+glyph : DrawableResultFeatureSet
+color : 153,255,153
+usescore : true
+minscore : 0
+maxscore : 100
+column : NAME
+column : SCORE
+column : READS
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+weburl : http://weasel.lbl.gov/cgi-bin/EST/community_query/cloneReport.pl?id_type=0&id_value=
+
+[Tier]
+tiername : Dpse EST
+expanded : true
+
+[Type]
+typename : Baylor EST
+tiername : Dpse EST
+resulttype : sim4:dpse_baylor_ESTreads_0625.FASTA
+glyph : DrawableResultFeatureSet
+color : 203,255,203
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : NAME
+column : SCORE
+column : READS
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+reversesort : false
+groupby : GENE
+
+[Type]
+typename : HHMI 3prime EST
+tiername : Dpse EST
+resulttype : sim4:na_EST.pseudo
+glyph : DrawableResultFeatureSet
+color : 203,255,203
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : NAME
+column : SCORE
+column : READS
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : Non-coding RNA
+visible : true
+
+[Type]
+typename : tRNA-result
+tiername : Non-coding RNA
+resulttype : trnascan-se:dummy
+resulttype : tRNAscan-se
+glyph : DrawableResultFeatureSet
+color : 204,255,51
+minscore : 0
+maxscore : 100
+column : SCORE
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : trna_type
+column : anticodon
+sortbycolumn : SCORE
+annot_type : tRNA
+
+[Type]
+typename : Non-coding RNA
+tiername : Non-coding RNA
+resulttype : sim4:na_smallRNA.dros
+glyph : DrawableResultFeatureSet
+color : 50,255,10
+minscore : 0
+maxscore : 100
+column : SCORE
+column : GENOMIC_RANGE
+sortbycolumn : SCORE
+groupby : HOMOLOGY
+weburl : http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=search&db=nucleotide&doptcmdl=GenBank&term=
+
+[Tier]
+tiername : BLASTX Similarity to Dmel
+expanded : true
+
+[Type]
+typename : BLASTX Similarity to Dmel
+tiername : BLASTX Similarity to Dmel
+resulttype : blastx:aa_SPTR.dros
+resulttype : blastx_masked:aa_SPTR.dros
+resulttype : blastx_masked:aa_TR.real.dros
+resulttype : blastx_masked:aa_SP.real.dros
+resulttype : blastx_masked:aa_SP.hyp.dros
+glyph : DrawableResultFeatureSet
+color : 255,20,0
+minscore : 0
+maxscore : 100
+column : SCORE
+column : expect
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+weburl : http://srs.ebi.ac.uk/srs6bin/cgi-bin/wgetz?[swall-acc:__ID__]+-e
+freshdate: 15-MAY-2002
+
+[Type]
+typename : BLASTX to Community Error Report
+tiername : BLASTX Similarity to Dmel
+resulttype : blastx:aa_users_i.dros
+resulttype : blastx_masked:aa_users_i.dros
+glyph : DrawableResultFeatureSet
+color : 255,250,10
+minscore : 0.0
+maxscore : 100.0
+column : SCORE
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+groupby : GENE
+
+[Tier]
+tiername : Comparative
+visible : true
+
+[Type]
+typename : Kerosene intron Dpse
+tiername : Comparative
+resulttype : sim4:kerosene-intron.FASTA
+glyph : DrawableResultFeatureSet
+color : 84,57,188
+minscore : 0
+maxscore : 100
+column : NAME
+column : SCORE
+column : READS
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+
+[Type]
+typename : BLASTN to Dmel
+tiername : Comparative
+resulttype : blastn:dmel_pc_transcript.FASTA
+glyph : DrawableResultFeatureSet
+color : 188,35,37
+minscore : 0
+maxscore : 100
+column : SCORE
+column : expect
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+
+[Type]
+typename : BLASTX to Dpse
+tiername : Comparative
+resulttype : blastx_masked:aa_vivekprom.dpse
+glyph : DrawableResultFeatureSet
+color : 255,154,66
+minscore : 0
+maxscore : 100
+column : SCORE
+column : expect
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+
+[Type]
+typename : BLASTX to Dmel
+tiername : Comparative
+resulttype : blastx:dmel_translation.FASTA
+resulttype : blastx:aa_dmel_RELEASE3-1.FASTA
+resulttype : blastx_masked:aa_dmel_RELEASE3-1.FASTA
+glyph : DrawableResultFeatureSet
+color : 255,154,66
+minscore : 0
+maxscore : 100
+column : SCORE
+column : expect
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+reversesort : false
+
+[Type]
+tiername : Comparative
+typename : TBLASTX to Dpse
+resulttype : tblastx_ne:Dpseudo-contigs.fasta
+resulttype : tblastx_nf:Dpseudo-contigs.fasta
+resulttype : tblastxwrap_masked:Dpseudo-contigs.fasta
+resulttype : tblastxwrap_masked:na_tigrdpse_scfchunks_7-24.FASTA
+color : 255,255,153
+usescore : true
+minscore : 0
+maxscore 100
+glyph : DrawableResultFeatureSet
+column : SCORE
+column : expect
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+
+[Type]
+tiername : Comparative
+typename : TBLASTX to Dmel ESTs
+resulttype : tblastx:na_EST.complete.dmel
+color : 255,255,153
+usescore : true
+minscore : 0
+maxscore 100
+glyph : DrawableResultFeatureSet
+column : SCORE
+column : expect
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+
+[Type]
+tiername : Comparative
+typename : TBLASTX to Agam
+resulttype : tblastx_nf:na_scf_chunk_agambiae.fa
+resulttype : tblastx_ne:na_scf_chunk_agambiae.fa
+resulttype : tblastxwrap_masked:na_scf_chunk_agambiae.fa
+color : 255,255,153
+usescore : true
+minscore : 0
+maxscore 100
+glyph : DrawableResultFeatureSet
+column : SCORE
+column : expect
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+
+[Type]
+tiername : Comparative
+typename : Ecore Agam
+resulttype : ecore:intron
+color : 255,165,0
+usescore : true
+minscore : 0
+maxscore 100
+glyph : DrawableResultFeatureSet
+column : NAME
+column : SCORE
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+
+[Tier]
+tiername : BLASTX Similarity to Other Species
+visible : true
+
+[Type]
+tiername : BLASTX Similarity to Other Species
+typename : Worm
+resulttype : blastx_masked:aa_SPTR.worm
+resulttype : blastx:aa_SPTR.worm
+color : 255,153,0
+usescore : true
+minscore : 0
+maxscore : 100
+glyph : DrawableResultFeatureSet
+column : SCORE
+column : expect
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+weburl : http://srs.ebi.ac.uk/srs6bin/cgi-bin/wgetz?[swall-acc:__ID__]+-e
+freshdate: 15-MAY-2002
+
+[Type]
+tiername : BLASTX Similarity to Other Species
+typename : Primate
+resulttype : blastx_masked:aa_SPTR.primate
+resulttype : blastx:aa_SPTR.primate
+color : 255,153,0
+usescore : true
+minscore : 0
+maxscore : 100
+glyph : DrawableResultFeatureSet
+column : SCORE
+column : expect
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+weburl : http://srs.ebi.ac.uk/srs6bin/cgi-bin/wgetz?[swall-acc:__ID__]+-e
+freshdate: 15-MAY-2002
+
+[Type]
+tiername : BLASTX Similarity to Other Species
+typename : Rodent
+resulttype : tblastx:na_unigene.rodent
+resulttype : blastx_masked:aa_SPTR.rodent
+resulttype : blastx:aa_SPTR.rodent
+color : 255,153,0
+usescore : true
+minscore : 0
+maxscore : 100
+glyph : DrawableResultFeatureSet
+column : SCORE
+column : expect
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+weburl : http://srs.ebi.ac.uk/srs6bin/cgi-bin/wgetz?[swall-acc:__ID__]+-e
+freshdate: 15-MAY-2002
+
+[Type]
+tiername : BLASTX Similarity to Other Species
+typename : Yeast
+resulttype : blastx_masked:aa_SPTR.yeast
+resulttype : blastx:aa_SPTR.yeast
+color : 255,153,0
+usescore : true
+minscore : 0
+maxscore : 100
+glyph : DrawableResultFeatureSet
+column : SCORE
+column : expect
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+weburl : http://srs.ebi.ac.uk/srs6bin/cgi-bin/wgetz?[swall-acc:__ID__]+-e
+freshdate: 15-MAY-2002
+
+[Type]
+tiername : BLASTX Similarity to Other Species
+typename : Plant
+resulttype : blastx_masked:aa_SPTR.plant
+resulttype : blastx:aa_SPTR.plant
+color : 255,153,0
+usescore : true
+minscore : 0
+maxscore : 100
+glyph : DrawableResultFeatureSet
+column : SCORE
+column : expect
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+weburl : http://srs.ebi.ac.uk/srs6bin/cgi-bin/wgetz?[swall-acc:__ID__]+-e
+freshdate: 15-MAY-2002
+
+[Type]
+tiername : BLASTX Similarity to Other Species
+typename : Insect
+resulttype : tblastx:na_dbEST.insect
+resulttype : blastx_masked:aa_SPTR.insect
+resulttype : blastx:aa_SPTR.insect
+color : 255,153,0
+usescore : true
+minscore : 0
+maxscore : 100
+glyph : DrawableResultFeatureSet
+column : SCORE
+column : expect
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+weburl : http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=search&db=nucleotide&doptcmdl=GenBank&term=
+freshdate: 15-MAY-2002
+
+[Type]
+tiername : BLASTX Similarity to Other Species
+typename : Other Vertebrates
+resulttype : blastx_masked:aa_SPTR.othvert
+resulttype : blastx:aa_SPTR.othvert
+color : 255,153,0
+usescore : true
+minscore : 0
+maxscore : 100
+glyph : DrawableResultFeatureSet
+column : SCORE
+column : expect
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+weburl : http://srs.ebi.ac.uk/srs6bin/cgi-bin/wgetz?[swall-acc:__ID__]+-e
+freshdate: 15-MAY-2002
+
+[Type]
+tiername : BLASTX Similarity to Other Species
+typename : Other Invertebrates
+resulttype : blastx_masked:aa_SPTR.othinv
+resulttype : blastx:aa_SPTR.othinv
+color : 255,153,0
+usescore : true
+minscore : 0
+maxscore : 100
+glyph : DrawableResultFeatureSet
+column : SCORE
+column : expect
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+weburl : http://srs.ebi.ac.uk/srs6bin/cgi-bin/wgetz?[swall-acc:__ID__]+-e
+freshdate: 15-MAY-2002
+
+[Tier]
+tiername : Insertion Site
+
+[Type]
+typename : P Element Insertion
+tiername : Insertion Site
+resulttype : sim4:na_pe.dros
+resulttype : pinsertion:dummy
+glyph : Triangle
+color : 64,224,208
+usescore : false
+scorethreshold : -1.0
+column : SCORE
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+reversesort : false
+groupby : GENE
+
+[Type]
+typename : piggyBAC Insertion
+tiername : Insertion Site
+resulttype : sim4:na_piggyBAC.dros
+resulttype : piggyBACinsertion:dummy
+glyph : Triangle
+color : 102,102,255
+usescore : false
+scorethreshold : -1.0
+column : SCORE
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : Affymetrix Oligo
+expanded : true
+
+[Type]
+typename : Oligo
+tiername : Affymetrix Oligo
+resulttype : sim4:na_affy_oligo.dros
+glyph : DrawableResultFeatureSet
+color : 102,51,255
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : score
+column : GENOMIC_RANGE
+column : query_frame
+column : probability
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : BAC Scaffold
+visible : false
+expanded : true
+
+[Type]
+typename : BAC Scaffold
+tiername : BAC Scaffold
+resulttype : clonelocator:scaffoldBACs
+glyph : DrawableResultFeatureSet
+color : 153,153,153
+usescore : false
+scorethreshold : -1.0
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+reversesort : false
+weburl : http://www.fruitfly.org/cgi-bin/annot/gbrowse?name=clone:
+
+[Tier]
+tiername : Tiling Path
+visible : false
+expanded : true
+
+[Type]
+typename : Tiling Path
+tiername : Tiling Path
+resulttype : assembly:path
+glyph : DrawableResultFeatureSet
+color : 204,204,204
+usescore : false
+scorethreshold : -1.0
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+reversesort : false
+weburl : http://www.fruitfly.org/cgi-bin/annot/gbrowse?name=clone:
+
+[Tier]
+tiername : Start Codon
+
+[Type]
+typename : startcodon_frame1
+tiername : Start Codon
+resulttype : codons
+resulttype : startcodon_frame1
+glyph : SiteCodon
+color : 34,220,34
+usescore : false
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+reversesort : false
+groupby : GENE
+
+[Type]
+typename : startcodon_frame2
+tiername : Start Codon
+resulttype : codons
+resulttype : startcodon_frame2
+glyph : SiteCodon
+color : 34,220,34
+usescore : false
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+reversesort : false
+groupby : GENE
+
+[Type]
+typename : startcodon_frame3
+tiername : Start Codon
+resulttype : codons
+resulttype : startcodon_frame3
+glyph : SiteCodon
+color : 34,220,34
+usescore : false
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : Stop Codon
+
+[Type]
+typename : stopcodon_frame1
+tiername : Stop Codon
+resulttype : codons
+resulttype : stopcodon_frame1
+glyph : SiteCodon
+color : red
+usescore : false
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+reversesort : false
+groupby : GENE
+
+[Type]
+typename : stopcodon_frame2
+tiername : Stop Codon
+resulttype : codons
+resulttype : stopcodon_frame2
+glyph : SiteCodon
+color : red
+usescore : false
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+reversesort : false
+groupby : GENE
+
+[Type]
+typename : stopcodon_frame3
+tiername : Stop Codon
+resulttype : stopcodon_frame3
+glyph : SiteCodon
+color : red
+usescore : false
+scorethreshold : -1.0
+column : NAME
+column : GENOMIC_RANGE
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : Repeat
+visible : false
+expanded : true
+
+[Type]
+typename : Repeat
+tiername : Repeat
+resulttype : repeatmasker:dummy
+glyph : DrawableResultFeatureSet
+color : 255,0,255
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : NAME
+column : SCORE
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : Promoter
+visible : false
+expanded : true
+
+[Type]
+typename : Promoter
+tiername : Promoter
+resulttype : promoter:dummy
+glyph : DrawableResultFeatureSet
+color : 255,255,51
+minscore : 0.0
+scorethreshold : -1.0
+column : NAME
+column : SCORE
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : Cytology
+visible : false
+expanded : true
+
+[Type]
+typename : Cytology
+tiername : Cytology
+resulttype : locator:cytology
+glyph : DrawableResultFeatureSet
+color : 102,102,102
+usescore : false
+scorethreshold : -1.0
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : Sequence selection
+visible : false
+
+[Type]
+typename : Sequence selection
+tiername : Sequence selection
+resulttype : Sequence selection
+glyph : DrawableResultFeatureSet
+color : orange
+usescore : false
+scorethreshold : -1.0
+column : NAME
+reversesort : false
+groupby : GENE
+
+[Tier]
+tiername : Do Not Show
+visible : false
+
+[Type]
+typename : Gap
+tiername : Do Not Show
+resulttype : gap:gap
+glyph : DrawableResultFeatureSet
+color : white
+usescore : false
+scorethreshold : -1.0
+column : SCORE
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+reversesort : false
+groupby : GENE
+
+[Type]
+typename : gaasterland
+tiername : Do Not Show
+resulttype : sim4:gaasterland.272partialmatch.fst
+resulttype : sim4:gaasterland.771bestnovel.fst
+glyph : DrawableResultFeatureSet
+color : 153,153,153
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+reversesort : false
+groupby : GENE
+
+[Type]
+typename : promoter_all
+tiername : Do Not Show
+resulttype : sim4:promoter_all_1941.fa
+glyph : DrawableResultFeatureSet
+color : 255,255,153
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : NAME
+column : SCORE
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+reversesort : false
+groupby : GENE
+
+[Type]
+typename : Ensembl
+tiername : Do Not Show
+resulttype : ensembl:Sept
+resulttype : ensembl1:Sept
+resulttype : ensembl2:Sept
+glyph : DrawableResultFeatureSet
+color : 204,153,255
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+reversesort : false
+groupby : GENE
+
+[Type]
+typename : STS
+tiername : Do Not Show
+resulttype : sim4:na_sts.dros
+glyph : DrawableResultFeatureSet
+color : 218,112,214
+usescore : false
+scorethreshold : -1.0
+column : SCORE
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+reversesort : false
+groupby : GENE
+
+[Type]
+typename : EST group
+tiername : Do Not Show
+resulttype : groupest:na_DGC.dros
+resulttype : groupest:dummy
+resulttype : groupest:na_est.dros
+resulttype : groupest:na_EST.all_nr.dros
+resulttype : groupest:na_EST.complete.dros
+resulttype : groupest:na_DGC_EST_nr.dros
+resulttype : groupest:na_DGC.in_process.dros
+resulttype : groupest:dpse_baylor_ESTreads_0625.fasta
+resulttype : groupest:na_EST.pseudo
+resulttype : groupest:kerosene-intron.FASTA
+glyph : DrawableResultFeatureSet
+color : white
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : NAME
+column : SCORE
+column : READS
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+reversesort : false
+groupby : GENE
+
+[Type]
+typename : ARGS region
+tiername : Do Not Show
+resulttype : sim4:na_ARGsregion.dros
+glyph : DrawableResultFeatureSet
+color : white
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : NAME
+column : SCORE
+column : READS
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+reversesort : false
+groupby : GENE
+
+[Type]
+typename : snRNA-result
+tiername : Do Not Show
+resulttype : sim4:na_snRNA.dros
+resulttype : snRNA
+glyph : DrawableResultFeatureSet
+color : 50,255,10
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : SCORE
+column : GENOMIC_RANGE
+column : query_frame
+reversesort : false
+weburl : http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=search&db=nucleotide&doptcmdl=GenBank&term=
+
+[Type]
+typename : NCBI
+tiername : Do Not Show
+resulttype : ncbi:Sept
+glyph : DrawableResultFeatureSet
+color : 153,51,255
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+reversesort : false
+groupby : GENE
+
+[Type]
+typename : dbP
+tiername : Do Not Show
+resulttype : sim4:dbP.fa
+glyph : DrawableResultFeatureSet
+color : 131,192,255
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : SCORE
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+reversesort : false
+groupby : GENE
+
+[Type]
+typename : kerosene intron group EST
+tiername : Do Not Show
+resulttype : groupest:kerosene-intron.FASTA
+glyph : DrawableResultFeatureSet
+color : 123,32,69
+minscore : 0.0
+maxscore : 100.0
+scorethreshold : -1.0
+column : SCORE
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+reversesort : false
+groupby : GENE
+

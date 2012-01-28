@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FEATURES xmlns="http://biodas.org/documents/das2">
+  <FEATURE uri="feature/Affymetrix_Yeast_2:1773363_x_at" type="type/SO:PCR_product">    
+      <LOC segment="segment/chrI" range="15:61:1"/>    
+      <LOC segment="segment/chrI" range="230152:230206:-1"/>    
+  </FEATURE>
+  
+  <FEATURE
+    uri="feature/Affymetrix_Yeast_2:1774003_at"
+    type="type/SO:PCR_product"
+  >    
+      
+      <LOC segment="segment/chrI" range="2:59:1"/>    
+      
+      <LOC segment="segment/chrI" range="230152:230206:-1"/>    
+  
+ 
+    
+  </FEATURE>
+  
+  <FEATURE
+    uri="feature/Affymetrix_YG-S98:2931_at"
+    type="type/SO:PCR_product"
+  >    
+      
+      <LOC segment="segment/chrI" range="144:347:-1"/>    
+  
+ 
+    
+  </FEATURE>
+  
+  <FEATURE
+    uri="feature/TEL01L"
+    type="type/SO:telomere"
+  >    
+      
+      <LOC segment="segment/chrI" range="1:802:1"/>    
+  
+ 
+    
+  </FEATURE>
+  
+  <FEATURE
+    uri="feature/TEL01L-TR"
+    type="type/SO:repeat_family"
+  >    
+      
+      <LOC segment="segment/chrI" range="1:63:-1"/>    
+  
+ 
+    
+  </FEATURE>
+  
+  <FEATURE
+    uri="feature/TEL01L-XR"
+    type="type/SO:repeat_family"
+  >    
+      
+      <LOC segment="segment/chrI" range="63:337:-1"/>    
+  
+ 
+    
+  </FEATURE>
+  
+</FEATURES>

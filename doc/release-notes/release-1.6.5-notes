@@ -1,0 +1,79 @@
+Major changes between release 1.6.4 (01/05/2006) and release 1.6.5
+(6/27/2006):
+
+Default number of levels for a type was 3 (because we didn't want things
+to break if curators used old tiers files that didn't specify
+"number_of_levels : 3" for genes).  Now it defaults to 1 for all types
+EXCEPT gene and pseudogene, for which it's 3 (in case the tiers file
+doesn't set it).  This can be overridden by a "number_of_levels" line in
+the tiers file (even for genes/pseudogenes).
+This is a better setup because most types are 1-level and it's tiresome
+to have to stick a number_of_levels line in the tiers file for every
+1-level type.
+
+Changes to ChadoXML and GAME adapter GUIs:
+- The new FlyChadoXmlAdapter is like the old GAME adapter interface--can
+read ChadoXML from a file or URL, or query the FlyBase server by gene,
+band, or range.  The old ChadoXML interface is still available as a way
+to load "generic" ChadoXML (although in fact it caters to FlyBase data as
+well).
+The URL for the FlyBase Chado XML server is
+http://flybase.net/cgi-bin/apollo.cgi
+
+- Since the old FlyBase server that served fly data in GAME XML format is
+now defunct, the cgi-query-enabled version of the GAME XML adapter (which
+is now called FlyGAMEAdapter) has been retired and replaced with a
+generic GAME XML loader that accepts only a filename or URL.
+
+Note that if you have any lines in your personal fly.style or game.style
+that point to fruitfly.org, e.g.
+GeneURL "http://www.fruitfly.org/cgi-bin/annot/get_xml_url.pl?gene="
+these will no longer work.  Remove these lines from your style files.
+
+Changes to ChadoXML reader/writer (see fixed-bugs for more details):
+- Doesn't choke on <!ENTITY> lines.
+- Now roundtrips "preamble" (everything before the <chado> line) from the
+original input.  This preserves all the comment lines from the original
+input, as well as any <!ENTITY> lines.
+- Name of original input file or URL is now saved as a comment line.
+(Added this to GAME adapter, too.)
+- Copes better with the absence of a <_appdata  name="residues"> record.
+(However, Apollo still needs the other <_appdata> fields.)
+- You can now add an "organism" parameter to a style file--it is used
+when writing out ChadoXML for features that don't have their own organism
+field.
+- Various attempts to improve GAME -> ChadoXML conversion.
+- Unlocalized features (no featurelocs) now show up up as + strand
+features from 0-0 (which is very likely outside of the range of the
+current segment and therefore not initially visible).  When you save as
+chadoxml, the chadoxml writer knows not to save featurelocs for these
+unlocalized features.
+
+Prevent infinite loop when trying to set the start codon on a messed-up
+gene (which somehow had transcripts longer than the parent gene).
+
+Enabled color-by-owner for non-gene annots (previously was done only for
+gene annots).  To turn this on, add
+     ColorAllAnnotsByOwner "true"
+to style file.
+
+Transcript and protein renamed properly on gene merge (was working
+correctly if you chose the righthand gene name but not if you chose the
+lefthand gene name).
+
+Genetic code is now configurable in style:
+        GeneticCode "1" | "6"
+1 is the default 
+6 is for paramecium
+(Right now, those are the only accepted values.)
+
+Changes to Chado JDBC adapter to allow it to read paramecium Chado
+database (and, more generally, to support Chado databases other than the
+rice one on which the adapter was originally developed).
+
+When you specify on the command line a filename with no path as the file
+to write to, it now goes in the current directory (.) rather than in
+APOLLO_ROOT by default.
+
+Better error messages (e.g. when trying to save to a nonexistent
+directory or when input is in the wrong format).

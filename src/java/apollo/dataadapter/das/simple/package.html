@@ -1,0 +1,29 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+</head>
+<body bgcolor="white">
+
+Provides simple implementations of the interfaces defined in the
+apollo.dataadapter.das package. The goal is to minimize dependecy
+on other software packages. In particular,
+
+<ul>
+
+<li> SimpleDASAdapterGUI is invoked by the Apollo framework: this in turn,
+this creates the SimpleDASAdapter. The adapter creates a...</li>
+
+<li> SimpleDASServer, which does direct SAX-parsing of requests, using the
+Content-handler classes DASDsnContentHandler, DASSegmentContentHandler,
+DASFeatureContentHandler and DASSequenceContentHandler. These handlers 
+parse das-dsn, entry_points, features and dna requests respectively.</li>
+
+<li> In order to create requests, we create an instance of SimpleDASDsn 
+and an array of SimpleDASSegment's to pass to the server. When the request
+is parsed, the result (obtained from the SimpleDASServer) is a list of 
+SimpleDASDsn's or SimpleDASSegment's or SimpleDASFeature's.</li>
+
+</ul>
+
+</body>
+</html>

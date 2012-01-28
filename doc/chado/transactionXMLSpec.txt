@@ -1,0 +1,210 @@
+Root Node:
+
+<transactions author="guanming" version="1.0" database="rice@brebiou.cshl.org">
+	<map_position chromosome="2R" start="800" end="1200">
+	<add />
+	<delete />
+	<update />
+	<merge />
+	<split />
+</transactions>
+
+Delete: A gene, transcrip, exon, comment, synonym can be deleted in Apollo
+
+1) Delete a gene/annotation: Annotaion is used for gene
+	<delete timestamp="ts">
+		<annotation id=”CG123” />
+	</delete>
+2) Delete a transcrip
+	<delete timestamp=”ts”>
+		<transcript id=”CG123-RA” />
+	</delete>
+3) Delete an exon
+	<delete timestamp="ts">
+		<exon parent_id="CG123-RA" start="40" end="150" isShared="true"/>
+	</delete>
+4) Delete an comment for a transtript
+	<delete timestamp="ts">
+		<transcript>
+			<comment>SomeText</comment>
+		</transcript>
+	</delete>
+5) Delete synonyms for a transcript or annotation:
+	<delete timestamp="ts">
+		<transcrpt>
+			<synonym>AliasName</synonym>
+			<synonym>AliasName1</synonym>
+		</transcrpt>	
+	</delete>
+	Same for annotaion's synonyms
+
+Add: A gene, transcrip, exon, comments, synonyms or orther info to gene or transcrip
+
+1) Add Gene:
+	<add timestamp="ts">
+ 		<annotation id="CG-temp-1234">
+			<!-- Should we use a new element called “transcript" or use the generic name “annotation"? I like a specific name “transcript" -->
+     			<transcript id="CG-temp-123-RA">
+        				<exon start="50" end="40" isShared="true" />
+        				<exon start=100 end=150 isShared="false" /> 
+        				<start_codon>50</start_codon> 
+				<!-- Stop condon is automatically calculated -->
+     			</transcript>
+   		</annotation>  
+	</add>
+2) Add exon:
+	<add timestamp="ts">
+		<exon parent_id="CG-temp-123-RA" start="50" end="324" isShared="false" />
+	</add>
+3) Add comment to gene or trancript:
+	<add timestamp="ts">
+		<transcript id="CG124">
+			<comment>SomeText</comment>
+		</transcipt>
+	</add>
+	Same for gene/annotation
+4) Add synonyms or orther info to gene or trancript:
+	<add timestamp="ts">
+		<annotation>
+			<synonym>Alias</synonym>
+			<!-- false is the default. This is an optional element. -->
+			<isProblematic>true</isProblematic>
+			<!-- A list of other properties can be displayed here. This should be the subparts generated from Annotaion Editor. An external file might be used for a list of all editable properties for Java code. -->
+		</annotaion>
+	</add>
+
+Update:  All changes from the annotation editor, exon range, moving exon from one trancript to another, set 5' or 3' end, set owner or disown to a trancript, changes made from exon detail editor
+1) Exon Range Change:
+	<update timestamp="ts">
+		<!-- updated values are used for the exon definition -->
+		<exon parent_id="CG23424-RA" start="50" end="341" isShared="false">
+			<!-- New updated values. Probably need another element names -->
+			<start>55</start>
+			<end>300</end>
+		</exon>
+	</update>
+2) Exon moving between two trancripts:
+	<update timestamp="ts">
+		<exon parent_id="CG1234-RA" start="50" end="200" isShared="false">
+			<parent_id>"CG1234-RB"</parent_id>
+		</exon>
+	</update>
+3)Changes from Info Editor and Exon Detail Editor should be encoded somewhere? The following is an example for comment to an annotatio:
+<update timestamp="ts">
+	<annotation id="CG124">
+		<!-- Need to check the Java implemention -->
+		<comment owner="name" timestamp="ts">SomeText</comment>
+		<isProblematic>true</isProblematic>
+	</annotation>
+</update>
+
+Merge: two genes, two trancripts, two or more exons
+
+1) Merge Two Genes:
+	<merge timestamp="ts">
+		<add>
+		</add>
+		<merge /> <!-- A gene merging can be resulted from trancript merging -->
+		<!-- Two genes to be merged -->
+		<source>
+			<annotation id="CG1234" >
+			<!-- For undo purpose, the whole defintion for annotaion should be definied here  if it is NOT possible to clone a SeqFeatureI and kept it somewhere. -->
+			</annotation>
+			<annotation id="CG1332" />
+		</source>
+		<!-- The merged product. It can be one of annotaions in source, or a new one. If it is one of annotaions in source, another should be deleted. If it is a new one, both annotaions should be deleted and a new one should be created. -->
+		<target>
+			<annotation id="CG-temp-1332" />
+			<!-- merging involves subpart updates – while not necessity to list here it would be
+ awfully convenient -->
+			<synonym> wooshy wooshy</synonym>
+			...
+		</target>
+	</merge>
+
+2) Merge Two Trancripts: can be generated from moving exons
+	<merge timestamp="ts">
+		<!-- Two trancripts to be merged -->
+		<source>
+			<transcript id="CG1234-RA">
+			<!-- For updo purpose, the whole defintion for an trancript should he here if it is NOT possible to clone a Java object for transcrip and keep it somewhere. -->
+			</transcript>
+			<transcript id="CG1234-RC">
+			</transcript>
+		</source>
+		<target>
+			<transcript id="CG1234-RA" />
+		</target>
+	</merge>
+
+3) Merge Two or More Exons:
+	<merge timestamp="ts">
+		<!-- Exons to be merged -->
+		<source>
+			<exon parent_id="CG123-RA" start="20" end="200" isShared="true" />
+			<exon parent_id="CG123-RA" start="230" end="300" isShared="true" />
+			<exon parent_id="CG123-RA" start="320" end="400" isShared="true" />
+		</source>
+		<target>
+			<exon parent_id="CG123-RA" start="20" end="400" isShared="true" />
+		</target>
+	</merge>
+
+Split: Trancript, Exon, Gene
+
+1) Split an Exon
+	<split timestamp="ts">
+		<!-- Exon to be split -->
+		<source>
+			<exon parent_id="CG1234-RA" start="20" end="100" isShared="false" />
+		</source>
+		<target>
+			<exon parent_id="CG1234-RA" start="20" end="50" isShared="false" />
+			<exon parent_id="CG1234-RA" start="52" end="100" isShared="false" />
+		</target>
+	</split>
+2) Split a Trancript
+	<split timestamp="ts">
+		<!-- Trancript to be split -->
+		<source>
+			<transcript id="CG123-RA">
+			</transcript>		
+		</source>	
+		<target>	
+			<!-- if any exons are missing error should be raised in adapter -->
+			<trancript id="CG123-RA">
+				<start_codon start="50" end="52" />
+				<exon parent_id="CG123-RA" start="30" end="100" isShared="true" /> 
+				<end_codon start="92" end="94" />
+			</transcript>
+			<transcript id="CG-tmp-123-RB">
+				<start_codon start="150" end="152" />
+				<exon parent_id="CG-tmp-123-RB" start="120" end="200" isShared="true" />
+				<exon parent_id="CG-tmp-123-RB" start="300" end="400" isShared="true" />
+			</transcript> 
+		</target>
+	</split>
+
+3) Split a Gene:
+	<split timestamp="ts">
+		<!-- Gene to be split -->
+		<!-- delete can cause split -->
+		<delete>
+			<exon>
+		</delete>
+		<delete>
+			<transcript>
+		</delete> 	
+		<source>
+			<annotation id="CG124">
+			</annotation>
+		</source>
+		<target>
+			<annotation id="CG124">
+				<!-- Defintion to annotaion -->
+			</annotation>
+			<annotation id="CG124-temp">
+				<!-- Defintion to annotation of CG124-temp -->
+			</annotation>
+		</target>
+	</split>

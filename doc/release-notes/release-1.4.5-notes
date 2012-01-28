@@ -1,0 +1,31 @@
+Release 1.4.5, 7/2/2004:
+
+Major additions:
+1. New Chado JDBC reader reads data from FlyBase Chado database (currently
+set to read from Indiana public server--Drosophila annotations, r3.2).
+Should be very useful to genome centers that are planning to use Chado,
+GMOD's Open Source database schema (available from www.gmod.org).
+2. GenBank human-readable report generator (based on code from Baylor,
+but fixed/extended considerably).  You can now choose to save GenBank as
+either human-readable or tabular format.
+
+Other additions and fixes:
+
+Restriction enzyme mapper now has "site position" and "fragment position"
+columns.  Clicking a row in the results table now selects and zooms to
+the restriction fragment.
+
+GenBank/EMBL readers debugging and improved
+
+"Missing 5' end" flag was being ignored when XML was loaded.
+
+java.util.Date can create dates with unfamiliar timezones that it can't
+then parse (e.g. SGT).  Solution: convert all Dates to GMT before saving.
+
+Tier rearrange (shift-right drag) once again shows a drag ghost (broke on
+12/20/2003).
+
+EnsJ: "Loading sequence" popup was coming up (repeatedly) during second
+and subsequent loads.  Now fixed.
+
+Various bop fixes (not sure what).

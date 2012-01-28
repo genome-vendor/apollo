@@ -1,0 +1,18 @@
+// Default style file for new data adapters--edit as appropriate.
+// Most of the parameters are not specified here because the default
+// vaues are used.
+// For a more complete list of parameters, please see game.style.
+//
+// Each line should have two strings, separated by one or more spaces.
+// The first string is a key and the second is the key's value.
+// It is necessary to put quotes around the strings if they contain
+// punctutation characters or spaces.
+// Both slash-star and slash-slash comments are accepted.
+// Blank lines are ignored.
+
+// The name of the types file (a file--expected to be in the conf directory)
+Types		        "game.tiers"
+
+// if there is no line return at end of last line it won't be read
+
+

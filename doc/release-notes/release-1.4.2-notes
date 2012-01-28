@@ -1,0 +1,35 @@
+Bugs fixed between release 1.4.1 (internal release, 3/12/2004) and
+release 1.4.2 (3/19/2004):
+
+Don't double-add result tags, whether or not we read the style twice.
+
+Do almost-out-of-memory check when user asks to save (it's been sometimes
+running out of memory while trying to save).
+
+Allow user to load data from r3.1 (gadfly) or 3.2 (chado).
+Some query types are disabled in chado (e.g. sequence).
+
+Tier properties weren't all being saved correctly.  [Note: fixed *after*
+3/18 internal release!]
+
+
+Synteny bugs fixed between 1.4.1 and 1.4.2
+
+1) Peptide coord bug where peptide coordinates were improperly used as
+nucleotide coords in blastx hits.
+
+2) Syntenic blocks and the blastx links are not shading by perc id as
+blastx doesnt yet have perc ids (coming soon apparently) and syntenic
+blocks have no scores at all.
+
+3) Masked blastx links from dpse to dmel ("dmel comparative") transcripts
+have been added.
+
+4) dmel and dpse(vivek_prom) blastx feature links can now be used to
+bring up a second species (previously only syntenic block worked)
+(changed color of dmel links to distinguish from dpse links)
+
+
+CVS note for developers:  this release was done on the release_1_4_1_patches branch.
+cvs -z3 -d:ext:yourusername@cvs.gmod.sourceforge.net:/cvsroot/gmod checkout -d [dir] -r release_1_4_1_patches apollo
+

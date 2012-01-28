@@ -1,0 +1,775 @@
+exception on save if dont start apollo from apollo root - not using
+apollo root to get transaction xml template
+
+jdbc seems to be addding "cds features" to reverse strand gene holder for forward
+strand transcripts - or something wierd like that - i only saw this
+through the debugger - not sure if it manifests in apollo but should
+be cleaned up - actually they show up in the annotation menu, but not
+the annotation tree window. This is the cause of the error msg:
+ERROR: Gene with no transcripts
+on splitting genes (probably comes up other times too)
+-- this was for debug flag for tigr - changed flag - should be
+configged - dont know why doesnt show up for rice
+
+
+splitting transcript and saving sometimes gives exception:
+Lookup Query: SELECT feature_id FROM feature WHERE organism_id=9 AND uniquename='Chr1' AND type_id=146
+Lookup Query: SELECT pub_id FROM pub WHERE uniquename='mgibson' AND type_id=19186
+Lookup Query: SELECT feature_id FROM feature WHERE organism_id=9 AND uniquename='CG:temp3:Chr1-RA' AND type_id=74 AND name='CG:temp3:Chr1-RA'
+java.lang.IllegalStateException: ChadoTransactionProcessor.commitLookup(): -1 cannot be found.
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitLookup(JDBCTransactionWriter.java:226)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransactions(JDBCTransactionWriter.java:115)
+        at apollo.dataadapter.TransactionOutputAdapter.commit(TransactionOutputAdapter.java:87)
+        at apollo.dataadapter.chado.ChadoAdapter.commitChanges(ChadoAdapter.java:239)
+        at apollo.dataadapter.AbstractApolloAdapter.commitChanges(AbstractApolloAdapter.java:232)
+        at apollo.dataadapter.AbstractApolloAdapter.commitChanges(AbstractApolloAdapter.java:239)
+        at apollo.dataadapter.chado.ChadoAdapterGUI.doOperation(ChadoAdapterGUI.java:290)
+        at org.bdgp.swing.widget.DataAdapterChooser.doCommitWithExceptions(DataAdapterChooser.java:355)
+        at org.bdgp.swing.widget.DataAdapterChooser.doCommit(DataAdapterChooser.java:408)
+        at apollo.gui.DataLoader$SaveAdapterChooser.doCommit(DataLoader.java:701)
+        at org.bdgp.swing.widget.DataAdapterChooser$CommitRunnable.run(DataAdapterChooser.java:132)
+        at java.lang.Thread.run(Thread.java:534)
+-- i dont see where this -1 comes from?? maybe we should catch this
+illegal state exception and print out a more informative message
+i think the problem is its looking up a temp id
+(my file data/rice/splits/failed-commit.gamexml captures this problem)
+
+
+transcript name needs to be uneditable!
+
+
+5) need to fire events when translation stop and/or start changes
+- do as post analysis
+- take out explicit translation events?
+- do as a range rather than separate start and stop events?
+
+sdeleting exon from guanming rice axample (17100000-1720000) seems to
+cause 2 exon deletes and 2 translation changes - look into this
+
+comments - transaction
+comments - undo
+
+comment internal state has to be preserved - forget how - i think it
+might have to appended to comment string itself??
+
+add scotts optimizations to addSearchHits query - look for other
+places it could apply
+
+jdbc read to game save loses search hits - i wonder if this is because
+the data structure/heiracrchy is not the same or something like that
+
+Transaction xml writer. (in apollo.dataadapter.transaction-xml?)
+
+Transaction xml reader.
+
+#Research and document all edits that will become transactions.
+
+## Come up with transaction xml that will handle all edits. -> chado xml
+
+##Make xml schema for transaction xml (pass around for comments) ->
+  chado xml
+
+Current AnnotationChangeEvents that are being fired have to be altered
+to be fully descriptional. (AnnotationEditor,FeatureEditorDialog)
+
+Rework Transaction, AnnotationChangeEvent/FeatureChangeEvent for fully described
+transactions.
+
+Normally when translation start set stop gets reset automatic - no
+need to send separate event - its computed
+But translation stops can be explicitly set.
+If a new start is set and it recomputes an explicitly set stop do we
+need to note the new stop in a trnsaction? or does setting the new
+start just take care of that - i guess maybe it does but im not sure
+
+setting exon ends - do we additional transactions if affects ends of
+transcript and gene - i dont think so - i think the database writer
+would just take care of it
+
+jdbc...
+
+exception after a add,splits, and merges (all with temps):
+Insert: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES (280438, 280437, 19415)
+Insert: INSERT INTO featureloc (fmax, fmin, strand, srcfeature_id, feature_id) VALUES ('1888720', '1885411', '1', 1, 280438)
+Insert: INSERT INTO feature (organism_id, uniquename, type_id, name) VALUES (9, 'CG:temp1:chr1-RB', 74, 'CG:temp1:chr1-RB')
+Insert: INSERT INTO featureloc (fmax, fmin, strand, srcfeature_id, feature_id) VALUES ('1885640', '1885411', '1', 1, 280439)
+Insert: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES (280439, 280436, 33)
+Insert: INSERT INTO featureprop (value, rank, feature_id, type_id) VALUES ('mgibson', '0', 280439, 19332)
+Insert: INSERT INTO featureprop (value, rank, feature_id, type_id) VALUES ('Mon Jan 10 17:33:11 EST 2005', '0', 280439, 19327)
+Insert: INSERT INTO feature (organism_id, seqlen, uniquename, residues, type_id) VALUES (9, '76', 'CG:temp1:chr1-PB', 'MAGGGGEYLRQFVEETAWYNEIFLSHVVPGDWWRALPHPLQSWLRNGLGGYLIYFACGFLWCFVIYYWKRHAYIPK', 1068)
+Insert: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES (280440, 280439, 19415)
+Insert: INSERT INTO featureloc (fmax, fmin, strand, srcfeature_id, feature_id) VALUES ('1885639', '1885411', '1', 1, 280440)
+Insert: INSERT INTO feature (organism_id, uniquename, type_id, name) VALUES (9, 'CG:temp2:chr1-RB', 74, 'CG:temp2:chr1-RB')
+Insert: INSERT INTO featureloc (fmax, fmin, strand, srcfeature_id, feature_id) VALUES ('1888065', '1887759', '1', 1, 280441)
+Insert: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES (280441, 280436, 33)
+org.postgresql.util.PSQLException: ERROR: duplicate key violates unique constraint "feature_c1"at org.postgresql.util.PSQLException.parseServerError(PSQLException.java:139)
+        at org.postgresql.core.QueryExecutor.executeV3(QueryExecutor.java:152)
+        at org.postgresql.core.QueryExecutor.execute(QueryExecutor.java:100)
+        at org.postgresql.core.QueryExecutor.execute(QueryExecutor.java:43)
+        at org.postgresql.jdbc1.AbstractJdbc1Statement.execute(AbstractJdbc1Statement.java:517)
+        at org.postgresql.jdbc2.AbstractJdbc2Statement.execute(AbstractJdbc2Statement.java:50)
+        at org.postgresql.jdbc1.AbstractJdbc1Statement.executeUpdate(AbstractJdbc1Statement.java:273)
+        at org.postgresql.jdbc1.AbstractJdbc1Statement.executeUpdate(AbstractJdbc1Statement.java:259)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitInsert(JDBCTransactionWriter.java:324)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransactions(JDBCTransactionWriter.java:118)
+        at apollo.dataadapter.TransactionOutputAdapter.commit(TransactionOutputAdapter.java:87)
+        at apollo.dataadapter.chado.ChadoAdapter.commitChanges(ChadoAdapter.java:252)
+        at
+        apollo.dataadapter.AbstractApolloAdapter.commitChanges(AbstractApolloAdapter.java:232)
+So the bug is a merge bug - that if the first name is chosen then the
+transcript names dont get renamed and you can have transcripts with the same suffix - 
+it turns out this bug is not new - its present in the last release!
+
+sometimes new temp genes get GN prefix in apollo - dont have
+repeatable - really need to get a repeatable for this!
+inserts without error but doesnt query back??
+so GN comes from the default name adapter - so sometimes sporatically
+gets into state where it uses default name adapter instead of rice
+name adapter for new annotations - why???? no repeatable - seems to be
+deep - only happens after a bunch of other junk has happened - need to
+find this one!!!
+
+
+fiddled around and somehow managed to get an exon delete the gene add:
+Insert: INSERT INTO feature (organism_id, uniquename, type_id, name) VALUES (9, 'TE:temp3:chr1', 173, 'TE:temp3:chr1')
+Insert: INSERT INTO featureloc (fmax, fmin, strand, srcfeature_id, feature_id) VALUES ('1888065', '1885411', '1', 1, 280534)
+Lookup Query: SELECT feature_id FROM feature WHERE organism_id=9 AND uniquename='CG:temp4:chr1-RA' AND type_id=74 AND name='CG:temp4:chr1-RA'
+java.lang.IllegalStateException: Error in ChadoTransactionProcessor.commitLookup()
+Lookup query failed to return anything:
+ SELECT feature_id FROM feature WHERE organism_id=9 AND uniquename='CG:temp4:chr1-RA' AND type_id=74 AND name='CG:temp4:chr1-RA'
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitLookup(JDBCTransactionWriter.java:231)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransactions(JDBCTransactionWriter.java:115)
+        at apollo.dataadapter.TransactionOutputAdapter.commit(TransactionOutputAdapter.java:87)
+        at apollo.dataadapter.chado.ChadoAdapter.commitChanges(ChadoAdapter.java:252)
+        at apollo.dataadapter.AbstractApolloAdapter.commitChanges(AbstractApolloAdapter.java:232)
+        at apollo.dataadapter.AbstractApolloAdapter.commitChanges(AbstractApolloAdapter.java:239)
+        at apollo.dataadapter.chado.ChadoAdapterGUI.doOperation(ChadoAdapterGUI.java:298)
+        at org.bdgp.swing.widget.DataAdapterChooser.doCommitWithExceptions(DataAdapterChooser.java:355)
+        at org.bdgp.swing.widget.DataAdapterChooser.doCommit(DataAdapterChooser.java:408)
+        at apollo.gui.DataLoader$SaveAdapterChooser.doCommit(DataLoader.java:717)
+
+annotation name event not firing on changing name in annot info!
+
+- with exon range change (ede) exon uniquname updates but exon name
+stays same with old range - do we even need these exons to have names?
+is it a scandal to not have a name - dont really need it - toss it!
+turns out its the feature_relationship trigger that is populating the
+exon name not apollo jdbc/transactions
+- scott fixed the trigger to not put in name if no name present
+
+optimize search hit query - postgres chokes on outer join - separate
+into 2 queries - flag for descriptions - i dont think tigr has
+descriptions - ask crabtree
+-put in scott subselect optimization - find out if sybase supported
+from crabtree - if not configure separate queries
+
+- prefix finder chokes on underscore - fix that
+
+adding a 2 exon transcript and deleting an exon and saving causes an
+exception - trying to delete with temp id:
+Delete Query: DELETE FROM feature WHERE organism_id=9 AND uniquename='CG:temp8:Chr1-RA' AND type_id=74 AND name='CG:temp8:Chr1-RA'
+java.lang.IllegalStateException: JDBCTransactionWriter.commitDelete(): Cannot delete a row.
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitDelete(JDBCTransactionWriter.java:389)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransactions(JDBCTransactionWriter.java:124)
+        at apollo.dataadapter.TransactionOutputAdapter.commit(TransactionOutputAdapter.java:87)
+        at apollo.dataadapter.chado.ChadoAdapter.commitChanges(ChadoAdapter.java:239)
+        at apollo.dataadapter.AbstractApolloAdapter.commitChanges(AbstractApolloAdapter.java:232)
+        at apollo.dataadapter.AbstractApolloAdapter.commitChanges(AbstractApolloAdapter.java:239)
+        at apollo.dataadapter.chado.ChadoAdapterGUI.doOperation(ChadoAdapterGUI.java:290)
+        at org.bdgp.swing.widget.DataAdapterChooser.doCommitWithExceptions(DataAdapterChooser.java:355)
+        at org.bdgp.swing.widget.DataAdapterChooser.doCommit(DataAdapterChooser.java:408)
+        at apollo.gui.DataLoader$SaveAdapterChooser.doCommit(DataLoader.java:701)
+        at org.bdgp.swing.widget.DataAdapterChooser$CommitRunnable.run(DataAdapterChooser.java:132)
+        at java.lang.Thread.run(Thread.java:534)
+i think this is fixed - either that or i dont have a repeatable
+
+
+merge bug merge 2 new gene - 2nd name - feat - feat rel insert with
+temp id: - cant repeat this one either - maybe its fixed - i think
+essentially got "fixed" when i put in that if 2 temp genes are merged
+dont even bother asking user for name - i think was if user selected
+2nd name - might be issue with real genes - dont know
+Insert: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES (280614, 280610, 33)
+Insert: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES ('CG:temp1:chr1:1862261-1862911', 280610, 33)
+org.postgresql.util.PSQLException: ERROR: invalid input syntax for integer: "CG:temp1:chr1:1862261-1862911"
+        at org.postgresql.util.PSQLException.parseServerError(PSQLException.java:139)
+        at org.postgresql.core.QueryExecutor.executeV3(QueryExecutor.java:152)
+        at org.postgresql.core.QueryExecutor.execute(QueryExecutor.java:100)
+        at org.postgresql.core.QueryExecutor.execute(QueryExecutor.java:43)
+        at org.postgresql.jdbc1.AbstractJdbc1Statement.execute(AbstractJdbc1Statement.java:517)
+        at org.postgresql.jdbc2.AbstractJdbc2Statement.execute(AbstractJdbc2Statement.java:50)
+        at org.postgresql.jdbc1.AbstractJdbc1Statement.executeUpdate(AbstractJdbc1Statement.java:273)
+        at org.postgresql.jdbc1.AbstractJdbc1Statement.executeUpdate(AbstractJdbc1Statement.java:259)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitInsert(JDBCTransactionWriter.java:306)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransactions(JDBCTransactionWriter.java:118)
+        at apollo.dataadapter.TransactionOutputAdapter.commit(TransactionOutputAdapter.java:87)
+        at apollo.dataadapter.chado.ChadoAdapter.commitChanges(ChadoAdapter.java:252)
+
+
+exons need to be renamed on gene name change - this only affects
+already existing genes not new ones so not critical for rice -
+should do this all with one transaction/event - a gene name
+transaction should imply all names below it are changed
+- exons dont have names they just have ids
+
+
+need to figure out name and id editing permissions for students - also
+name editing is presently lacking fly-like constraints of jibing with
+the id - this was working and now its not again??
+
+
+AIE needs to update IDs on type name change - i think we'll be hacking
+this for now in chado transactions
+
+annot editors new annots and transcripts recorded twice if in both
+cursor set and annot set - i think this is fixed
+
+AIE config out replace stop
+
+
+game w movement panel - test
+
+
+serialization gives null pointer on read - write is fine
+
+undo for comments - need to update commentator window
+
+
+
+id undo
+- atomic with name change
+- protein? -- need prot trans - should be its own category (not
+TRANSCRIPT)?
+- pep name wont undo to null as it wont set to null - it should - get
+rid of restriction?
+- trans suffix is not changing pep suffix
+- treanscript cdna seq name 
+- if you undo on a different trans/gene than originally brought up it
+loads original gene - annoying
+- synonyms on name changes!
+
+memory leaks - optimizeit
+
+command line:
+#-"apollo.main" repackaging for washing line, #dataloader & LoadUtil...
+#- load game
+#- load chado
+#- load genbank, gff, others...
+
+doc new command line stuff (nomi did it)
+
+need resolution on id prefixes - is it TE or transposable_element: - i
+think theres a few others - right now tiers file and db trigger
+contradict each other - 
+
+
+mrna suffix is gonna change to transcript in chado - do same in apollo
+in anticipation
+
+on adding new exon gene:
+Insert: INSERT INTO feature (organism_id, uniquename, type_id, name) VALUES (9, 'RICE:temp1', 202, 'RICE:temp1')
+Insert: INSERT INTO featureloc (fmax, fmin, strand, srcfeature_id, feature_id) VALUES ('421', '288', '-1', 1, 280287)
+Insert: INSERT INTO feature (organism_id, uniquename, type_id, name) VALUES (9, 'RICE:temp1-transcript2', 74, 'RICE:temp1-transcript1')
+Insert: INSERT INTO featureloc (fmax, fmin, strand, srcfeature_id, feature_id) VALUES ('421', '288', '-1', 1, 280288)
+Insert: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES (280288, 280287, 33)
+Insert: INSERT INTO featureprop (value, rank, feature_id, type_id) VALUES ('mgibson', '0', 280288, 20286)
+Insert: INSERT INTO featureprop (value, rank, feature_id, type_id) VALUES ('Tue Mar 29 16:16:46 EST 2005', '0', 280288, 20281)
+Insert: INSERT INTO feature (organism_id, seqlen, uniquename, residues, type_id) VALUES (9, '2', 'RICE:temp1-transcript1', 'NL', 1068)
+Insert: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES (280289, 280288, 20371)
+Insert: INSERT INTO featureloc (fmax, fmin, strand, srcfeature_id, feature_id) VALUES ('421', '415', '-1', 1, 280289)
+Insert: INSERT INTO feature (organism_id, uniquename, type_id) VALUES (9, 'RICE:temp1:421-289', 45)
+Insert: INSERT INTO featureloc (fmax, fmin, strand, srcfeature_id, feature_id) VALUES ('421', '288', '-1', 1, 280290)
+Insert: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES (280290, 280288, 33)
+Insert: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES (280290, 280288, 33)
+java.sql.SQLException: ERROR: duplicate key violates unique constraint "feature_relationship_c1"
+Problematic query: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES (280290, 280288, 33)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.processException(JDBCTransactionWriter.java:375)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitInsert(JDBCTransactionWriter.java:341)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransactions(JDBCTransactionWriter.java:124)
+        at apollo.dataadapter.TransactionOutputAdapter.commit(TransactionOutputAdapter.java:87)
+        at apollo.dataadapter.chado.ChadoAdapter.commitChanges(ChadoAdapter.java:268)
+-- actually this seems to be from an apollo bug where it allows for 3
+        identical ranged exons of the same transcript from dragging 3
+        results with the same range - fix apollo!
+
+cmd line:
+- save game
+- save chado
+
+game adapter renaming transcripts - take that out!
+
+trans name should probably not get temp in suffix if gene is temp - it
+just becomes too tempy
+
+naming on splits in rice for temp gene is wrong - names both new genes
+same thing - ok in fly - probably messed up by id setup??
+
+
+mrna with temp suffix is not getting replaced by db trigger -> scott
+
+
+on splitting a temp gene got name RICE:5 and loses the temp and name
+gets preserved on commit - this is bad - see
+rice/test/1:9000-13000-badnames-dropped-transcript.game
+
+
+see 1:9000-13000-badnames-dropped-transcript.game as transcript 1 is
+in database but doesnt appear in apollo - yikes!
+i wonder if this has to do with temp numbering failing to go through
+old transactions - and an old trans is mistakenly coalescing a new
+trans - need repeatable - wait but it is in the db - so why isnt it
+coming up in apollo??? - it has no exons - somehow transcript1 lost
+all of its exons without getting deleted - need a repeatable!
+heres an example of exons getting dropped:
+Lookup Query: SELECT pub_id FROM pub WHERE uniquename='mgibson' AND type_id=20306
+Insert: INSERT INTO feature (organism_id, uniquename, type_id, name) VALUES (9, 'RICE:temp19', 202, 'RICE:temp1
+9')
+Insert: INSERT INTO featureloc (fmax, fmin, strand, srcfeature_id, feature_id) VALUES ('15373', '13400', '1', 1
+, 280375)
+Insert: INSERT INTO feature (organism_id, uniquename, type_id, name) VALUES (9, 'RICE:temp19-transcript2', 74,
+'RICE:temp19-transcript1')
+Insert: INSERT INTO featureloc (fmax, fmin, strand, srcfeature_id, feature_id) VALUES ('15373', '14184', '1', 1
+, 280376)
+Insert: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES (280376, 280375, 33)
+Insert: INSERT INTO featureprop (value, rank, feature_id, type_id) VALUES ('mgibson', '0', 280376, 20286)
+Insert: INSERT INTO featureprop (value, rank, feature_id, type_id) VALUES ('Fri Apr 01 18:43:17 EST 2005', '0',
+ 280376, 20281)
+Insert: INSERT INTO feature (organism_id, seqlen, uniquename, residues, type_id) VALUES (9, '288', 'RICE:temp19
+-transcript1', 'DDQQVLRKRKTELGGTCSVASLILFVGLVTVLLYQAIQRRNIEVHRVKPANAPDLLSFVNDIEFHITTISSMSCSQLVAPSTIAMGTPGSMDFRL
+LPLSTLLTYNCQNTSQGPSVSLKCNGCRIPPRDHYVSWQFIDLPRQPAAAVGFQFNLTAKQHGDDKHVSSVSGTINSDNFTDDKLKTFRGRDSNVLKIQLFPQTYINHHNL
+KLLQPLVQDFTQGSTFSNVRNLNASLQNPMDGIINTTLYISYLSNYIVEISNENVLGPVSILASIGGLYAFSVAIFLCLMAQ', 1068)
+Insert: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES (280377, 280376, 20371)
+Insert: INSERT INTO featureloc (fmax, fmin, strand, srcfeature_id, feature_id) VALUES ('15048', '14184', '1', 1
+, 280377)
+Insert: INSERT INTO feature (organism_id, uniquename, type_id, name) VALUES (9, 'RICE:temp19-transcript3', 74,
+'RICE:temp19-transcript2')
+Insert: INSERT INTO featureloc (fmax, fmin, strand, srcfeature_id, feature_id) VALUES ('15060', '13400', '1', 1
+, 280378)
+Insert: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES (280378, 280375, 33)
+Insert: INSERT INTO featureprop (value, rank, feature_id, type_id) VALUES ('mgibson', '0', 280378, 20286)
+Insert: INSERT INTO featureprop (value, rank, feature_id, type_id) VALUES ('Fri Apr 01 18:43:04 EST 2005', '0',
+ 280378, 20281)
+Insert: INSERT INTO feature (organism_id, seqlen, uniquename, residues, type_id) VALUES (9, '359', 'RICE:temp19
+-transcript2', 'WRARRRACSPPTPPSAPASRASTSPPPSTAPASACPTAAGRSAPSAPPATRASTSSPPSSPSTSSAASPSPRPSSSRPPSLPSSPGLPFVPSPGS
+PDTTPPATRGSSARASGSAASTASTTPPTGRLLYQAIQRRNIEVHRVKPANAPDLLSFVNDIEFHITTISSMSCSQLVAPSTIAMGTPGSMDFRLLPLSTLLTYNCQNTSQ
+GPSVSLKCNGCRIPPRDHYVSWQFIDLPRQPAAAVGFQFNLTAKQHGDDKHVSSVSGTINSDNFTDDKLKTFRGRDSNVLKIQLFPQTYINHHNLKLLQPLVQDFTQGSTF
+SNVRNLNASLQNPMDGIINTTLYISYLSNYIVEISNENVLGP', 1068)
+Insert: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES (280379, 280378, 20371)
+Insert: INSERT INTO featureloc (fmax, fmin, strand, srcfeature_id, feature_id) VALUES ('14478', '13401', '1', 1
+, 280379)
+Insert: INSERT INTO feature (organism_id, uniquename, type_id) VALUES (9, 'RICE:temp19:14185-14276', 45)
+Insert: INSERT INTO featureloc (fmax, fmin, strand, srcfeature_id, feature_id) VALUES ('14276', '14184', '1', 1
+, 280380)
+Insert: INSERT INTO feature (organism_id, uniquename, type_id) VALUES (9, 'RICE:temp19:15303-15373', 45)
+Insert: INSERT INTO featureloc (fmax, fmin, strand, srcfeature_id, feature_id) VALUES ('15373', '15302', '1', 1
+, 280381)
+Insert: INSERT INTO feature (organism_id, uniquename, type_id) VALUES (9, 'RICE:temp19:13401-13778', 45)
+Insert: INSERT INTO featureloc (fmax, fmin, strand, srcfeature_id, feature_id) VALUES ('13778', '13400', '1', 1
+, 280382)
+Insert: INSERT INTO feature (organism_id, uniquename, type_id) VALUES (9, 'RICE:temp19:14360-15060', 45)
+Insert: INSERT INTO featureloc (fmax, fmin, strand, srcfeature_id, feature_id) VALUES ('15060', '14359', '1', 1
+, 280383)
+280379 is the protein for trans 2 - NOT trans 1 as i think it should
+be - as this is adding exons to a protein - makes no sense! - this
+should be 280376 for object_id - this is the problem
+Insert: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES (280380, 280379, 33)
+Insert: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES (280383, 280379, 33)
+Insert: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES (280381, 280379, 33)
+heres db data:
+rice=# select name,uniquename,feature_id,type_id from feature where name like 'RICE000162%';
+          name          | uniquename | feature_id | type_id
+------------------------+------------+------------+---------
+ RICE000162             | RICE000162 |     280375 |     202
+ RICE000162-transcript1 | RICE000163 |     280376 |      74
+ RICE000162-protein1    | RICE000164 |     280377 |    1068
+ RICE000162-transcript2 | RICE000165 |     280378 |      74
+ RICE000162-protein2    | RICE000166 |     280379 |    1068
+ RICE000162:13400-13778 | RICE000169 |     280382 |      45
+ RICE000162:14359-15060 | RICE000170 |     280383 |      45
+unnamed exon:
+rice=# select name,uniquename,feature_id,type_id from feature where feature_id = 280380;
+ name | uniquename | feature_id | type_id
+------+------------+------------+---------
+      | RICE000167 |     280380 |      45
+this is adding exons to a transcript as it should - this is the
+transcript that shows up ...
+Insert: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES (280382, 280378, 33)
+Insert: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES (280383, 280378, 33)
+-- ive got a repeatable - just insert a 2 transcript gene - i see the
+problem now too - i think the problem is that the protein and
+transcript have the same or similar ids and names - i didnt think it
+mattered because they are temps - but it matters as those ids are used
+to put relationsships together so they have to be unique even if temps
+of proteins - see rice/test/13000-19000/dropped-trans
+-- yikes this is heavy - Transcript.derivePeptideName -> name adapter
+-- need to call name adapter at Transcript creation
+AE.duplicateTrans (wierdo constructor)
+-- data adapters should be filling in the peptide themselves
+-- AE.buildTranscript
+-- AE.splitTranscript
+
+temp peptide is getting temp transcript name - not a big deal as the
+db should rename it and i dont think peptide name is ever displayed in
+apollo - nonetheless its awkward - coalescing may be an issue
+actually the peptide id is the transcript name
+
+
+on jdbc read old transactions are not getting dumped! need to be -
+same with loading from game! fix this right away as it will also
+produce a lot of funny errors that are unclear as to why - probably
+some below are due to this
+...another wierd thing - i think i just saved something that was a split
+that resulted in 2 one exon, 1 transcript genes - but i had done a
+bunch of stuff previous - the db came back with 2 2 transcript genes -
+need repeatable - maybe im doing wierd things
+so rice/split-nameing-bug/no-annots.tnxml should be empty but its not
+- get repeatable
+- this is fixed - due to transactions not being cleared on load
+
+
+gui for putting in user name (for windows - no user like unix)
+
+need to have rice apollo comform to typeless ids - 
+- no id changes on type change 
+- temp ids get prefix RICE for all types
+- get ids & names sorted out with scott
+
+
+config out translational frame shifts
+
+need compound transaction for split for tair - shouldnt be too hard
+
+config out sequencing errors
+
+rice transcript and protein suffixes are wrong RA -> transcript, PA -> protein
+
+
+on adding new gene:
+Insert: INSERT INTO feature (organism_id, uniquename, type_id, name) VALUES (9, 'RICE:temp1-transcript1', 74, 'RICE:temp1-transcript1')
+Insert: INSERT INTO featureloc (fmax, fmin, strand, srcfeature_id, feature_id) VALUES ('1257', '250', '1', 1, 280438)
+Insert: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES (280438, 280437, 33)
+Insert: INSERT INTO featureprop (value, rank, feature_id, type_id) VALUES ('mgibson', '0', 280438, 20286)
+Insert: INSERT INTO featureprop (value, rank, feature_id, type_id) VALUES ('Thu Apr 28 17:42:15 EDT 2005', '0', 280438, 20281)
+Insert: INSERT INTO feature (organism_id, seqlen, uniquename, residues, type_id, md5checksum) VALUES (9, '89', 'null', 'MSSAAGQDNGDTAGDYIKWMCGAGGRAGGAMANLQRGVGSLVRDIGDPCLNPSPVKGSKMLKPEKWHTCFDNDGKVIGFRKALKFIVLG', 1068, '')
+Insert: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES ('null', 280438, 20371)
+java.sql.SQLException: ERROR: invalid input syntax for integer: "null"
+
+Problematic query: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES ('null', 280438, 20371)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.processException(JDBCTransactionWriter.java:375)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitInsert(JDBCTransactionWriter.java:341)
+        at
+        apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransactions(JDBCTransactionWriter.java:124)
+-- this is due to peptide ids/acc not being filled in in AE/NA with
+        new gene - ammend this
+
+have to fix the jdbc reader for results - need to get feat sets - its
+still cutting out seq feats that are out of range but are part of in
+range feat sets - this is pretty crucial! flybase doesnt have this so
+it will need to be configured (high priority)
+this is true of 
+1) gene predics
+2) search hits
+-- make configurable for search hits (rice true, fly,tigr false)
+
+- if another gene is selected in annot info right after id edit, id
+edit doesnt go through - might be true of other edits as well
+true for synonyms as well
+probably true with external select as well (from main window)
+acutally it isnt because leaving the window causes the event to fire
+
+need to do undo for id change for fly release
+
+game from rice does not have organism - need this for style
+automation, good to have in general - (medium priority)
+needs to get populated from jdbc - is it in chado? 
+if not it has to be configured i guess?
+
+
+Transcript synonyms are not getting produced on gene name change
+
+Erroneously getting error message on gene name change:
+Error: transcript symbol pooshy-transcript3:temp does not match parent annotation's symbol, poo
+You must fix this problem before changes can be committed.
+
+
+wo! new single exon gene not coming up! :
+this is via saved game file from cmd line!
+straight from apollo its fine!
+Insert: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES (280465, 280464, 33)
+Insert: INSERT INTO feature (organism_id, seqlen, uniquename, residues, type_id) VALUES (9, '56', 'RICE:temp1-transcript1', 'MSSAAGQDNGDTAGDYIKWMCGAGGRAGGAMANLQRGVGSLVRDIGDPCLNPSPVK', 1068)
+Insert: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES (280466, 280466, 20371)
+Insert: INSERT INTO feature (organism_id, uniquename, type_id) VALUES (9, 'RICE:temp1:251-418', 45)
+Insert: INSERT INTO featureloc (fmax, fmin, strand, srcfeature_id, feature_id) VALUES ('418', '250', '1', 1, 280467)
+Insert: INSERT INTO feature_relationship (subject_id, object_id,
+type_id) VALUES (280467, 280466, 33)
+no names for prot & exon??
+rice=# SELECT f.name,uniquename,feature_id, c.name           FROM feature f, cvterm c     WHERE f.type_id = c.cvterm_id AND f.feature_id > 280463;
+          name          | uniquename | feature_id |  name
+------------------------+------------+------------+---------
+                        | RICE000241 |     280467 | exon
+ RICE000238-transcript1 | RICE000239 |     280465 | mRNA
+                        | RICE000240 |     280466 | protein
+ RICE000238             | RICE000238 |     280464 | gene
+(4 rows)
+straight from apollo (ok version):
+Insert: INSERT INTO feature (organism_id, seqlen, uniquename, residues, type_id) VALUES (9, '56', 'RICE:temp1-protein1', 'MSSAAGQDNGDTAGDYIKWMCGAGGRAGGAMANLQRGVGSLVRDIGDPCLNPSPVK', 1068)
+Insert: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES (280470, 280469, 20371)
+Insert: INSERT INTO feature_relationship (subject_id, object_id, type_id) VALUES (280471, 280469, 33)
+rice=# SELECT f.name,uniquename,feature_id, c.name           FROM feature f, cvterm c     WHERE f.type_id = c.cvterm_id AND f.name like 'RICE000242%';
+          name          | uniquename | feature_id |  name
+------------------------+------------+------------+---------
+ RICE000242:250-418     | RICE000245 |     280471 | exon
+ RICE000242-transcript1 | RICE000243 |     280469 | mRNA
+ RICE000242             | RICE000242 |     280468 | gene
+ RICE000242-protein1    | RICE000244 |     280470 | protein
+(4 rows)
+-- gmod name adapter needed to generate a distinct peptide id for game 
+
+
+
+(on small-gene.xml) if you add a comment & dont enter text and hit
+close (no add trancsaction fired) - you then get exceptions whenever trying to open comments
+again - either gene or transcript (until you exit & restart FED):
+java.lang.ArrayIndexOutOfBoundsException: 0 >= 0
+        at java.util.Vector.elementAt(Vector.java:431)
+        at javax.swing.JList$5.getElementAt(JList.java:1254)
+        at javax.swing.JList.getSelectedValue(JList.java:1812)
+        at apollo.gui.annotinfo.Commentator.getCurrentComment(Commentator.java:441)
+        at apollo.gui.annotinfo.Commentator.commitCurrentComment(Commentator.java:501)
+        at apollo.gui.annotinfo.GeneEditPanel.editComments(GeneEditPanel.java:705)
+        at apollo.gui.annotinfo.GeneEditPanel.access$500(GeneEditPanel.java:44)
+        at apollo.gui.annotinfo.GeneEditPanel$2.actionPerformed(GeneEditPanel.java:281)
+
+no repeatable - seems to happen on empty comments (which can still
+happen on hitting trans/gene com button to switch - clean up)
+java.lang.ArrayIndexOutOfBoundsException: 3 >= 2
+        at java.util.Vector.elementAt(Vector.java:431)
+        at javax.swing.JList$5.getElementAt(JList.java:1254)
+        at apollo.gui.annotinfo.Commentator$UserCommentListSelListener.getPreviouslySelectedComment(Commentator.java:500)
+        at apollo.gui.annotinfo.Commentator$UserCommentListSelListener.checkForEditedComment(Commentator.java:490)
+        at apollo.gui.annotinfo.Commentator$UserCommentListSelListener.valueChanged(Commentator.java:485)
+        at javax.swing.JList.fireSelectionValueChanged(JList.java:1321)
+        at javax.swing.JList$ListSelectionHandler.valueChanged(JList.java:1335)
+        at javax.swing.DefaultListSelectionModel.fireValueChanged(DefaultListSelectionModel.java:187)
+        at javax.swing.DefaultListSelectionModel.fireValueChanged(DefaultListSelectionModel.java:167)
+
+
+message for name editing claims you should edit id - not true for rice
+
+
+if working with temp genes and a split causes a merge - first theres a
+split popup and then theres a merge popup - there then comes a popup
+saying theres an error that the "annotation ID is not in a valid
+format: RICE:temp8 ID format should be: RICE\d+. You must fix this
+problem before changes can be committed." but i think it commits
+anyways - not sure. in any case this checker needs to be jiggy with
+temp ids. -- it comes from tha annot info editor being open - with any
+temp splits
+
+
+redundant syn on split causes problems at commit time - get rid of!
+-- fixed for gene syns
+-- still a prob for transcript syns
+
+simple split is choking on extra redundant synonym:
+nsert: INSERT INTO feature (organism_id, uniquename, type_id, name) VALUES (9, 'RICE:temp7', 202, 'RICE:temp7')
+Insert: INSERT INTO featureloc (fmax, fmin, strand, srcfeature_id, feature_id) VALUES ('2362', '2258', '1', 1, 280713)
+Lookup Query: SELECT synonym_id FROM synonym WHERE type_id=4 AND name='RICE000470' AND synonym_sgml='RICE000470'
+Insert: INSERT INTO feature_synonym (synonym_id, feature_id, pub_id, is_current, is_internal) VALUES (351207, 280713, 4, '1', '0')
+Lookup Query: SELECT synonym_id FROM synonym WHERE type_id=4 AND name='RICE000470' AND synonym_sgml='RICE000470'
+Insert: INSERT INTO feature_synonym (synonym_id, feature_id, pub_id, is_current, is_internal) VALUES (351207, 280713, 4, '1', '0')
+java.sql.SQLException: ERROR: duplicate key violates unique constraint "feature_synonym_c1"
+Problematic query: INSERT INTO feature_synonym (synonym_id, feature_id, pub_id, is_current, is_internal) VALUES (351207, 280713, 4, '1', '0')
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.processException(JDBCTransactionWriter.java:375)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitInsert(JDBCTransactionWriter.java:341)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransformedTransactions(JDBCTransactionWriter.java:124)
+
+
+transactions are getting lost sporatically - need repeatable - do a
+bunch of stuff - delete, add, split - go to save and it says theres 0
+transactions! whats up with that? find repeatable this is killer -
+maybe its reusing same ids or something???
+- add,del,add at one point ended up with just del
+- add,del coalesced to just del
+- add,del,add another time left 2 adds no delete - with this error on
+insert: (see add-del-add2 in test5)
+java.sql.SQLException: ERROR: new row for relation "featureloc" violates check constraint "featureloc_c2"
+Problematic query: INSERT INTO featureloc (featureloc_id, fmax, fmin, strand, srcfeature_id, feature_id) VALUES (2651908, '-1000000000', '999999999', '1', 376548, 1936331)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.processException(JDBCTransactionWriter.java:400)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitInsert(JDBCTransactionWriter.java:361)
+- another add-del went to just add and gave error on commit:
+java.sql.SQLException: ERROR: new row for relation "featureloc" violates check constraint "featureloc_c2"
+Problematic query: INSERT INTO featureloc (featureloc_id, fmax, fmin, strand, srcfeature_id, feature_id) VALUES (2651909, '-1000000000', '999999999', '1', 376548, 1936332)
+
+need compound transaction for merge for tair - shouldnt be too hard
+
+
+
+default "gene" type wasnt being set in AnnotatedFeature - wasnt
+checking for NO_TYPE
+some annots are coming up with no type - and sometimes not visible -
+wierd and these are genes in chado!!!
+alternate types are not deleting:
+Could not delete RICE000156 from RICE000155 because drawable was not found
+Why is an overlapper adapter requested in non-annotation tier no_type?
+Exception in thread "AWT-EventQueue-0" java.lang.NullPointerException
+        at apollo.editor.AnnotationEditor.areOverlapping(AnnotationEditor.java:619)
+        at apollo.editor.AnnotationEditor.findSplits(AnnotationEditor.java:4638)
+        at apollo.editor.AnnotationEditor.splitAllGenes(AnnotationEditor.java:4749)
+        at apollo.editor.AnnotationEditor.deleteSelectedFeatures(AnnotationEditor.java:4162)
+        at apollo.editor.AnnotationEditor.deleteSelectedFeatures(AnnotationEditor.java:4106)
+        at apollo.gui.menus.AnnotationMenu.actionPerformed(AnnotationMenu.java:416)
+  protected boolean areOverlapping(SeqFeatureI sa, SeqFeatureI sb) {
+    OverlapI checker = (sa.getBioType().equals(sb.getBioType()) ?
+                        Config.getOverlapper(sa) :
+                        SimpleOverlap.getSimpleOverlap());
+    return checker.areOverlapping (sa, sb);
+-- checker is null - need overlapper for rice i guess??
+
+
+1 level stuff:
+where its at - is making drawable!
+set 3' 5' ends in res menu not working - popup about exon has to be selected
+annot tree - not coming up (in annot info as well of course)
+sequence window has got nutin
+not saving to game properly - no feat set no feat span - though would
+be nice not to have these things - they are 3 level things - game is 
+hard wired to 3 levels - have annotation with start & end seq_rel/span
+(this is most critical)
+- annotation menu (on menu bar not popup) throws ex
+Exception in thread "AWT-EventQueue-0" java.util.NoSuchElementException
+        at java.util.Vector.firstElement(Vector.java:447)
+        at apollo.config.Config.getAnnotationColor(Config.java:1049)
+        at apollo.gui.menus.TranscriptMenu.menuInit(TranscriptMenu.java:114)
+        at apollo.gui.menus.TranscriptMenu$TranscriptMenuListener.menuSelected(TranscriptMenu.java:46)
+        at javax.swing.JMenu.fireMenuSelected(JMenu.java:1091)
+
+- annot info editor:
+Exception in thread "AWT-EventQueue-0" java.lang.NullPointerException
+        at apollo.gui.annotinfo.FeatureEditorDialog.setFeature(FeatureEditorDialog.java:184)
+        at apollo.gui.annotinfo.FeatureEditorDialog.setFeature(FeatureEditorDialog.java:148)
+        at apollo.gui.annotinfo.FeatureEditorDialog.<init>(FeatureEditorDialog.java:129)
+     at apollo.gui.annotinfo.FeatureEditorDialog.showTextEditor(FeatureEditorDialog.java:110)
+        at apollo.gui.menus.AnnotationMenu.actionPerformed(AnnotationMenu.java:424)
+        at javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:1849)
+- annot tree comes up with nothing
+- EDE: User was warned against editing frozen transcript, but did so anyway.
+java.lang.Throwable
+        at apollo.gui.detailviewers.exonviewer.SeqAlignPanel.getTierForFeature(SeqAlignPanel.java:682)
+        at apollo.gui.detailviewers.exonviewer.BaseEditorPanel.displayAnnot(BaseEditorPanel.java:288)
+        at apollo.gui.detailviewers.exonviewer.BaseFineEditor.<init>(BaseFineEditor.java:106)
+        at apollo.gui.detailviewers.exonviewer.BaseFineEditor.showBaseEditor(BaseFineEditor.java:75)
+        at apollo.gui.menus.AnnotationMenu.actionPerformed(AnnotationMenu.java:435)
+        at javax.swing.AbstractButton.fireActionPerformed(AbstractButton.java:1849)
+
+poluypeptides are not deleting for cyril on gene delete
+
+polypeptides for cyril are getting temp names - trigger not renaming -
+trigger issue? - scott fixed
+
+had to change protein to polypeptide - on write do in template - for
+read had to change java code itself - need one place to configure both
+- read use template? write use chado-adapter.xml?
+what is more current protein or polypeptide?
+should rice be using polypep?
+i think rice should use polypep - its in there now - maybe it wasnt
+when we started
+
+need to check if protein exists in db - i think null check on id in
+apollos prot (or prot is null itself?) should indicate this - then
+prot should be inserted instead of updated.
+doing this with isPeptide add trans - should check how this fares with coalescing
+
+saving new tiling_path annot goes in as a gene - 3 levels
+
+seq types belong in chado instance i think
+
+instance inheritance!
+
+##game needs to deal w 1 level annots
+
+jdbc reader still reading in 1 levels as 3 levels (its just annotation
+editor thats making 1 levels from scratch) ammend this! (make 1 level
+if configged DO-ONE-LEV)
+
+mem leak from bulk loader
+
+pub is only for syns & comments and messing up sima who is not doing
+syns & comments - do it on demand
+
+selection is messed - doesnt recognize 1 level - actually selection
+does - its the things listening to select that dont - eg evidence panel
+(annot menu fixed)
+
+seems to be querying for chroms twice - 
+
+saving a gene doesnt work : - protein has uniquename null - this was
+originally a tiling path changed to gene in annot info - that could be
+the issue
+Insert: INSERT INTO feature (feature_id, organism_id, seqlen, uniquename, residues, type_id) VALUES (39689319, 1, '8', 'null', 'LYPMKSAP', 59769)
+...
+DEBUG:
+Insert: INSERT INTO feature_relationship (feature_relationship_id, subject_id, object_id, type_id) VALUES (4988122, 'null', 39689318, 59647)
+
+java.sql.SQLException: ERROR: invalid input syntax for integer: "null"
+
+Problematic query: INSERT INTO feature_relationship (feature_relationship_id, subject_id, object_id, type_id) VALUES (4988122, 'null', 39689318, 59647)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.processException(JDBCTransactionWriter.java:400)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitInsert(JDBCTransactionWriter.java:361)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransformedTransactions(JDBCTransactionWriter.java:124)
+        at apollo.dataadapter.TransactionOutputAdapter.commitTransactions(TransactionOutputAdapter.java:97)
+        at apollo.dataadapter.chado.ChadoAdapter.commitChanges(ChadoAdapter.java:292)
+        at apollo.dataadapter.AbstractApolloAdapter.commitChanges(AbstractApolloAdapter.java:306)
+
+would be nice if range showed up in name (1:1000-2000 instead of just
+1)
+
+going from unshared to shared exon is wrong...
+Delete Query: DELETE FROM feature WHERE organism_id=9 AND type_id=171
+AND name='RICE000299:2260-2362'
+this is wrong - this should be 2258 and should be name!
+Lookup Query: SELECT feature_id FROM feature WHERE organism_id=9 AND uniquename='RICE000299:2259-2362' AND type_id=171
+java.lang.IllegalStateException: Error in ChadoTransactionProcessor.commitLookup()
+Lookup query failed to return anything:
+ SELECT feature_id FROM feature WHERE organism_id=9 AND uniquename='RICE000299:2259-2362' AND type_id=171
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitLookup(JDBCTransactionWriter.java:259)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransformedTransactions(JDBCTransactionWriter.java:135)
+        at apollo.dataadapter.TransactionOutputAdapter.commitTransactions(TransactionOutputAdapter.java:97)
+        at apollo.dataadapter.chado.ChadoAdapter.commitChanges(ChadoAdapter.java:295)
+
+missing-start-codon is showing up as a property when i roundtrip
+through game and jdbc writeback is choking on it as i guess it tries
+to process all properties - 
+see data/bdgp/november/exon-stuff/failed-2-new-transcripts-roundtripped.ctn
+    <featureprop op="insert">
+        <value>true</value>
+        <rank>0</rank>
+        <feature_id>CG:temp1:4:1-300-RA</feature_id>
+        <type_id>missing_start_codon</type_id>
+    </featureprop>
+- this is fixed - it needs to be in template and wasnt for crm (crm
+
+doesnt do gene editing so didnt notice)
+if you create a bunch of (2 is fine)single exon genes and merge them and then
+duplicate it the exon naming for the new gene retains an old invalid
+name for feat_rel transaction:
+Insert: INSERT INTO feature_relationship (feature_relationship_id, subject_id, object_id, type_id) VALUES (970193, 'RICE:temp7:66-74', 1936648, 34)
+java.sql.SQLException: ERROR: invalid input syntax for integer: "RICE:temp7:66-74"
+should be temp6 i believe - temp7 got merged away
+
+either this is fixed or i dont have a repeatable...
+error on committing a new temp trans and its duplicate
+Insert: INSERT INTO feature_relationship (feature_relationship_id, subject_id, object_id, type_id) VALUES (970134, 1936593, 1936591, 34)
+Update Query: UPDATE featureloc SET fmax='-1000000000', fmin='999999999' WHERE strand='1' AND feature_id=1936591
+org.postgresql.util.PSQLException: ERROR: new row for relation "featureloc" violates check constraint "featureloc_c2"
+        at org.postgresql.util.PSQLException.parseServerError(PSQLException.java:139)
+        at org.postgresql.core.QueryExecutor.executeV3(QueryExecutor.java:152)
+        at org.postgresql.core.QueryExecutor.execute(QueryExecutor.java:100)
+        at org.postgresql.core.QueryExecutor.execute(QueryExecutor.java:43)
+        at org.postgresql.jdbc1.AbstractJdbc1Statement.execute(AbstractJdbc1Statement.java:517)
+        at org.postgresql.jdbc2.AbstractJdbc2Statement.execute(AbstractJdbc2Statement.java:50)
+        at org.postgresql.jdbc1.AbstractJdbc1Statement.executeUpdate(AbstractJdbc1Statement.java:273)
+        at org.postgresql.jdbc1.AbstractJdbc1Statement.executeUpdate(AbstractJdbc1Statement.java:259)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitUpdate(JDBCTransactionWriter.java:463)
+        at apollo.dataadapter.chado.jdbc.JDBCTransactionWriter.commitTransformedTransactions(JDBCTransactionWriter.java:147)
+        at apollo.dataadapter.TransactionOutputAdapter.commitTransactions(TransactionOutputAdapter.java:97)

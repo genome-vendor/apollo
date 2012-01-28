@@ -1,0 +1,31 @@
+Changes in release 1.5.2 (July 1, 2005):
+
+Displaying "other" data (P insertions, etc.): put them in a new
+Annotation tier.  Apollo had built-in assumptions that there is only one
+annotation tier (called "Annotation")--now fixed.
+The Tier records in the tiers file now indicate whether they have curated
+annotations that should appear in the blue annotation area with the field
+curated : true
+The default is that all tiers have curated=false except for the tier
+called Annotation (so that we're backwards compatible with older tiers
+files that lack the "curated" field).
+
+Annotations and evidence can be saved separately and loaded separately
+(and layered)--this is implemented for GAME XML and ChadoXML adapters.
+
+Various ChadoXML fixes, including:
+- Made synonyms capable of having properties, so synonym properties in
+chadoXML can be carried through.
+- Filled in missing organism_id in featureloc
+- Progress towards handling ARGS
+
+Fixed: When I use "Create exon" while reverse complemented, the exon is
+extended however many bp to the 5', instead of to the 3'.
+
+Fixed: name changes in annot info editor didn't undo (bug in r1.5.1).
+
+Fixed: Synteny display--links not showing up.
+(It turns out to be an issue with the tiers file--it should be using
+synteny-game.tiers rather than game.tiers.)
+
+Fixed: Jalview: display of genomic seq is wrong.

@@ -1,0 +1,42 @@
+$Id: GUI-test-list,v 1.1 2007/04/25 15:23:48 briano Exp $
+
+This file is a list of things to test in the GUI. The idea would be
+anytime a GUI bug is fixed the conditions on how to reveal the bug
+should be put here. Then before a release we can whip through the
+list. These are generally GUI things that have to be tested by hand
+and can't be tested programatically.  
+
+1. Bug: Horizontal Scrollbar doesn't invalidate views, features disappear on scroll.
+   Test: Zoom all the way in, scroll all the way right, reset, scroll left, hit
+	vertical scroll. If features suddenly appear thats bad.
+
+2. Bug: Apollo gets cleared out on a bad filename.
+   Test: Put a bad filename into GAME:file and gff.
+
+3. Bug: Exceptions thrown on changing from gff to a game file.
+   Test: Load a game file (../data/example.xml) and then load a gff file.
+
+4. Bug: Annot not changing translation when splice sites changed in EDE.
+   Test: Zoom in to annot in main window to see its translated seq.
+   Drag ends of exons in trans region in EDE. Translated seq should change.
+
+5. When making installer, need to include this -D option (to allow writes
+ back to Ensembl databases):
+ 
+ lax.nl.java.option.additional=-mx200M -Xmx200M -Dorg.xml.sax.driver=org.apache.xerces.parsers.SAXParser
+
+- Uncomment the das-adapter from apollo config
+- Choose that adapter from the chooser
+- If you need to set up an HTTP proxy to speak to the outside world, do
+this by selecting the "change" button in the "Proxy Settings" row, and
+filling in your proxy server address and port. If you need one and you
+don't set one, then this step will just hang while java faffs around
+trying to set up a socket.
+- Type www.wormbase.org/db/das into the DAS Server field (yes, Ensembl
+is in the drop-down, but wormbase is a faster source). The
+sequence sources dropdown should have one value: "elegans". 
+Select it.
+
+If you don't have the right parameter in the lax file, the last step should
+break, with a dialog telling you that you can't load a SAX parser
+because the parameter is missing.

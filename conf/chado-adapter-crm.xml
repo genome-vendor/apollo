@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file is used to config chado database adapter -->
+<chado-adapter>
+
+
+    <chadoInstance id="referenceInstance" default="false">
+
+
+        <featureCV>sequence</featureCV>
+        <relationshipCV>relationship</relationshipCV>
+        <propertyTypeCV>feature_property</propertyTypeCV>
+
+        <!-- default is part_of -->
+        <partOfCvTerm>part_of</partOfCvTerm>
+        <transProtRelationTerm>derives_from</transProtRelationTerm>
+
+
+        <searchHitsHaveFeatLocs>true</searchHitsHaveFeatLocs>
+
+        <clsName>apollo.dataadapter.chado.jdbc.FlybaseChadoInstance</clsName>
+
+	<oneLevelAnnotTypes>
+	    <type>promoter</type>
+	    <type>insertion site</type>
+	    <type>transposable_element</type>
+	    <type>transposable_element_insertion_site</type>
+	    <type>remark</type>
+	    <type>repeat_region</type>	
+	    <type>tiling_path_fragment</type>	
+	</oneLevelAnnotTypes>
+
+	<threeLevelAnnotTypes>
+	    <type>gene</type>
+	    <type>pseudogene</type>
+	    <type>tRNA</type>
+	    <type>snRNA</type>
+	    <type>snoRNA</type>
+	    <type>ncRNA</type>
+	    <type>rRNA</type>
+	    <type>miRNA</type>
+	</threeLevelAnnotTypes>        
+
+    </chadoInstance>
+
+    <chadoInstance id="crmInstance" default="true">
+
+      <inheritsInstance>referenceInstance</inheritsInstance>
+
+    	<sequenceTypes>
+            <type>
+                 <name>chromosome_arm</name>
+                 <useStartAndEnd>true</useStartAndEnd>
+                 <queryForValueList>false</queryForValueList>
+                 <values>4,2L,2R,3L,3R,X,2h,3h,4h,Xh,Yh,U</values>
+             </type>
+	    <type>gene</type>
+	    <type>golden_path_region</type>
+	</sequenceTypes>
+
+        <writebackXmlTemplateFile>transactionWritebackTemplate_crm.xml
+               </writebackXmlTemplateFile>
+
+        <genePredictionPrograms>
+            <program>genscan_masked</program>
+            <program>genie_masked</program>
+        </genePredictionPrograms>
+
+        <searchHitPrograms>
+           <program>sim4</program>
+           <program>%blastx%</program>
+        </searchHitPrograms>
+
+        <oneLevelResultPrograms>
+           <program>
+              <name>crmscan</name>
+              <source>genome_tm_68_73</source>
+              <version>v4_tm_68_73</version>
+           </program>
+           <program>
+              <name>phastcons</name>
+              <source>genome</source>
+              <version>v1.0</version>
+           </program>
+           <program>
+              <name>crmscan77</name>
+              <source>genome_tm_68_77</source>
+              <version>v4_tm_68_77</version>
+           </program>
+           <program>crm_makeprimer</program>
+        </oneLevelResultPrograms>      
+
+        <searchHitsHaveFeatLocs>false</searchHitsHaveFeatLocs>
+
+    </chadoInstance>
+
+   <chadodb>
+        <name>CRM Database (4.2)</name>
+	<adapter>apollo.dataadapter.chado.jdbc.PostgresChadoAdapter</adapter>
+	<url>**** ENTER DB URL HERE *****</url>
+	<dbName>chacrm_4_2</dbName>
+	<dbUser>***ENTER USER HERE****</dbUser>
+	<dbInstance>crmInstance</dbInstance>
+	<style>crm.style</style>
+        <default-command-line-db>true</default-command-line-db>
+    </chadodb>
+
+</chado-adapter>

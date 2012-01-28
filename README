@@ -1,0 +1,13 @@
+Apollo is a genome annotation viewer and editor. It was developed as a
+collaboration between the Berkeley Drosophila Genome Project (part of
+the FlyBase consortium) and The Sanger Institute in Cambridge,
+UK. Apollo allows researchers to explore genomic annotations at many
+levels of detail, and to perform expert annotation curation, all in a
+graphical environment.
+
+This distribution is intended mostly for developers - it does not include
+the installer.  If you'd like to install Apollo on your Mac or Windows
+machine, please visit http://www.fruitfly.org/annot/apollo/install.html.
+
+For more developer information, see the README files in doc/. For user
+documentation see doc/html/userguide.html or go to http://fruitfly.org/apollo.

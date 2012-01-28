@@ -1,0 +1,83 @@
+$Id: README.webstart,v 1.3 2007/05/10 14:25:08 briano Exp $
+
+Your web server needs to have the jnlp MIME type set in etc/mime.types
+with this line:
+
+ application/x-java-jnlp-file	jnlp
+
+For web start, need to include all the config files in the jar (make sure
+they're listed in the Makefile under "jar").
+
+Each jar needs to be signed using jarsigner.  First make a keystore:
+    
+ keytool -genkey -alias signFiles -dname "CN=Nomi Harris, OU=BDGP, O=UC Berkeley, L=Berkeley, S=CA, C=USA" -keypass Apollo -storepass Apollo -keystore apollostore -validity 700
+
+Then sign each jar using jarsigner:
+
+  pushd ../../jars ; 
+  jarsigner -keystore apollostore -storepass Apollo -keypass Apollo -signedjar apollo.signed.jar apollo.jar signFiles ; 
+  mv apollo.signed.jar ~/toy/htdocs/annot/apollo/jars ; 
+  popd
+
+Here's a little perl script to sign all the jars that were already in the
+webstart directory:
+
+ cd ~/apollo/jars
+
+The script:
+
+#!/usr/bin/perl
+
+foreach my $jar (`/bin/ls /www/toy_8094/htdocs/annot/apollo/jars/*signed*`) {
+  chomp($jar);
+  $jar =~ s/.*\///;
+  $unsigned = $jar;
+  $unsigned =~ s/.signed//;
+  $cmd = "jarsigner -keystore apollostore -storepass Apollo -keypass Apollo -signedjar $jar $unsigned signFiles ; mv $jar /www/toy_8094/htdocs/annot/apollo/jars";
+  print "$cmd\n";
+  `$cmd`;
+}
+
+Apollo Webstart mostly works--it is inconsistent, and sometimes
+mysteriously fails to launch.  Getting the data from the flybase.net
+server is sometimes a problem--we think sometimes it times out and then
+Webstart just hangs.
+
+Apollo should really reinstall ALL the config files when run as a
+Webstart application, rather than relying on those that were already
+installed by previous launches of Apollo Webstart, in case the config
+files have changed.  (If the apollo jar has changed, the new one will
+automatically be downloaded, but it will still use the old config files
+if they're there.)
+
+Webstart requires a .jnlp file--see bin/cact.jnlp for an example.
+
+To launch Apollo webstart standalone (not from browser), you need to call
+javaws:
+
+ /usr/local/java/jdk/bin/javaws http://toy.lbl.gov:8094/annot/apollo/cact.jnlp &
+
+To make webstart show the console (so you can see stderr/stdout):  find
+the javaws executable, invoke it, go to edit->preferences->advanced-Java
+console and select "Show console".   
+
+When launching a webstart application from a web browser, every browser
+is different.  Generally, you will need to figure out how to tell your
+browser where javaws is.
+
+To get Netscape to know how to open webstart applications:
+
+Edit->Preferences->Helper applications
+
+You need a type application/x-java-jnlp-file
+If it is not there, add a New type.
+If it is, select from list and click Edit to set the application.
+extension: jnlp
+Application (or "open with") should point to javaws path
+(e.g./usr/local/java/jdk/bin/javaws)
+
+If you want your webstarted application to be able to talk back to your
+web browser (to display some web page), you need to use BasicService:
+
+  BasicService bs = (BasicService)ServiceManager.lookup("javax.jnlp.BasicService");
+  bs.showDocument(new URL(url));

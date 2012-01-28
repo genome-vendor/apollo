@@ -1,0 +1,253 @@
+// sim4_coverage is a percentage, thus the legal values are from 0-100
+// if the length of the sequence that has been aligned to the genomic 
+// sequence is 300 and the length of the aligned sequence is 100
+// then this corresponds to a 33% match. So, for example, we can
+// constrain the filter to only accept matches between that represent
+// at least 90% of the length of the entire sequence. The default
+// value is 0 (that is, no minimal length requirement at all)
+
+// max_exons is primarily for STS data. This option indicates that the
+// filter should reject any alignments that are constructed of more
+// max_exons" exons. The default is that there is no limit on the
+// number of exons
+
+// join_EST_ends is primarily for EST data. If it is true sim4 will
+// do two things. First if will reverse the orientation of any hits
+// where the name of the sequence contains the phrase 3prime. Second,
+// it will merge all alignments where the first 7 characters are the
+// same (in our case the name of the clone. The default is false.
+
+// revcomp_3primeESTs is solely for EST data. Those sequences analyzed
+// by sim4 and where the name ends in the suffix '.3prime' will be 
+// reverse complemented
+
+// sim4_score is the minimum required %identity to retain a span or hit
+// The default is 95.
+
+// sim4_length is the absolute minimum length in base pairs required
+// to accept a span regardless of percent identity
+
+// blast_repeatn passes in two different options: the first in the 
+// option name itself and the second as the value.
+// The first is the repeat word size (# of consecutive bases or amino 
+// acids). The second is the threshhold. Any hit where ALL spans 
+// have a score lower than this huffman code value is discarded. Larger
+// word sizes should have larger threshholds. The value is empirically
+// determined. To get an idea of an appropriate cutoff use crackle.test
+// with some representative sequences. The default is that no low
+// complexity filtering is done.
+
+// max_coincidence is a percentage. Within a single hit if any two
+// spans overlap one another by this percentage or more then the weaker
+// of the two spans is removed from the hit. The default is 100%
+
+// the two twilight parameters indicate a range of scores that put a 
+// span into the twilight zone. Any span with a score that is above
+// the upper bound is automatically kept. Any span with a score below
+// the lower bound is automatically thrown out. All spans that fall
+// within this range are put under consideration. The two factors that
+// are considered are the length of the span and the distance it lies
+// from its nearest neighbor. The score for this span is adjusted
+// according to these two factors and a determination is made whether
+// to retain the span judging by this adjusted score. The default
+// bounds for BLASTN are 160-80. The default for all other forms of
+// BLAST are 75-35.
+
+// -max_expect is used in BLAST filtering. It is a simple cutoff for
+// spans. any HSP with an expectation > this value is deleted. The
+// default is generous, it is 1.0
+
+// -max_coverage is the greatest number of hits (all HSPs included)
+// that is allowed in a given genomic region. The default is
+// 10 overlapping hits maximum 
+
+// DON'T FORGET THE LEADING HYPHEN
+
+// only require 70% of the length because the BAC ends contain a lot of crap
+filter STS "-max_exons 1 -percent_length 70 -min_score 85 -debug f"
+
+// there are only 2 options for repeatmasker, score and coverage
+// Don't filter out repeats;           
+filter Repeat "-debug f -percent_length 30 -min_score 250"
+filter Transposon "-debug f -percent_length 30 -min_score 250"
+
+// max_discontinuity is not a base length, but is a percentage of
+// the total length of the match
+filter EST "-max_cDNA_gap 2 -min_score 95 -join_EST_ends t -percent_length 80 -trim_polyA t -max_coverage 100 -revcomp_3primeESTs 3prime -debug LP01472"
+
+//sequences from PCRed genomic or mRNA for Jon 
+filter SEQREAD "-max_cDNA_gap 2 -min_score 90 -join_EST_ends f -percent_length 50 -trim_polyA f -max_coverage 100" 
+
+// this is an important option. the role of the reference sequence (usually the
+// the genomic for pipelines) defaults to being the query sequence or seq1. In
+// some cases however the reference sequence may be the subject sequence. If this
+// is the case then the program must switch the roles for the filtering so that
+// it is performing the filtering on the correct sequence.
+filter cDNA "-debug t -max_cDNA_gap 2 -min_score 95 -percent_length 80 -max_coverage -1 -trim_polyA 16"
+
+filter "P_Element" "-max_exons 2 -percent_length 95 -min_score 85"
+
+// a negative max_coverage implies a limitless level of coverage
+filter preRelease "-min_score 95 -percent_length 80 -max_coverage -1 -debug f"
+
+// a negative max_coverage implies a limitless level of coverage
+filter Release2 "-min_score 95 -percent_length 80 -max_coverage -1 -debug f"
+
+// we want gadfly release1 for the release2 genomic analysis
+// (but remember not to autopromote!)
+filter Release1 "-min_score 95 -percent_length 80 -max_coverage -1 -debug f"
+
+analysis snRNA "blastall:na_snrna.dros"
+filter snRNA "-max_expect 1.0e-30"
+
+//analysis STENCIL "sim4:na_stencil.dros"
+//filter STENCIL "-percent_length 60 -min_score 80 -max_cDNA_gap 2 -debug AM02148:G12810.72"
+
+analysis snRNA2 "sim4wrap:na_snrna.dros"
+filter snRNA2 "-min_score 95 -percent_length 95 -max_coverage -1 -debug f"
+
+// max_discontinuity is not a base length, but is a percentage of
+// the total length of the match
+filter mRNA "-max_cDNA_gap 2 -min_score 95 -percent_length 80 -max_coverage 50 -trim_polyA t -debug DMCPO612G"
+
+// this is a non-default filter should only be called 
+// if you suspect that the sequence may break the feature
+filter PartialmRNA "-max_cDNA_gap 2 -min_score 95 -percent_length 35 -max_coverage 50 -trim_polyA t -debug DMCPO612G"
+
+filter Users "-wordsize 2 -max_compression 15 -remove_twilight t -max_expect 1.0e-4 -max_coincidence 50 -max_coverage 50 -debug f"
+
+filter SPTR "-wordsize 3 -max_compression 15 -remove_twilight t -max_expect 1.0e-4 -max_coincidence 50 -max_coverage 50 -debug AAR96184 -split_duplicates t"
+
+filter Primate "-wordsize 2 -max_compression 15 -remove_twilight t -max_expect 1.0e-4 -percent_length 25 -max_coincidence 45 -max_coverage 3 -debug Q9UNW9 -split_duplicates t"
+
+filter Rodent "-wordsize 2 -max_compression 15 -remove_twilight t -max_expect 1.0e-4 -percent_length 25 -max_coincidence 45 -max_coverage 3 -split_duplicates t"
+
+filter Insect "-wordsize 2 -max_compression 15 -remove_twilight t -max_expect 1.0e-4 -percent_length 25 -max_coincidence 45 -max_coverage 3 -split_duplicates t"
+
+filter Plant "-wordsize 2 -max_compression 15 -remove_twilight t -max_expect 1.0e-4 -percent_length 25 -max_coincidence 45 -max_coverage 3 -split_duplicates t"
+
+filter Worm "-wordsize 2 -max_compression 15 -remove_twilight t -max_expect 1.0e-4 -percent_length 25 -max_coincidence 45 -max_coverage 3 -split_duplicates t"
+
+filter Yeast "-wordsize 2 -max_compression 15 -remove_twilight t -max_expect 1.0e-4 -percent_length 25 -max_coincidence 45 -max_coverage 3 -split_duplicates t"
+
+filter OtherVertebrate "-wordsize 2 -max_compression 15 -remove_twilight t -max_expect 1.0e-4 -percent_length 25 -max_coincidence 45 -max_coverage 3 -split_duplicates t"
+
+filter OtherInvertebrate "-wordsize 2 -max_compression 15 -remove_twilight t -max_expect 1.0e-4 -percent_length 25 -max_coincidence 45 -max_coverage 3 -split_duplicates t"
+
+filter Genscan "-keep_polyA false -keep_promoter false"
+
+// Oligo alignment, sim4_score 95 (1 mismatch / 25 = 96?), coverage has to be 100
+filter Oligo "-percent_length 100 -min_score 95"
+
+filter StencilClone "-min_score 80 -percent_length 50"
+
+filter Compa "-wordsize 2 -max_compression 15 -max_expect 1.0e-4 -max_coincidence 50 -separate_HSP t -min_length 10 -max_coverage 10"
+
+// select a type of analysis to be auto-promoted 
+// autopromote Release2 "bop.promote.CG_Namer"
+// autopromote tRNA "bop.promote.tRNA_Namer"
+
+// select a type of analysis to be collapse into a virtual alternative
+// transcripts (really only makes sense for ESTs)
+collapse EST
+
+//specify where to do JDBC connection to a mysql db 
+//must specify both hostname and dbname
+//this is used to parse raw output directly pulled from db
+
+database hostname "space.lbl.gov"
+database dbname "pipe"
+
+filter affy "-max_cDNA_gap 2 -min_score 95 -percent_length 80 -max_coverage 10"
+
+// These will be inserted into a vector of parsers
+// BOP will try each of these in this order to parse
+// any file that is read. 
+// If you are using the file-of-files method then
+// this order is important because it determines the
+// ID of the shared reference sequence for those files
+parser "apollo.dataadapter.analysis.tRNA_Parser"
+parser "apollo.dataadapter.analysis.BlastParser"
+parser "apollo.dataadapter.analysis.Sim4Parser"
+parser "apollo.dataadapter.analysis.FgeneshParser"
+parser "apollo.dataadapter.analysis.GenscanParser"
+parser "apollo.dataadapter.analysis.BlatParser"
+parser "apollo.dataadapter.analysis.RpMaskerParser"
+parser "apollo.dataadapter.analysis.GenieParser"
+
+analysis STS "sim4:na_sts.dros"
+analysis STS "sim4wrap:na_sts.dros"
+analysis STS "sim4:na_BACRsts.dros"
+analysis Transposon "repeatmasker:dummy"
+analysis Repeat "repeatmasker"
+analysis EST "sim4:na_dgc.dros"
+analysis EST "sim4wrap:na_est.complete.dros"
+analysis EST "sim4:na_DGC.dros"
+analysis EST "sim4wrap:na_dgc-cdna.dros"
+analysis EST "sim4:na_est.dros"
+analysis EST "sim4:pCR828_101.cRvCmpDPSE.fasta"
+analysis EST "sim4:dpseVivek.fasta"
+analysis EST "sim4:na_est.local.dros"
+analysis EST "sim4:na_est.all_nr.dros"
+analysis EST "sim4wrap:na_est.all_nr.dros"
+analysis EST "sim4:na_cdnaReads.dros"
+analysis EST "sim4:na_dbest.dros"
+analysis EST "sim4:PseudoBayHH3.fasta"
+analysis EST "sim4:na_cdnaReads.dros"
+analysis "P_Element" "sim4:na_pe.dros"
+analysis "P_Element" "sim4wrap:na_pe.dros"
+analysis Release2 "sim4:na_gadfly.dros.release2"
+analysis Release2 "sim4wrap:na_gadfly.dros.release2"
+analysis Release1 "sim4:na_gadfly.dros.release1"
+analysis Release2 "sim4:na_gadfly.dros"
+analysis mRNA "sim4:na_gb.anoga"
+analysis mRNA "sim4wrap:na_gb.anoga"
+analysis mRNA "sim4:na_adh.cDNAs.dros"
+analysis mRNA "sim4:na_Adh.dros"
+analysis mRNA "sim4:na_gb.dros"
+analysis mRNA "sim4wrap:na_gb.dros"
+analysis mRNA "sim4:na_cDNA.dros"
+analysis mRNA "sim4wrap:na_cDNA.dros"
+analysis mRNA "sim4:na_ARGs.dros"
+analysis mRNA "sim4wrap:na_ARGs.dros"
+analysis mRNA "sim4:na_ARGsCDS.dros"
+analysis mRNA "sim4wrap:na_ARGsCDS.dros"
+analysis mRNA "sim4:na_ARGsregion.dros"
+analysis mRNA "sim4wrap:na_ARGsregion.dros"
+analysis mRNA "sim4:na_geno.dros.release2"
+analysis mRNA "sim4wrap:na_geno.dros.release2"
+analysis Genie "genie"
+analysis Genie "genie:dummy"
+analysis GenieEST "genieEST"
+analysis Genscan "genscan"
+analysis Genscan "genscan:dummy"
+analysis tRNA "tRNAscan-SE"
+analysis tRNA "tRNAscan-SE:dummy"
+analysis Users "blastx:aa_users.dros"
+analysis Users "blastx:aa_users_i.dros"
+analysis SPTR "blastx:aa_sptr.dros"
+analysis SPTR "blastx:aa_sp.real.dros"
+analysis SPTR "blastx:aa_sp.hyp.dros"
+analysis SPTR "blastx:aa_tr.real.dros"
+analysis SPTR "blastx:aa_tr.hyp.dros"
+analysis SPTR "blastx:aa_sp.anoga"
+analysis SPTR "blastx:aa_tr.anoga"
+analysis SPTR "blastx:aa_Adh.dros"
+analysis Primate "blastx:aa_sptr.primate"
+analysis Primate "tblastx:na_unigene.primate"
+analysis Rodent "blastx:aa_sptr.rodent"
+analysis Rodent "tblastx:na_unigene.rodent"
+analysis Insect "blastx:aa_sptr.insect"
+analysis Insect "tblastx:na_dbest.insect"
+analysis Plant "blastx:aa_sptr.plant"
+analysis Plant "tblastx:na_dbest.plant"
+analysis Worm "blastx:aa_sptr.worm"
+analysis Worm "tblastx:na_dbest.worm"
+analysis Yeast "blastx:aa_sptr.yeast"
+analysis OtherInvertebrate "blastx:aa_sptr.othinv"
+analysis OtherVertebrate "blastx:aa_sptr.othvert"
+analysis StencilClone "sim4wrap:na_stencil.dros"
+analysis StencilClone "sim4wrap:na_stencil_newtrimmed.dros"
+analysis StencilClone "sim4:na_stencil.dros"
+analysis StencilClone "sim4:na_stencil_newtrimmed.dros"
+

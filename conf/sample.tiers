@@ -1,0 +1,541 @@
+# Sample tiers file (a simplified version of fly.tiers)
+
+# This file describes to Apollo how different feature types should be
+# displayed.
+# Tiers files have two types of records: tier records and type records.
+# Tiers are groupings of one or more types to be displayed together.
+# [Tier] fields and the default values are:
+# label :  false  (Group tier label)
+# visible : true
+# expanded : false
+# sorted : false
+# maxrows : maximum number of rows to show for this tier--default 0 means all
+# labeled : false
+# curated : false  [Whether to display in blue annotation zone]
+# warnonedit : false  [Can also be used as a Type parameter to tag
+#              individual types]
+# number_of_levels : 3 [The default is 1, for one-level annotation types;
+#                    use 3 for gene-like annotations (gene/transcript/exon)]
+#
+# The order in which tiers are listed in this file determines their
+# vertical display order (the first tier is displayed closest to the
+# central axis).
+#
+# TYPE fields:
+#  tiername : the tier this type appears in
+#  typename : label for this type
+#  resulttype : data type(s) to be included this type
+#  color : can be a standard color name (e.g. red) or an R,G,B triplet (default gray)
+#  utr_color : color used for utr regions. Only works with
+#              DrawableGeneFeatureSet. (default black)
+#  usescore : default true  # use score to set the height of this glyph
+#  minscore : 0 # minimum score for scaling height
+#  maxscore : 100 # maximum score for scaling height
+#  glyph : what glyph to use (mandatory).  Current choices include
+# DrawableGeneFeatureSet (exons connected by peaked introns),
+# DrawableResultFeatureSet (exons connected by straight lines),
+# DoubleHeadedArrow, Triangle, Zigzag, ThinRectangle (a rectangular outline).
+#  column : names of column(s) in detail table.  Choices include
+# GENOMIC_RANGE, GENOMIC_LENGTH, MATCH_RANGE, MATCH_LENGTH,
+# SCORE, NAME, READS.  You can also specify column names not in all caps
+# that correspond to properties of the features present in the data (e.g.
+# query_frame).
+#  sortbycolumn : row order in table determined by this column
+#  reversesort : Sort table rows in reverse order?  (default false)
+#  groupby : GENE method to use for grouping features (GENE, SINGLE, HOMOLOGY)
+#  weburl : optional, URL for pulling up web pages about this type of result
+#  freshdate : date after which sequences of this type are considered "new"
+# (the dates are found in the sequence descriptions)
+#  idformat : format of IDs for this kind of annotation (regexp, e.g. CG\d+)
+#  annot_type : when this result is promoted to an annotation, annot_type says
+#  which type of annotation it should become.
+#  warnonedit : false  [Overrides value of warnonedit setting, if any,
+# for the parent tier]
+#
+# The fields for a Type or Tier record can appear in any order, one per
+# line.  Be sure that none of the lines get broken up by inserted newlines.
+
+[Tier]
+tiername : Annotation
+expanded : true
+labeled : true
+curated : true
+warnonedit : false
+
+# Default utr_color is "transparent" (same as AnnotationBackgroundColor defined in game.style)
+# (So if you change AnnotationBackgroundColor, be sure to change utr_color to match!)
+[Type]
+label : gene
+tiername : Annotation
+datatype : gene
+datatype : transcript
+datatype : exon
+glyph : DrawableGeneFeatureSet
+color : 51,102,255
+idformat : FBgn\d{7}
+utr_color : 176,224,230
+name_method : FlyNameAdapter
+overlap_method : ORF_Overlap
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+number_of_levels : 3
+
+[Type]
+label : tRNA
+tiername : Annotation
+datatype : tRNA
+glyph : DrawableResultFeatureSet
+color : 0,204,0
+idformat : FBgn\d{7}
+name_method : FlyNameAdapter
+overlap_method : ORF_Overlap
+column : GENOMIC_RANGE
+column : ID
+sortbycolumn : GENOMIC_RANGE
+
+[Type]
+label : snRNA
+tiername : Annotation
+datatype : snRNA
+glyph : DrawableResultFeatureSet
+color : 0,204,0
+idformat : FBgn\d{7}
+name_method : FlyNameAdapter
+overlap_method : ORF_Overlap
+column : GENOMIC_RANGE
+column : ID
+sortbycolumn : GENOMIC_RANGE
+
+[Type]
+label : pseudogene
+tiername : Annotation
+datatype : pseudogene
+glyph : DrawableResultFeatureSet
+color : 153,153,255
+idformat : FBgn\d{7}
+name_method : FlyNameAdapter
+overlap_method : ORF_Overlap
+column : GENOMIC_RANGE
+column : ID
+number_of_levels : 3
+
+
+[Tier]
+tiername : Other annotated features
+# expand while testing
+expanded : true
+labeled : true
+curated : true
+warnonedit : true
+
+[Type]
+label : P insertion_site
+tiername : Other annotated features
+datatype : p_insertion
+datatype : P insertion_site
+datatype : transposable_element_insertion_site
+# There's an insertion_site in CG9884: P{PZ}oaf[E-32].  I assume it
+# belongs in this tier.
+datatype : insertion_site
+glyph : Triangle
+# Now hot pink--turquoise was too hard to see on aqua annotation background
+color : 255,0,203
+idformat : FBti\d{7}
+name_method : FlyNameAdapter
+overlap_method : NoOverlap
+# column : SCORE
+column : ID
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+
+[Type]
+label : promoter
+tiername : Other annotated features
+datatype : promoter
+datatype : CAAT_signal
+datatype : TATA_signal
+datatype : -35_signal
+datatype : -10_signal
+datatype : GC_signal
+glyph : PromoterGlyph
+color : 255,255,51
+idformat : CG\d+
+name_method : FlyNameAdapter
+overlap_method : NoOverlap
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+
+[Type]
+label : remark
+tiername : Other annotated features
+datatype : miscellaneous curator's observation
+datatype : remark
+glyph : Zigzag
+color : 255,255,204
+idformat : CR\d+
+name_method : FlyNameAdapter
+overlap_method : NoOverlap
+column : GENOMIC_RANGE
+column : ID
+
+# ARGS types
+[Type]
+label : rescue fragment
+tiername : Other annotated features
+datatype : rescue_fragment
+glyph : ThinRectangle
+color : 153,51,255
+name_method : FlyNameAdapter
+overlap_method : NoOverlap
+column : ID
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+
+[Type]
+label : point mutation
+tiername : Other annotated features
+datatype : point_mutation
+glyph : Triangle
+color : 0,102,204
+name_method : FlyNameAdapter
+overlap_method : NoOverlap
+column : ID
+column : GENOMIC_RANGE
+sortbycolumn : GENOMIC_RANGE
+
+# This tier is for showing new analysis results that you layer on with
+# "Add analysis result".  I tried putting it at the beginning (before the
+# Annotation tier) but that led to a weird display bug.
+[Tier]
+tiername : New analysis results
+expanded : true
+labeled : true
+
+[Type]
+label : New analysis results
+tiername : New analysis results
+glyph : DrawableResultFeatureSet
+color : 255,255,0
+usescore : true
+column : SCORE
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+
+[Tier]
+tiername : Previous Releases
+expanded : true
+
+[Type]
+label : Release 2 GadFly
+tiername : Previous Releases
+datatype : sim4:na_gadfly.dros
+datatype : sim4:na_gadfly.dros.RELEASE2
+glyph : DrawableResultFeatureSet
+color : 153,255,255
+usescore : true
+column : SCORE
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+
+[Type]
+label : Release 3.1 GadFly
+tiername : Previous Releases
+datatype : sim4:na_transcript.dmel.RELEASE31
+glyph : DrawableResultFeatureSet
+color : 0,204,255
+usescore : true
+column : SCORE
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+
+[Tier]
+tiername : Gene Prediction
+expanded : true
+
+[Type]
+label : Genie
+tiername : Gene Prediction
+datatype : piecegenie
+datatype : piecegenie:dummy
+datatype : genie_masked:dummy
+glyph : DrawableResultFeatureSet
+color : 153,51,255
+usescore : true
+minscore : 100.0
+column : SCORE
+column : GENOMIC_RANGE
+column : query_frame
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+weburl : http://www.fruitfly.org/seq_tools/genie.html#
+
+[Type]
+label : Genscan
+tiername : Gene Prediction
+datatype : genscan:dummy
+datatype : genscan_masked:dummy
+datatype : genscan
+glyph : DrawableResultFeatureSet
+color : 204,153,255
+usescore : true
+minscore : -1.0
+maxscore : 50.0
+column : SCORE
+column : GENOMIC_RANGE
+column : query_frame
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+weburl : http://genes.mit.edu/GENSCAN.html#
+
+[Type]
+label : Fgenesh
+tiername : Gene Prediction
+datatype : fgenesh:dummy
+glyph : DrawableResultFeatureSet
+color : 255,153,255
+usescore : true
+minscore : 100.0
+column : SCORE
+column : GENOMIC_RANGE
+column : query_frame
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+weburl : http://www.softberry.com/berry.phtml?topic=index&group=programs&subgroup=gfind#
+
+[Tier]
+tiername : Fly EST
+expanded : true
+
+[Type]
+label : Fly EST All
+tiername : Fly EST
+datatype : sim4:na_EST.complete.dros
+datatype : sim4:na_EST.all_nr.dros
+glyph : DrawableResultFeatureSet
+color : 153,255,153
+usescore : true
+column : NAME
+column : SCORE
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+weburl : http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=search&db=nucleotide&doptcmdl=GenBank&term=
+
+[Type]
+label : EST Same Strain
+tiername : Fly EST
+datatype : sim4:na_dbEST.same.dmel
+glyph : DrawableResultFeatureSet
+color : 153,255,153
+usescore : true
+column : NAME
+column : SCORE
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+weburl : http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=search&db=nucleotide&doptcmdl=GenBank&term=
+freshdate : Fri Jan 31 00:00:00 PST 2003
+
+[Tier]
+tiername : TBLASTX to Insects
+expanded : true
+
+[Type]
+label : Ecore Agam
+tiername : TBLASTX to Insects
+datatype : ecore:intron
+glyph : DrawableResultFeatureSet
+color : 255,153,102
+usescore : true
+column : NAME
+column : SCORE
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+
+[Type]
+label : Dpse genomic
+tiername : TBLASTX to Insects
+datatype : tblastxwrap_masked:na_baylorf1_scfchunk.dpse
+glyph : DrawableResultFeatureSet
+color : 255,102,51
+usescore : true
+column : SCORE
+column : identity
+column : expect
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+
+[Tier]
+tiername : BLASTX Similarity to Other Species
+expanded : true
+
+[Type]
+label : Worm
+tiername : BLASTX Similarity to Other Species
+datatype : blastx_masked:aa_SPTR.worm
+datatype : blastx:aa_SPTR.worm
+glyph : DrawableResultFeatureSet
+color : 255,153,0
+usescore : true
+column : SCORE
+column : identity
+column : expect
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+weburl : http://srs.ebi.ac.uk/srs6bin/cgi-bin/wgetz?[swall-acc:__ID__]+-e
+freshdate : Fri Jan 31 00:00:00 PST 2003
+
+[Type]
+label : Primate
+tiername : BLASTX Similarity to Other Species
+datatype : blastx_masked:aa_SPTR.primate
+datatype : blastx:aa_SPTR.primate
+glyph : DrawableResultFeatureSet
+color : 255,153,0
+usescore : true
+column : SCORE
+column : identity
+column : expect
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+weburl : http://srs.ebi.ac.uk/srs6bin/cgi-bin/wgetz?[swall-acc:__ID__]+-e
+freshdate : Fri Jan 31 00:00:00 PST 2003
+
+[Tier]
+tiername : Start Codon
+
+[Type]
+label : startcodon_frame1
+tiername : Start Codon
+datatype : codons
+datatype : startcodon_frame1
+glyph : SiteCodon
+color : 34,220,34
+column : NAME
+column : GENOMIC_RANGE
+sortbycolumn : NAME
+
+[Type]
+label : startcodon_frame2
+tiername : Start Codon
+datatype : codons
+datatype : startcodon_frame2
+glyph : SiteCodon
+color : 34,220,34
+column : NAME
+column : GENOMIC_RANGE
+sortbycolumn : NAME
+
+[Type]
+label : startcodon_frame3
+tiername : Start Codon
+datatype : codons
+datatype : startcodon_frame3
+glyph : SiteCodon
+color : 34,220,34
+column : NAME
+column : GENOMIC_RANGE
+sortbycolumn : NAME
+
+[Tier]
+tiername : Stop Codon
+
+[Type]
+label : stopcodon_frame1
+tiername : Stop Codon
+datatype : codons
+datatype : stopcodon_frame1
+glyph : SiteCodon
+color : red
+column : NAME
+column : GENOMIC_RANGE
+sortbycolumn : NAME
+
+[Type]
+label : stopcodon_frame2
+tiername : Stop Codon
+datatype : codons
+datatype : stopcodon_frame2
+glyph : SiteCodon
+color : red
+column : NAME
+column : GENOMIC_RANGE
+sortbycolumn : NAME
+
+[Type]
+label : stopcodon_frame3
+tiername : Stop Codon
+datatype : codons
+datatype : stopcodon_frame3
+glyph : SiteCodon
+color : red
+column : NAME
+column : GENOMIC_RANGE
+sortbycolumn : NAME
+
+[Tier]
+tiername : Sequence selection
+
+[Type]
+label : Sequence selection
+tiername : Sequence selection
+datatype : Sequence selection
+glyph : DrawableResultFeatureSet
+color : orange
+column : NAME
+sortbycolumn : NAME
+
+[Tier]
+tiername : Do Not Show
+visible : false
+
+// Gaps (runs of Ns) can be shown as red squiggles at the axis
+[Type]
+tiername : Do Not Show
+typename : Gap
+resulttype : gap:gap
+color : white
+usescore : false
+glyph : DrawableResultFeatureSet
+column : SCORE
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE

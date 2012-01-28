@@ -1,0 +1,16 @@
+// DAS style
+
+//the location of the types file (a file)
+//Types		        "ensdas.tiers"
+//Types		        "affy.tiers"
+Types		        "yeast.tiers"
+
+// Whether to show the annotation view, default true
+ShowAnnotations "false"
+// Whether to display the result view. If not in config file defaults to true.
+ShowResults		"true"
+// Whether to allow editing, default: false (takes out the editing menu options) 
+EnableEditing		"false"
+// Whether to enable the navigation manager - default false
+//EnableNavigationManager "true"
+

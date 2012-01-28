@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<webstart>
+  <jarsigner>
+    <alias>some_alias</alias>
+    <keypass>some_keypass</keypass>
+    <storepass>some_storepass</storepass>
+    <keystore>some_keystore</keystore>
+    <validity>700</validity>
+    <commonName>your_name</commonName>
+    <organizationUnit>organization_unit</organizationUnit>
+    <organizationName>organization_name</organizationName>
+    <localityName>city</localityName>
+    <stateName>state</stateName>
+    <country>country</country>
+  </jarsigner>
+  <jnlp spec="1.0+">
+    <information>
+      <title>Apollo</title>
+      <vendor>BBOP</vendor>
+      <description>Apollo Webstart</description>
+      <homepage href="http://your.home.page" />
+      <icon href="head-of-apollo.gif" kind="shortcut" />
+      <shortcut online="true">
+        <desktop />
+      </shortcut>
+      <offline-allowed />
+    </information>
+    <security>
+      <all-permissions />
+    </security>
+    <resources>
+      <j2se version="1.5+" initial-heap-size="64m" max-heap-size="500m" />
+    </resources>
+    <application-desc main-class="apollo.main.Apollo" />
+  </jnlp>
+  <webserver>
+    <url>http://webstart.location</url>
+    <jar_location>relative_path_to_jar_directory</jar_location>
+  </webserver>
+</webstart>

@@ -1,0 +1,90 @@
+7/29/2003
+Bugs fixed in release 1.3.5:
+
+The major fixes in this release were for issues with Jalview and with
+saving GAME XML.
+
+See doc/fixed-bugs for details of the Jalview fixes.
+
+GAME XML issues fixed:
+
+1. Sima loaded in game CG12548 but was unable to save it:
+caught exception committing XML
+java.lang.NullPointerException
+        at apollo.datamodel.SeqFeature.translate(SeqFeature.java:449)
+        at apollo.datamodel.Transcript.translate(Transcript.java:202)
+        at
+apollo.datamodel.Transcript.getPeptideSequence(Transcript.java:220)
+        at
+apollo.dataadapter.GAMEAdapter.writeFeatureSet(GAMEAdapter.java:505)
+        at
+apollo.dataadapter.GAMEAdapter.writeAnnotation(GAMEAdapter.java:406)
+...
+problem was saving transposon that didnt have whole sequence that had
+a cdna with null residues
+
+2. Both the cdna and the aa sequence for a transcript are being saved as
+-RA; peptide should be named -PA.
+Before:
+      <seq id="CG:temp1-RA" length="285" type="cdna">
+      <seq id="CG:temp1-RA" length="35" type="aa">
+After:
+      <seq id="CG:temp1-RA" length="285" type="cdna">
+      <seq id="CG:temp1-PA" length="35" type="aa">
+
+3. When you create a new transcript, produces_seq is null:
+    <feature_set id="CG:temp2-RA" produces_seq="null">
+but after you save and reload, it gets filled in.
+Now we don't save with produces_seq="null" (just leave out produces_seq)
+and don't save the cDNA or peptide sequence (these will also be added by
+the db).
+
+4. If you create a new transcript, its exons have evidence associated with
+them that gets saved in the XML:
+        <evidence result_id="result_span:71" type="blastx:aa_SPTR.dros"/>
+but if you then read that saved XML into Apollo and save it again,
+the evidence gets lost.
+(Suzi says we don't need to save evidence.  Frank agreed.  So now it
+doesn't try to save evidence.)
+
+More general Save issues fixed in this release:
+x When you do "Save" (rather than "Save As") it freezes up (with the menu
+still open!) while saving.  Should put up a message box that goes away
+when saving is done.
+x If you didn't read data from a file, and you edited the annotations and
+then tried to quit, it will ask you if you want to save.  If you choose
+"Save first, then quit", it will immediately quit w/o saving.  (Needs to prompt
+you for which file to save to.)
+[This now works, but if it can't save to the file you chose, it just
+complains and exits.  Should make it prompt for a new filename--hard to
+do bcs of control flow.]
+
+Fixed bug where it was ignoring dicistronic flag and setting start/stop
+for both transcripts to the same (longest) ORF, rather than keeping the
+two different start/stops.
+
+Fixed a few annot info bugs:
+- Pull up annotation info window for a single-transcript gene, delete
+that transcript in main window, and then click "Commit" in annotation
+info window.  Get exception.
+- If you change both the gene name and the transcript name, it saves the
+gene name change but not the transcript name change.  If you only change
+the transcript name, it saves it fine.
+
+Fixed display of peptide sequences inside protein results when zoomed in
+to the base level.
+
+ensj/otter adapter had wrong defaults, so was popping up lots of error
+boxes.
+
+Two utilities added:
+- Chris Mungall wrote a script that compares two XML files.  If they're
+semantically the same, it says so.  If they're different, it says they're
+different, although the exact nature of the difference(s) is hard to
+discern.
+- I extended Suzi's WashingLine class to allow Apollo to be invoked from
+the command line and read a GAME XML file and write out a GAME XML file,
+so that we can make sure nothing is being messed up in the round trip.  I
+also wrote a script, check-roundtrip.pl, that combines WashingLine with
+Chris's script, so you can invoke it on an XML file and it will tell you
+whether it survived the round trip with no significant changes.

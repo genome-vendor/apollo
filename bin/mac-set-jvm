@@ -1,0 +1,95 @@
+#!/usr/bin/perl
+# If appropriate, change Info.plist to force Apollo to use JDK1.5+ instead
+# of the default JVM of 1.3.1.
+
+my $APOLLO_ROOT;
+if ($ARGV[0]) {
+    $APOLLO_ROOT = $ARGV[0];
+    if (!($APOLLO_ROOT =~ /\/$/)) {
+	$APOLLO_ROOT .= "/";
+    }
+}
+else {
+    $APOLLO_ROOT = $ENV{"APOLLO_ROOT"} ? $ENV{"APOLLO_ROOT"} . "/" : "";
+}
+
+# Check OS version--JDK1.4 requires Mac OS X version 10.2.3 or later.
+# I'm not sure how to get the OS version other than from this file.
+my $version_file = "/System/Library/CoreServices/SystemVersion.plist";
+#my $version_file = "$APOLLO_ROOT/Apollo.app/Contents/SystemVersion.plist";  # FOR DEBUGGING
+
+if (!-f($version_file)) {
+    printf STDERR "Can't find $version_file.\nAre you sure you're actually on Mac OS X?\n";
+    exit(1);
+}
+
+my $version_string = `grep '10\.' $version_file|tail -1`;
+($version_string) = ($version_string =~ /.*10.(.*)\<.*/);
+#printf STDERR "OS version = $version_string\n";  # DEL
+if ($version_string < 2.5) {
+    printf STDERR "Mac OS X version $version_string doesn't support JDK1.5--not changing Info.plist.\n";
+    exit(3);
+}
+
+# We're on Mac OS 10.2.3 or later.  Check that we have 1.5+ installed.
+my $jdk1_5 = `ls -d /System/Library/Frameworks/JavaVM.framework/Versions/1.5*`;
+if (!$jdk1_5) {
+    printf STDERR "WARNING: you are running Mac OS X version $version_string, but you don't have JDK1.5 installed.\nRunning Apollo with this setup may crash your Mac.\nWe recommend installing JDK1.5.\n";
+    exit(-1);
+}
+
+my $changed = 0;
+my $properties = $APOLLO_ROOT . "Apollo.app/Contents/Info.plist";
+if (!open(IN, $properties)) {
+    printf STDERR "Can't find $properties.\nYou must not be running the installed version of Apollo.\n";
+    exit(2);
+}
+if (!open(OUT, ">$properties.new")) {
+    printf STDERR "Can't write to $properties.new, so can't set JVM.\nPlease make sure $APOLLO_ROOT/Apollo.app and all directories/files under it are writeable,\nand then try again.\n";
+    exit(2);
+}
+while (($line = <IN>) && !($line =~ /Java/)) {
+    print OUT $line;
+}
+print OUT $line;
+if (!($line =~ /Java/)) {
+    printf STDERR "Couldn't find Java line in $properties!";
+    exit(-1);
+}
+
+# Next line says <dict>; just print it
+$line = <IN>;
+print OUT $line;
+# Now see if we already have a JVMVersion string--if so, we might need to change it
+# to 1.5 (because we know we have 1.5)
+$line = <IN>;
+if ($line =~ /JVMVersion/) {
+    $line = <IN>;
+    if ($line =~ /1.3/) {
+	printf STDERR "$properties is specifying JVM1.3--we need 1.5";
+	$line = <IN>;  # Skip the version line; we'll rewrite it below
+    }
+    else {
+	printf STDERR "$properties already has appropriate JVM version string.\n";
+	exit(1);  # Didn't change Info.plist
+	# OUT will be left incomplete, but that's ok, because we're not going to move it
+        # on top of Info.plist.
+    }
+}
+# Add JVMVersion line BEFORE the line we checked to see if it was a JVMVersion line.
+print OUT "			<key>JVMVersion</key>\n";
+# print OUT "			<string>1.4+</string>\n";
+print OUT "			<string>1.5+</string>\n";
+print OUT $line;
+$changed = 1;
+while ($line = <IN>) {
+    print OUT $line;
+}
+close(IN);
+close(OUT);
+if ($changed) {
+    printf STDERR "Added JVMVersion to $properties\n";
+    system("mv -f $properties $properties.old; cp -f $properties.new $properties");
+    exit(0);
+}
+exit(1);  # Didn't change Info.plist

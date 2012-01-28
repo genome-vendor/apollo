@@ -1,0 +1,699 @@
+# This file describes to Apollo how different features should be displayed.  
+# There are two types of records: tier records and type lines.
+# Tiers are groupings of one or more types to be displayed together.
+
+# [Tier] fields and the default values
+# label :  false  (Group tier label)
+# visible : true
+# expanded : false
+# sorted : false
+# maxrows : maximum number of rows to show for this tier--default 0 means all
+# labeled : false
+
+# The order in which tiers are listed in this file determines 
+# their vertical display order
+# (the first tier is displayed closest to the central axis).
+# The fields for a Type or Tier record can appear in any order, one per line.
+
+# TYPE fields
+#  tiername : the tier this type appears in
+#  typename : label for this type
+#  resulttype : data type(s) to be included this type
+#  color : can be a standard color name (e.g. red) or an R,G,B triplet (default gray)
+#  utr_color : color used for utr regions. Only works with
+#              DrawableGeneFeatureSet. (default black)
+#  usescore : default true  # use score to set the height of this glyph
+#  minscore : 0 # minimum score for scaling height
+#  maxscore : 100 # maximum score for scaling height
+#  glyph : what glyph to use (mandatory).  Current choices include
+# DrawableGeneFeatureSet (exons connected by peaked introns),
+# DrawableResultFeatureSet (exons connected by straight lines),
+# DoubleHeadedArrow, Triangle, Zigzag, ThinRectangle.
+#  column : names of column(s) in detail table.  Choices include
+# include GENOMIC_RANGE, GENOMIC_LENGTH, MATCH_RANGE, MATCH_LENGTH,
+# SCORE, NAME, READS.  You can also specify column names not in all caps
+# that correspond to properties of the features present in the data (e.g.
+# query_frame).
+#  sortbycolumn : row order in table determined by this column
+#  reversesort : Sort table rows in reverse order?  (default false)
+#  groupby : GENE method to use for grouping features (GENE, SINGLE, HOMOLOGY)
+#  weburl : optional, URL for pulling up web pages about this type of result
+#  freshdate : date after which sequences of this type are considered "new" 
+# (the dates are found in the sequence descriptions)
+#  idformat : format of IDs for this kind of annotation (regexp, e.g. CG\d+)
+#  annot_type : for annotations, the result types that generate this type of annotation
+
+# TIER::ANNOTATION ====================================================================================
+[Tier]
+tiername : Annotation
+visible : true
+expanded : true
+maxrows : 0
+labeled : true
+
+[Type]
+tiername : Annotation
+typename : gene
+resulttype : gene
+resulttype : transcript
+resulttype : exon
+color : 51,102,255
+# Default utr_color is "transparent" (same as AnnotationBackgroundColor defined in game.style)
+utr_color : 176,224,230
+usescore : false
+glyph : DrawableGeneFeatureSet
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+overlap_method : ORF_Overlap
+name_method : RiceNameAdapter
+idformat : RICE\d+
+
+[Type]
+tiername : Annotation
+typename : transposable_element
+resulttype : transposable_element
+color : 255,0,203
+usescore : false
+minscore : 0
+maxscore : 0
+glyph : DoubleHeadedArrow
+column : GENOMIC_RANGE 
+column : ID
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+name_method : RiceNameAdapter
+# idformat : TE\d+ - this is flybase - rice is "transposable_element:"
+idformat : RICE\d+
+
+[Type]
+tiername : Annotation
+typename : tRNA
+resulttype : tRNA
+color : 0,204,0
+usescore : false
+glyph : DrawableResultFeatureSet
+column : GENOMIC_RANGE
+column : ID
+sortbycolumn : GENOMIC_RANGE
+name_method : RiceNameAdapter
+idformat : RICE\d+
+
+[Type]
+tiername : Annotation
+typename : rRNA
+resulttype : rRNA
+color : 0,204,0
+usescore : false
+glyph : DrawableResultFeatureSet
+column : GENOMIC_RANGE
+column : ID
+sortbycolumn : GENOMIC_RANGE
+name_method : RiceNameAdapter
+idformat : RICE\d+
+
+[Type]
+tiername : Annotation
+typename : miRNA
+#resulttype : microRNA
+resulttype : miRNA
+color : 0,204,0
+usescore : false
+glyph : DrawableResultFeatureSet
+column : GENOMIC_RANGE
+column : ID
+sortbycolumn : GENOMIC_RANGE
+name_method : RiceNameAdapter
+idformat : RICE\d+
+
+[Type]
+tiername : Annotation
+typename : pseudogene
+resulttype : pseudogene
+glyph : DrawableGeneFeatureSet
+color : 153,153,255
+usescore : false
+scorethreshold : -1.0
+column : GENOMIC_RANGE
+column : ID
+reversesort : false
+groupby : GENE
+name_method : RiceNameAdapter
+idformat : RICE\d+
+
+[Type]
+tiername : Annotation
+typename : remark
+#resulttype : miscellaneous curator's observation
+resulttype : remark
+glyph : Zigzag 
+color : 255,255,204
+usescore : false
+scorethreshold : -1.0
+column : GENOMIC_RANGE
+column : ID
+reversesort : false
+groupby : GENE
+name_method : RiceNameAdapter
+idformat : RICE\d+
+
+[Type]
+tiername : Annotation
+typename : promoter
+resulttype : promoter
+resulttype : CAAT_signal
+resulttype : TATA_signal
+resulttype : -35_signal
+resulttype : -10_signal
+resulttype : GC_signal
+color : 255,255,51
+usescore : false
+glyph : PromoterGlyph
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+name_method : RiceNameAdapter
+idformat : RICE\d+
+
+[Type]
+tiername : Annotation
+typename : repeat_region
+resulttype : repeat_region
+color : 102,102,255
+usescore : false
+glyph : Triangle
+column : SCORE
+column : GENOMIC_RANGE
+column : GENOMIC_LENGTH
+sortbycolumn : GENOMIC_RANGE
+name_method : RiceNameAdapter
+idformat : RICE\d+
+
+
+
+# TIER::GENE PREDICTION ====================================================================================
+[Tier]
+tiername : FgenesH - Gene Prediction
+visible : true
+expanded : true
+labeled : true
+
+
+
+[Type]
+tiername : FgenesH - Gene Prediction
+typename : FgenesH
+resulttype : FgenesH:na
+color : 255,153,255
+usescore : false
+minscore : 100
+maxscore 500
+glyph : DrawableResultFeatureSet
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+	sortbycolumn : GENOMIC_RANGE
+weburl : http://www.softberry.com/berry.phtml?topic=index&group=programs&subgroup=gfind#
+
+
+
+
+
+# TIER::BLAT ====================================================================================
+# [Tier]
+# tiername : blat
+# visible : true
+
+
+# TIER::BLAT::Rice_cDNA ====================================================================================
+[Tier]
+tiername : Rice_cDNA
+visible : true
+expanded : true
+
+[Type]
+tiername : Rice_cDNA
+typename : blat:Rice_cDNA
+resulttype : blat:Rice_CDS
+resulttype : blat:Rice_cDNA
+resulttype : blat:Rice_jap_cDNA_KOME
+color : 204,0,51
+usescore : false
+minscore : 0
+maxscore : 100
+glyph : DrawableResultFeatureSet
+column : SCORE
+column : expect
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+weburl : http://srs.ebi.ac.uk/srs6bin/cgi-bin/wgetz?[swall-acc:__ID__]+-e
+freshdate: 26-NOV-2007
+
+
+# TIER::BLAT::Rice_EST ====================================================================================
+[Tier]
+tiername : Rice_EST
+visible : true
+expanded : true
+
+
+[Type]
+tiername : Rice_EST
+typename : Rice_EST
+resulttype : blat:Rice_EST
+color : 255,20,0
+usescore : false
+minscore : 0
+maxscore : 100
+glyph : DrawableResultFeatureSet
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+weburl : http://srs.ebi.ac.uk/srs6bin/cgi-bin/wgetz?[swall-acc:__ID__]+-e
+freshdate: 15-MAY-2002
+
+# TIER::BLAT::Rice_ind_est ====================================================================================
+[Tier]
+tiername : Rice_ind_est
+visible : true
+expanded : true
+
+
+[Type]
+tiername : Rice_ind_est
+typename : Rice_ind_est
+resulttype : blat:Rice_ind_est
+color : 255,102,0
+usescore : false
+minscore : 0
+maxscore : 100
+glyph : DrawableResultFeatureSet
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+weburl : http://srs.ebi.ac.uk/srs6bin/cgi-bin/wgetz?[swall-acc:__ID__]+-e
+freshdate: 15-MAY-2002
+
+# TIER::BLAT::Rice_GI ====================================================================================
+[Tier]
+tiername : Rice_GI
+visible : true
+expanded : true
+
+
+[Type]
+tiername : Rice_GI
+typename : Rice_GI
+resulttype : blat:Rice_GI
+color : 218,18,40
+usescore : false
+minscore : 0
+maxscore : 100
+glyph : DrawableResultFeatureSet
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+weburl : http://srs.ebi.ac.uk/srs6bin/cgi-bin/wgetz?[swall-acc:__ID__]+-e
+freshdate: 15-MAY-2002
+
+
+# TIER::BLAT::Sugarcane_est ====================================================================================
+[Tier]
+tiername : Sugarcane_est
+visible : true
+expanded : true
+
+
+[Type]
+tiername : Sugarcane_est
+typename : Sugarcane_est
+resulttype : blat:Sugarcane_est
+color : 255,180,153
+usescore : false
+minscore : 0
+maxscore : 100
+glyph : DrawableResultFeatureSet
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+weburl : http://srs.ebi.ac.uk/srs6bin/cgi-bin/wgetz?[swall-acc:__ID__]+-e
+freshdate: 15-MAY-2002
+
+
+
+# TIER::BLAT::Rice_protein ====================================================================================
+[Tier]
+tiername : Rice_protein
+visible : true
+expanded : true
+
+
+[Type]
+tiername : Rice_protein
+typename : Rice_protein
+resulttype : blat:Rice_protein
+color : 255,250,10
+usescore : false
+minscore : 0
+maxscore : 100
+glyph : DrawableResultFeatureSet
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+
+
+
+# TIER::BLAT::Rice_genome ====================================================================================
+[Tier]
+tiername : Rice_genome
+visible : true
+expanded : true
+
+
+[Type]
+tiername : Rice_genome
+typename : Rice_genome
+resulttype : blat:Rice_genome
+glyph : DrawableResultFeatureSet
+color : 205,104,71
+usescore : false
+minscore : 0
+maxscore : 100
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+
+
+
+
+# TIER::COMPARATIVE ====================================================================================
+# [Tier]
+# tiername : Comparative
+# visible : true
+
+
+
+# TIER::COMPARATIVE::Maize_EST ====================================================================================
+[Tier]
+tiername : Maize_EST
+visible : true
+expanded : true
+
+
+[Type]
+tiername : Maize_EST
+typename : Maize_EST
+resulttype : blat:Maize_EST
+color : 0,153,255
+usescore : false
+minscore : 0
+maxscore 100
+glyph : DrawableResultFeatureSet
+column : NAME
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+sortbycolumn : GENOMIC_RANGE
+groupby : HOMOLOGY
+
+
+
+# TIER::COMPARATIVE::Maize_genome ====================================================================================
+[Tier]
+tiername : Maize_genome
+visible : true
+expanded : true
+
+
+[Type]
+tiername : Maize_genome
+typename : Maize_genome
+resulttype : blat:Maize_genome
+glyph : DrawableResultFeatureSet
+color : 51,0,255
+usescore : false
+minscore : 0
+maxscore : 100
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+
+
+
+
+# TIER::COMPARATIVE::Sorghum_EST ====================================================================================
+[Tier]
+tiername : Sorghum_EST
+visible : true
+expanded : true
+
+[Type]
+tiername : Sorghum_EST
+typename : Sorghum_EST
+resulttype : blat:Sorghum_EST
+glyph : DrawableResultFeatureSet
+color : 153,102,51
+usescore : flase
+minscore : 0
+maxscore : 100
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+
+
+
+
+
+# TIER::COMPARATIVE::Sorghum_genome ====================================================================================
+[Tier]
+tiername : Sorghum_genome
+visible : true
+expanded : true
+
+[Type]
+tiername : Sorghum_genome
+typename : Sorghum_genome
+resulttype : blat:Sorghum_genome
+glyph : DrawableResultFeatureSet
+color : 204,204,0
+usescore : false
+minscore : 0
+maxscore : 100
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+
+
+
+
+# TIER::COMPARATIVE::Barley_EST ====================================================================================
+[Tier]
+tiername : Barley_EST
+visible : true
+expanded : true
+
+[Type]
+tiername : Barley_EST
+typename : Barley_EST
+resulttype : blat:Barley_EST
+glyph : DrawableResultFeatureSet
+color : 153,51,102
+usescore : false
+minscore : 0
+maxscore : 100
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+
+
+# TIER::COMPARATIVE::Wheat_EST ====================================================================================
+[Tier]
+tiername : Wheat_EST
+visible : true
+expanded : true
+
+[Type]
+tiername : Wheat_EST
+typename : Wheat_EST
+resulttype : blat:Wheat_EST
+glyph : DrawableResultFeatureSet
+color : 204,153,102
+usescore : false
+minscore : 0
+maxscore : 100
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+
+
+# TIER::COMPARATIVE::Millet_EST ====================================================================================
+[Tier]
+tiername : Millet_EST
+visible : true
+expanded : true
+
+[Type]
+tiername : Millet_EST
+typename : Millet_EST
+resulttype : blat:Millet_EST
+glyph : DrawableResultFeatureSet
+color : 255,102,102
+usescore : false
+minscore : 0
+maxscore : 100
+column : query_frame
+column : GENOMIC_RANGE
+column : MATCH_RANGE
+column : GENOMIC_LENGTH
+column : MATCH_LENGTH
+
+
+
+
+
+
+# TIER::START CODON ====================================================================================
+[Tier]
+tiername : Start Codon
+visible : true
+
+[Type]
+tiername : Start Codon
+typename : startcodon_frame1
+resulttype : codons
+resulttype : startcodon_frame1
+color : 34,220,34
+usescore : false
+glyph : SiteCodon
+column : NAME 
+column : GENOMIC_RANGE
+sortbycolumn : NAME
+
+[Type]
+tiername : Start Codon
+typename : startcodon_frame2
+resulttype : codons
+resulttype : startcodon_frame2
+color : 34,220,34
+usescore : false
+glyph : SiteCodon
+column : NAME 
+column : GENOMIC_RANGE
+sortbycolumn : NAME
+
+[Type]
+tiername : Start Codon
+typename : startcodon_frame3
+resulttype : codons
+resulttype : startcodon_frame3
+color : 34,220,34
+usescore : false
+glyph : SiteCodon
+column : NAME 
+column : GENOMIC_RANGE
+sortbycolumn : NAME
+
+
+
+# TIER::STOP CODON ====================================================================================
+[Tier]
+tiername : Stop Codon
+visible : true
+
+[Type]
+tiername : Stop Codon
+typename : stopcodon_frame1
+resulttype : codons
+resulttype : stopcodon_frame1
+color : red
+usescore : false
+glyph : SiteCodon
+column : NAME 
+column : GENOMIC_RANGE
+sortbycolumn : NAME
+
+[Type]
+tiername : Stop Codon
+typename : stopcodon_frame2
+resulttype : codons
+resulttype : stopcodon_frame2
+color : red
+usescore : false
+glyph : SiteCodon
+column : NAME 
+column : GENOMIC_RANGE
+sortbycolumn : NAME
+
+[Type]
+tiername : Stop Codon
+typename : stopcodon_frame3
+resulttype : codons
+resulttype : stopcodon_frame3
+color : red
+usescore : false
+glyph : SiteCodon
+column : NAME 
+column : GENOMIC_RANGE
+sortbycolumn : NAME
+
+
+
+# TIER::SEQ SELECTION ====================================================================================
+[Tier]
+tiername : Sequence selection
+
+[Type]
+tiername : Sequence selection
+typename : Sequence selection
+resulttype : Sequence selection
+color : orange
+usescore : false
+glyph : DrawableResultFeatureSet
+column : NAME
+sortbycolumn : NAME
+
+
+
+
+
+

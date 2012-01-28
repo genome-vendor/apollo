@@ -1,0 +1,45 @@
+ImportStyle "fly.style"
+
+Types "crm.tiers"
+
+// Only relevant for game adapter. Whether to write/read apollo
+// transactions in game file (true) or separate file (false)
+// this is irrelevant if OutputTransactionXML is not set to "true"
+// default is false
+TransactionXmlInGameFile "true"
+//TransactionXmlInGameFile "false"
+
+// If this is true, then GENE annotations are colored by user color, but only
+// if you're in project internal mode.
+UserTranscriptColouring "true"
+
+// Boy is this one big hack or what. so coloring annots for the below
+// users that arent users at all of course - scandal. anyways it needs
+// to be in InternalMode to work judging from above comment and from
+// looking at the Style code internal mode is now set as such: 
+InternalMode "true"
+
+// For some projects, such as this one, we want to color all annots by
+// owner, not just genes.
+ColorAllAnnotsByOwner "true"
+
+UserInfo "user=fragment_designed:project=CRM:color=255,51,51:full-name=Fragment Designed"
+UserInfo "user=oligos_ordered:project=CRM:color=255,215,0:full-name=Oligos Ordered"
+UserInfo "user=seq_verified:project=CRM:color=255,153,0:full-name=Sequence Verified"
+UserInfo "user=gateway_cloned:project=CRM:color=255,215,51:full-name=Gateway Cloned"
+UserInfo "user=stopped:project=CRM:color=122,122,1:full-name=Stopped"
+UserInfo "user=Rearrayed:project=CRM:color=4,199,132:full-name=Rearrayed"
+UserInfo "user=destination_cloned:project=CRM:color=255,41,0:full-name=Destination Cloned"
+UserInfo "user=gsi_ready:project=CRM:color=22,127,224:full-name=GSI Ready"
+UserInfo "user=transformant:project=CRM:color=138,48,179:full-name=Transformant"
+UserInfo "user=crossed:project=CRM:color=167,207,68:full-name=Crossed"
+UserInfo "user=imaged:project=CRM:color=47,130,43:full-name=Imaged"
+UserInfo "user=gsi_failed:project=CRM:color=198,19,19:full-name=GSI Failed"
+
+UserInfo "user=apollo:project=CRM:color=17,17,17:full-name=Pending JTrack sync"
+UserInfo "user=svirskasr:project=CRM:color=17,17,17:full-name=Pending JTrack sync"
+
+InternalMode "true"
+FeatureBackgroundColor "white"
+FeatureLabelColor "black"
+EdgeMatchColor "black"

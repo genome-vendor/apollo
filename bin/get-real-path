@@ -1,0 +1,25 @@
+#!/bin/sh
+# Given a program name (e.g. mozilla) find the real physical path to it.
+# This is used by the apollo script (to define APOLLO_ROOT) and is
+# also used by Apollo to figure out the path to the web browser,
+# which is required by recent versions of mozilla.
+
+PATH_TO_ME=`which $1 2> /dev/null`
+
+if [ -z $PATH_TO_ME ]
+then
+    exit 1
+fi
+
+while [ -L $PATH_TO_ME ]
+do
+    cd `dirname $PATH_TO_ME`
+    PATH_TO_ME=`ls -l $PATH_TO_ME | sed -e 's/.* -> \(.*\)/\\1/'`
+done
+
+echo $PATH_TO_ME | grep "^.." > /dev/null
+cd `dirname $PATH_TO_ME`
+PATH_TO_ME=$PWD/`basename $PATH_TO_ME`
+
+echo $PATH_TO_ME
+

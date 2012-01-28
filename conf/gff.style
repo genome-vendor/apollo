@@ -1,0 +1,32 @@
+// Style for EBI GFF data adapter
+// See http://www.sanger.ac.uk/Software/formats/GFF/ for more information
+// about this GFF format.
+//
+// Most of the parameters are not specified here because the default
+// vaues are used.
+// For a more complete list of parameters, please see game.style.
+//
+// Each line should have two strings, separated by one or more spaces.
+// The first string is a key and the second is the key's value.
+// It is necessary to put quotes around the strings if they contain
+// punctutation characters or spaces.
+// Both slash-star and slash-slash comments are accepted.
+// Blank lines are ignored.
+
+// The name of the types file (a file--expected to be in the conf directory)
+// Used to be ensembl.tiers.  ensj.tiers seems better.
+Types		        "ensj.tiers"
+
+// Whether to show the annotation view, default true
+ShowAnnotations         "false"
+
+// Background color for results
+// Note that if you change FeatureBackgroundColor to white, as some people prefer,
+// you'll probably want to change EdgematchColor to black.
+FeatureBackgroundColor  "white"
+
+// Color for highlighting edges of results that line up
+EdgematchColor          "black"
+
+// Color for showing name labels in result panels (default is magenta)
+FeatureLabelColor       "black"

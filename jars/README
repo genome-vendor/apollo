@@ -1,0 +1,143 @@
+Description of jars:
+
+apollo.jar is the jar made from doing make jar on all of the apollo
+classes (makefile: src/java/Makefile, apollo source: src/java)
+This is not in cvs nor should it be, it has to be made via "make jar"
+
+biojava.jar is biojava classes from the biojava project (based in
+ensembl?). I think the ensj adapter uses this?
+
+crimson.jar appears to be a sax xml parser (used in otter, das, game, and
+ensj i think) - from http://java.sun.com/webservices/jaxp/reference/faqs/index.html:
+*Q. Why does Apache have multiple XML parsers?*
+
+As of March 2006, Apache has several Java parsers: Crimson, Xerces 1, and Xerces 2. The reason is historical -- because Apache accepted two donations from two different companies. IBM donated XML4J which became Apache Xerces 1. Sun donated Project X which became Apache Crimson. Xerces 2 is a new third parser which is a rewrite. It has goals such as maintainability, modularity, and the implementation of certain features, which neither of the previous original parsers has achieved. Xerces 2 was designed to fill the long-term needs of Apache projects going forward. The current version of Xerces is 2.8.
+
+ecp1_0beta.jar has sql stuff (jdbc driver?)
+
+ensj.jar is ensembl stuff, used for ensembl adapter ensj (anything
+else?).
+Please note:  if you commit a new ensj.jar that corresponds with a new
+Ensembl schema, you also need to change data/history.default (which
+points to one of the dbs, which is probably now out of date) and
+doc/html/userguide.  Also,
+src/java/apollo/dataadapter/ensj/EnsJAdapter.java refers to the schema
+version when it calls setName.
+Also check conf/ensj.tiers to see if any new data types need to be added.
+
+jakarta-oro-2.0.6.jar is for regular expressions. Im guessing this is
+for pre jdk1.4 code. Sonce 1.4 now has regular expression stuff should
+this eventually be taken out and code rewritten? The following classes
+import it:
+./apollo/gui/SeqSelectorTable.java:15:import org.apache.oro.text.regex.*;
+./apollo/gui/SequenceSelector.java:8:import org.apache.oro.text.regex.*;
+./apollo/datamodel/FeatureSet.java:10:import org.apache.oro.text.*;
+./apollo/datamodel/FeatureSet.java:11:import org.apache.oro.text.regex.*;
+
+jaxp.jar : This seems to be a sax xml parser. So now the question is
+do we need both jaxp and crimson? Are they both being used? Do they
+complement each other or are they redundant? Classes:
+./apollo/dataadapter/das/simple/SimpleDASServer.java:7:import javax.xml.parsers.*;
+./apollo/dataadapter/gamexml/XMLParser.java:10:import javax.xml.parsers.*;
+./apollo/dataadapter/synteny/builder/Model.java:5:import javax.xml.parsers.*;
+Suzi added this in 5/2002 with this comment:
+adding the jars that are needed to make have apollo act as
+a DAS client.
+# from http://java.sun.com/webservices/jaxp/reference/faqs/index.html:
+Q. What is the Java API for XML Processing (JAXP)?
+The Java API for XML Processing, or JAXP for short, enables applications to parse and transform XML documents using an API that is independent of a particular XML processor implementation. JAXP also provides a pluggability feature which enables applications to easily switch between particular XML processor implementations.
+To achieve the goal of XML processor independence, an application should limit itself to the JAXP API and avoid implementation-dependent APIs and behavior. This may or may not be easy depending on the application. See the question How can I write my JAXP application to be implementation-independent? below for more information. JAXP includes industry standard APIs such as the Document Object Model (DOM), the Simple API for XML (SAX) and the Streaming API for XML (StAX).
+The reason for the existence of JAXP is to facilitate the use of XML on the Java platform. For example, APIs such as DOM Level 2 do not provide a method to bootstrap a DOM Document object from an XML input document, whereas JAXP does. Other parts of JAXP such as the javax.xml.transform portion do not have any other equivalent XSLT processor-independent APIs.
+
+
+jdbc2_0-stdext.jar: seems to generic jdbc classes in package
+javax.sql. I cant find anywhere in the apollo code that uses the
+package javax.sql. Does this support other jars? This doesnt appear to
+support for any particular database.
+[Removed, 3/2005]
+
+junit.jar : A jar for testing. We should proabably be making more
+extensive use of this. Im certainly guilty of not using it.
+
+log4j-1.2.14.jar : Log4J.  See http://logging.apache.org/log4j/docs/
+Originally used only by the ensj adapter, log4j is now used in lieu
+of System.out.print(ln) and System.err.print(ln).
+
+mysql-connector-java-3.0.16-ga-bin.jar: replaces mm.mysql-2.0.6.jar
+mysql-connector-java-3.1.8--bin.jar replaced mysql-connector-java-3.0.16-ga-bin.jar
+mysql jdbc driver. used by:
+./apollo/bop/JDBCPipelineAdapter.java:14:  String driver = "org.gjt.mm.mysql.Driver";
+./apollo/dataadapter/mysql/MySQLInstance.java:142:      Class.forName("org.gjt.mm.mysql.Driver").newInstance();
+./apollo/dataadapter/mysql/MySQLDatabase.java:28:           Class.forName("org.gjt.mm.mysql.Driver").newInstance();
+./apollo/dataadapter/synteny/ChromosomePanel.java:318:    props.setProperty("jdbc_driver","org.gjt.mm.mysql.Driver");
+./apollo/dataadapter/synteny/ChromosomePanel.java:331:    props.setProperty("jdbc_driver","org.gjt.mm.mysql.Driver");
+./apollo/dataadapter/synteny/SyntenyComparaAdapterGUI.java:558:      properties.setProperty("jdbc_driver","org.gjt.mm.mysql.Driver");
+It is also used by ensj.jar internally.
+
+org.bdgp.jar : Jar created at Berkeley by John Richter (and
+others?). Used by John Richter's Goat as well as apollo. A lot of the
+generic data adapter chooser stuff is from this. Used throughout apollo.
+Code is in SourceForge as gmod/org.bdgp.  To make, say "make all" and
+then "make jar".
+
+patbinfree153.jar : This seems to be a regular expression package used
+by jalview. Could this be replaced by new jdk1.4 rexexp stuff?
+./jalview/analysis/blast/Hit.java:12:import com.stevesoft.pat.*;
+./jalview/analysis/blast/BPLite.java:14:import com.stevesoft.pat.*;
+./jalview/analysis/blast/TestRegex.java:10:import com.stevesoft.pat.*;
+
+pgjdbc2.jar.zip : So this is a postgres jdbc driver that is not being
+used anywhere in the code as far as I can tell. Its from December
+2002. There are no imports of org.postgressql... If I take it out and
+make clean everything compiles. This was added by Colin Weil(im
+guessing its when he was fiddling with postgres chado).
+REMOVED - updated with pg74.213.jdbc3.jar
+
+pg74.213.jdbc3.jar : postgres jdbc driver. Used by chado adapter. This
+replaces older driver pgjdbc2.jar.zip
+
+
+psgr2.jar : postcript printer:
+./apollo/gui/menus/FileMenu.java:24:import gov.sandia.postscript.*;
+./apollo/gui/menus/SyntenyChoiceMenu.java:25:import gov.sandia.postscript.*;
+./apollo/gui/genomemap/ApolloPanel.java:27:import gov.sandia.postscript.*;
+./apollo/gui/FullSyntenyPanel.java:11:import gov.sandia.postscript.*;
+
+
+sax.jar : Yet another sax xml parser. Gee whiz! Even worse sax.jar and
+crimson.jar have identical classes in them (eg
+org.xml.sax.Parser.class). Yikes! This could mean you think you are
+getting classes from one but infact you are getting them from the
+other (unless this is intentional). sax and crimson were both added by
+suzi in 7/2002. sax files are dated 1/2002, crimson is 10/2001. Theres
+also overlap with jaxp.jar. Yikes! (eg javax.xml.parsers.SAXParser)
+[Removed, 3/2005]
+
+xerces.jar : Seems to be both a dom and sax xml parser. (I think we
+need a few more xml parsers - 4 isnt enough ;) ). This was added by
+steve searle 10/2002 with this comment:
+"Added xerces.jar for XML parsing (Piccolo seems to have problems with large
+files)"
+Classes that i found:
+./apollo/dataadapter/synteny/builder/Model.java:6:import org.w3c.dom.*;
+Model.java is used by other classes such as
+apollo/dataadapter/synteny/builder/BuilderAdapterGUI.java and 
+apollo/dataadapter/synteny/builder/Controller.java.
+[Removed, 3/2005]
+
+te-common.jar - options is for processing command line options. its used in
+apollo.main.CommandLine class to get command line options for apollo.
+for docs see:
+http://te-code.sourceforge.net/article-20041121-cli.html
+## Copyright (c) 2002-2004, Andrew S. Townley
+## All rights reserved.
+(i tried 2 lighter/smaller command line jars. "options" didnt
+jibe with java 1.4.2, "jargp" only took single character options)
+
+org.mortbay.jetty.jar, servlet-tomcat.jar:
+Lets Apollo run a servlet for handling http requests (from IGB or other
+applications).
+
+jnlp.jar:
+Sun's jar for handling jnlps (java webstart launch files).  Needed in order
+to let webstarted Apollo tell your web browser to show a page.

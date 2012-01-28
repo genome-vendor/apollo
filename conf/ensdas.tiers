@@ -1,0 +1,210 @@
+tier Sequence, true, true, false, 0, false
+type Sequence, Sequence, {"sequence" "SEQUENCE"}, "255,255,102", false, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {NAME GENOMIC_RANGE}, GENOMIC_RANGE, false, SINGLE, "http://www.ensembl.org/perl/contigview?contig="
+
+tier TargetGene, true, true, false, 0, true
+type TargetGene, TargetGene, {"TargetTranscript"}, "204,0,204", false, 0.0, 0.0, apollo.gui.drawable.DrawableGeneFeatureSet, {NAME GENOMIC_RANGE}, GENOMIC_RANGE, false, GENE, "http://www.ensembl.org/perl/geneview?transcript="
+
+tier Gene, true, true, false, 0, true
+type Gene, EnsemblGene, {"ensembl"}, "204,51,0", false, 0.0, 0.0, apollo.gui.drawable.DrawableGeneFeatureSet, {NAME GENOMIC_RANGE PHASE}, GENOMIC_RANGE, false, GENE, "http://www.ensembl.org/perl/geneview?transcript="
+type Gene, EnsemblGeneR, {"ensembl_r"}, "51,204,0", false, 0.0, 0.0, apollo.gui.drawable.DrawableGeneFeatureSet, {NAME GENOMIC_RANGE PHASE}, GENOMIC_RANGE, true, GENE, "http://www.ensembl.org/perl/geneview?transcript="
+type Gene, Hugo, {"hugo"}, "204,51,0", false, 0.0, 0.0, apollo.gui.drawable.DrawableGeneFeatureSet, {NAME GENOMIC_RANGE PHASE}, GENOMIC_RANGE, false, GENE, "http://www.ensembl.org/perl/geneview?gene=__ID.__"
+type Gene, HugoR, {"hugo_r"}, "51,204,0", false, 0.0, 0.0, apollo.gui.drawable.DrawableGeneFeatureSet, {NAME GENOMIC_RANGE PHASE}, GENOMIC_RANGE, true, GENE, "http://www.ensembl.org/perl/geneview?gene=__ID.__"
+type Gene, Swissprot, {"swiss"}, "204,51,0", false, 0.0, 0.0, apollo.gui.drawable.DrawableGeneFeatureSet, {NAME GENOMIC_RANGE PHASE}, GENOMIC_RANGE, false, GENE, "http://www.ensembl.org/perl/geneview?gene=__ID.__"
+type Gene, SwissprotR, {"swiss_r"}, "51,204,0", false, 0.0, 0.0, apollo.gui.drawable.DrawableGeneFeatureSet, {NAME GENOMIC_RANGE PHASE}, GENOMIC_RANGE, true, GENE, "http://www.ensembl.org/perl/geneview?gene=__ID.__"
+type Gene, Sptrembl, {"sptrembl"}, "204,51,0", false, 0.0, 0.0, apollo.gui.drawable.DrawableGeneFeatureSet, {NAME GENOMIC_RANGE PHASE}, GENOMIC_RANGE, false, GENE, "http://www.ensembl.org/perl/geneview?gene=__ID.__"
+type Gene, SptremblR, {"sptrembl_r"}, "51,204,0", false, 0.0, 0.0, apollo.gui.drawable.DrawableGeneFeatureSet, {NAME GENOMIC_RANGE PHASE}, GENOMIC_RANGE, true, GENE, "http://www.ensembl.org/perl/geneview?gene=__ID.__"
+type Gene, Embl, {"embl"}, "51,204,0", false, 0.0, 0.0, apollo.gui.drawable.DrawableGeneFeatureSet, {NAME GENOMIC_RANGE}, GENOMIC_RANGE, false, GENE, "http://srs.ebi.ac.uk/srs6bin/cgi-bin/wgetz?-page+qResult+-e+[EMBL-Gene:__ID__]+-vn+1"
+type Gene, EmblR, {"embl_r"}, "204,51,0", false, 0.0, 0.0, apollo.gui.drawable.DrawableGeneFeatureSet, {NAME GENOMIC_RANGE}, GENOMIC_RANGE, true, GENE, "http://srs.ebi.ac.uk/srs6bin/cgi-bin/wgetz?-page+qResult+-e+[EMBL-Gene:__ID__]+-vn+1"
+type Gene, Locus, {"locus"}, "51,204,0", false, 0.0, 0.0, apollo.gui.drawable.DrawableGeneFeatureSet, {NAME GENOMIC_RANGE}, GENOMIC_RANGE, false, GENE, "http://srs.ebi.ac.uk/srs6bin/cgi-bin/wgetz?-page+qResult+-e+[EMBL-Gene:__ID__]+-vn+1"
+type Gene, TGE_gw, {"TGE_gw"}, "51,204,0", false, 0.0, 0.0, apollo.gui.drawable.DrawableGeneFeatureSet, {NAME GENOMIC_RANGE}, GENOMIC_RANGE, false, GENE, "http://srs.ebi.ac.uk/srs6bin/cgi-bin/wgetz?-page+qResult+-e+[EMBL-Gene:__ID__]+-vn+1"
+type Gene, similarity_genewise, {"similarity_genewise"}, "51,204,0", false, 0.0, 0.0, apollo.gui.drawable.DrawableGeneFeatureSet, {NAME GENOMIC_RANGE}, GENOMIC_RANGE, false, GENE, "http://srs.ebi.ac.uk/srs6bin/cgi-bin/wgetz?-page+qResult+-e+[EMBL-Gene:__ID__]+-vn+1"
+type Gene, exonerate_e2g, {"exonerate_e2g"}, "51,204,0", false, 0.0, 0.0, apollo.gui.drawable.DrawableGeneFeatureSet, {NAME GENOMIC_RANGE}, GENOMIC_RANGE, false, GENE
+
+tier ESTGene, true, true, false, 0, true
+type ESTGene, ESTGene, {"genomewise"}, blue, false, 0.0, 0.0, apollo.gui.drawable.DrawableGeneFeatureSet, {NAME GENOMIC_RANGE PHASE}, GENOMIC_RANGE, false, GENE, "http://www.ensembl.org/perl/geneview?transcript="
+type ESTGene, ESTGene_r, {"genomewise_r"}, "0,0,175", false, 0.0, 0.0, apollo.gui.drawable.DrawableGeneFeatureSet, {NAME GENOMIC_RANGE PHASE}, GENOMIC_RANGE, true, GENE, "http://www.ensembl.org/perl/geneview?transcript="
+
+tier Prediction, true, true, false, 0, false
+type Prediction, Genscan, {"genscan" "GENSCAN"}, "0,153,153", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {score GENOMIC_RANGE}, GENOMIC_RANGE, false, GENE
+type Prediction, tRNA, {"TrnaScan"}, red, true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {score GENOMIC_RANGE}, GENOMIC_RANGE, false, SINGLE
+
+tier mRNA, true, true, true, 7, false
+type mRNA, EMBLrna, {"vertebrate_mRNA_eg" "embl_vertrna"}, "51,153,0", true, 0.0, 2000.0, apollo.gui.drawable.DrawableResultFeatureSet, {score GENOMIC_RANGE GENOMIC_LENGTH MATCH_RANGE}, GENOMIC_RANGE, false, HOMOLOGY, "http://www.ebi.ac.uk/cgi-bin/emblfetch?"
+
+tier Protein, true, true, true, 7, false
+type Protein, Protein, {"sptr" "blastp" "wublastp" "Swall"}, "255,153,0", true, 0.0, 2000.0, apollo.gui.drawable.DrawableResultFeatureSet, {score GENOMIC_RANGE GENOMIC_LENGTH MATCH_RANGE}, GENOMIC_RANGE, false, HOMOLOGY, "http://www.ebi.ac.uk/cgi-bin/swissfetch?"
+
+tier VertRNA, true, true, true, 7, false
+type VertRNA, EMBLVertRNA, {"wublastx" "vert" "tblastn" "wutblastn"}, "51,153,0", true, 0.0, 2000.0, apollo.gui.drawable.DrawableResultFeatureSet, {score GENOMIC_RANGE GENOMIC_LENGTH MATCH_RANGE}, GENOMIC_RANGE, false, HOMOLOGY, "http://www.ebi.ac.uk/cgi-bin/emblfetch?"
+
+tier Unigene, true, true, true, 7, false
+type Unigene, Unigene, {"unigene.seq"}, red, true, 0.0, 2000.0, apollo.gui.drawable.DrawableResultFeatureSet, {score GENOMIC_RANGE GENOMIC_LENGTH MATCH_RANGE}, GENOMIC_RANGE, false, HOMOLOGY, "http://www.ncbi.nlm.nih.gov/UniGene/clust.cgi?ORG=__ID.__&CID=__ID__"
+
+tier EST, true, true, false, 0, false
+type EST, EST, {"EST_eg" "dbest" "EST"}, "153,153,255", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {NAME score GENOMIC_RANGE GENOMIC_LENGTH MATCH_RANGE}, GENOMIC_RANGE, false, HOMOLOGY, "http://www.ebi.ac.uk/cgi-bin/emblfetch?__ID.__"
+
+tier Markers, true, true, false, 0, true
+type Markers, Markers, {"Mapprimer130" "epcr"}, magenta, true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {NAME GENOMIC_RANGE}, GENOMIC_RANGE, false, SINGLE, "http://www.ensembl.org/perl/markerview?marker="
+
+tier Variation, false, true, false, 0, false
+type Variation, SNP, {"Variation"}, "102,102,255", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {NAME GENOMIC_RANGE}, GENOMIC_RANGE, false, SINGLE, "http://www.ensembl.org/perl/snpview?snp="
+
+tier CPGIsland, true, true, false, 0, false
+type CPGIsland, cpgisle, {"cpg"}, "130,0,130", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_RANGE GENOMIC_LENGTH score}, GENOMIC_RANGE, false, SINGLE
+
+tier Exonerate, true, true, true, 7, false
+type Exonerate, "Exonerate gapped", {"exonerate_gapped"}, cyan, true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_RANGE GENOMIC_LENGTH MATCH_RANGE}, GENOMIC_RANGE, false, SINGLE, "http://trace.ensembl.org/perl/traceview?tracedb=0&traceid="
+
+tier trace, true, true, true, 7, false
+type trace, trace, {"trace"}, "255,102,255", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_RANGE GENOMIC_LENGTH MATCH_RANGE SCORE}, GENOMIC_RANGE, false, SINGLE, "http://trace.ensembl.org/perl/traceview?tracedb=0&traceid="
+
+tier Repeat, true, true, false, 0, false
+type Repeat, Repeat, {"repeat" "RepeatMasker" "repeatrasker" "RepeatMasker_SINE" "RepeatMasker_LINE"}, gray, true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {NAME GENOMIC_RANGE}, GENOMIC_RANGE, false, SINGLE
+
+tier stopcodon_frame1, true, true, false, 0, false
+type stopcodon_frame1, stopcodon_frame1, {"codons" "stopcodon_frame1"}, red, false, 0.0, 0.0, apollo.gui.drawable.SiteCodon, {NAME GENOMIC_RANGE}, NAME, false
+
+tier stopcodon_frame2, true, true, false, 0, false
+type stopcodon_frame2, stopcodon_frame2, {"codons" "stopcodon_frame2"}, red, false, 0.0, 0.0, apollo.gui.drawable.SiteCodon, {NAME GENOMIC_RANGE}, NAME, false
+
+tier stopcodon_frame3, true, true, false, 0, false
+type stopcodon_frame3, stopcodon_frame3, {"stopcodon_frame3"}, red, false, 0.0, 0.0, apollo.gui.drawable.SiteCodon, {NAME GENOMIC_RANGE}, NAME, false
+
+tier Annotation, true, true, false, 100, true
+type Annotation, Annotation, {"gene" "transcript" "exon" "transposon" "tRNA"}, "255,215,0", false, 0.0, 0.0, apollo.gui.drawable.DrawableAnnotatedFeatureSet, {GENOMIC_RANGE EVIDENCE}, EVIDENCE, false
+
+tier human_mrna, true, true, false, 0, false
+type human_mrna, human_mrna, {"human_mrna"}, "51,204,0", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier mouse_mrna, true, true, false, 0, false
+type mouse_mrna, mouse_mrna, {"mouse_mrna"}, "51,204,0", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier mouse_swall, true, true, false, 0, false
+type mouse_swall, mouse_swall, {"mouse_swall"}, "204,204,0", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier blastn, true, true, false, 0, false
+type blastn, blastn, {"blastn"}, "255,204,102", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier blastall, true, true, false, 0, false
+type blastall, blastall, {"blastall"}, "255,0,204", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier primate, true, true, false, 0, false
+type primate, primate, {"primate"}, "102,102,255", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier genebuilder, true, true, false, 0, false
+type genebuilder, genebuilder, {"genebuilder"}, "204,0,0", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier tblastx, true, true, false, 0, false
+type tblastx, tblastx, {"tblastx"}, "204,255,51", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier blastx, true, true, false, 0, false
+type blastx, blastx, {"blastx"}, "127,255,0", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier swir, true, true, false, 0, false
+type swir, swir, {"swir"}, "127,255,0", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier no_type, true, true, false, 0, false
+type no_type, no_type, {"no_type"}, "127,255,0", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier dbsts, true, true, false, 0, false
+type dbsts, dbsts, {"dbsts"}, "127,255,0", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier TGE_e2g, true, true, false, 0, false
+type TGE_e2g, TGE_e2g, {"TGE_e2g"}, "51,204,0", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier Riken_BMG, true, true, false, 0, false
+type Riken_BMG, Riken_BMG, {"Riken_BMG"}, "153,0,0", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier TGW, true, true, false, 0, false
+type TGW, TGW, {"TGW"}, "204,204,0", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier combined_gw_e2g, true, true, false, 0, false
+type combined_gw_e2g, combined_gw_e2g, {"combined_gw_e2g"}, "153,0,153", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier e-PCR, true, true, false, 0, false
+type e-PCR, e-PCR, {"e-PCR"}, "255,153,0", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier FPC_BMG, true, true, false, 0, false
+type FPC_BMG, FPC_BMG, {"FPC_BMG"}, "255,51,51", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier intron, true, true, false, 0, false
+type intron, intron, {"intron"}, "51,51,251", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier three_prime, true, true, false, 0, false
+type three_prime, three_prime, {"three_prime"}, "51,251,51", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier five_prime, true, true, false, 0, false
+type five_prime, five_prime, {"five_prime"}, "251,51,51", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier utr5, true, true, false, 0, false
+type utr5, utr5, {"utr5"}, "251,251,51", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier utr3, true, true, false, 0, false
+type utr3, utr3, {"utr3"}, "51,251,251", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier missutr3, true, true, false, 0, false
+type missutr3, missutr3, {"missutr3"}, "125,125,0", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier missutr5, true, true, false, 0, false
+type missutr5, missutr5, {"missutr5"}, "0,125,125", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier endtrans, true, true, false, 0, false
+type endtrans, endtrans, {"endtrans"}, red, true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier starttrans, true, true, false, 0, false
+type starttrans, starttrans, {"starttrans"}, green, true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier synteny, true, true, true, 7, false
+type synteny, synteny, {"synteny"}, "255,102,255", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_RANGE GENOMIC_LENGTH MATCH_RANGE SCORE}, GENOMIC_RANGE, false, SINGLE, "http://www.ensembl.org/__ID:__/contigview?contig=__ID__"
+
+tier GenePair, false, true, false, 0, false
+type GenePair, GenePair, {"gene_pair"}, red, true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier CDS, true, true, false, 0, false
+type CDS, CDS, {"cds"}, green, true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false, SINGLE
+
+tier ensembl:transcript, true, true, false, 0, false
+type ensembl:transcript, ensembl:transcript, {"ensembl:transcript"}, "204,51,0", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false, SINGLE
+
+tier String, true, true, false, 0, false
+type String, String, {"String"}, black, true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false, SINGLE
+
+tier ensembl:translation, true, true, false, 0, false
+type ensembl:translation, ensembl:translation, {"ensembl:translation"}, cyan, true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier genscan:prediction, true, true, false, 0, false
+type genscan:prediction, genscan:prediction, {"genscan:prediction"}, green, true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier ensembl:static_golden_path, true, true, false, 0, false
+type ensembl:static_golden_path, ensembl:static_golden_path, {"ensembl:static_golden_path"}, "255,255,51", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier ensembl:exon, true, true, false, 0, false
+type ensembl:exon, ensembl:exon, {"ensembl:exon"}, "51,0,255", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier combined_gw_e2g:gene, true, false, false, 0, false
+type combined_gw_e2g:gene, combined_gw_e2g:gene, {"combined_gw_e2g:gene"}, "240,240,240", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier exonerate_e2g:cDNA, true, false, false, 0, false
+type exonerate_e2g:cDNA, exonerate_e2g:cDNA, {"exonerate_e2g:cDNA"}, "240,240,240", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier cpg:cpg_island, true, true, false, 0, false
+type cpg:cpg_island, cpg:cpg_island, {"cpg:cpg_island"}, "102,0,102", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier e-PCR:sts, true, true, false, 0, false
+type e-PCR:sts, e-PCR:sts, {"e-PCR:sts"}, "255,102,255", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier similarity_genewise:gene, true, false, false, 0, false
+type similarity_genewise:gene, similarity_genewise:gene, {"similarity_genewise:gene"}, "240,240,240", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier TGE_gw:gene, true, false, false, 0, false
+type TGE_gw:gene, TGE_gw:gene, {"TGE_gw:gene"}, "240,240,240", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier ensembl:static_golden_path_clone, true, true, false, 0, false
+type ensembl:static_golden_path_clone, ensembl:static_golden_path_clone, {"ensembl:static_golden_path_clone"}, "0,255,153", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier ensembl:static_golden_path_contig, true, false, false, 0, false
+type ensembl:static_golden_path_contig, ensembl:static_golden_path_contig, {"ensembl:static_golden_path_contig"}, "240,240,240", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+
+tier ensembl:karyotype, true, true, false, 0, false
+type ensembl:karyotype, ensembl:karyotype, {"ensembl:karyotype"}, "147,147,148", true, 0.0, 100.0, apollo.gui.drawable.DrawableResultFeatureSet, {GENOMIC_LENGTH MATCH_LENGTH GENOMIC_RANGE MATCH_RANGE SCORE}, null, false
+

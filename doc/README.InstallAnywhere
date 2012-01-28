@@ -1,0 +1,47 @@
+$Id: README.InstallAnywhere,v 1.2 2007/04/25 15:23:48 briano Exp $
+
+Installing InstallAnywhere to make an Apollo Release
+==================================
+- Launch ~nomi/install-anywhere/InstallAnywhere
+- Choose the Apollo project
+- Launch "advanced designer" to access more options in InstallAnywhere
+- Go to "Files" and add or delete any files as needed.
+- If you add any new jars, be sure to check the "in classpath" checkbox below.
+- A special magic way to set properties: click on the "A" Apollo file in
+the Visual Tree, and then click the "Edit Properties" button to see the
+various properties of the Launcher.
+
+lax.nl.java.optional.additional is the way to specific command-line
+arguments to Java.  This actually does not work right on Mac--it
+apparently doesn't like having them all on one line like that.  We tried
+adding separate lax.nl.java.optional.additional lines for the different
+args, but the software won't let me add duplicate property names.
+
+To put the installable version on the web, you need
+/users/nomi/install-anywhere/Apollo/Apollo_Build_Output/Web_Installers/install.htm
+and /users/nomi/install-anywhere/Apollo/Apollo_Build_Output/Web_Installers/InstData.
+
+Copy them to the appropriate web directory. Don't put the raw
+install.htm up on the web; instead, we have a modified version called
+install.html.  You have to edit install.html to contain the proper
+SizeInBytes for each platform.  Open install.html and replace all the
+lines from
+ <param name="PlatformName1"			value="Windows">
+
+through
+ <param name="SizeInBytesNoVM6"		value="24078174">
+
+with the corresponding lines from install.htm (including all the
+platforms listed there--there might be more or less than 6).
+
+If you want to make an internal release, go to src/java and do:
+ 
+ make privatecfg
+
+Then build the release, and then don't forget to do:
+ 
+ make restorecfg 
+
+or make will get confused about whether you're in public or
+internal mode and the next time you do "make privatecfg" the config files
+will get screwed up.

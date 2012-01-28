@@ -1,0 +1,136 @@
+We are pleased to report that Apollo version 1.4.0 alpha is now ready to
+download from http://toy.lbl.gov:8094/annot/apollo/install.html
+
+This prerelease is specifically intended for you to try out and report
+any bugs to us; we will endeavor to fix them before the "real" release in
+a few weeks.  To help us track down the bugs, please be sure to tell us:
+- Which datafile you were working with (don't email it--they're too big.
+We can arrange to ftp it if necessary).
+- Which annotation/transcript you were working on when the problem
+occurred.
+- What exactly you did that triggered the problem.
+- All output from the terminal window.
+
+
+NEW FEATURES:
+
+New game.tiers file format (easier to read and change).  If you have an
+old game.tiers, it will be autoconverted to the new format, but probably
+your best bet is to remove all your personal config files from your
+.apollo and use the new default ones.  (Don't forget that if you want to
+make personal adjustments to any parameters in apollo.cfg and game.style,
+all you need to put in yours are the things that are different--the
+default ones will be read first, and then your modifications will be
+applied.  I described this at the time of the last release.)
+
+Better handling of non-gene annotation types.  New glyphs for showing
+them in main Apollo display.
+
+Structured transaction records are now added to the XML when you save.
+They include the type of object that changed (e.g. TRANSCRIPT;
+ANNOTATION; COMMENT), the operation (e.g. ADD, SPLIT, etc.), the relevant
+names and/or IDs before and after the transaction, and the user and
+time/date when the change was made.
+
+Support for translational exceptions, including frame shifts and one base
+pair genomic sequencing errors.  (Edits are done in the EDE; reported in
+the annotation info editor.)
+
+IDs:
+- Exons and transcripts no longer have IDs.
+- Transcript names are based on parent gene's symbol (e.g. cact-RA).
+- Annotation info editor lets you edit annotation and transcript IDs.
+IDs must be in the correct format for the annotation type (this is
+specified in game.tiers).
+- Protein IDs now inherit from the correct transcript ID
+
+UTRs are now shown in a different color from the rest of the gene.  The
+default color is the same light blue as the annotation background, so
+they look "transparent".  This can be changed by defining a different
+utr_color for Type Annotation in game.tiers.
+
+Restriction enzyme mapper:
+- Cut sites show up in main window (near the axis).
+- Can now map multiple restriction enzymes at once (though scrolling
+can get slow)
+- Table of restriction fragments; can be selected for viewing in
+  Sequence window.
+
+Annotation info window:
+- Now has integrated annotation tree
+- Shows arbitrary properties for annotations and transcripts (including
+validation_flag).
+- Shows translational exceptions and genomic sequencing errors
+- Comment editor is now a separate popup window (still could use some
+work).
+
+Ability to tag results by selecting (using the right-mouse popup menu)
+from a list of comments, which are specified (as ResultTags) in
+game.style.  These tagged results are crosshatched in pink in the
+display.
+
+Temporary names for new annotations are in the appropriate format, and
+include the region description for global uniqueness (e.g. a new gene
+would be named CG:temp1:AE003603.Sept; a new P insertion would be named
+FBti:temp1:AE003603.Sept).
+Also, any temporary names that were used and then the annotation was
+deleted are not reused in that region.
+
+Shift-click adds a feature to the current selection set if it's not
+selected; removes from the selection set if it was already selected.
+
+
+BUG FIXES:
+
+There are too many bug fixes to list here--please see doc/fixed-bugs if
+you are interested.  Here are some of them (these are described in terms
+of the bugs--all of these should now be fixed).
+
+Bug on single-button Macs (reported by Gillian):
+If you select a feature and then apple-click (to simulate right mouse) to
+get popup menu, then when you move your mouse down the menu, the selected
+feature moves down in the background with the mouse (as if it thinks
+you're trying to drag the feature).
+
+Peptide sequences are read in from the XML.  When user changes peptide
+(e.g. by moving start codon), peptide sequence was not getting updated--if
+you saved the XML it saved the old sequence.
+New behavior: GUI-Apollo will preserve transcripts that were read in
+(unless user changes transcript).  WashingLine (command-line Apollo) will
+retranslate all peptides.  (Peptides that are annotated as non-standard
+translations are translated properly.)
+
+When you select a transcript and bring up the annot info window, it
+shows one of the gene transcripts, but not necessarily the transcript you
+selected.
+Need to show transcript synonyms in transcript edit panel.
+
+"Sanitize" exon types as they are read in because sometimes there are
+weird types put there by some old buggy Apollo version.  For example,
+Harvard gave me a file (AE003511.Jun.crosby.p.xml) that has a transcript
+that contains exons of type "transcript" and one of type
+"sim4:na_gb.dros".  Change these to type "exon".  Please note that if
+someone in the future tries to include new exon types in the XML ("polyA
+site" or whatever), this method will wipe out those new type and convert
+them to "exon".  Maybe for safety we should have a list of valid exon
+types in the style file?
+
+Whenever a new region is loaded, the real estate allocation is
+reapportioned, rather than staying as you had set it.
+
+Fix gene merging (I think there may still be occasional issues with
+this--if you notice any, let me know exactly what you did, with which
+genes).
+
+
+There are still plenty of bugs, of course (but we hope most of them are
+minor).  You can look at doc/todo for a long list of the ones we know
+about.  In particular, we are still shaking out some issues with
+translational exceptions, and also some new problems launching new
+versions of mozilla on linux.  Also, we have concentrated on supporting
+GAME for this release; there are currently some issues with other data
+adapters (EnsJ and Synteny).
+
+We hope you enjoy this new version!
+
+         Nomi, Mark, Suzi, and Sima

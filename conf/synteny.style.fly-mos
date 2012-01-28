@@ -1,0 +1,64 @@
+// Synteny style
+// Most of the parameters are not specified here because the default
+// vaues are used.
+// For a more complete list of parameters, please see game.style.
+
+// The name of the types file (a file--expected to be in the conf directory)
+Types		        "ensj.tiers"
+
+
+// Whether to show the annotation view, default false.
+//ShowAnnotations "false"
+
+// Whether to display the result view, default true.
+ShowResults		"true"
+
+// Whether to allow editing, default false (takes out the editing menu options) 
+//EnableEditing		"false"
+
+// Whether to enable the navigation manager - default false
+EnableNavigationManager "false"
+
+// Color for highlighting edges of results that line up
+// EdgematchColor "black"
+
+//All the species-specific information that actually allows Synteny to happen.
+//The adapter classes are used to actually build the adapter
+//guis in the synteny adapter's tabs. The rest of it is default
+//information for the various gui's.
+
+
+//"Name.Mosquito2" "Anopheles_gambiae"
+//"Name.Fly-Mosquito2" "Compara" 
+"Name.Fly" "Drosophila melanogaster"
+"Name.Fly-Mosquito1" "Compara" 
+"Name.Mosquito1" "Anopheles gambiae" 
+
+//
+// MOSQUITO2 
+//
+//"Species.Mosquito2.DataAdapter" "apollo.dataadapter.ensj.AnnotationEnsJAdapter"
+
+//
+// FLY-MOSQUITO2
+//
+//"Species.Fly-Mosquito2.DataAdapter"  "apollo.dataadapter.synteny.SyntenyComparaAdapter"
+//"Species.Fly-Mosquito2.querySpecies" "Mosquito2"
+//"Species.Fly-Mosquito2.hitSpecies"   "Fly"
+
+//
+// FLY 
+//
+"Species.Fly.DataAdapter" "apollo.dataadapter.ensj.EnsJAdapter"
+
+//
+// FLY-MOSQUITO1
+//
+"Species.Fly-Mosquito1.DataAdapter"  "apollo.dataadapter.synteny.SyntenyComparaAdapter"
+"Species.Fly-Mosquito1.querySpecies" "Fly"
+"Species.Fly-Mosquito1.hitSpecies"   "Mosquito1"
+
+//
+// MOSQUITO1 
+//
+"Species.Mosquito1.DataAdapter" "apollo.dataadapter.ensj.EnsJAdapter"

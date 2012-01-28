@@ -1,0 +1,131 @@
+
+seq1 = tiny.SD03549.fst, 1744 bp
+seq2 = tiny.fst (AE003634.Sept), 7350 bp
+
+>gi|17862927|gb|AY069796.1| Drosophila melanogaster SD03549 full length cDNA
+>AE003634.Sept 7350 residues
+
+(complement)
+
+502-1678  (259-1434)   99%
+
+      0     .    :    .    :    .    :    .    :    .    :
+    502 TCCGGATCCCGATGAAGTATTTTACACCTGCGCCTGGTCGTACGACCTTA
+        ||| -| |||||||||||||||||||||||||||||||||||||||||||
+    259 TCCC AGCCCGATGAAGTATTTTACACCTGCGCCTGGTCGTACGACCTTA
+
+     50     .    :    .    :    .    :    .    :    .    :
+    552 AGACCTCTTCACCTCTCCTGGCCGCTGCTGGATACCGCGGAGTCATCCGG
+        ||||||||||||||||||||||||||||||||||||||||||||||||||
+    308 AGACCTCTTCACCTCTCCTGGCCGCTGCTGGATACCGCGGAGTCATCCGG
+
+    100     .    :    .    :    .    :    .    :    .    :
+    602 GTTATTGATGTCGAGCAGAATGAGGCGGTGGGCAACTACATTGGCCATGG
+        ||||||||||||||||||||||||||||||||||||||||||||||||||
+    358 GTTATTGATGTCGAGCAGAATGAGGCGGTGGGCAACTACATTGGCCATGG
+
+    150     .    :    .    :    .    :    .    :    .    :
+    652 ACAGGCCATTAACGAGCTGAAGTTCCATCCGCACAAGCTACAGCTTTTGC
+        ||||||||||||||||||||||||||||||||||||||||||||||||||
+    408 ACAGGCCATTAACGAGCTGAAGTTCCATCCGCACAAGCTACAGCTTTTGC
+
+    200     .    :    .    :    .    :    .    :    .    :
+    702 TTTCGGGCAGCAAGGATCACGCGATAAGATTGTGGAACATCCAGAGCCAT
+        ||||||||||||||||||||||||||||||||||||||||||||||||||
+    458 TTTCGGGCAGCAAGGATCACGCGATAAGATTGTGGAACATCCAGAGCCAT
+
+    250     .    :    .    :    .    :    .    :    .    :
+    752 GTGTGCATTGCCATCCTGGGCGGAGTGGAGGGACATCGCGATGAGGTGCT
+        ||||||||||||||||||||||||||||||||||||||||||||||||||
+    508 GTGTGCATTGCCATCCTGGGCGGAGTGGAGGGACATCGCGATGAGGTGCT
+
+    300     .    :    .    :    .    :    .    :    .    :
+    802 GTCCATCGACTTTAATATGCGTGGAGATCGCATTGTGTCGAGCGGCATGG
+        ||||||||||||||||||||||||||||||||||||||||||||||||||
+    558 GTCCATCGACTTTAATATGCGTGGAGATCGCATTGTGTCGAGCGGCATGG
+
+    350     .    :    .    :    .    :    .    :    .    :
+    852 ATCACTCGCTGAAGCTGTGGTGTCTGAATACGCCCGAGTTCCATCACAAG
+        ||||||||||||||||||||||||||||||||||||||||||||||||||
+    608 ATCACTCGCTGAAGCTGTGGTGTCTGAATACGCCCGAGTTCCATCACAAG
+
+    400     .    :    .    :    .    :    .    :    .    :
+    902 ATCGAACTGTCGAACACTTTCAGCCAGGAGAAGTCAACGCTGCCTTTCCC
+        ||||||||||||||||||||||||||||||||||||||||||||||||||
+    658 ATCGAACTGTCGAACACTTTCAGCCAGGAGAAGTCAACGCTGCCTTTCCC
+
+    450     .    :    .    :    .    :    .    :    .    :
+    952 CACGGTGACCAAGCACTTCCCCGATTTTTCAACGCGGGATATACACAGGA
+        ||||||||||||||||||||||||||||||||||||||||||||||||||
+    708 CACGGTGACCAAGCACTTCCCCGATTTTTCAACGCGGGATATACACAGGA
+
+    500     .    :    .    :    .    :    .    :    .    :
+   1002 ACTATGTGGACTGTGTGCAGTGGTTCGGCAACTTTGTGCTCTCCAAGTCC
+        ||||||||||||||||||||||||||||||||||||||||||||||||||
+    758 ACTATGTGGACTGTGTGCAGTGGTTCGGCAACTTTGTGCTCTCCAAGTCC
+
+    550     .    :    .    :    .    :    .    :    .    :
+   1052 TGCGAAAATGCCATTGTCTGCTGGAAGCCGGGACAACTACATCAGAGTTT
+        |||||||||||||||||||||||||| |||||||||||||||||||| ||
+    808 TGCGAAAATGCCATTGTCTGCTGGAAACCGGGACAACTACATCAGAGCTT
+
+    600     .    :    .    :    .    :    .    :    .    :
+   1102 CGAGCAGGTGAAGCCGAGCGACTCCTCCTGCACGATAATCGCGGAATTCG
+        ||||||||||||||||||||||||||||||||||||||| ||||||||||
+    858 CGAGCAGGTGAAGCCGAGCGACTCCTCCTGCACGATAATTGCGGAATTCG
+
+    650     .    :    .    :    .    :    .    :    .    :
+   1152 AGTACGATGAGTGCGAGATCTGGTTCGTGAGATTCGGCTTCAATCCGTGG
+        ||||||| ||||||||||||||||||||||||||||||||||||||||||
+    908 AGTACGACGAGTGCGAGATCTGGTTCGTGAGATTCGGCTTCAATCCGTGG
+
+    700     .    :    .    :    .    :    .    :    .    :
+   1202 CAGAAGGTGATTGCCCTGGGCAATCAGCAGGGCAAGGTGTATGTGTGGGA
+        ||||||||||||||||||||||||||||||||||||||||||||||||||
+    958 CAGAAGGTGATTGCCCTGGGCAATCAGCAGGGCAAGGTGTATGTGTGGGA
+
+    750     .    :    .    :    .    :    .    :    .    :
+   1252 GCTGGATCCCAGCGATCCCGAGGGCGCACACATGACCACCCTGCACAATT
+        ||||||||||||||||||||||||||||||||||||||||||||||||||
+   1008 GCTGGATCCCAGCGATCCCGAGGGCGCACACATGACCACCCTGCACAATT
+
+    800     .    :    .    :    .    :    .    :    .    :
+   1302 CGCGTAGCGTGGCCACTGTGCGCCAGATCGCCTTCTCCCGCGATGCCAGC
+        |||||||||||||||||||||||||||| |||||||| ||||||||||||
+   1058 CGCGTAGCGTGGCCACTGTGCGCCAGATAGCCTTCTCTCGCGATGCCAGC
+
+    850     .    :    .    :    .    :    .    :    .    :
+   1352 GTACTGGTCTACGTGTGCGATGACGCCACCGTGTGGCGATGGAACCGCAG
+        ||||||||||||||||||||||||||||||||||||||||||||||||||
+   1108 GTACTGGTCTACGTGTGCGATGACGCCACCGTGTGGCGATGGAACCGCAG
+
+    900     .    :    .    :    .    :    .    :    .    :
+   1402 ACAAACGACTTCCATCTGATGGCGCAGCTGGGCGCAACCACAAACCAAAT
+        |||||| |||||||||||||||||||||||||||||||||||||||||||
+   1158 ACAAACAACTTCCATCTGATGGCGCAGCTGGGCGCAACCACAAACCAAAT
+
+    950     .    :    .    :    .    :    .    :    .    :
+   1452 CTCACGTGGCCAAAACTTACAACATTTCCCTCAATTAGTTCCTAGTTGGT
+        ||||||||||||||||||||||||||||||||||||||||||||||||||
+   1208 CTCACGTGGCCAAAACTTACAACATTTCCCTCAATTAGTTCCTAGTTGGT
+
+   1000     .    :    .    :    .    :    .    :    .    :
+   1502 TAGCATTAAGATATAGAATTACGCTCCTGTGCTGTTCCAAATTATTTCAA
+        ||||||||||||||||||||||||||||||||||||||||||||||||||
+   1258 TAGCATTAAGATATAGAATTACGCTCCTGTGCTGTTCCAAATTATTTCAA
+
+   1050     .    :    .    :    .    :    .    :    .    :
+   1552 GTAAATCCAATTAATAGTTGGATGAGATTTAAATATGTTAAGCCGGTTGC
+        ||||||||||||||||||||||||||||||||||||||||||||||||||
+   1308 GTAAATCCAATTAATAGTTGGATGAGATTTAAATATGTTAAGCCGGTTGC
+
+   1100     .    :    .    :    .    :    .    :    .    :
+   1602 TTTTTAGATGTAAGAACGAATAGTTGTTGCTTACTCCGCTGCCTTTATTT
+        |||||||||||||||||||||||||||||||||||| |||||||||||||
+   1358 TTTTTAGATGTAAGAACGAATAGTTGTTGCTTACTCTGCTGCCTTTATTT
+
+   1150     .    :    .    :    .
+   1652 ATTGTAAATAAAGTGAGTACATTGTAA
+        |||||||||||||||||||||||||||
+   1408 ATTGTAAATAAAGTGAGTACATTGTAA
+

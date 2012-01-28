@@ -1,0 +1,27 @@
+$Id: README.EnsJ,v 1.1 2007/05/04 20:41:00 briano Exp $
+
+Notes on various EnsJ issues.
+
+Missing Databases
+===================
+The databases in the default history keep going away and then the EnsJ
+adapter behaves badly and you have to hand-edit the default history and
+maybe also ensj_defaults.conf (where is that used?).  There's got to be a
+better way.
+
+Stable IDs
+===================
+Stable IDs really are linked to DBs--should have a separate history
+for each DB.
+
+GFF Issue
+===================
+Load EnsJ, save as GFF, reload (using ensj.tiers)--nothing displayed!
+GFF doesn't have any way to indicate that the genomic region doesn't
+start at 1.  I guess that's a GFF deficiency rather than an EnsJ bug.
+
+Stop and Start Don't Adjust
+===================
+Alex reported that stop and start don't adjust when moving splice
+sites for ensj fugu. I found this to be true in ensj but couldnt
+repeat in game.  [Not tested in new EnsJ adapter]

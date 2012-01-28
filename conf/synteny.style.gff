@@ -1,0 +1,61 @@
+// Synteny style
+
+//the location of the types file (a file)
+Types		        "ensj.tiers"
+
+// Whether to show the annotation view, default false.
+// ShowAnnotations "true"
+// How much of the screen should annotations take up relative to results
+// If this is not set it will be 50% annotations, 50% results.
+// Should only be set if ShowAnnotations is true
+
+// Whether to display the result view. If not in config file defaults to true.
+ShowResults		"true"
+
+// Whether to allow editing, default: false (takes out the editing menu options) 
+//EnableEditing		"true"
+
+// Whether to enable the navigation manager - default false
+EnableNavigationManager "false"
+
+EdgematchColor "black"
+
+FeatureLoadSize "20000000"
+
+
+// Everything below is specifically for synteny
+
+//
+//All the species-specific information that actually allows Synteny to happen.
+//The adapter classes are used to actually build the adapter
+//guis in the synteny adapter's tabs. The rest of it is default
+//information for the various gui's.
+
+"Name.Species1" "Species1Name"
+"Name.Species2-Species1" "Compara" 
+"Name.Species2" "Species2Name" 
+
+//
+// SPECIES1 
+//
+"Species.Species1.DataAdapter" "apollo.dataadapter.GFFAdapter"
+
+//
+// SPECIES2 
+//
+"Species.Species2.DataAdapter" "apollo.dataadapter.GFFAdapter"
+
+//
+// SPECIES1-SPECIES2 
+//
+"Species.Species2-Species1.DataAdapter"  "apollo.dataadapter.BaseGFFAdapter"
+"Species.Species2-Species1.querySpecies" "Species1"
+"Species.Species2-Species1.hitSpecies"   "Species2"
+
+//
+//This is a composite of stupid adapters - they need no interaction when loading data.
+NaiveCrossSpeciesDataLoading "true"
+
+//
+//speeds up rendering on link panel
+UseOpaqueLinks "true"

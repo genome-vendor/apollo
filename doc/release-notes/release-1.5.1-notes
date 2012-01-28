@@ -1,0 +1,101 @@
+Release 1.5.1 (5/12/05)
+
+Jon Slenk of TAIR supplied a fix to this annoying Windows-only problem
+(Mac and Linux didn't exhibit this behavior):
+If you open the EDE, annotation info or jalview window and then 
+mouse over the data/annotation tiers part of the main window, it 
+minimises the EDE/jalview/annotation info window and brings the main 
+window to the front.
+
+Transactions and Chado JDBC adapter:
+- Chado JDBC write working for rice--transaction based (only writes what
+has changed, more or less).
+- Transaction coalescing (not perfect but pretty good)
+- Compound transactions used to represent splits (merge coming soon).
+- Fixed bugs with merges & splits & other sundry things with transactions
+and jdbc writeback
+- JDBC queries optimized for rice db
+- JDBC reader is much more easily configurable now (via an xml config file).
+
+Fixes to ChadoXML adapter:
+1. Reported by Pinglei: miss feature.uniquename
+  <uniquename>CG33798-PA</uniquename>
+  <featureloc>
+     ....
+     <srcfeature_id>
+        <feature>
+           miss uniquename here. [should be chromosome arm]
+2A. missing feature_synonym.is_current
+(is_current=1 when the synonym matches the feature name.)
+2B. missing feature_synonym.pub_id
+This can't yet be fully supported because inside Apollo, synonyms are
+just strings, and there are reasons why it would be difficult to make
+them into fuller data structures.
+3. Exon names and ranks--now calculated appropriately if annot is
+changed.  (Carried through unchanged if annot is untouched.)
+4. Read/write pseudogenes and other non-coding genes correctly.  In GAME
+XML, these types are stored at the parent annot level; in ChadoXML, they
+are at the transcript level and need to be propagated to parent.
+5. Peptide featurelocs should have dbxref_id <accession>SO:0000105 block
+inside the type_id block of their srcfeature_id.
+6. Read, save, reload--multi-span results (e.g. lavender genscan results)
+all have parent result set's score rather than span score.
+7. Conversion between GAME and ChadoXML working better (read GAME and save
+as ChadoXML or vice versa).
+
+Analysis adapter:  "Add analysis results" wasn't working at all; now it's
+kind of working, at least for the case of adding tiny.blast.dmel to
+tiny.xml.  Other analysis parsers (e.g. BLAT) still have problems.
+
+There are now command-line arguments to specify the output filename and
+format:
+  -o, --outputFormat=output_format      Specify output format. 
+                                        [chadoDB|game|chadoxml|genbank|gff|backup]
+  -w, --writeFile=filename              Filename to write to
+
+Rubberband below axis--Sequence window title now mentions that it's rev strand.
+
+Although the coloring by splice sites is displayed on both strands when
+you're zoomed in, as you zoom out, the colored bars only appear on the
+minus strand.  (Fixed.)
+
+There is now a generic gmod name adapter from which fly and rice name
+adapters inherit.
+Peptide ids & names are dealt with more extensively in name adapter (no
+longer hardwired to fly in GAME adapter).
+
+SpeciesToStyle parameters in apollo.cfg let you specify a style file to
+use when reading data from a particular organism
+e.g. SpeciesToStyle "Oryza sativa -> rice.style"
+
+Fixed bug that was present in r1.5.0:
+in most--but not every--case, if you switch data adapters, the new data
+doesn't come up right.  the tiers come up collapsed to the point of
+(near-)invisibility; if you then Expand all tiers, they show up.  i
+didn't notice this behavior when switching between game and chado xml
+adapters, but if you load something from ensj or gff and then try game or
+chado xml, you'll see the problem.  the simplest way to see the problem
+is to load tiny.xml and then the sample gff file--it comes up with all
+the results tiny and gray.
+
+Fixed: transcript (and peptide) accession numbers were being set to
+genename-RA rather than id-RA (e.g. CG99999-RA).  (This was a bug new to
+r1.5.0.)
+
+Centralized UserName class.  If username can't be found in environment, a
+box pops up prompting user to enter it.
+
+Annot info editing fixes:
+- Fixed: AE53) synonyms, dbxrefs, and comments are being copied on just
+moving one exon (not a transcript merge - and its going from target
+transcript to source transcript). On transcript merge the new transcript
+does not have the deleted transcripts stuff
+- Fixed some exceptions thrown when editing comments.
+- Fixed problems with deleting comments.
+- Deal more gracefully with empty comments.
+- Fixed: If another gene is selected from annot tree right after id (or
+name or synonym) edit, edit goes away.
+- Most of the things in the annot info editor GUI are now
+configurable--for example, if your project doesn't allow sequence error
+editing, it can be configured that way.
+

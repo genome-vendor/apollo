@@ -1,0 +1,121 @@
+Release notes for Apollo Release 1.5.0 (March 18, 2005):
+
+The biggest additions to this release are the new Chado XML adapter
+(which right now is very FlyBase-specific and will need to be generalized
+later), fine-grained transactions (enabling full Undo in the annot info
+editor), and Chado JDBC direct-to-database writeback.
+
+                Chado XML Adapter
+
+Note that the Chado XML adapter does not yet handle macros.
+
+Non-Apollo data in Chado XML that we're not yet dealing with (we'll try
+to handle most of these before the next release):
+- Exon rank: if annot is unchanged, rank will be carried through, but if
+annot has changed, all exon ranks will be set to 0.
+- Exon names/IDs: if anything in an annot has changed, exon IDs will be
+set to "temp:geneId:exonstart-exonend" and names will be set to
+"temp:genename:exonstart-exonend" (otherwise, they are carried through).
+- feature_cvterms--not parsed or saved.
+- pub_ids (e.g. for synonyms)--not parsed or saved.
+- "is_current" for synonyms not handled.  (Synonyms in Apollo are just
+strings at the moment.)
+- Genome sequencing errors--didn't have example, so not parsed or saved
+(writer warns that they are not being saved).
+- Poly-A sites--not parsed or saved.
+- Sequences (e.g. peptide sequences) in Apollo can't have properties
+(such as synonyms).  Some of these I can provide based on the transcript
+parent, but others (e.g. is_fmin_partial) will be missing.
+
+There are some esoteric cases that I didn't have examples of in Chado
+XML, so for now I am saving these as featureprops--hope that's ok:
+- Replace stop codon with selenocysteine (readthrough_stop_codon)
+- Unconventional start codon (non_canonical_start_codon)
+- Approve non-consensus splice site (non_canonical_splice_site=approved/unapproved)
+- Missing start or stop codon (missing_start_codon, missing_stop_codon)
+- Translational frame shift (plus_1_translational_frame_shift,
+  minus_1_translational_frame_shift)
+
+Using Apollo as a GAME <-> ChadoXML converter is theoretically possible,
+but has some problems (for example, if you load GAME, save as Chado XML,
+and then reload, you can't zoom in to see the transcript residues).
+
+
+      Fine-grained Transactions and Annot Info Editor Undo
+
+There are now transactions for almost every fine grain edit. One
+exception is that there are no transactions for result feature edits
+(result tags). Transactions are what enable undo in the annot info editor
+(and open the door to a future full Apollo-wide undo).
+
+The annotation info editor now has an Undo button that lets you
+incrementally undo changes you have made in the editor.  Your changes are
+all effective immediately, so if you close the editor window without
+saying Undo, your changes will be permanent.  This is different from the
+previous (pre-1.5.0) behavior, in which changes made in the annotation
+info editor were not saved until you pressed the Commit button (and you
+couldn't undo individual changes).
+
+There have been a few other minor annot info editor changes and
+fixes--for example, you can now delete synonyms (as well as adding or
+changing existing synonyms).  Internal synonyms show up in the Properties
+list (but only if you are running Apollo in internal mode).
+
+When you save your work with the GAME or Chado XML adapter, a separate
+transaction file is saved as well.  Note that any old-style transactions
+stored in the GAME XML input are now ignored--they will not be loaded and
+carried through when you save.
+
+The Chado JDBC data adapter can now do direct-to-database writeback (this
+is working with Cold Spring Harbor's Chado Rice database, and shouldn't
+be too hard to adapt to other Chado databases).  It converts the
+transactions to updates to the chado database, so only edited features
+are updated in the database.
+
+
+     Improvements in Memory and Load/Save Time
+
+Mark has plugged a bunch of memory leaks, which should help with the
+problem of running out of memory during long Apollo sessions.  I
+reorganized the way the GAME adapter goes through the XML parse tree (and
+used the same approach for the Chado XML adapter) that should reduce the
+maximum amount of memory used during the load.  It also allows the load
+progress bar to slowly fill as data is loaded.
+
+Mark fixed buffered saving, which makes saving GAME or Chado XML data
+much quicker.
+
+I added an option to let you save only the annotations (no results) in
+GAME or Chado XML format.  (However, you cannot yet load annotations and
+results from separate files.)
+
+
+     Other Improvements and Bug Fixes
+
+Suzi fixed the modified CDS bug reported by Lynn on Jan 6, 2005.
+
+BOP fixes:
+- Fixed bug in FeaturePair that screwed up bop results (query sequence was
+appearing where hit sequence should be).
+- Fixed polyA problem in BOP
+
+Restriction enzyme finder: "Select" boxes are clickable again
+
+Added "clear" button to Find panel (requested by Sima)
+
+Got rid of "Save" menu item.  It would overwrite the input file(s)
+without asking, which might not be what the user wanted to do.  
+Save is still available with the ctrl-s keyboard shortcut.  By default,
+it will ask you if you're sure you want to overwrite the file; this
+behavior can be turned off by setting AskConfirmOverwrite "false" in
+apollo.cfg.)
+
+Command-line args now let you specify input format and input filename or
+source.  If you don't specify the format, it will try to guess.  (For
+now, old command-line args (e.g. "-x") are still being supported also.)
+
+Fixed coloring by splice site potential on reverse strand.  (To see this,
+click right mouse with your mouse over the axis.)  Now it uses a
+two-color system for indicating splice site potential: GT is colored
+orange and AG is blue.
+

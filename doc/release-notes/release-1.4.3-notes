@@ -1,0 +1,62 @@
+Bugs fixed between release 1.4.2 (3/19/2004) and release 1.4.3
+(4/19/2004):
+
+Fixed transcript-renaming bug:  if transcripts were listed out of order
+in the input (e.g. Hph-RC, Hph-RA, Hph-RB), they were silently renamed in
+order (Hph-RA, Hph-RB, Hph-RC).
+
+If you create or modify an annotation by dragging down results from
+collapsed tiers, a warning message is printed.  (Some users wanted a
+popup message but others hate popups; this was a compromise.)
+
+Apollo should know which style and tiers file to use for each database so
+you don't have to swap around config files each time you wanted to look
+at a different db.
+
+Prefs editor:
+Show the default style file (conf/game.style) in an uneditable text box,
+and then put up your .apollo/game.style (which might start out empty) in
+a different editable box below it
+
+Let users get the sequence of the entire segment you're looking at, not 
+just a rubberbanded section.  [File -> Save sequence]
+
+Rubberbanding axis to see residues in seq window now fixed (was broken
+for rev strand)
+
+In annot tree, sort annots by genome position (not alphabetically).
+
+New apollo.config package for config-related classes (which used to be
+stuffed into gui and dataadapter)
+
+Vertical evidence panel (rather than horizontal) is now the
+default--preferred by more curators.  Apollo window starts out wider now
+to accommodate vertical evidence panel.
+
+
+Synteny improvements between 1.4.2 and 1.4.3:
+
+Synteny now comes up in vertical mode by default and the vertical
+evidence panel is now resizable.
+
+Vertical scrolling to selected feature is fixed. Previously upon 
+selecting a link, a selected feature that was part of the link would 
+vertically scroll way off screen.
+
+You can now config links between 2 curation sets that contain links to
+each other. link_type, source and hit species are specified in the linked
+type in the tiers file. This works with game, in theory could be made to
+work with other adapters that have linked data embedded in the species
+data.
+
+Result popup menu item for bringing up a syntenic species only enabled
+for types that are linked (as configged above)
+
+Link popup menu now has visibilty check boxes for all the tiers that have
+links (as configged in tiers file)
+
+Window title now includes species name(s)
+
+
+CVS note for developers:  this release was done on the branch-1_4_3 branch.
+cvs -z3 -d:ext:yourusername@cvs.gmod.sourceforge.net:/cvsroot/gmod checkout -d [dir] -r branch-1_4_3 apollo

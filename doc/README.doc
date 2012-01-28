@@ -1,0 +1,12 @@
+$Id: README.doc,v 1.1 2007/04/30 19:52:28 briano Exp $
+
+This apollo/doc directory was reorganized in 4/2007, primarily for
+the purposes of creating a set of READMEs and moving all bugs 
+and enhancement requests to the Apollo Sourceforge tracker.
+
+No information was lost. The history of fixed bugs is
+described in the release-notes/old-fixed-bugs,
+release-notes/1.4.0-1.6.5-fixed-bugs, and
+release-notes/1.36-1.5.4-synteny-fixed-bugs files. 
+
+ 

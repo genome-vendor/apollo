@@ -1,0 +1,57 @@
+Changes between release 1.6.5 (6/2006) and release 1.7.0 (1/2008):
+
++ Added GFF3 support
+
++ Added program source filtering for reading off Chado databases
+  <program>
+    <name>program_name</name>
+    <source>data_source</source>
+    <version>data_version</version>
+  </program>
+
++ Lots of work on the ensj adapter to allow it to work better with
+recent ensembl schemas, handle ditags, give finer control of gene
+loading, increase speed of gene loading, bug fixes to history, cigar
+parsing in ensj layer, loading of contig features
+
++ Allow layout of display to be saved to / loaded from a file. Most
+useful for synteny where initial display set up can take time. The
+saved layout also includes the current base position and zoom factor,
+and on loading you can choose to use those.
+
++ Underlying change to SyntenyPanel to use MultiSplitPane makes
+resizing of species panels inside the SyntenyPanel more predictable.
+
++ Working round java bug where tickboxes weren't being updated in
+menus, so the menus should show the correct state for things such as
+which strands are displayed etc.
+
++ Ability to edit settings for a type (new popup menu item in
+feature popup). The settings which can be edited are the glyph used
+for drawing the feature and the columns in the table displayed in
+the evidence panel.
+
++ EvidencePanel tables now remember their widths for each feature type
+and that information can be saved / loaded from a tiers file.
+
++ Some new table columns (END_PHASE and CODING_PROPERTIES) for 
+evidence table.
+
++ New drawing glyph which shades exons darker or lighter depending on
+their phase (DrawablePhaseHighlightGeneFeatureSet). Also a version of 
+that which uses straight lines to join exons rather than 'hats' 
+(DrawablePhaseHighlightNoHatGeneFeatureSet)
+
++ Fixed GC slider window tick interval display bug
+
++ Work on ensembl synteny adapter so it works with latest ensembl
+compara db schema, and basic support for allowing different alignment 
+sets to be selected.
+
++ PureJDBCTransactionWriter added.  This entailed some changes to 
+other classes, but in almost every case the changes are 1. reverse 
+compatible and 2. invisible to the end user.
+
++ Uses of Log4J for generating log files. 
+
++ Other misc bug fixes

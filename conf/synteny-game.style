@@ -1,0 +1,104 @@
+// Get all the settings for game.style, then add and override them
+// with stuff below. Order matters. ImportStyle must occur in this
+// file before any overriding parameters, or the override will get
+// wiped out.
+// (eventually merge this with game.style? or is it nice to have
+// separate configging for multi species?
+// not sure if we really need to import as game.style gets picked up
+// by the GAMEAdapters below)
+ImportStyle "game.style"
+
+// This overrides game.style Types 
+//Types "game-dpse.tiers"
+Types synteny-game.tiers
+
+// Adds dropdown list in synteny data adapter gui for the user to 
+// specify how many species to query for
+// This is game synteny specific.
+AddSyntenySpeciesNumberDropdown "true"
+
+// The maximum number of species the user is allowed to load 
+// (game synteny only)
+NumberOfSpecies "3"
+
+// Just do Species1, Species2,... up to NumberOfSpecies, 
+// and use the DefaultSyntenyDataAdapter, and ignore all of the
+// Name.Species and Species.Species stuff
+UseGenericSyntenySpecies "true"
+
+// If no data adapter is specified for a species then use this default
+DefaultSyntenyDataAdapter "apollo.dataadapter.gamexml.GAMEAdapter"
+
+
+// SpeciesToDatabase maps which database to load from, given a species that one
+// wants to load (e.g. from a link).
+// These must be filled in for game synteny to be able to load from links
+> SpeciesToDatabase "Drosophila melanogaster -> gadfly3"
+> SpeciesToDatabase "Drosophila pseudoobscura -> gadflydpsef1"
+
+// Locked zooming means all species (for now theres just 2) zoom
+// together when you zoom. If set to "true", zooming locks when you 
+// hold the shift key, and is unlocked without the shift. If set to 
+// "false", zooming is unlocked with the shift key, and locked
+// without. Default value is "true"
+// This is an initial value that can be changed in synteny menu.
+InitialShiftForLockedZooming "false"
+
+// If "true", all species in synteny will scroll together. This will
+// be reflected in the synteny menu, where the user can change this.
+// Default is "false"
+InitialLockedScrolling "true" 
+
+// This will add a menu item to the result popup menu that will bring
+// the link up as the other species (in synteny of course)
+// Presently this is specific to game synteny.
+AddSyntenyResultMenuItem "true"
+
+// Start/stop codons appear by default when zoomed in, and they take
+// up a hunk of real estate. The user can hide site view (at all zoom
+// levels) with a "Show starts/stops" menu item in the View menu. By
+// default this is initially set to true. This config option will
+// initially set it to the state desired. In other words if you want
+// the site codons turned off by default set this to false. Synteny
+// styles probably want this to be false since synteny is so
+// strapped for real estate and the sites are a hog.
+InitialStateForStartStopCodonVisibility "false"
+
+// Links in game and ensj are different. In ensj links go from
+// putative gene to putative gene(by putative I mean genes are
+// calculated results not actual annotations). When an exon that is involved in a
+// link is selected, its gene name is queried for, and the gene name
+// is used to discover the relevant link. Game data does a bit of
+// processing of the links and actually links blast (putative) exons
+// to annotated Exons. So when an exon is selected, its gene name does
+// not need to be queried for, the exon name itself can be used.
+// So synteny needs to know if the links are gene to gene or not.
+// default true(ensj). game synteny needs this to be false for
+// selection to work properly.
+SyntenyLinksAreGeneToGene "false"
+
+// Whether to enable the navigation manager, true in game.style.
+EnableNavigationManager "false"
+
+
+
+// This is configuration for putting in different datadapters for
+// different species - untested territory. DefaultSyntenyDataAdapter
+// is the way to go if all species use the GAME adapter. Eventually user will be
+// able to choose dataadapters in gui itself rather than having to do
+// it in the config
+       
+//"Name.Species1" "Species1"
+//"Name.Species2" "Species2" 
+
+//
+// SPECIES1 
+//
+//"Species.Species1.DataAdapter" "apollo.dataadapter.gamexml.GAMEAdapter"
+
+//
+// SPECIES2 
+//
+//"Species.Species2.DataAdapter" "apollo.dataadapter.gamexml.GAMEAdapter"
+
+// Be sure to put a newline at the end of the last line of this file

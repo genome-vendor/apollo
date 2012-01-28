@@ -1,0 +1,23 @@
+
+GENSCAN 1.0	Date run: 21-Apr-105	Time: 19:33:00
+
+Sequence AE003634.Sept : 7350 bp : 43.25% C+G : Isochore 2 (43 - 51 C+G%)
+
+Parameter matrix: HumanIso.smat
+
+Predicted genes/exons:
+
+
+Gn.Ex Type S .Begin ...End .Len Fr Ph I/Ac Do/T CodRg P.... Tscr..
+----- ---- - ------ ------ ---- -- -- ---- ---- ----- ----- ------
+
+ 1.04 PlyA -   3193   3188    6                               1.05
+ 1.03 Term -   4373   4121  253  1  1   86   47   218 0.872  12.61
+ 1.02 Intr -   4841   4719  123  1  0   75   14   255 0.997  16.50
+ 1.01 Init -   5763   5639  125  0  2   34  -26   154 0.955  -1.72
+ 1.00 Prom -   5914   5875   40                              -7.76
+
+ 2.02 PlyA -   5937   5932    6                               1.05
+ 2.01 Sngl -   7149   6175  975  0  0   59   45  1158 0.980 105.37
+
+

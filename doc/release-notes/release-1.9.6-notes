@@ -1,0 +1,2 @@
++ Changed synonym reading/writing for Chado to use <propertyTypeCV> from chado-adapter.xml to make it consistent with the other CV handling elements (rather than expect the 'null' CV)
++ Fixed 'owner' updating code when writing to a Chado instance

@@ -1,0 +1,110 @@
+// Abstract style for GAME XML adapter (or, really, any adapter
+// reading GMOD data--it's really not GAME-specific anymore).
+// This file contains settings that apply to all GAME XML data.
+// The fly-specific settings are now in fly.style, which
+// imports this style file and then adds to and/or modifies it.
+// Rice-specific settings are in rice.style (which also imports
+// this file).  The appropriate tiers files for fly and rice data
+// are declared in fly.style and rice.style respectively.
+//
+// Note that this file (game.style) shouldn't be used  by itself as the style
+// for a data adapter--you need to use fly.style or rice.style instead.
+//
+// Format:
+// Each line should have two strings, separated by one or more spaces.
+// The first string is a key and the second is the key's value.
+// It is necessary to put quotes around the strings if they contain
+// punctutation characters or spaces.
+// Both slash-star and slash-slash comments are accepted.
+// Blank lines are ignored.
+
+// Whether to show the annotation view, default true.
+ShowAnnotations         "true"
+
+// Whether to display the result view, default true.
+ShowResults		"true"
+
+// Whether to allow editing, default false.  Set to true to allow
+// creation or editing of annotations.
+EnableEditing		"true"
+
+// Whether to enable the navigation manager, default false.
+EnableNavigationManager "false"
+
+// Note: colors can be the standard Java colors (black, blue, cyan, darkGray,
+// gray, green, lightGray, magenta, orange, pink, red, white, yellow)
+// or an R,G,B value
+
+// Background color for annotations
+AnnotationBackgroundColor "176,224,230"  // aqua
+
+// Background color for results
+// Note that if you change FeatureBackgroundColor to white, as some people prefer,
+// you'll probably want to change EdgematchColor to black.
+FeatureBackgroundColor  "black"
+
+// Color for highlighting edges of results that line up
+EdgematchColor          "white"
+
+// Width of edgematch lines (default is 2)
+EdgematchWidth          "2"
+
+// Color for showing name labels in result panels (default is magenta)
+FeatureLabelColor       "white"
+
+// Color for showing name labels in annotation panels (default is black)
+AnnotationLabelColor    "black"
+
+// CoordBackgroundColor is for the background of the central axis (default white)
+CoordBackgroundColor    "white"
+
+// CoordForegroundColor is for the numbers on the axis (default black)
+CoordForegroundColor    "black"
+
+// If this is true, then annotations are colored by user color, but only
+// if you're in project internal mode.
+// Default is false--all annotations (of a given type) are the same
+// color, as defined in tiers file.
+UserTranscriptColouring "false"
+
+// For selection rectangle around selected features
+SelectionColor          "255,0,102"  // pinkish-red
+
+// Whether to show sequencing gaps in cDNAs as dashed lines (default is false)
+DashSets                "true"
+// Color to use for dashed lines in cDNAs
+SequenceGapColor        "231,255,51"
+
+// Whether to show feature rectangles in 3D (default false).  Generally, programmers think
+// the 3D effect is cool and biologists find it annoying.
+Draw3D                  "false"
+
+// Whether to draw outlines around feature rectangles (default false).
+DrawOutline             "false"
+
+// Fonts are composed of 3 comma-delimited fields: 
+// fontname,fontstyle,fontsize (10 is the default)
+// fontstyle can be 0,1,2,3 (plain, bold, italic, bolditalic) 
+
+// DefaultFeatureLabelFont is used for annotations with unknown
+// PeptideStatus (e.g. pseudogenes) as well as feature labels. 
+// The PeptideStatus annotation fonts are used for the label of the
+// annotation as well as the font in the the gene menu. 
+DefaultFeatureLabelFont "Dialog,0,10"
+
+// Default font for Apollo. Axis numbers use default font, and it's also
+// used for residues inside features when you zoom in.
+DefaultFont "Dialog,0,12"
+
+// DNA and Amino Acid sequence font for Exon Detail Editor
+ExonDetailEditorSequenceFont "Dialog,0,12"
+
+// Colors for the two alternating background stripes of the exon detail editor
+ExonDetailEditorBackgroundColor1 "gray"
+ExonDetailEditorBackgroundColor2 "black"
+
+// Alternating colors for exons in the exon detail editor
+ExonDetailEditorFeatureColor1 "0,102,255"  // medium blue
+ExonDetailEditorFeatureColor2 "0,0,180" // dark blue
+
+// Be sure that the last line of this file ends with a newline.

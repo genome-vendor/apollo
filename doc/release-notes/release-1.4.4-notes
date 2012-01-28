@@ -1,0 +1,27 @@
+Release 1.4.4, 4/23/2004:
+
+As is traditional, after doing release 1.4.3 the other day, we discovered
+a problem.  We were worried that some users (mostly local ones) would try
+to use older tiers files lacking the now-required name_method fields for
+Annotations; that results in bad names for transcripts (but no error
+messages that would lead you to realize the reason for the problem).  So,
+to protect against that case, we put a NameAdapterInstall line into
+game.style to specify the default name adapter to use in case name_method
+is not specified.  Unfortunately, this had the unanticipated side effect
+of preventing the Synteny viewer from showing links between the species.
+
+If you never use the Synteny viewer, you don't need to do anything.  If
+you do want to use it, and you've downloaded release 1.4.3, there are two
+possible ways to fix it:
+
+1. Open YOUR_APOLLO_DIR/conf/game.style and comment out this line:
+   NameAdapterInstall      "apollo.config.FlyNameAdapter"
+so it should say
+   // NameAdapterInstall      "apollo.config.FlyNameAdapter"
+If you do this, keep in mind that you must use an up-to-date tiers file
+that includes name_method lines for all the Annotation types.
+
+2. Download release 1.4.4, which differs from 1.4.3 only in the fix for
+the NameAdapterInstall/Synteny clash.  If you download 1.4.4 you
+shouldn't have to touch game.style, and you can use the latest game.tiers
+or a slightly out-of-date one.

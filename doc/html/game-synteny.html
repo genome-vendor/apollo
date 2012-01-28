@@ -1,0 +1,224 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>Apollo GAME Synteny guide</title>
+</head>
+<body bgcolor="#ffffff">
+<h1 align="center">Using the Synteny Viewer with "Embedded link data"<br>
+</h1>
+<h3 align="center">Last updated 6/26/2006</h3>
+By "embedded link" I mean that the synteny linking data is contained in
+the curation data set itself. This is true of both GAME and Chado JDBC
+data. In contrast, Ensembl and GFF load there linking data from a
+separate source, be it a database or file. Below is described working
+with GAME and after that Chado JDBC.<br>
+<br>
+<h2>GAME<br>
+</h2>
+Here are the instructions for trying the GAME synteny viewer.
+Please note that until the synteny data becomes public, you will
+only be able to look at the example that is included with the
+Apollo distribution. Also be aware that the synteny viewer is
+still in active development, so there are still many bugs. You
+should see better performance in the next release.
+<p>When you start apollo, choose the data adapter called "Synteny". If
+you have the version of the apollo.cfg that came with the Apollo public
+release 1.4.2, this should give you the GAME synteny choices of
+Drosophila data, rather than the GFF synteny choices for Ensembl
+data. </p>
+<p>You can choose "Load two species" and then under file, ask to browse
+to
+find the example GAME files showing a syntenic region between
+Drosophila
+melanogaster (Dmel) and Drosophila pseudoobscura (Dpse).
+<b>Please note that this is only an example, and is not official
+FlyBase
+pseudoobscura data.</b> For now, you will only be able to view this
+one example; complete data will be released at a later date.
+</p>
+<p>The Synteny data loader should show the following example files:</p>
+<p>Species 1: <br>
+data/example.xml<br>
+<br>
+then hit the "Species 2" tab and select<br>
+<br>
+Species 2:<br>
+data/dpse-example.xml<br>
+<br>
+The GAME synteny viewer will allow you to see comparative links between
+the Dmel and Dpse sequence, in salmon pink for the syntenic block data
+and in tan for the BLASTX data, comparing the r3.1 annotations to the
+genewise predictions in Dpse which have been promoted to annotations.</p>
+<p>It is often easier to see the tan BLASTX results if you hide the
+Synteny
+results, either with the third mouse menu or the types panel. You can
+also hide links with the link popup menu(described below)
+</p>
+<p>You can click on the section with the colorful polygons and with the
+third
+mouse button ask to see only +/+, &plusmn;, -/-, or -/+ strands. You
+can
+also use that menu to "home in on a selected link".
+The menu also lists all the linked tiers, that can be selected for
+visibility.
+</p>
+<p>When you choose &plusmn;, you usually need to reverse complement the
+species that
+is displaying the - strand. So if you click in the - strand species,
+then
+under the "view" menu you can select "reverse complement". Clicking in
+either the top species or bottom species window makes that window
+active
+for most menu options at the top. You can see which species window is
+active under the "Synteny" menu.</p>
+<p>Under the Synteny menu, you can lock scrolling or zooming. Using the
+types panel, under the tiers menu, you can see various types of
+comparative data.</p>
+<p>Please note: the <a href="synteny.html">EnsJ/GFF
+synteny viewer</a> is currently out of commission.</p>
+<p>Here is a screenshot of GAME data in the synteny viewer:</p>
+<p><img src="images/game-synteny.gif">
+</p>
+<h4>Advanced configuration</h4>
+If you have GAME data from two species that you would like displayed in
+synteny it's a bit involved. Here is what you need to know:
+<ul>
+  <li> GAME synteny works differently than ensembl. There is no compara
+database to get links from (at least not yet), so the linking
+information actually comes from the species data itself.
+  </li>
+  <li> There are settings in the tiers files and style file to indicate
+which types link to other species, what they link to and how they link
+to it.
+  </li>
+  <li> Presently GAME synteny only supports three types of links:
+PEPTIDE,
+TRANSCRIPT, and SELF. TRANSCRIPT links from a result to a transcript,
+with the result having transcript coordinates. PEPTIDE links from a
+result to a "peptide",
+which is basically linking to a transcript with peptide
+coordinates. SELF links from 2 features of the same type, and
+presently links them only by location.
+  </li>
+  <li> A peptide link is configged like this:
+    <br>
+[Type]
+    <br>
+typename : BLASTX to Dmel
+    <br>
+tiername : Comparative Dmel
+    <br>
+resulttype : blastx:aa_dmel_RELEASE3-1.FASTA
+    <br>
+resulttype : blastx:dmel_translation.FASTA
+    <br>
+...
+    <br>
+synteny_link_type : PEPTIDE
+    <br>
+link_query_species : Drosophila pseudoobscura
+    <br>
+link_hit_species : Drosophila melanogaster
+  </li>
+  <li> A transcript link would look the same except with:
+    <br>
+synteny_link_type : TRANSCRIPT
+  </li>
+  <li> A self link would have:
+    <br>
+synteny_link_type : SELF
+  </li>
+  <li> A peptide link in GAME xml looks like this:
+    <br>
+&lt; computational_analysis&gt; <br>
+&lt; program&gt; blastx&lt;/program&gt; <br>
+&lt; database&gt; aa_dmel_RELEASE3-1.FASTA&lt;/database&gt; <br>
+&lt; date timestamp="1070962040000"&amp;gtTue Dec 09 04:27:20 EST
+2003&lt;/date&gt; <br>
+&lt; result_set id=":1406526"&gt; <br>
+&lt; name&gt;
+CG8931-PA-Contig1100_Contig5371-1-aa_dmel_RELEASE3-1.FASTA-blast&lt;/name&gt;
+    <br>
+&lt; seq_relationship type="query"
+seq="Contig1100_Contig5371:21575-23310"&gt; <br>
+&lt; span&gt; <br>
+&lt; start&gt; 1613&lt;/start&gt; <br>
+&lt; end&gt; 436&lt;/end&gt; <br>
+&lt;/span&gt; <br>
+&lt;/seq_relationship&gt; <br>
+&lt; result_span&gt; <br>
+&lt; name&gt; CG8931-PA&lt;/name&gt; <br>
+&lt; type&gt; blastx:aa_dmel_RELEASE3-1.FASTA&lt;/type&gt; ... <br>
+&lt; seq_relationship type="query"
+seq="Contig1100_Contig5371:21575-23310"&gt; <br>
+&lt; span&gt; <br>
+&lt; start&gt; 1613&lt;/start&gt; <br>
+&lt; end&gt; 1245&lt;/end&gt; &lt;/span&gt; <br>
+&lt; alignment&gt; <br>
+PSFNLNIHLLDTSLRKYL... <br>
+&lt;/alignment&gt; <br>
+&lt;/seq_relationship&gt; <br>
+&lt; seq_relationship type="subject" seq="CG8931-PA"&gt; <br>
+&lt; span&gt; <br>
+&lt; start&gt; 42&lt;/start&gt; <br>
+&lt; end&gt; 164&lt;/end&gt; <br>
+&lt; /span&gt; <br>
+&lt; alignment&gt; <br>
+PSKHLGSSLEEREKAIVD... <br>
+&lt; /alignment&gt; <br>
+&lt; /seq_relationship&gt; <br>
+&lt; /result_span&gt; <br>
+&lt; /result_set&gt; </li>
+  <li> So how does this turn into a link? First this result_set gets
+assigned a visual Type (FeatureProperty in java) from its program and
+database. The resulttype in the tiers config above is
+"program:database", which maps the logical/data type to the visual
+type. Then if that visual type has a synteny_link_type (as well as the
+link species), its seen as a linkable type. Since this is a PEPTIDE
+type, all of the transcripts of the other species are gone through and
+there peptide name is checked with the hits peptide name. The hits
+peptide name is given in the "seq_relationship type=subject" line
+above. The
+"seq" parameter is the peptide name, which is CG8931-PA here. So upon
+going through all of the transcripts of the other species, if one
+existed that was called CG8931-RA, it would have the peptide name
+CG8931-PA, and the 2 features would form a link. According to the
+peptide coords given above (42-164) the subregion (which may or may not
+be
+the whole exon) of the exon that
+holds those peptde coords would end up being the other part of the link.</li>
+</ul>
+<br>
+<h2>Chado JDBC Data</h2>
+The Chado JDBC data adapter can support embedded link data as well (as
+of June 2006). Like GAME synteny it is configured in the tiers file.
+Here is a Type from the tiers file configured for jdbc synteny from
+conf/paramecium.tiers:<br>
+[Type]<br>
+tiername : Gene Prediction<br>
+typename : Gaze<br>
+resulttype : Gaze<br>
+.....<br>
+synteny_link_type: SELF<br>
+synteny_link_level: PARENT<br>
+synteny_link_match_on: ID<br>
+<br>
+SELF says that it links to features of its same type (just as in Game).
+synteny_link_level PARENT says to link features at the parent level not
+at the child/leaf level. For instance for a gene prediction predicting
+exons and transcripts, PARENT says to link the predicted transcripts,
+not exons. CHILD (which I believe is the default) would cause the exons
+to link. synteny_link_match_on: ID says that the linking actually
+happens via IDs. The Jdbc reader actually reads in the ids of the 2
+mathcing features and stores them with each feature in the apollo
+datamodel. This contrasts from game where the id information is lost
+and features find each other via RANGE.<br>
+<br>
+The jdbc adapter will query chado for this kind of relationship looking
+for a feature_relationship between the 2 features. I believe the type
+of this relationship is one of the new syntenic that were recently
+discussed on the gmod schema list.<br>
+<br>
+<br>
+</body>
+</html>

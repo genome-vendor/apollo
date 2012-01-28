@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This file is used to config chado database adapter -->
+<chado-adapter>
+
+    <chadoInstance id="referenceInstance" default="true">
+
+        <writebackXmlTemplateFile>transactionXMLTemplate.xml</writebackXmlTemplateFile>
+
+        <featureCV>sequence</featureCV>
+        <polypeptideType>polypeptide</polypeptideType>
+        <relationshipCV>relationship</relationshipCV>
+        <propertyTypeCV>feature_property</propertyTypeCV>
+
+        <!-- default is part_of -->
+        <partOfCvTerm>part_of</partOfCvTerm>
+        <transProtRelationTerm>derives_from</transProtRelationTerm>
+
+        <searchHitsHaveFeatLocs>true</searchHitsHaveFeatLocs>
+
+        <clsName>apollo.dataadapter.chado.jdbc.FlybaseChadoInstance</clsName>
+
+	<oneLevelAnnotTypes>
+	    <type>promoter</type>
+	    <type>insertion site</type>
+	    <type>transposable_element</type>
+	    <type>transposable_element_insertion_site</type>
+	    <type>remark</type>
+	    <type>repeat_region</type>	
+	</oneLevelAnnotTypes>
+
+	<threeLevelAnnotTypes>
+	    <type>gene</type>
+	    <type>pseudogene</type>
+	    <type>tRNA</type>
+	    <type>snRNA</type>
+	    <type>snoRNA</type>
+	    <type>ncRNA</type>
+	    <type>rRNA</type>
+	    <type>miRNA</type>
+	</threeLevelAnnotTypes>        
+
+    </chadoInstance>
+
+  
+    <chadoInstance id="riceInstance" default="true">
+
+       <inheritsInstance>referenceInstance</inheritsInstance>
+
+        <partOfCvTerm>part_of</partOfCvTerm>
+         <inheritsInstance>referenceInstance</inheritsInstance>
+         <featureCV>sequence</featureCV>
+        <relationshipCV>relationship</relationshipCV>
+        <propertyTypeCV>feature_property</propertyTypeCV>
+        <writebackXmlTemplateFile>transactionXMLTemplate_rice.xml</writebackXmlTemplateFile>
+
+ 	<sequenceTypes>
+	    <type>gene</type>
+	    <!-- bacs are not in rice yet  <type>BAC</type> -->
+	    <!-- useStartAndEnd specifies this is a range so that different GUI
+	         can be used, queryForValue -> query db for chroms/seqIds -->
+            <type>
+                <name>chromosome</name>
+                <useStartAndEnd>true</useStartAndEnd>
+                <queryForValueList>true</queryForValueList>
+                <isTopLevel>true</isTopLevel>
+            </type>
+	</sequenceTypes>
+
+       <genePredictionPrograms>
+            <program>FgenesH</program>
+        </genePredictionPrograms>
+
+        <searchHitPrograms>
+            <program>blat</program>
+        </searchHitPrograms>        
+
+        <searchHitsHaveFeatLocs>true</searchHitsHaveFeatLocs>
+
+    	<clsName>apollo.dataadapter.chado.jdbc.RiceChadoInstance</clsName>
+
+	<oneLevelAnnotTypes>
+	    <type>promoter</type>
+	    <type>transposable_element</type>
+	    <type>remark</type>
+	    <type>repeat_region</type>	
+	</oneLevelAnnotTypes>
+
+	<threeLevelAnnotTypes>
+	    <type>gene</type>
+	    <type>pseudogene</type>
+	    <type>tRNA</type>
+	    <type>snRNA</type>
+	    <type>snoRNA</type>
+	    <type>ncRNA</type>
+	    <type>rRNA</type>
+	    <type>miRNA</type>
+	</threeLevelAnnotTypes>
+
+    </chadoInstance>  
+  
+    <chadoInstance id="riceInstance-no-hits">
+
+        <genePredictionPrograms>
+            <program>FgenesH</program>
+        </genePredictionPrograms>
+
+        <searchHitPrograms>
+        </searchHitPrograms>        
+
+        <searchHitsHaveFeatLocs>true</searchHitsHaveFeatLocs>
+
+    	<clsName>apollo.dataadapter.chado.jdbc.RiceChadoInstance</clsName>
+
+	<oneLevelAnnotTypes>
+	    <type>promoter</type>
+	    <type>transposable_element</type>
+	    <type>remark</type>
+	    <type>repeat_region</type>	
+	</oneLevelAnnotTypes>
+
+	<threeLevelAnnotTypes>
+	    <type>gene</type>
+	    <type>pseudogene</type>
+	    <type>tRNA</type>
+	    <type>snRNA</type>
+	    <type>snoRNA</type>
+	    <type>ncRNA</type>
+	    <type>rRNA</type>
+	    <type>miRNA</type>
+	</threeLevelAnnotTypes>
+
+    </chadoInstance>    
+
+    <chadoInstance id="ricePure">
+
+       <inheritsInstance>riceInstance</inheritsInstance>
+
+       <pureJDBCWriteMode>true</pureJDBCWriteMode>
+       <pureJDBCCopyOnWrite>false</pureJDBCCopyOnWrite>
+       <pureJDBCNoCommit>false</pureJDBCNoCommit>
+       <!-- logDirectory>/Users/mgibson/.apollo</logDirectory -->
+       <queryFeatureIdWithUniquename>true</queryFeatureIdWithUniquename>
+       <queryFeatureIdWithName>true</queryFeatureIdWithName>
+   </chadoInstance>    
+   
+
+
+    <!-- Marks Test rice database at brebiou.cshl.org -->
+    <chadodb>
+        <name>RiceDB test server at brebiou(Tunneling)</name>
+	<adapter>apollo.dataadapter.chado.jdbc.PostgresChadoAdapter</adapter>
+	<url>jdbc:postgresql://localhost:15432/rice</url>
+	<dbName>rice</dbName>
+	<dbUser>mgibson</dbUser>
+	<dbInstance>riceInstance</dbInstance>
+	<style>rice.style</style>
+        <!-- default database to use for loading and saving from -->
+        <!--  command line if none is specified -->
+        <default-command-line-db>false</default-command-line-db>
+    </chadodb>   
+ 
+   <chadodb>
+        <name>RiceDB test server at brebiou(Tunneling,no hits)</name>
+	<adapter>apollo.dataadapter.chado.jdbc.PostgresChadoAdapter</adapter>
+	<url>jdbc:postgresql://localhost:15432/rice</url>
+	<dbName>rice</dbName>
+	<dbUser>mgibson</dbUser>
+	<dbInstance>riceInstance-no-hits</dbInstance>
+	<style>rice.style</style>
+        <!-- default database to use for loading and saving from -->
+        <!--  command line if none is specified -->
+        <default-command-line-db>true</default-command-line-db>
+    </chadodb>   
+
+   <!-- Scotts Test rice database at gmod.cshl.org - works with ssh
+   tunnel on local host
+   ssh -L15432:gmod.cshl.edu:5432 -l cain -N gmod.cshl.edu -->
+    <chadodb>
+        <name>RiceDB test server at gmod.cshl.edu(Tunneling)</name>
+        <adapter>apollo.dataadapter.chado.jdbc.PostgresChadoAdapter</adapter>
+        <url>jdbc:postgresql://localhost:15432/rice</url>
+        <dbName>rice</dbName>
+        <dbUser>cain</dbUser>
+        <dbInstance>riceInstance</dbInstance>
+        <style>rice.style</style>
+        <!-- default database to use for loading and saving from -->
+        <!--  command line if none is specified -->
+        <default-command-line-db>true</default-command-line-db>
+    </chadodb>
+    <chadodb>
+        <name>dicty hack</name>
+	<adapter>apollo.dataadapter.chado.jdbc.PostgresChadoAdapter</adapter>
+	<url>jdbc:postgresql://gmod.genetics.northwestern.edu:5432/ubuntu</url>
+	<dbName>ubuntu</dbName>
+	<dbUser>mark</dbUser>
+	<dbInstance>riceInstance</dbInstance>
+	<style>rice.style</style>
+        <!-- default database to use for loading and saving from -->
+        <!--  command line if none is specified -->
+        <default-command-line-db>true</default-command-line-db>
+    </chadodb>   
+    <chadodb>
+        <name>dicty pure</name>
+	<adapter>apollo.dataadapter.chado.jdbc.PostgresChadoAdapter</adapter>
+	<url>jdbc:postgresql://gmod.genetics.northwestern.edu:5432/ubuntu</url>
+	<dbName>ubuntu</dbName>
+	<dbUser>mark</dbUser>
+	<dbInstance>ricePure</dbInstance>
+	<style>rice.style</style>
+        <!-- default database to use for loading and saving from -->
+        <!--  command line if none is specified -->
+        <default-command-line-db>true</default-command-line-db>
+    </chadodb>   
+
+
+</chado-adapter>

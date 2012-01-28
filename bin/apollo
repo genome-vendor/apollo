@@ -1,0 +1,256 @@
+#!/bin/sh
+#
+# Note: /bin/sh doesn't work on Alphas (need to use bash there) but works everywhere else.
+#
+# bin/apollo startup script
+# figures out which version of java to use, and starts apollo
+# according to the needs of that jdk
+#
+# the user's classpath is completely ignored
+#
+# APOLLO_ROOT should be already be set if you are
+# following the quick start in doc/NOTES
+#
+# Run with "-s" or "-c" to use classfiles in src/java instead of using apollo.jar
+# Any other command-line args are passed along to Apollo
+
+# if no APOLLO_ROOT set then try to figure it out
+# (this is copied from John Richter's dageditor script)
+if [ -z "$APOLLO_ROOT" ]; then
+
+    #Make sure ls uses default behavior
+    alias ls=ls
+    unalias ls
+    
+    # Find the real (physical) pathname for Apollo
+    PATH_TO_ME=`which $0`;
+
+    #Now see if the path is actually a symbolic link. If it is, set TEMP
+    #to true
+    TEMP=`ls -l $PATH_TO_ME | sed -e "s/.* -> \(.*\)/true/g"`
+    if [ -z "$TEMP" ]; then
+    TEMP='false';
+    fi
+
+    #While we keep finding symbolic links...
+    while [ "$TEMP" = "true" ]; do
+    #Parse the ls output and set PATH_TO_ME to the actual location of the
+    #symbolic link
+    PATH_TO_ME=`ls -l $PATH_TO_ME | sed -e "s/.* -> \(.*\)/\1/g"`
+
+    TEMP=`ls -l $PATH_TO_ME | sed -e "s/.* -> \(.*\)/true/g"`
+    if [ -z "$TEMP" ]; then
+    TEMP='false';
+    fi
+    done
+
+    #If PATH_TO_ME is a relative link, set TEMP to true, otherwise set
+    #TEMP to false
+    TEMP=`echo $PATH_TO_ME | sed -e "s/^\/.*/true/g"`
+    if [ -z "$TEMP" ]; then
+    TEMP='false';
+    fi
+
+    #If PATH_TO_ME was a relative link, change it to an absolute reference
+    if [ $TEMP != 'true' ]; then
+    PATH_TO_ME="$PWD/$PATH_TO_ME"
+    fi
+    
+    #Remove the name of this script from the end of the path
+    PATH_TO_ME=`echo $PATH_TO_ME | sed -e "s/\(.*\)\/.*/\1/g"`
+    #this will fail if other bins in path
+    #PATH_TO_ME=`echo $PATH_TO_ME | sed -e "s/bin//g"`
+    # strip off the /bin directory to get to apollo root
+    PATH_TO_ME=`echo $PATH_TO_ME | sed -e "s/\(.*\)\/.*/\1/g"`
+    APOLLO_ROOT=$PATH_TO_ME
+fi
+
+if [ -z "${APOLLO_ROOT}" ]; then
+    echo Warning: APOLLO_ROOT not set and could not guess what it should be.
+    exit 1
+else
+    echo APOLLO_ROOT set to ${APOLLO_ROOT}
+fi
+
+#APOLLO=apollo.gui.ApolloRunner
+APOLLO=apollo.main.Apollo
+CLASSES_OR_JAR=${APOLLO_ROOT}/jars/apollo.jar
+LOG4JDEBUG=""
+
+# default Log4J configuration file
+LOG4JCONFIG_URL=file://${APOLLO_ROOT}/conf/log4j.properties
+case $1 in
+# -c means "use classfiles, not jar" (useful for developers)
+-c)
+    CLASSES_OR_JAR=${APOLLO_ROOT}/src/java/classfiles
+    echo "Using classfiles, not jar"
+    shift
+    ;;
+# Keep all other arguments to determine main
+*)
+    ;;
+esac
+
+case $1 in
+-bop)
+    APOLLO=apollo.bop.bop
+    shift
+    ;;
+-fasta)
+    APOLLO=apollo.seq.io.FastaFile
+    shift
+    ;;
+-t)
+    APOLLO=apollo.test.TestApollo
+    shift
+    ;;
+-tr)
+    APOLLO="junit.ui.TestRunner apollo.test.TestApollo"
+    shift
+    ;;
+-log4j)
+    LOG4JCONFIG_URL=file://$2
+    echo "setting log4jconfig file to $2"
+    shift
+    shift
+    ;;
+# Note that -test uses jar, not classfiles
+-test)
+    APOLLO=apollo.test.WashingLine
+    shift
+    ;;
+-wash)
+    APOLLO=apollo.test.WashingLine
+    shift
+    ;;
+# -roundtrip uses classfiles
+-roundtrip)
+    APOLLO=apollo.test.WashingLine
+    CLASSES_OR_JAR=${APOLLO_ROOT}/src/java/classfiles
+    shift
+    ;;
+# -log4jdebug tells Log4J to print debugging messages about its own operations
+-log4jdebug)
+    LOG4JDEBUG='-Dlog4j.debug=1'
+    shift
+    ;;
+-help)
+    echo "Options:"
+    echo "-c (use classfiles instead of jar)"
+    echo "-test (run in batch mode--e.g. apollo -test -x in.xml -x out.xml)"
+    echo "-roundtrip (same as -test but uses classfiles instead of jar)"
+    echo "-bop (call BOP, not Apollo)"
+    echo "-log4jdebug (debugs the debugger)"
+    echo "All other options are passed on to Apollo."
+    echo "For Apollo options, use 'apollo --help' (yes, a double dash)"
+    exit 0
+    ;;
+# Keep all other arguments and pass on to Apollo as command-line args
+*)
+    ;;
+esac
+
+# echo Using $CLASSES_OR_JAR for apollo classes
+
+#set up default apollo classpath
+# Don't add apollo.jar to APOLLO_CLASSPATH--if we're using the classfiles,
+# we don't want it, and if we're not, then it's already in CLASSES_OR_JAR.
+APOLLO_CLASSPATH=$CLASSES_OR_JAR
+for file in ${APOLLO_ROOT}/jars/*.jar; do 
+  if [ $file != ${APOLLO_ROOT}/jars/apollo.jar ]; then 
+#    echo "Adding ${file} to CLASSPATH"
+    APOLLO_CLASSPATH=${APOLLO_CLASSPATH}:${file}; 
+  fi;
+done
+for file in ${APOLLO_ROOT}/*.jar; do 
+    if [ -s $file ]; then
+#        echo "Adding ${file} to CLASSPATH"
+        APOLLO_CLASSPATH=${APOLLO_CLASSPATH}:${file}; 
+    fi;
+done
+
+# What's this ${CLASSPATH} for?  It doesn't add anything, does it?
+APOLLO_CLASSPATH=${APOLLO_CLASSPATH}:\
+${APOLLO_ROOT}/data:\
+${CLASSPATH}
+
+#ORB_PATH=${ORB_PATH:-${APOLLO_ROOT}/jars/jacorb.jar}
+
+#MISC_OPTIONS="-ms100M -DproxySet=true -DproxyHost=soa.sanger.ac.uk -DproxyPort=80"
+# Start with 50M of memory (max amount of memory is specified in apollo.cfg)
+STARTING_MEMORY="-ms50M"
+
+#include the orb in the classpath if they have it
+# if [ ! -s ${ORB_PATH} ]; then
+# 	echo Can\'t find CORBA Orb. Apollo will be started without CORBA...
+# else
+#	APOLLO_CLASSPATH=${APOLLO_CLASSPATH}:${ORB_PATH}
+#fi
+
+#see if the ~/.apollo/apollo.cfg describes the path to Java
+if [ -s ${HOME}/.apollo/apollo.cfg ]; then
+    #if it does, set the path to java based on the contents of the file
+    JAVAPATH=`awk '/^[\t ]*JavaPath[\t ]*\"(.*)\"/ { print substr($2,2,length($2)-2)}' ${HOME}/.apollo/apollo.cfg`
+    MEMSETTING=`awk '/^[\t ]*Memory[\t ]*\"(.*)\"/ { print substr($2,2,length($2)-2)}' ${HOME}/.apollo/apollo.cfg`
+#otherwise see if JavaPath is specified in conf/apollo.cfg
+elif [ -s ${APOLLO_ROOT}/conf/apollo.cfg ]; then
+    #if it does, set the path to java based on the contents of the file
+    JAVAPATH=`awk '/^[\t\s]*JavaPath[\t ]*\"(.*)\"/ { print substr($2,2,length($2)-2)}' ${APOLLO_ROOT}/conf/apollo.cfg`
+    MEMSETTING=`awk '/^[\t\s]*Memory[\t ]*\"(.*)\"/ { print substr($2,2,length($2)-2)}' ${APOLLO_ROOT}/conf/apollo.cfg`
+fi
+
+if [ -z "${MEMSETTING}" ]; then
+    MEMSETTING="500M"
+fi
+
+# See if JAVAPATH is still not defined
+if [ -z "${JAVAPATH}" ]; then
+    echo Couldn\'t find JavaPath line in apollo.cfg file, \
+         trying to guess path to java...
+
+    #make sure java isn't aliased
+    unalias java
+
+    #set the javapath to the path given by 'which java', without the bin/java
+    # (basically, get the path to java and trim off the last 9 characters;
+    #  obviously, this approach won't work if you've installed java strangely,
+    #  but java probably won't work either)
+    # el - mawk's substring function acts differently than awk/gawk
+    #      so converting to use sed instead
+    #JAVAPATH=`which java | awk ' { print (substr($0,0, length($0) - 9)) } '`;
+    JAVAPATH=`which java | sed -e 's%/bin/java%%'`
+fi
+
+echo Using version of Java in ${JAVAPATH}: ${JAVAPATH}/bin/java
+
+#make sure that java is actually there
+if [ ! -s "${JAVAPATH}/bin/java" ]; then
+    #if it isn't, fail
+    echo Could not make a good guess about the location of Java, or \
+         JavaPath line in apollo.cfg is no good--it said ${JAVAPATH}
+    exit 1
+fi
+
+# Find user's web browser and save the path as an environment variable.
+# This is necessary because recent versions of Mozilla (v1.6) seem to be
+# reluctant to be invoked (from Apollo) by simply calling "mozilla", even
+# if mozilla is in the user's path.  Need to use the full physical path.
+# (Netscape, at least the version I tried on Solaris, seemed to be ok with
+# being called just "netscape").
+BROWSER=`${APOLLO_ROOT}/bin/get-real-path mozilla`
+if [ -z "${BROWSER}" ]; then
+   BROWSER="netscape"
+fi
+
+echo "Web browser = $BROWSER"
+
+# echo Using classpath ---------- ${APOLLO_CLASSPATH}
+
+echo "Starting apollo (memory = ${MEMSETTING})..."
+CMD="${JAVAPATH}/bin/java ${STARTING_MEMORY} -Xmx${MEMSETTING} -classpath ${APOLLO_CLASSPATH} -DAPOLLO_ROOT=${APOLLO_ROOT} -Dorg.xml.sax.driver=org.apache.crimson.parser.XMLReaderImpl ${LOG4JDEBUG} -Dlog4j.configuration=${LOG4JCONFIG_URL} $APOLLO"
+# Print the command
+echo $CMD "$@"
+# Now run it
+$CMD "$@"
+
+exit $?;

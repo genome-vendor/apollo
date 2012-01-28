@@ -1,0 +1,3 @@
++ Added support for reading GFF3 data from URLs and from compressed data (gzip, zip)
++ Added support for remote analysis (BLAST and Primer BLAST)
++ Various bugfixes

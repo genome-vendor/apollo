@@ -1,0 +1,61 @@
+// Synteny style
+// Most of the parameters are not specified here because the default
+// vaues are used.
+// For a more complete list of parameters, please see game.style.
+
+// The name of the types file (a file--expected to be in the conf directory)
+Types		        "ensj.tiers"
+
+// Whether to show the annotation view, default false.
+//ShowAnnotations "false"
+
+// Whether to display the result view, default true.
+ShowResults		"true"
+
+// Whether to allow editing, default false (takes out the editing menu options) 
+//EnableEditing		"false"
+
+// Whether to enable the navigation manager - default false
+EnableNavigationManager "false"
+
+// Color for highlighting edges of results that line up
+EdgematchColor "black"
+
+//All the species-specific information that actually allows Synteny to happen.
+//The adapter classes are used to actually build the adapter
+//guis in the synteny adapter's tabs. 
+
+"Name.Mouse" "Mus musculus"
+"Name.Mouse-Rat" "Compara" 
+"Name.Rat" "Rattus norvegicus" 
+"Name.Rat-Human" "Compara" 
+"Name.Human" "Homo sapiens"
+
+//
+// MOUSE 
+//
+"Species.Mouse.DataAdapter" "apollo.dataadapter.ensj.EnsJAdapter"
+
+//
+// MOUSE-RAT
+//
+"Species.Mouse-Rat.DataAdapter"  "apollo.dataadapter.synteny.SyntenyComparaAdapter"
+"Species.Mouse-Rat.querySpecies" "Mouse"
+"Species.Mouse-Rat.hitSpecies"   "Rat"
+
+//
+// RAT 
+//
+"Species.Rat.DataAdapter" "apollo.dataadapter.ensj.EnsJAdapter"
+
+//
+// HUMAN-RAT
+//
+"Species.Rat-Human.DataAdapter"  "apollo.dataadapter.synteny.SyntenyComparaAdapter"
+"Species.Rat-Human.querySpecies" "Rat"
+"Species.Rat-Human.hitSpecies"   "Human"
+
+//
+// HUMAN 
+//
+"Species.Human.DataAdapter" "apollo.dataadapter.ensj.EnsJAdapter"

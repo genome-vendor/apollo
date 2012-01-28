@@ -1,0 +1,23 @@
+// Style for sample data adapter
+// Most of the parameters are not specified here because the default
+// vaues are used.
+// For a more complete list of parameters, please see game.style and fly.style.
+
+// The name of the types file (a file--expected to be in the conf directory)
+Types		        "sample.tiers"
+
+// Whether to show the annotation view (default true)
+ShowAnnotations         "false"
+
+// Background colors for results
+// Note that if you change FeatureBackgroundColor to white, as some people prefer,
+// you'll probably want to change EdgematchColor to black.
+FeatureBackgroundColor  "black"
+
+// Color for highlighting edges of results that line up
+EdgematchColor          "black"
+
+// Width of edgematch lines (default is 2)
+EdgematchWidth          "2"
+
+

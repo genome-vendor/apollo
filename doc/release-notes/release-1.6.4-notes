@@ -1,0 +1,66 @@
+Major changes between public release 1.6.0 (11/03/05) and public release
+1.6.4 (01/05/2006) (there were several internal releases in between):
+
+The majority of changes and bug fixes during this period involved the
+ChadoXML adapter--please see doc/fixed-bugs and doc/release-1.6.3-notes
+for more details.
+
+Another category of changes involved making it possible for Apollo to
+deal with one-level annotations, such as rescue fragments or point
+mutations, which don't have a three-level gene/transcript/exon structure.
+Since Apollo was designed to treat all annotations as if they had three
+levels, we had been dealing with one-level annotations by artificially
+promoting them to three levels as they were read in (and then flattening
+them back to one level if the user chose to save the data).  Now the
+one-level annotations are stored in one-level datamodels.  This involved
+changes in many classes, ranging from datamodels to gui to name adapters,
+and there are still some glitches remaining--see the todo for more
+details.
+(Note that the initial work for enabling one-level annotations was done
+in release 1.6.0, but it was turned off for that release because it was
+still buggy.)
+
+The BLAST hit loader (in the analysis adapter) is now working somewhat
+better than before, although it is still fragile (any changes in the
+BLAST output format will break it) and visually confusing.  See
+fixed-bugs for more details about what I fixed, and see todo for a list
+of some of the remaining issues.
+
+Some bug fixes and improvements involving the Annotation Info Editor (AIE):
+- New synonym-editing interface in AIE lets you add/delete synonyms
+individually (instead of having to edit a comment-delimited list).
+- When you use AIE to change annot name or type, right detail panel (in
+main window) now updates to show new name or type.
+- Null pointer was flying in gene edit panel when name was fully erased
+- Better handling of one-level annotations
+
+Some fixes involving gene merges--deal properly with synonyms, dbxrefs,
+properties.
+
+Fixed problem with Sequence window (broke on or around 10/11/05):
+if you double-click any result and bring up the Sequence window, it comes
+up with Peptide selected and 0 residues.
+
+Ensembl data adapter now working for databases with schemas 33 and up.
+
+Note for developers:
+I have added a "Parameters" hash to Style for storing anonymous
+key=value parameters.
+Whenever we add a new parameter to the style file, we've been adding
+methods in Style.java to set/get some variable--it's getting annoying.
+I wanted to add some more new parameters for use by ChadoXmlWrite, and
+was not psyched about adding more variables and methods to Style, so I
+made it able to store generic parameters (key=value) from style files
+in a hash (like Properties on SeqFeatures, but I called this
+Parameters to reduce confusion.)  Parameters give us a
+general-purpose, extensible way to set key=value(s) pairs in the
+style.  The default can be set in Style.java (which, of course, means
+we can't set it for brand-new parameters that are not yet known) or by
+the caller.
+
+Patch to XMLElement allows Apollo to be compiled under JDK1.5 (as well as
+1.4).  Unfortunately, this patch is incompatible with JDK1.3, which we
+still need to support for older (pre-10.2.3) versions of Mac OS X because
+they can't run JDK1.4+.  So what I did for release 1.6.4 is to comment
+out this patch, make the release, and then put the patch back in CVS so
+that developers will be able to use JDK1.5 to compile the Apollo code.

@@ -1,0 +1,50 @@
+// Synteny style
+// Most of the parameters are not specified here because the default
+// vaues are used.
+// For a more complete list of parameters, please see game.style.
+
+// The name of the types file (a file--expected to be in the conf directory)
+Types		        "ensj.tiers"
+
+// Whether to show the annotation view, default false.
+//ShowAnnotations "false"
+
+// Whether to display the result view, default true.
+ShowResults		"true"
+
+// Whether to allow editing, default false (takes out the editing menu options) 
+//EnableEditing		"false"
+
+// Whether to enable the navigation manager - default false
+EnableNavigationManager "false"
+
+// Color for highlighting edges of results that line up
+// EdgematchColor "black"
+
+//All the species-specific information that actually allows Synteny to happen.
+//The adapter classes are used to actually build the adapter
+//guis in the synteny adapter's tabs. The rest of it is default
+//information for the various gui's.
+
+
+"Name.Mel" "Drosophila Melanogaster"
+"Name.Mel-Pse" "Compara" 
+"Name.Pse" "Drosophila Pseudoobscura" 
+
+
+//
+// MELANOGASTER 
+//
+"Species.Mel.DataAdapter" "apollo.dataadapter.ensj.EnsJAdapter"
+
+//
+// FLY-MOSQUITO1
+//
+"Species.Mel-Pse.DataAdapter"  "apollo.dataadapter.synteny.SyntenyComparaAdapter"
+"Species.Mel-Pse.querySpecies" "Mel"
+"Species.Mel-Pse.hitSpecies"   "Pse"
+
+//
+// PSEUDOOBSCURA 
+//
+"Species.Pse.DataAdapter" "apollo.dataadapter.ensj.EnsJAdapter"

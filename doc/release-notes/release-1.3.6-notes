@@ -1,0 +1,70 @@
+11/3/03
+
+Fixed issues with JDK1.4, so now Apollo can run under 1.4 (now
+recommended for all platforms except Macs running old versions of Mac OS
+X (before 10.2.3)).  If you have an older Mac OS, you can still run
+Apollo (with JDK1.3) but you won't be able to use the Ensj/Otter data
+adapter.
+I've heard reports that the clipboard (copy/paste) works better in 1.4.
+
+Can now rubberband a region on the axis and the selected sequence will
+pop up in a Sequence window.  If you're very zoomed out and the region
+you've selected is too large, it will offer to save it as a FASTA file.
+
+Used code from Harvard to make sure Apollo doesn't introduce any bad
+changes into the XML when you round-trip an XML file.
+
+More transaction types are now recorded at the end of a saved XML file:
+before we just recorded deletes and changes; now we also have records for
+added, merged, and split genes.  These transaction records just identify
+the changed annotations by their IDs; the complete information is present
+elsewhere in the XML file.
+
+Results that represent hits against sequences that are new to their
+respective database (as indicated in tiers file) are shown with a box
+around them, so that the curator can immediately see which results are
+new and need to be looked at.
+
+Thanks to David Goodstein, search (Find) now allows full regexps!  (The
+Search in the Exon Detail Editor does as well.)
+
+Instead of having the config files in $HOME/.apollo be slightly modified
+copies of the ones in APOLLO_ROOT/conf, you can now put ONLY the stuff
+you want changed into your personal cfg files.  Apollo will first read
+the ones in APOLLO_ROOT/conf, and then read your personal cfgs and apply
+any modifications.
+
+Another enhancement in style file handling is that you can now import
+other style files:
+ImportStyle "old.style"
+This causes everything in the old style to be in the new.  Anything you 
+want to change you can just add to the new style and it will override 
+the old style. In theory this could mean less cutting and pasting 
+between styles.
+
+If you have start/stop visibility set to false, start/stops were still
+showing up--this is now fixed.
+
+Added "hotlist" of external analysis web sites (BLAST, etc.) as an Apollo
+menu (as first step towards dynamic analysis).
+
+Many bug fixes and improvements in Synteny viewer, including new GAME
+Synteny viewer (still under development) for looking at
+D. melanogaster/pseudoobscura comparative data.
+
+Added more popup warnings when users try to create/edit annotations
+outside range (though I can still find ways to edit annots outside range
+w/o getting a popup).
+
+Things fixed/added in Synteny view:
+- Editing, save fixed.
+- Handy link menu items added.
+- Locked zooming.
+- Synteny now works with GAME. You can load one species and then use the 
+blast results to another species (for now its psuedo) to load another 
+species. The other species is loaded with the same range around that 
+feature(using padleft and padright to game url). Links between the 2 
+species are automatically derived from the blast link features that are 
+present in both datasets(no explicit link file needs to be specified).
+- Database chooser was added to select the different species databases.
+

@@ -1,0 +1,2171 @@
+-----------------------------------------------------------
+Improvements and bug fixes after release 1.4.0 (2/9/2004)
+(For older bug fixes, see old-fixed-bugs)
+-----------------------------------------------------------
+
+Put in red/green markers at axis to show where sequence/region ends.
+
+Synteny GFF example--all red features come up labeled no_name (used to
+have ENST names)
+(Vivek says this is happening with a lot of the EnsJ features, too)
+
+Things that would make it easier to set non-standard start of translation:
+- When user wants to set a non-standard (non-ATG) start of
+translation because 5' exons not identified, they have to set it using
+the EDE *and* document by by the user going to the annotation text editor
+and then setting the appropriate comment. This is a 2-step operation.
+It would be good to add to both the main Apollo window and the EDE menu
+options that basically say this. e.g.  "5' end of transcript incomplete"
+and then either a further pull-right menu to indicate the phase (1,2,3)
+or a little dialog box to set the phase of translation]. That way the
+users could do it on the spot in one move
+- non-ATG used, documented cases of CTG translation starts: again a
+two-step operation (first the EDE, then the comment).  We could eliminate
+the 2nd step by inferring this comment. In other words, if the user
+actively sets the start to something that is a non-ATG codon then we
+automatically add the comment that this has a XXX non-canonical start
+- the 3' end is incomplete. I [Suzi] had eons ago added both flags
+(booleans) to the FeatureSet datamodel so that these could
+be held explicitly (rather then parsing a comment which is
+quite risky). The flag for an incomplete 3' end is automatically
+set if the translation never reaches a stop codon (see the
+method setTranslationEndFromStart). Unfortunately nothing
+has been done with this. It doesn't appear in the visuals or
+in the text. It would be quite nice to come up with something
+that presented these more clearly so the incomplete transcripts
+would be more obvious.
+- There is a translational frameshift. Currently this is added
+in the comments and then there is some horrid hack of magic
+that took the 'validation' file and sorted out the position of the
+frameshift from there. I would really, really like to have a means
+to set the position of the frameshift. At the very least by
+entering the position number in the text editor. Or preferably,
+be able to set this from the EDE.
+
+If there is no ID format defined for a type, make sure annot info editor
+doesn't complain that ID is not in legal format.
+
+- i went into the annot info editor and tried to change the type of a
+regular gene to pseudogene.  it then doesn't show me the transcripts,
+because pseudogenes don't have transcripts (?).  but when i try to save
+my changes, it says "Error: transcript symbol CG12173-RA does not match
+parent annotation's symbol, CR12173".  but i have no way to access
+transcript CG12173-RA.
+
+Separate canned comment lists for genes and transcripts.
+(They appear in game.style as AnnotationComments and TranscriptComments.)
+
+If you say "merge transcripts" to merge transcripts from different genes,
+it asks you if you want to merge the genes, but if you say "Don't merge",
+too bad, it merges them anyway!  It should ask earlier, when you can
+still abort the operation.
+(Same issue with "move exons to transcript".)
+
+If you have apollo already open and try to 'open new' with something that
+has no genomic sequence, you get an exception:
+java.lang.NullPointerException
+        at apollo.gui.genomemap.TierView.setScrollValues(TierView.java:388)
+        at 
+apollo.gui.genomemap.TierView.updateManagerHeight(TierView.java:100)
+        at apollo.gui.genomemap.ManagedView.setBounds(ManagedView.java:57)
+        at apollo.gui.genomemap.FeatureView.setBounds(FeatureView.java:468)
+        at apollo.gui.genomemap.SplitterView.setBounds(SplitterView.java:81)
+
+Vertical scroll to selection doesn't always work--try CG31538 in
+annot-types.xml.  (I think the issue is with the lowest annotation in the
+reverse strand.)
+[Now it looks like the issue is that tier numbers are being *assigned* to
+transcripts but *requested* from annotations!]
+
+When tier is collapsed, don't show labels (even if labeling is turned
+on).
+
+Chris Smith says that in translations, NNN should be translated as "X"
+rather than "?".
+
+Sima says non-protein-coding annots still have transcripts (except for
+misc. curator's observation).  Make transcript panel show up in annot
+info editor.
+
+Browser launching not working on plutonium.
+On plutonium, if you say "which mozilla", it says /usr/X11/bin/mozilla,
+and that points to /opt/mozilla-1.6/run-mozilla.sh.  although
+/opt/mozilla-1.6/mozilla accepts arguments (e.g. an URL to launch with),
+/opt/mozilla-1.6/run-mozilla.sh does not, so the browser launching fails.
+- call run-mozilla.sh for initial launch; call mozilla-xremote-client
+to direct to desired URL (see BrowserLauncher.java.FINISH)
+
+Bev would like to start with smaller evidence panel.  Make this a
+configurable option (EvidencePanelHeight--default is 200; sensible values
+are between 150 and 350).
+
+Splice sites:
+Visual flag for non-standard spice sites (not GT/AG).
+Apollo should have a visual flag for splices for which the cDNA alignment
+cannot be matched PRECISELY to a GT/AG.  In some cases, it may be close
+and sim4 may have fudged the alignment by a few bases; in other cases the
+alignment is so far from at GT/AG that it is shown as an atypical splice.
+In either case, we would like to see a flag.  Perhaps an edge mark of a
+different color?
+Latest suggestion: inward-pointing arrowhead:  ___
+                                                 /
+                                                 \
+                                               ---
+
+Suzi wrote: When I was testing the tree view (both in isolation and as a
+part of the editor) if you hit the up and down arrows then the editor
+would shift and update to that anntation/transcript. Now you have to
+actively click to get the editor to switch.  This is not how it should
+work. If the tree view is up in the editor then whatever is showing in
+the editor should be exactly the same as what is selected in the tree
+view. This probably crept in when you made the other changes. Can you
+please fix it.
+
+Annot tree window should go away when you load a new region.  Instead, it
+stays there but now says "No annotations" (even though new region *does*
+have annotations).  (Also, could this failure to go away represent a
+memory leak?)
+
+GenBank writer--don't look at comments for translational exceptions.
+Instead, need to use new methods.  [Suzi]
+
+Some of the URLs for getting more info about features are not right
+(e.g. some of the SPTR proteins in the red and orange tiers--but some are ok).
+Also, there are a lot of special URLs in TierPopupMenu, which is bad.
+Some that don't work (in example.xml):
+http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=search&db=protein&doptcmdl=GenBank&term=Q9VN82
+http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=search&db=protein&doptcmdl=GenBank&term=Q24279
+http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=search&db=protein&doptcmdl=GenBank&term=Q95TT5
+
+Frame shifting bugs
+- Open /users/sima/apollo_data/amn.sima.xml.  It opens it with the
+unconventional start, but the sequence after the frame shift is wrong if
+you ask for Sequence from the EDE--it is not frameshifting anymore. The
+glyph in the EDE is right, and the sequence when you call it from the
+main display is right, but the sequence in the Sequence window if you
+call if from the EDE is from the wrong frame.
+
+Don't show user colors or user names (use project name) in annot info
+editor if we're in public mode.
+
+Prefs editor: edit ~/.apollo/game.style; if there wasn't one, make a new
+one with comment that you only need to put in the parameters you want to
+change.  Add "help" button to bring up Style portion of user manual
+(#StyleFiles).
+Call menu item "Preferences (style)".
+Update prefs section in manual (get rid of image)
+
+Sequence window now lets you adjust +/- range for corresponding genomic
+sequence (code contributed by Sylvain Foret <foret@rsbs.anu.edu.au>)
+
+When using the 'adjust for sequencing error' functionality and you choose
+to insert or delete a base the transcript lengths now change as they should.
+
+---------^^^-----Internal release 1.4.1---------^^^---------
+
+Don't double-add result tags, whether or not we read the style twice.
+
+Do almost-out-of-memory check when user asks to save (it's been sometimes
+running out of memory while trying to save).
+
+Allow user to load data from r3.1 (gadfly) or 3.2 (chado).
+Some query types are disabled in chado (e.g. sequence).
+
+Tier properties weren't all being saved correctly.  [Note: fixed *after*
+3/18 internal release!]
+
+---------^^^-----Release 1.4.2 (3/19/04)---------^^^---------
+
+For public game.tiers, we need to strip out the lines specifying what 
+sort of ID format to assign, since they may want to change the type of 
+an annotation, and they won't know what sorts of IDs they need to add.
+
+Change the color of the unusual splice site triangles to both be orange 
+(not pink and orange).
+
+Let users get the sequence of the entire segment you're looking at, not 
+just a rubberbanded section.  [File -> Save sequence]
+
+In annot tree, sort annots by genome position (not alphabetically).
+
+When evidence panel is vertical, doesn't let you make it very big (or
+very small, but that's less important).
+
+Rubberbanding axis to see residues in seq window is broken for rev strand
+
+Can't hide promoter tier (Why?  It's not because of the promoter glyph.
+It's not because it's the lowest tier.)  [It was because it shared a
+typename with promoter annotations.]
+
+- Should make new apollo.config package for Config and Style and any
+other config-related classes.  It's kind of weird that they're in gui.
+
+- If you use "add analysis", the Fgenesh and Genscan analysis loader GUIs
+look very strange and don't seem to behave as I would expect.  If I try
+to choose something from the Tier or Type menu, my selection doesn't show
+up.  (They work better, for some reason, if you use "Open new" instead of
+"add analysis"--why??)
+[Fix submitted by Sylvain Foret]
+
+New bugs from Suzi's 3/14/2004 commit (fixed by Suzi):
+- Protein-coding transcripts are labeled -PA, -PB, etc. instead of -RA,
+-RB.  Non-coding transcripts (e.g. P elements) are -RA etc.
+- No doubt relatedly, when you save the XML, the transcripts are also
+named with PA, and their produces_seq uses RA (so it's backwards):
+    <feature_set produces_seq="CG1113-RA">
+      <name>CG1113-PA</name>
+[I found that newly-created genes have properly named transcripts (-RA).
+But if you change the suffix in the annot info editor (to, say, -RZ), it
+gets changed to -PZ (why is it changing after I commit??).]
+- In annot info editor, if you change the transcript suffixes to -RA,
+etc., and then Commit, they remain -PA, etc.  [As above, something is
+setting the transcript names after you commit.]
+- If you turn on labeling of results, the names are too long (e.g.
+SD14915.5prime-AE003603.Sept-na_DGC.dros-sim4, rather than just SD14915,
+which is what my getShortName method used to return, but Suzi got rid of
+that.  I agree that my method was kludgy, but I still think we need some
+way to shorten these result names for use as display labels.)
+- In annot info editor, if you try to change annot symbol or ID, no
+matter what you do you get "Error: annotation symbol foo is inconsistent
+with ID CG1234.  You must fix this problem before changes can be
+committed."
+
+Prefs editor:
+Show the default style file (conf/game.style) in an uneditable text box,
+and then put up your .apollo/game.style (which might start out empty) in
+a different editable box below it
+
+Main window is too narrow when evidence panel is vertical (now the
+default).  Make it wider and make width configurable.
+
+Fixed transcript-renaming bug:  if transcripts were listed out of order
+in the input (e.g. Hph-RC, Hph-RA, Hph-RB), they were silently renamed in
+order (Hph-RA, Hph-RB, Hph-RC).
+
+Dragging down a collapsed evidence tier to create a transcript results in
+unintentionally strange-looking transcript.  If user is dragging down
+multiple exons, should check if they're from collapsed tier(s), and if
+so, pop up a warning.
+
+Let user choose which database they want to use (e.g. gadfly, gadfly3, etc.)
+Pulldown list on GAME data adapter (generated by call to perl script)?
+- Apollo should know which style and tiers file to use for each database so
+you wouldn't have to swap around config files each time you wanted to
+look at a different db.
+
+If your game.tiers doesn't have name_method : FlyNameAdapter, then all
+the transcripts just share the parent annotation's name (gene Hph has
+transcripts Hph, Hph, and Hph), which leads to problems in the annot info
+editor.
+[Allow default name_method and overlap_method to be specified in style
+file.  Of course, if you don't put them there either, you're still going
+to have problems.  But this fix covers what happens if users have latest
+style but are using old tiers file that doesn't have name_methods.]
+
+---------^^^-----Release 1.4.3 (4/19/04)---------^^^---------
+
+Adding NameAdapterInstall line to game.style (to protect against case
+where user has out-of-date game.tiers that lacks name_methods)
+inadvertently broke synteny links (they weren't showing up at all).
+
+---------^^^-----Release 1.4.4 (4/23/04)---------^^^---------
+
+JDBC Chado adapter (see chado-jdbc-fixed)
+
+"Missing 5' end" flag was being ignored when XML was loaded.
+[Also patched for Harvard]
+
+Harvard curators would really like the File selection window to scroll
+vertically rather than horizontally.  They claim it used to scroll
+vertically--this appears to be a Java change.  
+[The File selector is a Java widget, JFileChooser.  There does not appear
+to be any way to make it default to vertical scrolling; however, it turns
+out that the button in the upper right of the file chooser causes it to
+change orientation to vertical.]
+
+Tree view window no longer gets added to Window menu.  This stopped
+working on Jan 21.
+(Preferences editor doesn't get added to to Window menu either, but that
+doesn't seem to ever have happened.)
+
+Annot info editor: Commit button is grayed out, so you can't save your
+changes.  (Bug introduced 5/10/04)
+
+Some blastx URL construction is now broken.
+In example.xml if you select Q9VN98 and do "Get info about this feature from
+web", the last release would use the URL
+http://srs.ebi.ac.uk/srs6bin/cgi-bin/wgetz?[swall-acc:Q9VN98]+-e
+which works.
+Now it looks for 
+http://www.ncbi.nlm.nih.gov/entrez/query.fcgi?cmd=search&db=nucleotide&doptcmdl=GenBank&term=Q9VN98#Q9VN98
+which is wrong.
+
+GAMEAdapter used to silently convert result span (i.e. exon) types to
+match the parent result set type (e.g. genscan:dummy) and now it
+preserves the types that are coming from the db (e.g. Init, Exon, etc.).
+Before:
+  <computational_analysis>
+    <program>genscan</program>
+    <database>dummy</database>
+...
+     <result_span id=":1268433">
+       <type>genscan:dummy</type>
+Now:
+  <computational_analysis>
+    <program>genscan</program>
+    <database>dummy</database>
+...
+     <result_span id=":15171929">
+       <type>Init</type>
+The observed behavior is that (when you load data from a gadfly db)
+lots of results appear as beige exons connected by colored lines.
+[5/10/04: Suzi fixed this by reverting the behavior (in
+GAMEAdapter.getSpan) to the way it was before: once again, result spans
+inherit their type from their parent.]
+
+When new property scheme is created, you get exceptions:
+java.lang.NullPointerException
+	at apollo.dataadapter.gamexml.GAMEAdapter.getAnnot(GAMEAdapter.java:790)
+	at apollo.dataadapter.gamexml.GAMEAdapter.getAnnotations(GAMEAdapter.java:699)
+	at apollo.dataadapter.gamexml.GAMEAdapter.getCurationSet(GAMEAdapter.java:393)
+Harvard reported this problem (patched by sending them a new tiers file
+that includes misc. non-coding RNA, which was missing from their tiers
+file).
+I fixed this by making sure that when a new feature property is created,
+it gets assigned the name adapter that was installed in the style.
+However, I also had to change getNameAdapter() to return the name adapter
+even if the tiername is not "annotation".  Why was getNameAdapter() set
+up to return null if asked for a non-annotation tiername?
+
+Loading any XML file (including tiny.xml) now results in the message
+        Creating new feature property scheme for Annotation
+Doesn't seem to do any harm, but what's it doing?  Why is it trying to
+create a new feature property scheme for a tier (rather than a type)?
+[suzi caused this by adding a setType method to StrandedFeatureSet.  why
+is this necessary?  is it for rat data?]
+
+Restriction mapper:
+- Add new columns to the restriction enzyme mapper, renaming position to 
+"site position" and adding "fragment position". The fragment position 
+should link to the highlighted fragment, not the restriction enzyme 
+site.
+- If new restriction enzyme doesn't have any sites, clear table (rather
+than leaving old one up).
+x Make it clearer what to do after checking "Export" boxes--should put
+"Show Sequence Fragments" button below table
+x Base pair column needs to add 1 to count
+
+Non-consensus splice sites are now flagged even in non-coding regions
+(previously was just in coding).
+[Also patched for Harvard]
+
+java.util.Date can create dates with unfamiliar timezones that it can't
+then parse (e.g. SGT).  Solution: convert all Dates to GMT before saving.
+
+When you load a gene by name, sometimes the gene appears zoomed &
+selected in the display, and sometimes it doesn't--this seems to be true
+for both r3.1 and r3.2.
+[It was being selected on second and subsequent loads, but not on first load.]
+
+When you load a gene by name, the text in the lower detail panel with the
+blue background is using the name of the leftmost gene in the region
+rather than the selected gene.
+When I load gene Egfr from r3.1, it comes up showing Egfr boxed, but 
+for some reason the blue-background text in the lower detail panel says
+_0: MESK2
+and when I brought up Egfr from r3.2, that area says
+_0: Sara
+Sara and MESK2 are upstream of Egfr (the arrangement is Sara  MESK2  Egfr).
+[I didn't explicitly fix this bug, but I'm not seeing it anymore.]
+
+In EDE, if you do "set as 5' end", you get the warning about adding
+possibly multiple features from collapsed tiers.  ?!
+
+Lets you tag results when you double-click to select whole result, but
+not when you've just selected an exon.
+[Seems to have been fixed--by elves?]
+
+BDGP EST IDs look like "LD18592.5prime", rather than the clone ID
+"LD18592". If you "Get info about this feature via Web" with the EST ID,
+all you get from Labtrack is a fasta sequence file of the EST, which is
+not very informative. If you query with the clone ID, you get the
+appropriate report.  Need to leave out the .[53]prime part.
+[Also added this fix to patched jar for Harvard]
+
+Patch release 1.4.4 jar for Harvard:
+- Don't ignore missing 5' end (i.e. start codon) when we read XML
+- Non-consensus splice sites should be flagged even in non-coding regions
+(previously was just in coding).
+- Truncate 3/5prime suffix from EST IDs when constructing URLs
+
+x Add "-gb" command-line option to read GenBank files
+x Give user radio-button option to save as GenBank tabular format or
+GenBank human-readable format
+
+GenBank reader:
+x Need to preserve incoming fields such as keywords, in case we're later
+asked to write out GenBank format.
+x There can be more than one REFERENCE, each with its own AUTHORS, TITLE,
+etc.  How to keep those straight?  Right now, we're stuffing all the
+AUTHORS into the AUTHORS property, etc., which isn't good enough.
+
+- If a style file tries to import itself, should refuse to do that (otherwise
+it results in an infinite loop, which eventually results in a weird error
+that looks like a Java problem)
+
+6/14/04: Tiers are ok now.  there's one new weird thing i'm seeing,
+though: the promoter predictions in my test file are showing up closest
+to the axis in the result tier, with labels. they (on some level) seem to
+think they're annotations--if i use the type panel to change the color of
+Annotation:promoter, these promoter results change color.
+Turns out the problem is that the promoter results used to be called
+promoter:dummy, because the database name ("dummy") was appended to the
+program name ("promoter") as the analysis results were read in.  
+a few days ago, suzi changed GAMEAdapter so it doesn't add the database
+name if it's "dummy", which is generally a sensisble policy.  however, in
+this case, it means that the promoter results now are of resulttype
+"promoter", which, according to game.tiers, goes in the Annotation tier
+as a promoter type.  that's why we're seeing the promoter results close
+to the axis (and in the promoter annotation color).
+["dummy" is once again used to name the analysis results with
+database=dummy; however, for the *display* (in getBioTypeForDisplay, used
+by SetDetailPanel), we don't show the ":dummy" string--instead, these
+results are identified by their ranges, which is more useful.]
+
+Some of Harvard's XML files include some synonyms with weird greek
+symbols (e.g. &amp;bgr;) which Apollo was saving as &bgr;, which the XML
+parser than chokes on if you try to read in the saved XML.  
+Now GAMEAdapter change weird greek symbols to text for synonyms (it
+already does this for gene names).  But Harvard should avoid putting SGML
+into the XML.
+
+EMBL reader:
+- Works on ~suzi/projects/gmod/apollo/data/AE003603.embl
+Doesn't work on ~nomi/apollo/data/jkembl--why?  (Look at join record)
+Loading /users/nomi/apollo/data/jkembl...
+Trying to load curation set now
+Initial read was successful, parsing now
+Ignoring indirect location reference in AJ009736:1..7411
+Odd, 0 locs parsed
+java.lang.ArrayIndexOutOfBoundsException: 0 >= 0
+        at java.util.Vector.elementAt(Vector.java:431)
+        at apollo.dataadapter.genbank.GenbankRead.setLocation(GenbankRead.java:544)
+        at apollo.dataadapter.genbank.GenbankRead.readFeature(GenbankRead.java:613)
+[Now works]
+
+GenBank human-readable writer:
+x Make it fill in header section
+x If input had some fields such as version and authors, need to write
+those out when we save.  (References are hard, because there can be
+multiple references, each with different authors, title, etc.)
+x Currently prints feature offsets relative to chromosome arm.  Should be
+releative to source sequence (i.e. should start at 1).
+x For FEATURES:source, use local coords
+x CDS records right now just list the range of the whole CDS--need to
+write a join of exon ranges.  (We have exon records instead, which the
+GenBank records don't have.)
+x Rev-strand annot ranges should be written with "complement"--right now
+they're just being written with start>end.
+x ORIGIN (actual sequence) not being written out!
+
+Removed a bunch of System.exits that were in various places where (fairly
+minor) errors occurred--a bit of an overreaction, perhaps?!
+
+GFF adapter won't let you zoom in to see sequence--throws exception:
+java.lang.StringIndexOutOfBoundsException: String index out of range: -61236
+        at java.lang.String.substring(String.java:1444)
+        at apollo.datamodel.Sequence.getResiduesImpl(Sequence.java:95)
+        at apollo.datamodel.AbstractSequence.getResidues(AbstractSequence.java:162)
+        at apollo.gui.genomemap.ScaleView.getSequence(ScaleView.java:564)
+[Suzi broke this on 5/23]
+
+GenBank reader:
+- If transl_table is set to something non-standard, we don't yet know
+what to do, so should refuse to load this feature.
+- If user asks for accession that's not found, need to deal with it
+gracefully (now it throws an exception and then hangs)
+
+GenBank writer:
+- When I tried saving annot-types.xml as GenBank tabular format, it named
+the files things like "3R:1080000-1110000.annot.rpt".  I'm worried about
+file names including a ":"--isn't that unacceptable on Windows?  We
+should check for : in the region name and change it to _.
+x repeat_regions (e.g. TE19183 in AE003650) are being saved as genes
+x repeat_region is losing its map position
+x Any fields that come in (saved as properties) should be written out;
+not just the specific ones we're now writing.
+
+Tier compression/spacing problem:
+if i load a gene (e.g. kel) from r3.2, some of the purple gene prediction
+results are expanded, and others (near the sides) are collapsed.  if i do
+"expand tier", then they expand--but why were some of them collapsed?
+there are also times when i see the sort of "ladder" effect that sima
+mentioned, where each purple result claims its own vertical spot, so the
+purple tier ends up taking up a large amount of vertical real estate.  i
+saw this when i loaded example.xml, zoomed in some, and then loaded gene
+kel from r3.2.  i just tried that again (this time i loaded kel from 3.1,
+so that's not the issue) and got the same ladder effect.
+[This was an attempt to fix another tier bug.  Suzi has restored the
+behavior to how it used to be, which means we still have the obscure bug,
+but not this problem.]
+
+i forgot how this worked and thought it was a bug:  if you try to check
+Label, and the tier is not expanded, it refuses to check.  then if you
+click Expand, the Label box gets checked too.  should just expand tier
+automatically if user asks to label.
+
+- https://sourceforge.net/tracker/?func=detail&atid=462763&aid=962389&group_id=27707
+Say I have the following sequence file:
+>test
+ggggggggggatgaaatttgggcccaaatttgggcccgggggggggg
+and .gff file:
+SEQ1    EMBL    exon    11      38      .       +       .
+When the SEQ1 feature is displayed, bases 12-38 are
+displayed, not 11-38.  The .gff spec says both
+coordinates are inclusive, so this appears to be a bug.
+As follow up to previous - the right end of SEQ1 is
+also off by 1.  It appears that Apollo assumes that
+coordinates start at 0, whereas the .GFF spec says they
+start at 1 (an all too common problem in genomics!). 
+Again - robert dot blick at utsouthwestern dot edu.
+[I'm not seeing this.  When I tried the one-line gff file
+shown above, it didn't show any features, but when I added another line,
+with a blastx feature from 11 to 38, it does indeed show bases 11-38.
+Maybe this got fixed recently?]
+
+- Title of Apollo window when we read sample GFF file says "Chr".
+Shouldn't it say the filename if it can't get the chromosome name from
+the file?  (It did on March 15--not sure when that stopped working.)
+[Actually, it's doing a reasonable thing--it's using the first word in
+the FASTA header as the title.  The FASTA header said "Chr 2 20000 40000"
+so it just took the "Chr" part.]
+
+Tier rearrange (shift-right drag) doesn't show a drag ghost anymore
+[Worked 12/19/03; didn't work 12/20/04]
+
+GenBank reader/writer:
+x Multi-line fields in features (e.g.:
+                     /function="transcription factor, regulates TBP gene
+                     expression") 
+are glommed together w/o space, so you get property FUNCTION =
+transcription factor, regulates TBP geneexpression"
+(yes, including that unwanted closing ").
+x Right now we just have CDS records, which are actually showing the
+mRNA extent.  Call what's now CDS mRNA, and add CDS records that don't
+include UTR.
+Suzi said: Essentially the first join is translation start to the donor
+splice of that exon and the last join if the last acceptor splice up to
+the final base of the stop codon (use the method-getLastBaseOfStopCodon
+-or whatever its called)
+
+EDE81) Find sequence doesn't zoom to sequence properly (this used to
+work).
+[Seems to be working now--fixed by elves?]
+
+EnsJ: "Loading sequence" popup comes up (repeatedly) during second and
+subsequent loads.  It shouldn't be trying to load sequence yet.
+
+---------^^^-----Release 1.4.5 (7/2/04)---------^^^---------
+
+Peptide sequences were sometimes getting written twice--once with all the
+other seqs, after the annotations; once inside the transcript records.
+Now they're written only with the other seqs, not inside the transcript
+records.
+
+A few chado-jdbc changes (see chado-jdbc-fixed)
+
+---------^^^-----Internal release 1.4.6 (7/8/04)---------^^^---------
+
+Improvements to Find:
+- Added "clear" button to Find panel (requested by Sima)
+- Searching on sequence with a blank field shouldn't return anything.
+- (From Ben Faga): Accidentally clicking the "Name" find button shouldn't clear
+my carefully crafted [sequence] regex.
+
+I checked the Find in the EDE, and it appears that the Phase of the
+queryframe is not correct--it should have been 1 for my query (CTWPVF)
+but it said 0. I think this is a bug.(sima)
+
+Fixed GAME save to handle quotes in ids (for Len Trigg's gff data)
+
+Fixed bug in FeaturePair that screwed up bop results (query sequence was
+appearing where hit sequence should be).
+
+Fixed polyA problem in BOP
+
+Patched v1.4.4 for Harvard:
+- When synonyms have &lt; it gets translated to < when GAME is saved,
+which then can't be read in.  Be sure to translate all these special
+characters to entities (& form) when they're written out (see
+data/lessthan.xml)
+buf.append(indent + "<synonym>" +
+	XML_util.transformToPCData(syn)
+	 + "</synonym>\n");
+Question:  Are we sure that it's only synonyms that can have these special
+characters?  [Pinglei said gene names could, too.  They were already
+being re-entity-ized when being written out.  Sequence names weren't; now
+they are, too.]
+[Also fixed this in current version.]
+- Guanming's buffered save fix
+(These fixes were added on top of the June 2004 patches to v1.4.4.)
+
+Shu wrote: before apollo 1.4.4 (inclusive), it worked fine with soi
+dumped game xml, starting 1.4.5, apollo throws null pointer exception in
+GAMEAdapter.getAnalysisType. it turns out that chado does not have dummy
+as db for prediction analysis and like, and xml has empty database
+element.  (See /users/sshu/tmp/CG1234_chado.game.xml)
+
+Release 1.4.5 doesn't make--it is missing src/java/apollo/dataadapter/ensj19
+(which I added) but it still is having trouble compiling
+src/java/apollo/dataadapter/ensj19/AnnotationEnsJAdapterGUI.java
+src/java/apollo/dataadapter/ensj19/AnnotationEnsJAdapter.java
+Make a new release 1.4.6 (might as well) tar for sourceforge.
+
+If you are missing conf/chado-adapter.xml and try to read and then write
+GAME (not Chado!) you get:
+java.lang.ArrayIndexOutOfBoundsException: 0
+        at apollo.dataadapter.chado.ChadoAdapterGUI.makeUI(ChadoAdapterGUI.java:606)
+        at apollo.dataadapter.chado.ChadoAdapterGUI.<init>(ChadoAdapterGUI.java:167)
+        at apollo.dataadapter.chado.ChadoAdapter.getUI(ChadoAdapter.java:333)
+        at org.bdgp.swing.widget.DataAdapterChooser.getUsableAdapterList(DataAdapterChooser.java:542)
+It should be more tolerant (after all, the user wasn't trying to do
+anything with Chado).
+
+Can't click "select" boxes in restriction enzyme table.  (Broke between
+r1.4.4 and r1.4.5.)
+
+When you middle-mouse-rubberband genomic sequence, the header line in the
+Sequence window doesn't have a sequence name:
+>:0-163 (genomic sequence): 163 residues
+In v1.4.4, you got
+>Sequence selection (genomic sequence): 596 residues
+which is not vastly better.  Why can't we generate a more useful name?
+
+Better GAME schema description is now in game.rng.  (game.xsd can be
+derived from game.rng with the Trang translator.)
+
+When opening a purported GAME XML file, verify that it really does
+contain GAME XML by looking for the <game> tag.  It wasn't checking that,
+so if you gave it a file of some other format, you'd get an inscrutable
+error message.
+
+Buffered saving in GAME Adapter makes saving much faster.
+
+GAME save now has option to save just annotations (and genomic residues)
+without results.
+So does Chado XML save.
+
+GAME load by sequence removed (not available for release 3.2 and later).
+
+Sima would like "Save as" to check if the file already exists and ask if
+you want to overwrite it.
+(Note that this is implemented for GAME save only.  Whether to ask is
+configged by AskConfirmOverwrite (default true) in apollo.cfg.)
+(Now implemented for Chado XML as well.)
+
+Got rid of Save and Save All (synteny only) menu items.  Both of these
+overwrite the input file(s), which might not be what the user wanted to
+do.  (Note that Save is still available with the ctrl-s keyboard
+shortcut.  By default, it will ask you if you're sure you want to
+overwrite; this can be turned off by setting AskConfirmOverwrite "false"
+in apollo.cfg.)
+
+Data adapter labels (that appear in the data adapter chooser dropdown)
+are now configurable in apollo.cfg as an optional third argument:
+DataAdapterInstall	"apollo.dataadapter.gamexml.GAMEAdapter" "game.style" "Drosophila annotations (GAME XML format)"
+//DataAdapterInstall	"apollo.dataadapter.gamexml.GAMEAdapter" "rice.style" "Rice annotations (GAME XML format)"
+
+<arm> tag (in GAME) is not always written out (it should be)--this is
+because Apollo expects the arm to have a name different from the seqid,
+and the arm to be a real arm (e.g. 2R rather than 2Rnew).
+Suzi says: The read/write code should both be using the same
+arm data--currently they do not. The write saves it
+using curation.setChromosome, but the save is still
+using the old method and is writing the seq.getDisplayId
+[I now have it using getChromosome to write both the arm and the
+chromosome, but why do we need both if they're always the same?]
+
+Annot info editor:
+- annot info editor refactored. It no longer clones annots and modifies
+those clones, and then replaces the annot with the clone at commit
+time. Now changes happen to the actual datamodel. The clone is gone. so
+there's no commit button as changes are immediate. But you can undo
+changes one at a time with the new undo button. Annot info now sends out
+events for every fine grain change that it does, which result in
+transactions.
+- Full undo in annot info editor via transactions (paves the way for full
+Undo in all of Apollo).
+- Synonyms can now be deleted (as well as added or changed) in annot info
+editor.
+- "Missing stop codon" updated immediately if "Replace stop codon" has
+changed this state.
+- Sima reported problems editing gene symbols and IDs in annot info
+editor.  Can't replicate.  Sima wrote:
+I'm in internal mode, and looking at genes in the "gadflyst" database.
+For example, if I query for "gene" "HP1679" from gadflyst, and then select
+"ST:X:15590323:15589211:GENSCAN" and I open up the Annotation Info editor,
+and then I select some text at the end of the "Symbol", delete it, then go
+to the middle, and try to delete the X, the cursor goes the end of the
+string.  Then if I go the beginning of the string and try to type
+"CG:temp", the cursor goes to the end of the string after every 1 or 2
+strokes I type (e.g. if I type "te" really fast it lets me get those 2 in
+before the cursor ends up at the end of the string).
+[Sima sees this on Linux and on Mac.]
+- internal_synonyms (which come in as properties) now show up in properties
+in annot info only if we're in internal mode.
+
+Command-line args refactored.  You can now specify input (or output)
+format and input (or output) filename or source.  (If you don't specify
+the format, it will try to guess.)
+
+Some classes moved to new "main" package.
+
+If you do "Show GC" it pops up the tweeker window.  If you then get rid
+of the window by xing it and then pick "Find restriction sites" from the
+Analysis menu, exceptions fly.  [Fixed]
+
+Did some reorganizing of the way GAME adapter goes through the XML parse
+tree and fills in the Apollo datamodels.  It still starts with the entire
+parse tree (in order to save memory, we really should handle each element
+as it's read, but this is more reorganizing than I was prepared to do at
+the moment) but now (thanks to a new method in org.bdgp.xml.XMLElement) it
+pops off each child of the tree and deals with it.  Theoretically, this
+should reduce the maximum amount of memory used, although in practice I
+haven't observed much of a difference.
+One win of this new approach is that I can make the progress bar slowly
+move as elements are processed, which gives the user the comforting impression
+that things are happening (which, indeed, they are).
+
+Splice site potentials on the negative strand are incorrect. They're
+indicated as if the sequence is being read from left to right, just like
+the forward strand. For example, AG is green on both strands, but that
+corresponds to 5'-AG-3' on the forward strand and 3'-AG'-5' on the
+negative strand. On the negative strand, GA should be green instead,
+since it's 3'-GA-5'.
+[Now it uses just two colors]
+
+Modifed CDS bug [Suzi]
+On 6 January 2005, Madeline Crosby wrote:
+ > Sian came across inconsistent behavior by Apollo
+ > in regard to annotations with base subsitutions
+ > in the CDS.  In 3 new records we recently created
+ > Apollo does 2 different things in these cases when 
+ > 'Sequence (CDS)' is requested.
+ > 
+ > These are all premature stops in the sequenced strain,
+ > with which we have used the new base substitution
+ > capability.
+ > 
+ > In 2 cases, Apollo inserts "XX" in the position of the
+ > affected amino acid (which also throws off the aa count).
+ > (See attached records for CG1149 and CG9390.)
+ > 
+ > In the third case, it inserts the correct amino acid
+ > (see attached record for CR31931).
+
+Problem changing stop codons on reverse strand (e.g. trying to change a
+stop codon TGA to a TGT in CG9390)
+
+Adding result tag to result has a repaint issue
+
+Find & fix memory leaks in GAME (and Chado XML) adapter, EDE, and more [Mark]
+
+Transactions have been refactored, more fully implemented. There are
+now transactions for almost every fine grain edit. One exception is
+that there are no transactions for result feature edits (result
+tags). Transactions are what enable undo in the annot info editor (and
+open the door to a future full apollo undo - who knows). Transactions
+were necessity for the chado jdbc adapter, which translates the
+transaction into a chado db update/insert/delete.
+Transactions are also being saved by the GAME adapter, and read back
+in. Currently they are in a separate file (they may migrate to the
+same file). Old style game transactions are rendered obsolete (and are
+ignored if they appear in the game input).
+
+For edits that affect multiple items at once there are compound
+transactions that enable all the edits to be undone at once as they
+should be. For example a gene name change will change transcript names
+and add gene and transcript synonyms, and change peptide and cdna seq
+names. All of these transactions are the children of one compound
+transaction. When the compound transaction gets an undo, it undoes all
+of its children.
+
+There is also a chado xml transaction adapter that can write out chado
+xml transactions from apollo transactions, that xort can read. Chado
+transaction xml can not be read back into apollo, it is write only.
+Transactions are not saved as chado XML unless you set
+OutputChadoTransaction "true" in apollo.cfg (the default is false).
+
+Transactions can be used for other data adapters that want to write out
+only what has changed, rather than having to write everything that was
+read in.  This is particularly useful for datasources that include
+non-apollo data (integrated data).
+
+The Chado JDBC data adapter now does direct-to-database writeback
+(previously it was for read only). It converts the transactions to
+updates to the chado database, so only edited features are updated in the
+database. Currently this is working with the Chado Rice database (at Cold
+Spring Harbor). Adapting it to other Chado databases shouldn't be too
+hard.
+
+EnsJ problems (fixed by elves):
+x There are problems with the status bar updating in response to
+mouseover--sometimes it works, sometimes not.  [3/2005: seems ok now]
+x Can't look at alignments in Jalview, because EnsJ data doesn't include
+alignments [at least, this was true about six months ago, and I don't
+think it's changed]  [3/2005: seems ok now]
+
+Update example.xml with r4 data when it comes out.
+
+---------^^^-----Release 1.5.0 (3/18/05)---------^^^---------
+
+Command-line args:
+- Need options to specify output format/filename
+
+Rubberband below axis--Sequence window title doesn't mention that it's
+rev strand (and it has start < end, so you really wouldn't know)
+
+Although the coloring by splice sites is displayed on both strands when
+you're zoomed in, as you zoom out, the colored bars only appear on the
+minus strand.
+
+There should be a gmod name adapter from which fly and rice name adapters
+inherit.
+
+SpeciesToStyle parameters in apollo.cfg let you specify a style file to
+use when reading data from a particular organism
+e.g. SpeciesToStyle "Oryza sativa -> rice.style"
+
+If a style file is not in conf but is in .apollo, get it from .apollo
+without choking.
+
+Create exon brings multiple result popup up - it shouldnt (and its
+rather annoying and confusing)
+
+AE53) synonyms, dbxrefs, and comments are being copied on just moving one
+exon (not a transcript merge - and its going from target transcript to
+source transcript). On transcript merge the new transcript does not
+have the deleted transcripts stuff - i suspect that this is because
+the merged stuff went to the deleted and not vice versa.
+
+Bug in 1.5.0:
+in most--but not every--case, if you switch data adapters, the new data
+doesn't come up right.  the tiers come up collapsed to the point of
+(near-)invisibility; if you then Expand all tiers, they show up.  i
+didn't notice this behavior when switching between game and chado xml
+adapters, but if you load something from ensj or gff and then try game or
+chado xml, you'll see the problem.  the simplest way to see the problem
+is to load tiny.xml and then the sample gff file--it comes up with all
+the results tiny and gray.
+[Note that right before the 1.5.3 release, Steve made some changes that
+caused this bug to come back, and Mark re-fixed it.]
+
+Centralized UserName class.  If username can't be found in environment, a
+box pops up prompting user to enter it.
+
+- Chado XML adapter does not yet read in and roundtrip saved transactions
+(GAME Adapter does), so if you load a Chado XML file, do some edits, save
+your work in the same file, quit Apollo, load the saved file and do some
+more edits, the .tnxml file will have your latest edits but not the
+previous ones.
+
+Read GAME, save Chado XML
+x Convert GAME-style type names to Chado (e.g. cdna->cDNA; transcript->mRNA)
+[implemented, but not fully tested]
+x Exons need names and IDs [assign when writing out if name was "no_name"]
+x check all the stuff in annot info editor
+(x) Subject organism? [Chado XML doesn't seem to really use that
+anyway--just has "Computational result"]
+
+Read Chado, save GAME
+x Don't save all the "boring" properties
+
+Reported by Pinglei:
+1. miss feature.uniquename
+  <uniquename>CG33798-PA</uniquename>
+  <featureloc>
+     ....
+     <srcfeature_id>
+        <feature>
+           miss uniquename here. [should be chromosome arm]
+
+- If you open the EDE, annotation info or jalview window and then 
+mouse over the data/annotation tiers part of the main window, it 
+minimises the EDE/jalview/annotation info window and brings the main 
+window to the front.  [4/2005: TAIR is annoyed by this bug and may try to
+fix it.]
+Window problem fix sent by Jon Slenk:
+I promised Mark I'd look into the issue of the main window auto-raising
+under MS Windows. Skipping the details of the debugging process, the fix
+appears to be: replace the use of requestFocus() with requestFocusInWindow().
+
+If there are no canned comments, an exception is thrown when you try to
+select from the pulldown list.  That should be handled more gracefully.
+Editing comments for Mbs
+java.lang.IllegalArgumentException: setSelectedIndex: 0 out of bounds
+        at javax.swing.JComboBox.setSelectedIndex(JComboBox.java:595)
+        at apollo.gui.annotinfo.Commentator.createNewComment(Commentator.java:380)
+        at apollo.gui.annotinfo.Commentator.addComment(Commentator.java:351)
+
+Transcript (and peptide) accession numbers are being set to genename-RA
+rather than id-RA (e.g. CG99999-RA).  Apollo never really did anything
+with accession numbers before, because GAME data doesn't use them, but
+Chado XML does so we need to get this right.  It's working ok for data
+read from Chado XML and saved without editing--the problem arises when
+you edit a transcript name, causing its sequence accession and peptide
+accession to be set.  And the problem only shows up when writing out
+peptide accessions--it was coming out correctly for transcripts because I
+call transcript.getId() to get the transcript accession.  Peptides don't
+have a getId method, so I was using getAccession().
+[This was a temporary problem in v1.5.0]
+
+Sima reported problem with Chado XML reader showing a pseudogene as a
+protein-coding gene:
+/users/sima/apollo_data/chado.stencil.harvard/16017226_16050437_3L.chado.xml
+/users/sima/apollo_data/game.stencil.harvard/HP1162.game.xml (GAME file
+for the same region)
+Need to propagate type of transcript-level elements up to parent
+annotation:
+ gene
+    mRNA (for all coding gene)
+    pseudogene
+    tRNA
+    ...
+    snRNA
+       exon
+       protein (only for coding gene, in other word, its parent must be 'mRNA'
+
+Analysis adapter
+- I discovered that if you load analysis results directly (rather than
+using "Add analysis"), it works--so it's "Add analysis" that's broken.
+[Now fixed--not sure if I fixed it the most optimal way, but it's
+working, at least in the simple case (adding tiny.blast.dmel to tiny.xml).]
+I think this was the bug reported here:
+- When trying to create a Repeat region tier in Apollo to the sequence I
+am annotating from my RepeatMasker results, nothing much happens. The
+tier seems to be invisible although the RepeatMasker result file imported
+clearly contains large repeat regions. I used Add Analysis Results and
+then selected my file (the RM result file ending with the suffix .out),
+choose Repeat as tier as well as type. I did not get any error message.
+anders.lanzen@bccs.uib.no
+https://sourceforge.net/tracker/index.php?func=detail&aid=1095852&group_id=27707&atid=391291
+
+Sima reported:
+ apple.awt.EventQueueExceptionHandler Caught Throwable :
+ java.lang.ArrayIndexOutOfBoundsException: 2 >= 2
+ java.lang.ArrayIndexOutOfBoundsException: 2 >= 2
+ 	at java.util.Vector.elementAt(Vector.java:431)
+ 	at javax.swing.JList$5.getElementAt(JList.java:1254)
+ 	at  apollo.gui.annotinfo.Commentator$UserCommentListSelListener.getPreviouslySelectedComment(Commentator.java:468)
+ 	at  apollo.gui.annotinfo.Commentator$UserCommentListSelListener.checkForEditedComment(Commentator.java:458)
+ apollo.gui.annotinfo.Commentator$UserCommentListSelListener.valueChanged(Commentator.java:453)
+ 	at javax.swing.JList.fireSelectionValueChanged(JList.java:1321)
+
+Sima also reported:
+> If I have 2 comments for a transcript (1 & 2), and I add a new one (3), it
+> adds 3 fine.  However, if after making that annotation, I delete number 2,
+> *sometimes* it seems to also delete number 1. I can hit undo, but then I
+> get back first number 2, and then number 1, and I lose number 3.  Does
+> that make sense?
+
+- game adapter sets transcript names to be their gene name plus a suffix.
+this constraint needs to be removed or configured (and off by default) -
+jimmy song from aventis has complained about this. the reason its there
+is to fix some old faulty game files - so thats probably grounds for
+removing it if we dont need the fix anymore.  [Now commented out from GAMEAdapter.]
+
+- If another gene is selected from annot tree right after id (or name or
+synonym) edit, edit goes away.  (This doesn't happen if you do an
+external select from the main window, because leaving the window fires
+the event that makes the edit stick.)
+
+Peptide featurelocs should have dbxref_id <accession>SO:0000105 block
+inside the type_id block of their srcfeature_id.
+
+ChadoXML issues mentioned by Pinglei:
+2A. missing feature_synonym.is_current
+Frank wrote:
+the code checks to see if the internal_synonym value [i.e. the
+synonym name] is the same as [the feature's] uniquename [NO, this should
+be name, not uniquename].  If it is, is_current is set to '1'.
+Pinglei wrote:
+Currently policy for FlyBase-Chado is:
+1. feature.name (not feature.uniquename, even some time feature.uniquename is 
+same as feature.name) also in synonym table, and is the ONLY one which 
+feature_synonym='true'. [Huh?]
+(Pinglei turned out to be right--is_current=1 when the synonym matches
+the feature name.)
+
+2B. missing feature_synonym.pub_id
+Not yet supporting.  (Changing synonyms from strings to fancier data
+structures would be difficult without adding a synonym editor, because
+synonyms would have to be flattened to strings for editing, and then we
+wouldn't have the data to fill them back up.)
+(5/5/05: Harvard told me that if it's an autosynonym (is_current=1), then
+the author is gadfly3, and otherwise, the synonym author is the same as
+the owner of this feature.  However, in the ChadoXML examples they gave
+me, it's the opposite--author is the owner for autosynonyms and gadfly3
+for other synonyms, so I'm going to do it that way for this release.
+Oh, yikes, it's worse than that--there seems to be no correlation.  Some
+autosynonyms have gadfly3 as the author (e.g. CG3566-PC) and some have
+the feature owner.  In fact, the transcripts have two autosynonyms, one
+owned by the author and one owned by gadfly3.  And the non-autosynonyms
+seem to be owned by gadfly3.  For now, I'm just going to use gadfly3 as
+the owner of everything, since there seems to be no way to get it to
+match the examples.)
+
+3. Exon names and ranks--now calculated appropriately if annot is
+changed.  (Carried through unchanged if annot is untouched.)
+
+- Read, save, reload--multi-span results (e.g. lavender genscan results)
+all have parent result set's score rather than span score.
+
+Transactions:
+- Chado JDBC write working for rice--transaction based (only writes what
+has changed, more or less).
+- Transaction coalescing (not perfect but pretty good)
+- Compound transactions used to represent splits (merge coming soon).
+
+Transactions and Chado JDBC adapter:
+- Chado JDBC write working for rice--transaction based (only writes what
+has changed, more or less).
+- Transaction coalescing (not perfect but pretty good)
+- Compound transactions used to represent splits (merge coming soon).
+- Fixed bugs with merges & splits & other sundry things with transactions
+and jdbc writeback
+- JDBC queries optimized for rice db
+- JDBC reader is much more easily configurable now (via an xml config file).
+
+- Most of the things in the annot info editor GUI are now
+configurable--for example, if your project doesn't allow sequence error
+editing, it can be configured that way.
+
+example.xml (using Drosophila r4.1 data) that was added just before
+Apollo r1.5.0 had bad alignments (result of a problem somewhere in
+FlyBase's processing--the data coming from Berkeley was ok).  Temporarily
+replaced with an example from release 3.2.
+
+Problem using Chado adapter to read from r4.1 fly server (not sure when
+this started happening):
+java.lang.NullPointerException: Can't accept feature name of null. Use RangeI.NO_NAME instead.
+	at apollo.datamodel.Range.setName(Range.java:48)
+	at apollo.dataadapter.chado.jdbc.JdbcChadoAdapter._makeFeatureSet(JdbcChadoAdapter.java:2135)
+	at apollo.dataadapter.chado.jdbc.JdbcChadoAdapter.addSearchHits(JdbcChadoAdapter.java:1502)
+	at apollo.dataadapter.chado.jdbc.FlybaseChadoInstance.getCurationSet(FlybaseChadoInstance.java:283)
+	at apollo.dataadapter.chado.jdbc.FlybaseChadoInstance.getCurationSet(FlybaseChadoInstance.java:149)
+	at apollo.dataadapter.chado.jdbc.JdbcChadoAdapter.getCurationSet(JdbcChadoAdapter.java:1980)
+	at apollo.dataadapter.chado.ChadoAdapter.getCurationSet(ChadoAdapter.java:236)
+	at apollo.dataadapter.chado.ChadoAdapterGUI.doOperation(ChadoAdapterGUI.java:295)
+	at org.bdgp.swing.widget.DataAdapterChooser.doCommitWithExceptions(DataAdapterChooser.java:360)
+	at apollo.main.DataLoader$ApolloAdapterChooser.doCommit(DataLoader.java:731)
+The progress bar then froze saying "Retrieving sim4 and %blastx% results
+0%".  (Was "%blastx%" supposed to be expanded to something else?)
+
+---------^^^-----Release 1.5.1 (5/12/05)---------^^^---------
+
+More efficient checking for possible dates in sequence header lines in
+GAME data--sped up loading of example.xml by about 10 seconds.
+
+Filled in missing organism_id blocks for peptide sequence and sequence's
+featureloc (in chadoxml output).
+
+Displaying "other" data (P insertions, etc.): put them in a new
+Annotation tier.  Apollo had built-in assumptions that there is only one
+annotation tier (called "Annotation")--now fixed.
+The Tier records in the tiers file now indicate whether they have curated
+annotations that should appear in the blue annotation area with the field
+curated : true
+The default is that all tiers have curated=false except for the tier
+called Annotation (so that we're backwards compatible with older tiers
+files that lack the "curated" field).
+
+Can specify an URL as a datasource on the command line, e.g.
+apollo -i game -f http://www.fruitfly.org/cgi-bin/annot/get_xml_url.pl?gene=cact&database=r4
+[Need for webstart, but also handy for testing]
+
+Fixed: name changes in annot info editor didn't undo (bug in r1.5.1).
+
+In the ARGS chadoxml examples, some of the cvterm records have a
+dbxref_id stuck between the cv_id and the name (which previous examples
+had not).  Removed assumption that the name field will be the second
+grandchild of cvterm.
+
+Fixed bug in r.1.5.1: if you were in public mode and loaded GAME XML that
+included internal_synonym properties, these were lost when you saved the
+GAME.
+
+Make synonyms capable of having properties, so synonym properties in
+chadoXML can be carried through.
+- Currently in Apollo, internal synonyms are saved as properties, not
+synonyms.  Need to make them synonyms and change annot info editor
+and GAME XML adapter accordingly.
+
+5/25/2005: Pinglei reported:
+1. miss synonym.synonym_sgm, which typically has same value as synonym.name
+[Now carried through with synonym property.  New synonyms are assigned
+synonym_sgm = synonym.name.]
+
+4a.                 <uniquename>CG:temp1:3R_16403779_16411515-PA</uniquename>
+.......miss organism_id for the above feature ..........
+
+- pub_ids for synonyms (now attached to synonyms as "author" property).
+If no author property at time of writing, guess based on annot/transcript
+owner, pub_ids, and use "gadfly3" if the owner can't be determined.
+
+Chado XML Adapter issues:
+5/25/2005: Pinglei reported:
+4b. miss uniquename, organism_id 
+                <featureloc>
+                  <fmax>16407222</fmax>
+                  <fmin>16406461</fmin>
+                  <locgroup>0</locgroup>
+                  <rank>0</rank>
+                  <srcfeature_id>
+                    <feature>
+                      <type_id>
+                        <cvterm>
+                          <cv_id>
+                            <cv>
+                              <name>SO</name>
+                            </cv>
+                          </cv_id>
+                          <name>chromosome_arm</name>
+                        </cvterm>
+                      </type_id>
+                      
+  ----------miss uniquename,organism_id for this feature ......                    
+                      
+                    </feature>
+                  </srcfeature_id>
+                  <strand>-1</strand>
+                </featureloc>
+[Fixed missing organism_id.  Not sure why he's saying it's missing
+uniquename.  uniquename is there in the file, right where his "----miss"
+line appears above.  I think it's ok.]
+
+Harvard gave me some ARGS examples where the ARGS appeared at the transcript
+level under an annotation, but with no exons.  I dealt with this by having
+ChadoXmlAdapter promote these transcripts to independent annotations.
+Then today, Pinglei told me that they decided to save ARGS as independent
+annots, so my new code is probably not needed (but should be harmless--it
+only kicks in for transcripts that lack exons).
+
+Added provisional types to game.tiers for showing ARGS data--these are
+not supposed to be the final color choices or glyphs, but we had to start
+with something so the curators could try it out.
+
+Changed the way fake transcript names are assigned--they shouldn't get a
+transcript suffix (e.g. Kr-protein_bind-14-RA) but should just get the
+annot's name (Kr-protein_bind-14), since, after all, it's a fake
+transcript that is just the transcript-level representation of its
+parent.
+
+When we're sure that all the "weird" exons have been fixed, remove
+"sanitizing" step from GAMEAdapter.
+
+Annot info editor:
+- Transcript synonyms are not getting produced on gene name change
+- in annot info editor if you merge transcripts and lose the transcript
+currently being displayed, it doesnt recoginze this/refresh and
+continues showing the obsolete transcript.
+
+Added ability to load annotations and evidence separately (load & layer)
+x ChadoXML
+x GAME XML
+(can even mix and match, as long as data is from the same genomic region)
+
+Enable users to save annotations and evidence separately
+(Already can save just annots; need to also enable saving just evidence.)
+x Do for ChadoXML adapter 
+x Do for GAME XML adapter
+
+When I use "Create exon" while reverse complemented, the exon is extended
+however many bp to the 5', instead of to the 3'.
+
+6/2005: Synteny display--links not showing up (see synteny-todo).
+(It turns out to be an issue with the tiers file--it should be using
+synteny-game.tiers rather than game.tiers.)
+
+Jalview: display of genomic seq is wrong.  (Broke between r1.4.6 and
+r1.5.0.)  This seems to occur if you select a protein result (e.g. red
+blastx hit).  It happens in tiny.xml.
+
+fixed bug reported yesterday by debbie - in rice translation start &
+stops were a base off on the reverse strand.
+
+---------^^^-----Release 1.5.2 (7/1/05)---------^^^---------
+
+Added second annotation tier ("Other annotated features").  The new ARGS
+types such as point_mutation go there, as well as P insertion_site,
+promoter, pseudogene, and many others.
+
+Fixed problem reported by Haiyan Zhang: Apollo changed the genes' 
+dbxref->db_id from FlyBase to GadFly (was actually hardcoded before--now
+it's recorded in the dbxref).
+
+Also now saving the genomic db in the dbxref for the curation set--this
+comes from the result queries.  Saving the one from the first result
+query we get to and assuming it's the same for subsequent result
+queries--saving each one would waste too much space, and checking that
+each one is in fact the same would waste time.
+
+game.tiers is now called fly.tiers (since it's fly-specific).  To make it
+easier on longtime Apollo users, Apollo now checks whether you have a
+.apollo/game.tiers and offers to rename it .apollo/fly.tiers (it also now
+does this if you have a .apollo/game.style).
+
+Fixed little bug in reporting list of style files used (e.g.
+"Set style to /users/nomi/.apollo/fly.style; style file source(s):
+/users/nomi/apollo/conf/fly.style, /users/nomi/apollo/conf/game.style,
+/users/nomi/.apollo/fly.style").  It was printing filename 0, then
+filename 1, filename 1, filename 1...
+
+Enable sequences (e.g. peptides) to have properties (so sequence
+properties in ChadoXML, such as timeaccessioned, can be carried through).
+
+Calculating longest orf has repaint issue in main window [needed to add
+      endEdit(changer, true, trans, FeatureChangeEvent.REDRAW);]
+
+(Reported by Brian Bettencourt:)
+When a load fails due to network timeout, Apollo says the same thing as
+when the requested data really doesn't exist (e.g. "Gene foo not found").
+Can we differentiate between these two scenarios?  How to simulate
+network timeout when it never actually happens to us?
+[Now it gives you a "can't connect to URL" message if the connection
+times out and a "not found" message if it gets an empty input stream
+(that's what the Indiana cgi gives you if you request a gene or region
+that doesn't exist).]
+
+Should have a less kludgy way of indicating that we're in internal mode
+(e.g. an "internal" flag).  [InternalMode=true in fly.internal.style]
+
+No more apollo.internal.cfg.  (Still need fly.internal.style because of
+curator colors.)
+
+Fixed class cast exception from "Show [internal] gene report":
+java.lang.ClassCastException
+        at apollo.config.FlyDisplayPrefs.generateAnnotURL(FlyDisplayPrefs.java:220)
+
+URL for "Show gene report" (now called "Get info about this feature from
+Web", as it is for results) updated.  No more internal gene reports--gene
+report URL is the same for public + private.
+
+Can also now get FlyBase reports for non-gene annots that have an FB
+identifier.
+
+Added "Change color for this feature type" menu options to result and
+annot right mouse popup menus.
+
+Added expand/collapse tier menu options to annot right mouse popup menu.
+
+In /users/nomi/harvard/chadoxml_middletier/aberration_junction.chado.xml
+FBal0022196 should say Df(2L)N22-14.bk1 in detail panel.
+The problem is that normally the accession is the uniquename; these
+features have different accession and uniquename (and no name).
+
+EST URLs now point to genbank rather than weasel.lbl.gov.
+Get rid of extra parts of EST names before constructing URL, e.g. (in
+Acyp-region.game) RH09094:contig1, UNKNOWN_RE01983:contig1, BE975849_revcomp
+
+A missing tiers file is pretty serious--throw an exception rather than
+just printing an error message and continuing.  (Also, if they are trying
+to use game.style as their style, explain that game.style is an abstract
+style that doesn't define a tiers file, and they should use fly.style or
+rice.style (both of which inherit from game.style).)
+
+Default orientation for detail panel is now horizontal (as per Sima's
+request).
+
+Loosened the cutoff for showing the weird-splice-site orange triangle
+in small exons (e.g. CG12154)
+
+If start codon is missing, "start codon" is colored purple in EDE instead
+of green.
+
+x IDs not showing up in detail panel for P insertions in
+/users/nomi/harvard/chadoxml_middletier/rescue_fragment.chado.xml
+(though they're showing up in annot info).  ID does show up properly for
+rescue_fragment ifc[+t5.7]
+
+Unstranded annotations:  for now, they are being shown on the + or -
+strand (minus if fmin>fmax, which shouldn't really happen--that was buggy 
+data).  Harvard would like to see them appear on both strands.
+The annot info window shows the unstranded=true property, but that
+property is not written out.
+
+Fixed some behavior involving overlapping non-protein-coding annots:
+- AE59) When you try to create a new gene that overlaps a P insertion, the new 
+gene becomes a new "transcript" of that P insertion, e.g. P{GawB}-RA, 
+P{GawB}-RB, etc.
+I'd argue that curators won't expect this behavior, and I wonder if we 
+should make the annotations of "other types" not be added to in this way, 
+but have the default of new anotations created overlapping other type 
+annotations be protein-coding genes.
+[New behavior:  if you drag a result that would make a new non-coding
+annot into a region where there is already some annotation, it becomes a
+new annotation, not a pseudo-transcript of an existing annotation.]
+- if you drag into the annot panel a result that should make an npc
+kind of annot (e.g. p insertion), and it overlaps with a protein-coding
+gene that's already there, it adds a transcript to the pcg but changes
+the type of the pcg to the new npc (e.g. p insertion).  [fixed]
+- If there are overlapping npc annots in a region and you add a new one,
+it shouldn't ask if you want to add your new one as a "transcript" of the
+existing npcs (since they don't have transcripts).
+
+New result popup menu option: "Create new annotation".  Has pull-right
+color-coded list of annotation types, so now you can create a new
+annotation of the desired type right off the bat.
+This is enabled if you have already selected a result and also if you
+click in a blank area of the annotation panel (that menu option used to
+be "Create exon"; now it says "Create new annotation" and lets you pick a
+type before asking you the length).
+
+AE57) for result menu item "Create new overlapping gene" if i have both a
+result & an annot selected i get funny error message and it doesnt
+happen: "Add gene or transcript not allowed when no features selected" 
+if a result is selected and an annot is NOT selected then everything
+works fine. i think it should still work with an annot selected (and
+if not the error message needs to be more clear)
+Sima says:
+I think it should not be allowed but the error popup should be something 
+like "Select results but not annotations to create a new annotation".
+
+["Create overlapping gene" menu item is now gone, having been subsumed by
+the new "create new annotation" item; however, the error message above
+can still happen, and it has been reworded to make more sense.]
+
+Annotation top-level menu is now colored by annotation color.
+
+After loading EnsJ region, File menu doesn't list any writers!  Even if
+EnsJ itself doesn't have a writer, shouldn't it offer the other writers?
+[Enabled "Save as" even if editing is turned off.]
+
+Pop up a warning if user tries to edit a "frozen" annot, based on the
+presence of certain special featureprops:
+- unstranded [added by Apollo]
+- warn_about_edit
+- mutant_in_strain
+- transpliced_transcript
+[but note that trans-spliced transcripts have never been handled properly
+in Apollo, and we don't have time to fix that.]
+
+8. no start codon and no stop codon
+Set protein feature is_{fmin,fmax}_partial to true and in combination
+with the strand of the protein will indicate if start or stop is missing
+no start codon -> strand = 1 and is_fmin_partial = true
+		  strand = -1 and is_fmax_partial = true
+no stop codon  -> strand = 1 and is_fmax_partial = true
+		  strand = -1 and is_fmin_partial = true
+[I *think* these are working ok, now that I finally got valid examples to
+test on.]
+
+5. Translational readthrough (from Andy):
+     featureprop of transcript
+          type -> stop_codon_readthrough
+	  alternate type -> stop_codon_redefinition_as_selenocysteine
+	  value -> 1 or 0
+***currently Apollo uses the featureprop readthrough_stop_codon
+***I have changed this to 1) better reflect SO term 2) to unambiguously
+   deal with the situation described below
+*WARNING- the old featureprop readthrough_stop_codon is still present
+          in the provided chado-xml for CG7210 
+*note - there are several cases where the mechanism and aminoacid replacement
+ is unknown so the top level term will be used.  When this term is used the 
+ amino acid is designated as 'X' in the CDS.  ***We want the less specific 
+ term and the residue sequence preserved when present***
+[Now stop_codon_readthrough (and readthrough_stop_codon) and
+stop_codon_redefinition_as_selenocysteine are all treated the same; the
+wording in the annot info panel has been changed from 
+"Replace stop codon with selenocysteine" to "Readthrough stop codon" ONLY
+for data read by the ChadoXML adapter.  The behavior for all three of
+these featureprops is the same:  readthrough stop codon is shown in pink.]
+
+BLAST layering:  
+Fixed BLAST parser to deal with latest NCBI BLAST output, as well as
+FlyBlast output of 8/15/2005 (but that format is about to change).
+Can now layer NCBI BLAST results where query was an unknown sequence, and
+currently loaded region is some genomic region.  (Select the checkbox
+that says "BLAST results are for an unknown query sequence against the
+chromosomes at NCBI")
+Only hits to the currently loaded chromosome will be shown.  (If region
+doesn't have a chromosome defined, all hits will be shown.)  This needs
+more testing.
+Note that it turns out that the Chromosome arm coordinates in data from
+IU Apollo cgi don't match the NCBI coordinates, so hits appear shifted
+over somewhat.  This is a data problem, not an Apollo bug.
+
+Some additions by TAIR to make Apollo work for them (shouldn't affect
+anyone else).  It will be to everyone's advantage if TAIR stays in synch
+with the Apollo codebase.
+
+Steve Searle fixed some things in the EnsJ and Synteny adapters, e.g.
+Jalview now works (fetches sequences as needed).
+
+Mark fixed some Chado JDBC things.
+
+When UserTranscriptColoring is turned on, and you click on a colored-by-user
+annotation, the detail panel still uses deep blue.
+[Now it uses deep blue as the gene type color on the left, and it uses
+the user color on the right.  I could make it use the user color on the
+left, too, but actually I think this way is appropriate--the selected
+annotation belongs to a type that is blue, but this particular one is
+yellow or whatever.  Is that too confusing?]
+
+AE49) If you try to create an out-of-range new annot, should be warned.
+
+---------^^^-----Internal release 1.5.3 (8/18/05)---------^^^---------
+
+Fixed a JVM-dependent problem in Config.java that had to do with a
+variable getting initialized.  It caused problems with some JVMs and not
+others--I think it had to do with whether they instantiated the class at
+startup or just when the class was needed.
+
+Fixed: Problem with stop codon not being recognized after gene is changed
+(seems to happen only when data is loaded from ChadoXML--same data loaded
+from GAME XML doesn't have this problem!):
+
+Fixed: Stop codon dragging off by one: if you select a stop codon and
+drag it onto a transcript, it comes down one base to the left of where it
+should (on both strands).
+
+---------^^^----------Release 1.5.4 (8/22/05)----------^^^---------
+
+Annotation labels don't slide along as you scroll if you're revcomped.
+[fixed by Steve]
+
+Zoom panel more compact (leaving more horizontal room for region
+description and more vertical room for info panel).
+
+Show axis and show/hide annot panel (in View menu) need a repaint.
+
+- If you start by loading a small region, start/stop codons don't show up
+until you zoom (or hit reset).  If you load the same region from an
+already-started Apollo (by "Open new"), they *do* show up.
+
+- If the first or last residue in a region is supposed to be part of a
+start or stop codon, that start/stop codon is not shown.
+
+The Mosquito files have regions that include a -- in the name, e.g.
+     <!-- Analysis of: REGION: MOZ2a--chromosome:2R:28480000-28685000 -->
+When this is written inside a comment, the XML parser sees the -- and expects
+to see the end of the comment and gets upset when that doesn't happen.
+So we'll change "--" to "-" if it appears in seq_name before writing it in
+a comment.
+
+- If you hide the forward strand, revcomp, and then show the forward strand
+again, the red and green lines that indicate the limits of the sequence
+being displayed extend down into the blue and black zones, rather than
+staying in the white zone near the axis.
+  
+- 5/2004: Ensembl gene URLs not working right.
+e.g. for ENST00000254959 we get
+http://www.ensembl.org/Homo_sapiens/geneview?transcript=ENSE00000655080
+which just gets me "Gene ENSE00000655080 not found".  i haven't found any
+that work (i tried loading a region from homo_sapiens_core).
+[8/2005: Now URL is
+http://www.ensembl.org/homo_sapiens_core_32_35e/geneview?transcript=ENST00000307499
+which still doesn't work.]
+
+When you are zoomed in the main display and can see the translation of an
+annotation on the reverse strand, if you scroll to the stop codon,
+suddenly the translation disappears. Annotations on the forward strand
+seem fine. [Bug introduced between r1.5.3 and 1.5.4.]
+
+1. Currently if one tries to pull down evidence to create a new
+annotation or merge two annotations you are asked if you want to merge
+that annotation with all the features it overlaps with including features
+in the second annotation tier (i.e. transposon_insertion_sites,
+protein_binding_sites etc.).  While it is useful to be warned about those
+features that live in the first annotation tier (i.e. genes and different
+types of non-coding RNAs), asking about merging with the second tier
+features is not necessary nor desired.
+[Now these second-tier annots have overlap_method : NoOverlap in the
+tiers file to prevent this unwanted behavior.]
+
+Mouse wheel vertically scrolls result or annotation panel (if your cursor
+is over one of them).
+
+8.  When trying to display the sequence of joined ESTs that are 5' and 3' ends 
+of the same clone (i.e. joined by dashed yellow line), it doesn't work and an 
+exception is thrown pasted below:
+delill:/users/andy-> java.lang.StringIndexOutOfBoundsException: String index out of range: -1
+        at java.lang.String.substring(String.java:1474)
+        at apollo.datamodel.Sequence.getResiduesImpl(Sequence.java:115)
+        at apollo.datamodel.AbstractSequence.getResidues(AbstractSequence.java:189)
+        at apollo.datamodel.Range.getResidues(Range.java:181)
+        at apollo.datamodel.SeqFeature.getFeatureSequence(SeqFeature.java:87)
+        at apollo.gui.detailviewers.seqexport.SeqExport.hasResultSequence(SeqExport.java:499)
+        at apollo.gui.detailviewers.seqexport.SeqExport.hasResultSequence(SeqExport.java:506)
+        at apollo.gui.detailviewers.seqexport.SeqExport.processFeatures(SeqExport.java:198)
+        at apollo.gui.detailviewers.seqexport.SeqExport.init(SeqExport.java:123)
+[etc]
+[Doesn't depend on whether EST is dashed--some ESTs throw this exception
+and others don't.  In example.xml (or example.results.game), the first
+EST and the one below it (SD25916) are bad; the third one down (LD29996) 
+(right at the bottom of what's visible) is ok.  Oh, I see--it's because
+these ESTs don't *have* sequence in the input!  Somehow the check to see
+whether or not they have sequence is saying yes when really they don't.]
+[Fixed--now if you pull up a Sequence window for a residueless result, it
+shows the genomic sequences, and the "Result sequence" radiobutton is disabled.]
+
+2. Another option request.  A quick way to turn off the generation of the tnxml 
+files during saves.
+[Add config option to apollo.cfg to say whether to save the transaction
+file--defaults to false.]
+
+Change to non-consensus splice adds orange triangle but annotation info
+editor (AIE) doesn't indicate non-consensus or have approval check box if
+splice is not in the coding region.
+
+Set a 5' end of internal exon that contained the start of translation and
+a non-consensus splice site on its 5' end using 'Set as 5' end' [or EDE]
+and the non-consensus splice triangle showed up at the start of
+translation, not at the intron/exon boundary.
+
+Fixed: Can't move feature to other strand if there exists no feature of
+that type on other strand
+
+Bug with result dragging:  if you hide the result panel (via the checkbox
+in View menu) and then show it again, and then try to drag a result into
+the annotation zone, the drag bar gets all wide and flickers up at the
+top of the result panel weirdly.  If you then do something else to change
+how the panels are displayed--e.g. hide reverse strand--it goes back to
+acting normal.
+
+Steve added ability to change look & feel (LAF) on the fly.  That also
+addresses this issue from the todo:
+When running mac-set-jvm, also let Mac user choose Aqua or Metal look & feel.
+Issues with Aqua:
+- the Type field in the lower left detail panel is clear rather than colored
+- the events required to get the chromosome drop down in the ensj adapter
+to fill don't seem to be happening
+
+Prohibit creation of out-of-range annots.  (Disable "Create new
+annotation" AnnotationMenu option if click is out of range, rather than
+letting user invoke that and then complaining and refusing to create the
+new out-of-range annot.)
+
+You can now drag results into a gene UTR and it will make a separate gene
+- before it merged with the existing gene.
+
+9. We have uncovered one possible problem in our initial testing.  When one creates 
+a new non-coding RNA feature (i.e. ncRNA, snoRNA, pseudogene etc...) the CG:temp 
+name does not contain an -R[A-Z] suffix, as do the gene transcripts.  However, 
+it is possible to have multiple transcripts for at least some of these types of 
+features (i.e. only ncRNA at the moment but there could be others in the 
+future).
+[Now we give -RX suffixes to first-tier annots only.  The real test for
+whether to add a suffix should be whether this is a three-level annot
+(vs. a one-level annot like "promoter").  Mark is planning to add an
+option to the tiers file to say whether a type is one-level or three-level.]
+[Also note that the suffix assignment works properly when you create a
+new annotation, but if you create a first-tier annot, which has
+transcript suffixes, and then change it to a second-tier annot type, it
+won't strip off the transcript suffixes.]
+
+New WarnOnEdit parameter can be used in tiers file at the Tier or Type
+level to indicate that if the user tries to edit an annotation of that
+type (or, if it's at the Tier level, any type in that tier) they will get
+a popup warning.
+
+3. Now that we are treating stop codon readthrough as a more general case can 
+you change the 'U' that is inserted into the sequence to an 'X'.  And it would 
+be great if you could produce a special warning if someone tries to perform some 
+action on a protein with the 'stop_codon_redefinition_as_selenocysteine' 
+featureprop that would change the 'U' in the sequence to the more generic 'X'.
+[The property stop_codon_redefinition_as_selenocysteine now preserves the
+U.  The stop_codon_readthrough property can now have a boolean
+(true/false) value or a character for the replacement amino acid.  If it
+is "true", the affected stop codon will show up as the generic
+readthrough aa, X.  If it is a character (e.g. "Q"), it will show up as
+that character in the Apollo display and also will be saved that way in
+the ChadoXML (or GAME XML) file.  The annotation info editor just has a
+checkbox for "readthrough stop codon" (yes/no), which is checked if the
+stop_codon_readthrough property is non-false and non-empty or
+stop_codon_redefinition_as_selenocysteine property is true--thus, you
+can't tell the difference between 'U' and 'X' inside the annot info
+editor, nor can you set a specific readthrough residue from inside
+Apollo.  That would be nontrivial to add--if it is super-important to
+you, let me know and I'll see what I can do.  Also, if you try to edit a
+transcript that has a readthrough stop codon, you get a popup warning.
+Another caveat is that although you can see the redefined stop codon (U,
+X, or whatever) if you zoom in on the annotation, and in the Sequence window
+if you select the *whole* transcript, if you show just the affected exon
+in the Sequence window, it prints * for the readthrough stop codon.]
+
+Like the ChadoXML adapter, the GAME adapter can also now handle specific
+readthrough residues, so you can have
+    <property>
+      <type>stop_codon_redefinition_as_selenocysteine</type>
+      <value>true</value>
+    </property>
+or
+    <property>
+      <type>readthrough_stop_codon</type>
+      <value>U</value>
+    </property>
+(or any other residue there).
+
+Fixed: -PA dbxref being printed twice, once with is_current=0 and once
+with is_current=1, although input had it twice with is_current=0 (see
+~nomi/harvard/chadoxml_esoteric/CG18228.annots.saved.chado).
+
+Fixed: Webstarted Apollo can't talk to your browser to tell it to go to
+an URL (e.g. for gene reports)
+
+Fixed: get-real-path (to find path of web browser) works on Linux but not
+on Solaris.
+
+Apollo transactions can be included in GAME XML file instead of being
+saved as a separate file.  Add
+TransactionXmlInGameFile "true"
+to your style file to trigger this.
+
+Sequences (e.g. peptides) need to be able to have Synonyms.
+[mRNA sequences now have associated protein features that can have
+Synonyms, so we can roundtrip peptide synonyms.]
+
+This also fixed the problem where taking ownership of a peptide (by
+editing it) also gave you ownership of its synonyms.  The synonym owners
+now stay as they were.
+
+When 2 annotations are merged into a new gene model some of the synonym
+and dbxref info appears to be going missing.
+
+Unknown fields were being saved as featureprops--roundtrip them as
+fields instead (as they came in), e.g.
+   <is_obsolete>0</is_obsolete>
+[Made ChadoXML reader/writer and GAME writer do this.  If you read in
+ChadoXML and save as some format other than ChadoXML or GAME
+(e.g. GenBank) you may end up with extra "isField" values that were used
+to mark these flat fields.]
+
+Data problem:
+r4.1 data has bad subject start/ends, e.g.
+         <seq_relationship type="subject" seq="Q9VDQ6">
+           <span>
+             <start>971140</start>
+             <end>971366</end>
+           </span>
+These look fine in Berkeley's gadfly4, so the problem is downstream of
+Berkeley, probably in the data that is being dumped out of chado from the
+Indiana server.
+[this seems to be fixed now]
+
+New document containing instructions on making a tiers file.  (Added link
+to it in userguide.)
+[Added preliminary version--needs more work]
+
+Chado loader now does lazy sequence loading (much faster).
+
+First big step towards breaking the tyranny of gene/transcript/exon
+datamodels:  if you set
+DO-ONE-LEVEL-ANNOTS "true"
+in apollo.cfg, Apollo creates one-level annotations when appropriate
+(e.g. tiling_path_fragments) rather than promoting them to phony
+three-level annots.  The GAME adapter can now read and write one-level
+annots (the ChadoXML adapter can't yet).
+Note that this changes the GAME specification.  Data written out with
+this flag set to true has GAME version 1.1 (rather than 1.0).
+For this release, DO-ONE-LEVEL-ANNOTS is set to "false" so as not to
+cause problems for Harvard.
+
+Added version tag (1.1 if DO-ONE-LEVEL-ANNOTS=true, otherwise 1.0) to
+GAME XML output.  (Not yet being looked at by GAME reader.)
+
+---------^^^----------Release 1.6.0 (11/03/05)----------^^^---------
+
+DO-ONE-LEVEL-ANNOTS now set to true in apollo.cfg--means one-level annots
+are stored as one level inside Apollo (rather than being promoted to
+phony three-level annots as they are read in) and also saved as one level
+annots in GAME XML (v1.1.) rather than being saved as phony three-level
+annots in GAME 1.0.
+If you want to save GAME 1.0, you must set DO-ONE-LEVEL-ANNOTS="false"
+in apollo.cfg. before invoking Apollo.
+
+Fixed null pointer exception on GAME->ChadoXML conversion.
+
+Slightly less kludgy way of storing ChadoXML flat fields
+(e.g. <is_obsolete>1</is_obsolete>) as properties and writing them back
+out properly as fields.  (Still a *bit* kludgy.)
+
+Simple name adapter used for 1 level annots now tacks on number suffix
+and looks for annots with same prefix and adds 1 to largest suffix # if
+present - this allows for multiple annots from same result to get
+different names.
+
+Ensembl data adapter now working for databases with schemas 33 and up.
+
+GAME adapter can now read & write proteins (type=polypeptide) as
+feature_spans under transcript's feature_set.  This allows for protein
+ids & names to be roundtripped.  (Note that protein features are dumped
+only in GAME 1.1, not in 1.0.)
+
+make tar now works on Solaris
+
+EDE: Transcript pulldown said "1 level annot, no transcripts" (and annot
+name did not appear anywhere).  Instead, for one-level annots, the label
+now says "Annotation:" and the list says annot name.
+
+If GAME file has a blank first line, print a more informative error
+message (but unfortunately, we still can't parse the file--it needs to
+have <?xml> as the first thing in the file.)
+
+Subject coordinates for BLASTX hits are wrong in ChadoXML examples.
+(When they fix this, need fixed ChadoXML examples.)
+[CG16983.chado.xml now has correct subject coords.]
+
+Fixed: Can't cut and paste from the detail panel the one-level annot 
+identifiers, because they don't show up in the box where you see
+transcript names for three-level annots.  (If there are no transcripts,
+just repeat annot name.) [SetDetailPanel]
+
+BLAST hit overlay:
+- Layered BLAST hits were showing up in new (unknown) tier rather than in
+the New Aanalysis Results tier.
+- Default should be that query is NOT genomic--user shouldn't have to
+check checkbox.
+(Should checkbox be a radiobutton set instead, to make it clear that it's
+an either/or choice?)
+New wording for checkbox: "I used the current genomic sequence (or a
+portion thereof) as my BLAST query" (default is unchecked).  I would
+still welcome input on this wording!
+- "Genomic offset" textbox is disabled UNLESS the "I used genomic"
+checkbox is checked.
+- When you open a Sequence window on BLAST hits loaded by analysis adapter,
+it now shows the corresponding genomic seq (rather than trying, and
+failing, to show the result sequence or peptide sequence).
+[It would be nice to see the actual residues of the hit sequence, but I
+think that would be too hard, since we only have bits and pieces of it
+from the hit alignments.]
+
+Fixed: When a new 2nd tier annotation is created it is named without an -RX
+suffix.  However, if the symbol is changed in the AIE then an -RX suffix
+is added inappropriately.
+
+x We don't want transposons to have -RA suffixes.
+[Now that Apollo understands one-level types, transposons are identified
+as one-level in the tiers file and thus don't get -RA suffixes.]
+
+x Problem with Sequence window (broke on or around 10/11/05):
+if you double-click any result and bring up the Sequence window, it comes
+up with Peptide selected and 0 residues.
+
+Fixed label color for one-level annots.
+
+- Double-click one-level annot, get exception:
+java.lang.ArrayIndexOutOfBoundsException
+	at java.lang.System.arraycopy(Native Method)
+	at apollo.gui.genomemap.FeatureView.getEdges(FeatureView.java:342)
+	at apollo.gui.genomemap.FeatureView.getEdges(FeatureView.java:317)
+	at apollo.gui.genomemap.FeatureView.setMatchingEdges(FeatureView.java:297)
+	at apollo.gui.genomemap.ApolloPanel.highlightEdges(ApolloPanel.java:898)
+
+Allow command-line roundtripping to/from same type of file, e.g.
+~/apollo/bin/apollo -c -f ~/apollo/data/chado/CG16983.chado.xml -w ~/apollo/data/chado/CG16983.chado.savedg
+(very useful for testing)
+
+ChadoXML: is_obsolete and any other flat fields are now printed just after
+is_analysis, rather than with the featureprops.
+
+Result tags (represented as <problem> featureprops in ChadoXML) can now
+be roundtripped and also added in Apollo and then saved in ChadoXML.
+
+ChadoXML adapter now handles one-level annots correctly, instead of the
+kludge of promoting them to phony three-level annots and then collapsing
+them again for writing.
+
+---------^^^----------Internal Release 1.6.1 (11/28/05)----------^^^---------
+
+New synonym-editing interface in AIE lets you add/delete synonyms
+individually (instead of having to edit a comment-delimited list).
+
+Synonym owners saved in GAME 1.1.
+
+x Click on a one-level annot--the label in the colored part of the right
+section of the detail panel has the name of a nearby protein-coding gene,
+rather than of the one-level annotation.
+
+x If I click on a one-level annotation and try to open the anntation 
+info editor, selected annot isn't highlighted in the tree to the left.
+[Now it is, but if you create a NEW annot while the AIE is open, it
+selects the wrong annot in the tree--usually it seems to select whatever
+happens to be first in the tree, but not always!]
+
+fixed bug reported by sima - null pointer was flying in gene edit
+panel when name was fully erased
+
+x Open data/CG16983.chado.xml; open AIE on a P element annot (but don't
+change anything); then try to open another file in Apollo--get warning
+that data has been changed.  
+The issue is that the AIE thinks the type of annot has been changed--this
+happens when there's more than one datatype per Type in the tiers file,
+and the datatype the annot started with didn't happen to be first on the
+list.  In this case, fly.tiers has "p_insertion" as the first datatype,
+while the datatype of the P elements in CG16983.chado.xml is
+"transposable_element_insertion_site", which is farther down in the list
+of datatypes for the Type labeled "P insertion_site".
+The ultimate fix for this problem involves making Apollo fully
+SO-compliant instead of relying on a cobbled-together list of datatypes
+in the tiers file, but Mark implemented a quick fix for now.
+
+x Peptide featureloc for minus-strand peptides gets messed up on
+roundtrip--it ends up with fmin>fmax and strand==1.
+
+When you use AIE to change annot name or type, right detail panel (in
+main window) now updates to show new name or type.
+
+Patch to XMLElement allows Apollo to be compiled under JDK 1.5 (as well
+as 1.4).
+
+fixed bug reported by sima - null pointer was flying in gene edit
+panel when name was fully erased
+
+x pub_id's type_id's <name> always used to be "computer file"--now it can
+apparently be other things ("publication").
+(Now roundtripped)
+
+x Sometimes (for non-gene annots) dbxref is lost and uniquename is
+changed.  (See ~/harvard/dpp.chado)
+Before:
+<feature>
+   <dbxref_id>
+      <dbxref>
+        <accession>FBal0034433</accession>
+	<db_id>
+	   <db>
+	     <name>FlyBase</name>
+           </db>
+	</db_id>
+      </dbxref>
+   </dbxref_id>
+   <is_analysis>0</is_analysis>
+   <is_obsolete>0</is_obsolete>
+   <uniquename>dpp[8391]</uniquename>		
+   ...
+ </feature>
+After:
+<feature>
+   <is_analysis>0</is_analysis>
+   <is_obsolete>0</is_obsolete>
+   <uniquename>FBal0034433</uniquename>		
+   ...
+ </feature>
+So the dbxref is lost and the uniquename is changed.  Not good!
+[This is now sort of fixed.  Uniquename is no longer lost.  For the
+dbxref, the writer still tries to find the one that matches the feature's
+uniquename, but now if it can't find that, it writes the first xref.  I
+think we need to add a method to DbXref to tag the "real" xref.
+Also, currently all dbxrefs are also written out as feature_dbxrefs; we
+need to make sure that we only write feature_dbxrefs that came in as
+feature_dbxrefs.  So I guess we need a tag for that, too.]
+
+featureprops now have a rank that is generated as they are written out
+(multiple values for a particular key are numbered sequentially).  Note
+that rank is NOT guaranteed to be preserved on roundtrip.
+
+--------^^^---------Internal Release 1.6.2 (12/13/05)---------^^^--------
+
+dbxrefs and feature_dbxrefs now roundtrip properly.  They are tagged (as
+primary and secondary dbxrefs) as they are read in, and then they are
+written out as appropriate.  The writer assumes that there will be only
+one primary dbxref (although this would be easy to change, and the reader
+will record multiple primary dbxrefs if they appear in the input).  It is
+also ok if the primary dbxref for a feature does not appear as a
+feature_dbxref (in the past, Apollo assumed that the primary dbxref was
+also a feature_dbxref, but that's not always true).
+
+x When new synonyms are created (from a gene merge or the user adding a
+synonym) they don't have an owner, so the synonym's pub uniquename comes
+out empty.
+
+x When genes are merged, should set is_current=0 for all the feature_dbxrefs
+x When genes are merged, both the old feature uniquename and the old
+feature name are added as synonyms.  Harvard wants only the name added as
+a synonym, not the uniquename (though this must be a policy change--in
+the past, they must have wanted both).
+x When genes are merged, the old protein synonyms are not all added to
+the merged gene.
+
+x If you empty out gene symbol field (not sure if this also happens with
+ID field) prior to typing/pasting a new one, it doesn't register the new
+one.  (If you edit the field without ever emptying it completly, the
+change registers fine.)
+
+x Put try/catch around all integer parsing from ChadoXML input just in
+case a non-integer slips in there.
+
+x If you rubberband more than one one-level annot and then do "Delete
+feature", it only deletes one of them, not all of them.
+
+x It seems that the one-level annots don't come in with a <seqlen>
+field.  Don't write <seqlen> for annots that don't have transcripts (and
+thus don't have residues).
+
+Made the constants used by ChadoXmlWrite configurable in style file
+(added these to fly.internal.style):
+TypeIDOntology               "SO"           // For type_ids
+IDForDbxref                  "SO:0000105"   // SO id for dbxrefs
+DefaultChadoDatabase         "FlyBase"      // For xrefs, in case we can't figure out db
+DefaultSynonymAuthor         "gadfly3"
+DefaultSynonymPubType        "computer file"
+FeaturepropCV                "annotation property type"
+
+(Note for developers:
+These use Style.java's new "Parameters" hash for storing anonymous
+key=value parameters.
+Whenever we add a new parameter to the style file, we've been adding
+methods in Style.java to set/get some variable--it's getting annoying.
+I wanted to add some more new parameters for use by ChadoXmlWrite, and
+was not psyched about adding more variables and methods to Style, so I
+made it able to store generic parameters (key=value) from style files
+in a hash (like Properties on SeqFeatures, but I called this
+Parameters to reduce confusion.)  Parameters give us a
+general-purpose, extensible way to set key=value(s) pairs in the
+style.  The default can be set in Style.java (which, of course, means
+we can't set it for brand-new parameters that are not yet known) or by
+the caller.)
+
+fixed bug reported by sima - the name field in gene edit panel was not
+recognizing pasting as an edit - it was requiring a keystroke which
+doesnt happen on pasting
+
+annotation editor was setting exon ids in a gmod specific fashion -
+gene:start-end - moved this to gmod name adapter with generate exon id -
+so now this behavior can be changed in other name adapters.
+
+"Is problematic?" boolean (which can be set in AIE for the gene or
+transcript) is now saved by ChadoXMLWrite.
+(Note that the "problem" featureprop type in ChadoXML is actually two
+different things inside Apollo--when attached to a result rather than an
+annotation, it is stored internally as a "tag".)
+
+Problem (in v1.6.2) with exception flying in AnnotationEditor.copyDbXrefs
+when non-coding genes were split (interrupting the split process,
+resulting in display problems and transcript naming problem) is fixed (I
+think it was due to problems with dbxrefs).
+
+Now that we're treating one-level annots as one-levels (rather than
+promoting them to three levels), we expect them to be identified as such
+in the tiers file:
+number_of_levels : 1
+If the user has an out-of-date tiers file without this line for a
+one-level type, the one-level annot will not show up.  Pop up a warning.
+
+x When I tried hand-editing ChadoXML to make a boolean (true) result tag
+(on a result, not an annot), it didn't show up crosshatched in the Apollo
+display.
+(Now "problem" featureprops attached to results can be strings or
+booleans; "problem"s on annots/transcripts can only be booleans.)
+
+--------^^^---------Internal Release 1.6.3 (12/20/05)---------^^^--------
+
+- Some of the esoteric properties (e.g. non_canonical_start_codon) are
+being saved twice (once as a "special" property and once as a generic
+property).  The property types that may (or may not) be affected by this
+problem are:
+non_canonical_start_codon
+non_canonical_splice_site
+stop_codon_readthrough
+missing_start_codon
+missing_stop_codon
+(Also note that if you do an edit that should turn off one of these
+properties, it is still getting written out, because Apollo doesn't know
+to change the ChadoXML-specific property when the edit is performed.)
+- is_fmin_partial, is_fmax_partial not getting properly roundtripped
+(saved for peptide, lost for transcript parent of peptide).
+- is_fmin_partial, is_fmax_partial still saved as true if they come in
+true and then you fix the transcript to restore the 3' or 5' end.
+
+--------^^^---------Internal Release 1.6.4 (12/21/05)---------^^^--------
+
+Default number of levels for a type was 3 (because we didn't want things
+to break if curators used old tiers files that didn't specify
+"number_of_levels : 3" for genes).  Now it defaults to 1 for all types
+EXCEPT gene and pseudogene, for which it's 3 (in case the tiers file
+doesn't set it).  This can be overridden by a "number_of_levels" line in
+the tiers file, even for genes/pseudogenes.
+This is a better setup because most types are 1-level and it's tiresome
+to have to stick a number_of_levels line in the tiers file for every
+1-level type.
+
+Two fixes to ChadoXML reader (motivated by Mark Yandell's group's
+attempts to read their chadoXML data into Apollo):
+1. Find the <name> element in a <type_id> (it was assuming it would appear
+in a particular position, which is a bad assumption).
+2. Cope with the absence of a <_appdata  name="residues"> record.
+However, Apollo still needs the other <_appdata> fields to set the genomic
+region info.
+This is an idiosyncratic FlyBase way of representing the region info.
+It would be nice if there were a more standardized way of doing this, or
+if Apollo could at least estimate the fmin/fmax by looking at the features
+and finding the lowest/highest endpoints.
+Unfortunately, the genomic region info currently needs to be set up
+BEFORE we read the features.
+
+"make tar" now creates an apollo.VERSION symbolic link (e.g.,
+apollo.1.6.5) and does the tar from there, so if the user untars the
+Apollo tar in her main directory, it will go into an apollo.1.6.5
+subdirectory.  (Note that the zip is still made from inside the apollo
+main directory--this is intentional, to make it easier to update
+apollo_airlock.)
+
+[Temporary bug resulting from my changes to the default number of levels
+for a type--this bug was not in the previous release.]
+Flip result (of a type found only on one strand) to other strand, get
+exception (can reproduce this with tiny.xml):
+java.lang.ClassCastException
+	at apollo.gui.drawable.DrawableFeatureSet.repairFeatureSet(DrawableFeatureSet.java:423)
+	at apollo.gui.genomemap.ResultView.handleResultChangeEvent(ResultView.java:106)
+	at apollo.gui.Controller.handleResultChangeEvent(Controller.java:312)
+	at apollo.editor.AnnotationEditor.flipResult(AnnotationEditor.java:1383)
+[This was caused because I changed the default # of levels of a feature
+from 3 to 1, and there was code relying on *results* having 3 levels, so
+I made a temporary fix where results now default to 3 levels (which is
+kind of weird, since they really don't have 3 levels) and annots default
+to 1 level except for genes which defualt to 3.  This should be fixed in
+a less kludgy fashion at some point.]
+
+fly.harvard.tiers renamed to vector.tiers, since it is for the VectorBase
+project.
+New unified fly.tiers replaces fly.tiers for public and internal use.
+
+Someone at Harvard created a new gene that seemed kind of weird
+(transcripts named no_name; transcripts longer than parent gene).  When
+you load it, it causes Apollo to go into an infinite loop trying to set
+the start codon:
+Warning: translation start set inappropriately to 14338212 for no_name--setting to first codon
+ (low = 14338346, high = 14338675)
+Setting translation start at first codon for no_name
+Warning: translation start set inappropriately to 14338212 for no_name--setting to first codon
+[etc]
+Changed FeatureSet.setTranslationEndFromStart to prevent the infinite loop.
+What I'm having it do now is that if translation start is not in the
+range of the transcript, and missing_5prime is set (which it is, in
+this case), then it doesn't try to calculate the correct translation
+start or end--it just gives up.
+That means that if there's some weird transcript with a weird translation
+start value that *doesn't* have missing_5prime set to true, Apollo could
+still loop, but I think that situation will be rare.
+
+Enabled one-level annots to have owners (previously only transcripts
+could have owners--top level annots did not).  One-level annots will have
+owners only if <author> (in GAME XML) or "owner" (in ChadoXML) is defined
+for the annot.  And genes will only have owners if the owner is defined
+at the gene level--they won't use the owner from their child transcripts
+(which can be different for each transcript).
+
+Enabled color-by-owner for non-gene annots (previously was done only for
+gene annots).  To turn this on, add
+     ColorAllAnnotsByOwner "true"
+to style file.
+
+Some of the insertion site annotations from the new FlyBase chadoxml cgi
+have no featurelocs.  This was causing them to appear to span the entire
+genome (because the default Range, when it hasn't been set, is -1000000
+to 1000000).  These will now show up as + strand features from 0-0 (which
+is very likely outside of the range of the current segment and therefore
+not initially visible).  When you save as chadoxml, the chadoxml writer
+knows not to save featurelocs for these unlocalized features.  (If you
+save as game xml, they will get saved with start=end=0.)
+
+You can now add an "organism" parameter to a style file--it is used when
+writing out ChadoXML for features that don't have their own organism
+field.
+
+Problem with renaming of transcript and protein on merge (reported by
+Andy, 3/8/06):
+Merging genes you are asked if you want to keep one of the old names or
+name with temp name.
+If you choose one of the existing names you get different behavior
+depending on if you choose left or right gene relative to positive
+strand view.  
+Choose gene on left and the FBgn uniquename of the left gene is
+maintained but so are the FBtr and FBpp uniquenames from the existing
+premerge transcript and protein and this is not the desired result.
+Choose gene on right and the FBgn uniquename is preserved but the
+transcripts and proteins get names like FBgn-RA and FBgn-PA and this is
+the desired behavior.
+In other words the protein and transcript symbols are getting reset if
+you pick the left gene (GOOD) but not getting reset if you pick the right
+gene (BAD).
+
+New FlyChadoXmlAdapter is like the old GAME adapter interface--can read
+ChadoXML from a file or URL, or query the FlyBase server (which now
+returns ChadoXML) by gene, band, or range.  The old ChadoXML adapter
+interface is still available as a way to load "generic" ChadoXML
+(although in fact it caters to FlyBase data as well).
+
+Since the old FlyBase server that served fly data in GAME XML format is
+now defunct, the cgi-query-enabled version of the GAME XML adapter (which
+is now called FlyGAMEAdapter) has been retired and replaced with a
+generic GAME XML loader that accepts only a filename or URL.
+
+The code in the ChadoXML adapter that looks for the <chado> line to
+confirm that the input really is ChadoXML was giving up too soon for
+files with lots of <!ENTITY> declarations at the beginning.  It now looks
+up to 1000 lines into the input for the <chado> line before giving up.
+
+Reported by Andy: sometimes when you merge transcripts, it doesn't ask
+you about whether you want to merge the genes and which name to give the
+merged gene.
+- If you select eco-RA and CG8596-RA and choose either merge 
+transcripts or add transcript to exon the merged transcript 
+automatically gets the CG8596 identifier.  No warning about merging 
+overlapping genes with a choice to choose name.
+- Merging eco-RA and CG8600-RA does result in the warning and the 
+ability to choose one of the two names or a temp name.
+[The problem was that the decision whether to ask about merging the genes
+depended on which one was considered the "source" transcript and which
+was the "destination".  It was asking about the merging only if the
+"source" gene had only one transcript.  Now it also asks if the
+"destination" gene has only one transcript.]
+
+Chado JDBC adapter extended to deal with paramecium data (using
+paramecium.tiers and paramecium.style).
+
+Genetic code is now configurable in style:
+        GeneticCode "1" | "6"
+1 is the default 
+6 is for paramecium
+(Right now, those are the only accepted values.)
+
+ChadoXML adapter now roundtrips "preamble" (everything before the <chado>
+line) from the original input.  This preserves all the comment lines from
+the original input, as well as any <!ENTITY> lines.  Preserving the
+comment lines means that the beginning of the chado xml file is now a
+history of the saves Apollo has done on this input.  For example, if I
+roundtrip an input file twice, the header now looks like this:
+
+    <?xml version="1.0" encoding="ISO-8859-1"?>
+    <!-- ChadoXML file (FlyBase v1.0, no macros) created by nomi on Tue Jun 13 21:32:10 GMT 2006 -->
+    <!-- Apollo version: Apollo Genome Annotation and Curation Tool, version 1.6.5 dev, last updated2006-06-13 13:27 2006, /users/nomi/apollo/src/java/apollo/dataadapter/flychadoxml/FlyChadoXmlAdapter.java -->
+    
+    <!-- Header lines preserved from the input source: /users/nomi/apollo/data/entity.saved.chado-->
+    <!-- ChadoXML file (FlyBase v1.0, no macros) created by nomi on Tue Jun 13 21:28:03 GMT 2006 -->
+    <!-- Apollo version: Apollo Genome Annotation and Curation Tool, version 1.6.5 dev, last updated2006-06-13 13:27 2006, /users/nomi/apollo/src/java/apollo/dataadapter/flychadoxml/FlyChadoXmlAdapter.java -->
+    
+    <!-- Header lines preserved from the input source: /users/nomi/apollo/data/entity.chado-->
+    <!-- created by Pinglei Zhou, Flybase Harvard University -->
+    <!--created from Database:config using dump_spec:/users/zhou/temp/FB_XORT/conf/dumpspec_apollo.xml -->
+
+    <!DOCTYPE FBchado [
+    <!ENTITY lt "&#38;#60;">
+    <!ENTITY gt "&#62;">
+    [etc]
+    
+Of course, the header will get longer by a few lines each time a file is
+reloaded and resaved, but compared with the size of a Chado XML file,
+this extra text should be insignificant.
+
+The GAME adapter now saves the original filename as well (but does not
+attempt to save the header of the original file).
+
+Fixed: when you gave a filename with no path on the command line for
+writing to, Apollo saved it in APOLLO_ROOT/filename rather than
+./filename.  You could get around this by explicitly saying "-w
+./filename", but it was still annoying!
+
+Need to handle saving to nonexistent directory better:
+Tried to save as baddir/file.chado; got "can't write to file null" error
+message (and non-graceful recovery)

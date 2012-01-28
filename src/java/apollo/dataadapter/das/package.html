@@ -1,0 +1,22 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<html>
+<head>
+</head>
+<body bgcolor="white">
+
+<p>Defines the interfaces to support the reading of DAS datasources
+by Apollo. The goal is allow different implementations to be
+provided of, for example, <code>DASServer</code>. These implementations
+can be sophisticated or not, as necessary. </p>
+
+<p>I have included a reference (very direct, unsophisticated) implementation
+in the <code>apollo.dataadapter.das.simple</code> package.</p>
+
+<p>The interface <code>DASServer</code> is the basic type 
+referred to by a data adapter referencing a DAS datasource. The <code>DASDsn</code>,
+<code>DASSegment</code>, <code>DASFeature</code> and <code>DASSequence</code> are
+types used to pass information into a request from the server, and 
+to retrieve information back from the server.</p>
+
+</body>
+</html>

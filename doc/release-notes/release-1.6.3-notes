@@ -1,0 +1,102 @@
+Major changes since Internal Release 1.6.2 (12/13/05):
+
+dbxrefs and feature_dbxrefs now roundtrip properly.  They are tagged (as
+primary and secondary dbxrefs) as they are read in, and then they are
+written out as appropriate.  The writer assumes that there will be only
+one primary dbxref (although this would be easy to change, and the reader
+will record multiple primary dbxrefs if they appear in the input).  It is
+also ok if the primary dbxref for a feature does not appear as a
+feature_dbxref (in the past, Apollo assumed that the primary dbxref was
+also a feature_dbxref, but that's not always true).
+
+x When new synonyms are created (from a gene merge or the user adding a
+synonym) they don't have an owner, so the synonym's pub uniquename comes
+out empty.
+
+x When genes are merged, should set is_current=0 for all the feature_dbxrefs
+x When genes are merged, both the old feature uniquename and the old
+feature name are added as synonyms.  Harvard wants only the name added as
+a synonym, not the uniquename.
+
+x When genes are merged, the old protein synonyms are not all added to
+the merged gene.
+
+Problem (in v1.6.2) with exception flying in AnnotationEditor.copyDbXrefs
+when non-coding genes were split (interrupting the split process,
+resulting in display problems and transcript naming problem) is fixed (I
+think it was due to problems with dbxrefs).
+
+x If you rubberband more than one one-level annot and then do "Delete
+feature", it only deletes one of them, not all of them.
+------------------------------------------------------------------------
+
+Major changes made between public release 1.6.0 (11/03/05) and internal
+release 1.6.1 (11/28/05):
+
+ChadoXML: is_obsolete and any other flat fields are now printed just after
+is_analysis, rather than with the featureprops.
+
+Result tags (represented as <problem> featureprops in ChadoXML) can now
+be roundtripped and also added in Apollo and then saved in ChadoXML.
+
+ChadoXML adapter now handles one-level annots correctly, instead of the
+kludge of promoting them to phony three-level annots and then collapsing
+them again for writing.
+
+DO-ONE-LEVEL-ANNOTS now set to true in apollo.cfg--means one-level annots
+are stored as one level inside Apollo (rather than being promoted to
+phony three-level annots as they are read in) and also saved as one level
+annots in GAME XML (v1.1.) rather than being saved as phony three-level
+annots in GAME 1.0.
+If you want to save GAME 1.0, you must set DO-ONE-LEVEL-ANNOTS="false"
+in apollo.cfg. before invoking Apollo.
+
+Simple name adapter used for 1 level annots now tacks on number suffix
+and looks for annots with same prefix and adds 1 to largest suffix # if
+present - this allows for multiple 1-level annots from same result to get
+different names.
+
+Fixed: When a new 2nd tier annotation is created it is named without an -RX
+suffix.  However, if the symbol is changed in the AIE then an -RX suffix
+is added inappropriately.
+
+- We don't want transposons to have -RA suffixes.
+[Now that Apollo understands one-level types, transposons are identified
+as one-level in the tiers file and thus don't get -RA suffixes.]
+
+Ensembl data adapter now working for databases with schemas 33 and up.
+
+BLAST hit overlay:
+- Layered BLAST hits were showing up in new (unknown) tier rather than in
+the New Aanalysis Results tier.
+- Default should be that query is NOT genomic--user shouldn't have to
+check checkbox.  New wording for checkbox: "I used the current genomic
+sequence (or a portion thereof) as my BLAST query" (default is
+unchecked).
+- "Genomic offset" textbox is disabled UNLESS the "I used genomic"
+checkbox is checked.
+
+---------------------------------------------------------------------
+Major changes made between internal release 1.6.1 (11/28/05) and internal
+release 1.6.2 (12/13/05):
+
+New synonym-editing interface in AIE lets you add/delete synonyms
+individually (instead of having to edit a comment-delimited list).
+
+x Open data/CG16983.chado.xml; open AIE on a P element annot (but don't
+change anything); then try to open another file in Apollo--get warning
+that data has been changed.
+
+When you use AIE to change annot name or type, right detail panel (in
+main window) now updates to show new name or type.
+
+x Peptide featureloc for minus-strand peptides gets messed up on
+roundtrip--it ends up with fmin>fmax and strand==1.
+
+x pub_id's type_id's <name> always used to be "computer file"--now it can
+apparently be other things ("publication").
+(Now roundtripped)
+
+x Sometimes (for non-gene annots) dbxref is lost and uniquename is
+changed.  [This was partially fixed in 1.6.2, and completely fixed in
+1.6.3.]

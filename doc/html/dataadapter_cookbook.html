@@ -1,0 +1,1788 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title>A cookbook for creating an Apollo data adapter.</title>
+</head>
+<body bgcolor="white">
+<h1 align="center">The Data Adapter Cookbook</h1>
+<h1>Introduction</h1>
+This guide aims to be a quick start to writing your own dataadapter for
+Apollo. It uses the <strong><code>SampleAdapter</code></strong> for
+illustration:
+the code for that adapter lies in the
+<strong><code>apollo/dataadapter/sample</code></strong> package. One
+way of getting going quickly
+would be to start by examining the code skeleton provided in the sample
+dataadapter, and then modify it for your own purposes.
+I assume in all the following that if you're reading this document then
+you have already obtained a developer's installation of apollo - for
+instance
+a cvs checkout of the fully source tree and supporting files, and are
+reasonably familiar with the location and basic function
+of the main supporting files (apollo.cfg, the style and tiers files for
+an adapter). If you <em>haven't</em>, then you can, via cvs or
+tarball, from <code><strong>gmod.sourceforge.net</strong></code> -
+this site has all the code and instructions for downloading etc.
+<h1>Run the sample! Get going now!</h1>
+You should start by activating the sample dataadapter. Do this by
+adding
+the following lines to the <code><strong>conf/apollo.cfg</strong></code>
+file:
+<p><code><strong>DataAdapterInstall
+"apollo.dataadapter.sample.SampleAdapter"
+"sample.style"
+</strong></code></p>
+When apollo starts, it will try to create the sample adapter and its
+gui, and load them to the list of adapters available to the user. If
+the
+load fails, it will notify the user in a message sent to the console
+during startup.
+Start up Apollo and choose the Sample adapter from the list of
+available
+adapters. It should allow you to choose the number of features you want
+to display, and then display the chosen number in Apollo, along with a
+fake
+sequence.
+<h1>The classes and configuration files you need to write</h1>
+Every data adapter in Apollo needs two main classes and two
+configuration files. In practice you may well have more than these two
+classes in the data adapter's design, but Apollo will rely on the
+presence of the two main classes, and their configuration files.
+<center><img src="images/dataadaptercookbook1.jpg" height="600"
+ width="500"></center>
+<dl>
+  <dt>The data adapter (e.g. <code><strong>apollo.dataadapter.sample.SampleAdapter</strong></code>),</dt>
+  <dd>
+    <p>This is responsible for gathering data (features and sequence)
+from a back end, and packaging the data in terms of Apollo's datamodel.
+The type of data gathered and where it's gathered from is specified as
+state
+information on the adapter.</p>
+  </dd>
+  <dd><br>
+  </dd>
+  <dt>The data adapter's gui (e.g. <code><strong>apollo.dataadapter.sample.SampleAdapterGUI</strong></code>),
+  </dt>
+  <dd>
+    <p>This is responsible for gathering the user's preferences (via a
+gui) for where the data should be loaded from, and what sort to gather,
+and setting all this information on the data adapter. </p>
+  </dd>
+  <dt>The data adapter's style file (e.g. <code><strong>conf/sample.style</strong></code>)</dt>
+  <dt><br>
+  </dt>
+  <dd>
+    <p>This keeps the user's visual preferences specific to the
+SampleAdapter. </p>
+  </dd>
+  <dt>The data adapter's tier file (e.g. <code><strong>conf/sample.tiers</strong><code>)
+    </code></code></dt>
+  <dd>
+    <p>This keeps the list of possible data "tiers" (tracks) which we
+expect the SampleAdapter to provide, along with their visual
+appearance. </p>
+    <p>When you are displaying the results of many independent analyses
+of a
+particular genome, you will need to group results of the same analysis
+together visually, and distinguish
+them from results from other analyses. You do this by putting your
+results in <em>tiers</em>
+(visual groupings). Tiers (visual groupings) are tied to the logical
+data groups via
+the <em>type</em> of the Features your adapter creates. You specify
+how a tier looks (data colours
+and glyphs) in the tiers file, and lots of other visual properties
+besides. </p>
+  </dd>
+</dl>
+<h2>Writing a DataAdapterGUI</h2>
+The DataAgapterGUI is just a glorified JPanel which is
+created by the your DataAdapter class (several times actually) during
+Apollo's startup, and then placed - when the user chooses to use it -
+into the central panel of the DataAdapterChooser.
+You should have two main goals when writing one -
+<ol>
+  <li>
+    <p>Write a nice constructor. This amounts to writing the code that
+creates widgets and adding them to the JPanel. Everyone has their own
+taste as to how to do this - the sample
+has a suggested style. I have a few other suggestions based on
+experience: </p>
+    <ul>
+      <li>
+        <p>Minimise the use of direct access to instance variables in
+the class (the rule I use is to only directly refer to the instance
+when the object is created). This is generally wise rule to brutally
+enforce, but I think I've seen the most flagrant violations in
+gui-related code. So, for instance, say </p>
+        <p><code><strong> getMyFavouriteDropDown().setSelectedItem(...);</strong></code></p>
+        <p>instead of </p>
+        <p><code><strong>myFavouriteDropDown.setSelectedItem(...) </strong></code>.</p>
+Generations in the future will thank you.
+        <p></p>
+      </li>
+      <li>
+        <p>If you want to remain sane, use GridBagLayout to lay your
+components out: Box is seductive but has weird side effects, and is
+basically impossible for normal humans to alter post-hoc.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Implement doOperation. This is forced on you by the
+DataAdapterUI interface in
+org.bdgp.io, and it's the call made by the DataAdapterChooser on your
+dataadapter when the user
+hits "OK". It's traditional here to have the adapter do three things in
+this operation:</p>
+    <ul>
+      <li>
+        <p>Derive a summary of the user's choices - the "state
+information" - based on the GUI's current state. This summary is placed
+into a Properties object</p>
+      </li>
+      <li>
+        <p>Transmit this information to the DataAdapter by passing the
+Properties object</p>
+      </li>
+      <li>
+        <p>Call a method on the DataAdapter to fetch the CurationSet.
+This is where all the data gets read. Pass the CurationSet you obtain
+out as the return from the doOperation method.</p>
+        <p>If you intend your adapter to read and write data then you
+have to make a decision in the doOperation method as to what to do:
+each GUI instance is created with only one operation in mind, so you
+must <em>check</em> the operation inside the GUI instance, and branch
+based on that. See the BaseGFFAdapter or the GAMEAdapter for an example
+of how to do this.</p>
+      </li>
+    </ul>
+  </li>
+</ol>
+You also should implement a few lesser methods (such as <code>get/setProperties</code>).
+These
+are explained and demonstrated in the SampleAdapter.
+<p>Your UI needs to extend org.bdgp.swing.AbstractDataAdapterUI (from
+the
+org.bdgp jar in apollos jars directory - jar created from org.bdgp on
+source forge).
+AbstractDataAdapterUI extends JPanel and implements
+org.bdgp.io.DataAdapterUI. The javadocs for DataAdapterUI are pretty
+informative so here they are:</p>
+<p>/**<br>
+* An abstract representation of a DataAdapter user interface. These
+interfaces<br>
+* are meant to be used in conjunction with a some sort of data adapter<br>
+* selection widget, like org.bdgp.swing.widget.DataAdapterChooser<br>
+*/<br>
+public interface DataAdapterUI {<br>
+/**<br>
+* Sets the data adapter for this UI. Since the UI provides it's<br>
+* own implementation of the IOOperation via the <br>
+* {link #doOperation(Object)}, the DataAdapterUI can decide whether or<br>
+* not to actually use the DataAdapter to perform the operation. However,<br>
+* a correct implementation of this interface will use the DataAdapter<br>
+* given in setDataAdapter.<br>
+*/<br>
+public void setDataAdapter(DataAdapter in);</p>
+<p> /**<br>
+* Sets UI properties for this DataAdapterUI. The source of these<br>
+* properties is up to the widget that displays the DataAdapterUI. Most
+of<br>
+* the time these properties will contain some sort of history
+information<br>
+* and will be loaded from a file. The Properties object may be null if<br>
+* there are no properties to set.<br>
+*/<br>
+public void setProperties(Properties in);</p>
+<p> /**<br>
+* Returns the UI properties for this DataAdapterUI. These properties<br>
+* may be recorded by the widget that displays the DataAdapterUI and<br>
+* provided to the setDataAdapter method of later instances of the<br>
+* DataAdapterUI. This method may return null if there are no properties<br>
+* to record.<br>
+*/<br>
+public Properties getProperties();</p>
+<p> /**<br>
+* The method that actually performs the data adapter operation<br>
+* (presumably by delegating to a data adapter). The input and outputs<br>
+* to this method are entirely dependent on the operation the data
+adapter<br>
+* is supposed to perform. The input or output of this method may be
+null.<br>
+*/<br>
+public Object doOperation(Object values) throws DataAdapterException;</p>
+<p> /**<br>
+* Set the input, if there is any. This input is the same as the Object<br>
+* passed into doOperation. A DataAdapterUI may need to get a hold of<br>
+* its input before doOperation time and this allows for it. For instance<br>
+* if the UI wants to display input related stuff it needs it before doOp<br>
+*/<br>
+public void setInput(Object input);<br>
+}</p>
+<p>AbstractDataAdapterUI takes care of setDataAdapter so you dont need
+to
+worry about that. It also no-ops setInput, so override setInput only
+if you're gui needs to know about the input before doOp time.
+</p>
+<p>doOperation is the most important method here, and it is described
+above, but heres a little more.
+</p>
+<p>doOperation throws an
+org.bdgp.io.DataAdapterException if anything goes
+wrong. DataAdapterException can wrap another exception by using its
+constructor: DataAdapterException(Throwable nestedException,String
+msg), or it can just carry a message(DAE(String)).
+</p>
+<p>As mentioned above what is usually done in doOperation is
+getCurationSet() is called
+on the associated data adapter, but this is not dictated by any
+interface. Being a subclass of AbstractDataAdapterUI, the data adapter
+is available as the variable "driver" of type DataAdapter. The
+DataAdapter interface is given below. Notice it has nothing comparable
+to
+doOperation. In other words to do anything with it at this point you
+have to cast it to the type of DataAdapter that you are using, that
+will have a getCurationSet, or whatever method you've put in there to
+get the data (this is a quirk with working with org.bdgp's generic
+data adapter chooser framework- one could argue that doOperation
+belongs in DataAdapter). SampleAdapterGUI has a
+getDataAdapter method which just returns driver as a DatAdapter. This
+is called and cast to a SampleAdapter in
+doOperation, because we happen to know its a SampleAdapter, and then
+getCurationSet is called on the SampleAdapter. </p>
+<p>The history lists for the gui come from the properties, so
+getProperties and setProperties need to be implemented to get history.
+</p>
+<p></p>
+<h2>DataAdapter</h2>
+A DataAdapter must have an empty
+constructor. org.bdgp.io.DataAdapterRegistry creates the instance of
+the DataAdapter from the DataAdapterInstall in apollo.cfg and requires
+an empty constructor.
+<p>Implement (mainly) getCurationSet. The normal pattern (not forced by
+any interface) is for the DataAdapterGui to call getCurationSet on its
+DataAdapter. In fact getCurationSet is in AbstractApolloAdapter, and
+throws a NotImplementedException if it's not overridden. getCurationSet
+returns a CurationSet (surprise surprise). This is where you need to
+build your CurationSet described in the apollo datamodel below.<br>
+</p>
+<p>It is crucial that in your getCurationSet method you call
+super.clearOldData() (super being AbstaractApolloAdapter which you
+should be subclassing). This clears out the old data as well as sets up
+the style and tiers for the new data adapter.<br>
+</p>
+<p>A data adapter needs to subclass
+apollo.dataadapter.AbstractApolloAdapter.
+AbstractApolloAdapter extends org.bdgp.io.AbstractDataAdapter (from
+the org.bdgp jar. org.bdgp source is on
+sourceforge). AbstractDataAdapter implements
+org.bdgp.io.VisualDataAdapter which implements
+org.bdgp.io.DataAdapter. DataAdapter's interface is this:
+</p>
+<p>public interface DataAdapter {<br>
+/**<br>
+* Returns the type of data handled by this data adapter<br>
+*/<br>
+public String getType();</p>
+<p> /**<br>
+* Returns a list of all operations supported by this data adapter<br>
+*/<br>
+public IOOperation [] getSupportedOperations();</p>
+<p> /**<br>
+* For initialization, like opening files or database connections.<br>
+*/<br>
+public void init();<br>
+}</p>
+<p>Most of those methods need to be implemented in your data adapter
+(the
+abstract classes do not implement most of them).
+</p>
+<p>You should set the name that will appear in the data adapter chooser
+dropdown list by calling setName (which is implemented in
+AbstractApolloAdapter)
+in your constructor.</p>
+<p>apollo.dataadpater.ApolloDataAdapterI has defined a set of
+org.bdgp.io.IOOperation
+constants that apollo uses and gets returned by
+getSupportedOperations:
+</p>
+<p> public static final IOOperation OP_READ_DATA = new
+IOOperation("Read data");<br>
+public static final IOOperation OP_WRITE_DATA = new IOOperation("Write
+data");<br>
+public static final IOOperation OP_READ_SEQUENCE = new
+IOOperation("Read sequence");<br>
+public static final IOOperation OP_READ_RAW_ANALYSIS = new
+IOOperation("Read raw analysis results");<br>
+public static final IOOperation OP_APPEND_DATA = new IOOperation("Add
+additional data");</p>
+<p>So if your adapter is read only it should just return this array:<br>
+IOOperation[] supportedOperations = {ApolloDataAdapterI.OP_READ_DATA};<br>
+</p>
+<p>If your data adapter can read, write, and layer/append data, an
+array like so should be returned:<br>
+&nbsp; IOOperation [] supportedOperations = {<br>
+&nbsp;&nbsp;&nbsp; ApolloDataAdapterI.OP_READ_DATA,<br>
+&nbsp;&nbsp;&nbsp; ApolloDataAdapterI.OP_WRITE_DATA,<br>
+&nbsp;&nbsp;&nbsp; ApolloDataAdapterI.OP_APPEND_DATA<br>
+&nbsp; };<br>
+<br>
+</p>
+<p>init() may be a no-op if there is no initilization your data adapter
+needs to do (a lot of the dataadapters inits are
+no-ops). AbstractApolloAdapter implements this as a no-op. If you need
+to do initialization of your data adapter, override this.</p>
+<p>getType() should return a String that describes the
+DataAdapter. GAMEAdapter returns:
+"GAME XML source (filename, URL, gene=cact, band=34A, or
+sequence=ACGT)"
+As far as I can tell this is actually not used anywhere by the
+DataAdapterChooser. Since it seems inconsequential,
+AbstractApiolloAdapter implements this to return the empty
+string. You can override this in case it does have consequence in the
+future (maybe it does now and I'm missing something)
+</p>
+<p>From the org.bdgp.io.VisualDataAdapter interface you need to
+implement the
+getUI method:<br>
+/**<br>
+* Returns a user interface for the requested IOOperation. Most<br>
+* VisualDataAdapters will return a different user interface for each<br>
+* supported IOOperation.<br>
+*/<br>
+public DataAdapterUI getUI(IOOperation op);</p>
+<p>This returns the associated DataAdapterGUI described above. (Return
+null if your data adapter has no ui, like if its only used from the
+command line)<br>
+</p>
+<h3>Appending data (Layover)</h3>
+To append data your data adapter gui must support io operation
+OP_APPEND_DATA as described above. The data adapter chooser will then
+set the operation in your data adapter gui with setOperation to
+OP_APPEND_DATA when the user is appending data (via FileMenu layover).
+In you data adapter gui doOperation you need to check the operation
+before proceeding to do the appropriate thing, as both OP_READ_DATA(new
+data - wipe out old), and OP_APPEND_DATA will come in here. Something
+like this:<br>
+<br>
+&nbsp; public Object doOperation(Object values) throws
+ApolloAdapterException {<br>
+&nbsp;...<br>
+&nbsp;&nbsp;&nbsp;&nbsp; if
+(ioOperation.equals(ApolloDataAdapterI.OP_READ_DATA)) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return driver.getCurationSet();<br>
+&nbsp;&nbsp;&nbsp; }<br>
+&nbsp;&nbsp;&nbsp; else if
+(ioOperation.equals(ApolloDataAdapterI.OP_APPEND_DATA)) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return driver.addToCurationSet();<br>
+&nbsp;&nbsp;&nbsp; }<br>
+...<br>
+<h2>Style file</h2>
+Copy someone else's for now.
+<h2>Tiers file</h2>
+The type of the features and feature sets you create is the point here:
+you will need to define tiers and types within tiers for all your input
+feature types. (more on this later)<br>
+<h1>3. Notes on practice</h1>
+<h2>The Apollo datamodel</h2>
+The relationship between what you specify and what you see (feature
+names, holders and tiers files):
+<h3>A quick sketch</h3>
+The top object of the datamodel that needs to be created is an
+apollo.datamodel.CurationSet. All of the objects I will be talking
+about are in apollo.datamodel. CurationSet inherits from GenomicRange
+(chromosome and organism stuff) which inherits from Range. A Range has
+coordinates, strand, and sequence(SequenceI).
+<p>CurationSet holds the annotations and results:
+</p>
+<p>StrandedFeatureSetI getAnnots()<br>
+StrandedFeatureSetI getResults()<br>
+setAnnots(StrandedFeatureSetI)<br>
+setResults(StrandedFeatureSetI)<br>
+</p>
+<p>A StrandedFeatureSetI is a FeatureSetI with these added methods:<br>
+public FeatureSetI getForwardSet();<br>
+public FeatureSetI getReverseSet();<br>
+</p>
+<p>So it has a FeatureSetI for the forward and reverse strand.
+</p>
+<p>A FeatureSetI is a holder of SeqFeatureIs (its also a subclass of
+SeqFeatureI). SeqFeatureI extends RangeI, the Range interface, which
+has the properties of Range mentioned above. SeqFeatureIs and
+FeatureSetIs are the basic building blocks of the datamodel.
+</p>
+<p>Then different objects come into play on the result and annot side
+of
+the datamodel. The FeatureSet returned by getAnnots().getForwardSet()
+(or getReferseSet()) holds AnnotatedFeature objects. An
+AnnotatedFeature is a FeatureSet. AnnotatedFeature has things that are
+common to all annot model objects: comments, identifier,
+isProblematic, description, dbxrefs, and synonyms. An AnnotatedFeature
+can be a holder of other AnnotatedFeatures which may be a
+Transcript, if its a gene. The different annot types(e.g.
+gene,psuedogene,transposon...) are distinguished by the
+getTopLevelType()
+method.
+</p>
+<p>A Transcript is also an AnnotatedFeature. It has a translation start
+and end and functions for cdna and peptide sequence. Its also a holder
+of Exons.
+</p>
+<p>Exon extends AnnotatedFeature. An Exon has a frame. Exons are the
+leaves of the annot model.
+</p>
+<p>On the result side, the FeatureSet from
+CurationSet.getResults().getForward/ReverseSet() holds a FeatureSet
+for each type in the strand (e.g. blastx, ESTs,...). This FeatureSet
+holds a FeatureSet that is the result analog to a transcript. This
+FeatureSet holds a bunch of SeqFeatures, which may be FeaturePairs.
+FeaturePair extends
+SeqFeature and is used for alignments. A FeaturePair holds 2
+SeqFeatures: a query and a hit, which are the alignment/blast
+equivalents. </p>
+<p>Here the structure from forward result set to leaves:
+</p>
+<p>ForwardResultFeatureSet (isHolder = true)<br>
+|<br>
+FeatureSet For Each Type(isHolder = true)<br>
+|<br>
+FeatureSet "result transcript" (isHolder = false)<br>
+|<br>
+SeqFeature(may be FeaturePair)<br>
+</p>
+<p>Annot structure:<br>
+AnnotatedFeature (one for each strand) (isHolder = true)
+|<br>
+AnnotatedFeature(previously this was Gene)(isHolder = true)<br>
+|<br>
+Transcript(isHolder = false)<br>
+|<br>
+Exon<br>
+</p>
+<p>This is the structure GAME uses. Turns out apollo is a little more
+flexible. FeatureSetI has a notion of being a "holder". If a feature
+set is not a "holder", it will be probably be getting displayed in some
+fashion (this admittedly is a little funny putting viewish type things
+in the model). So the part of the structure above where isHolder=false
+needs to be the same,
+but the part of the structure where isHolder = true can vary. You can
+add more layers in
+the holder part of the data structure if you like and apollo will not
+complain. In fact
+the ensj data adapter has more layers in here.
+</p>
+<p></p>
+<h3>What is a CurationSet?</h3>
+DataAdapter.getCurationSet() returns an
+apollo.datamodel.CurationSet object. A CurationSet holds both results
+and annotations as well as the main sequence. Results are set with
+setResults(StrandedFeatureSetI),
+and annots are set with setAnnots(StrandedFeatureSetI). This
+determines what gets displayed in the annotation and result views in
+apollo. A StrandedFeatureSetI has a forward and reverse FeatureSetI for
+the 2 strands.
+<p>A CurationSet extends GenomicRange which extends Range. A
+GenomicRange
+allows you to set an organism string and a chromosome string. A Range
+has a name. GenomicRange sets its name to its chromosome.</p>
+<p>Range also has a start and end to set. Your CurationSet and features
+need to be in the same coordinate space. Apollo does not assume the
+features are relative to the curation set and offset them. If your
+feature data is relative to the curation set, your data adapter has to
+do the offsetting to get your apollo features in absolute coordinates
+rather than relative coordinates. This is actually true of GAME
+XML. GAME spans(feature) are relative to its map(curation set). The
+GAME data adapter adds the offset of the curation set/map to all of
+its spans in making its SeqFeatures.</p>
+<p>To make this clear here is an example. Lets say a data set starts at
+1000,
+and its features are relative. A relative data feature of 100 would
+need to have 1000 added to it for a start of 1100. </p>
+<p>Actually it gets even a bit more complicated. Relative coordinates
+might be base-oriented (counts bases themselves - start at 1) or
+interbase (counts between bases - start at 0). The above example
+assumes the coords are interbase. If they are base-oriented
+(as GAME is) you would have to subtract 1 to get the offset
+right. So if its base-oriented relative coords with cur set start at
+100 and feature start at 1 then 100 + 1 would have the feature
+starting at 101, which is not right. Subtracting 1 to compensate for
+base-oriented will have it starting at 100 where it belongs. </p>
+<h3>StrandedFeatureSet</h3>
+StrandedFeatureSet's constructor takes a FeatureSet for each strand.
+Typical use of StrandedFeatureSet is <br>
+for results: <br>
+StrandedFeatureSet results = new StrandedFeatureSet(new
+FeatureSet(),new
+FeatureSet())
+<p>for annots:<br>
+StrandedFeatureSet annots = new StrandedFeatureSet(new
+AnnotatedFeature(), new AnnotatedFeature())</p>
+<p>AnnotatedFeature is a FeatureSet. For CurationSets annot stranded
+feature set, the feature sets have to be AnnotatedFeatures.
+</p>
+<p>You can then use the StrandedFeatureSet to add forward and reverse
+features. StrandedFeatureSet will query the features strand and add it
+to the appropriate feature set strand. So in practice you dont
+actually need to add things directly to the feature set for a strand.
+</p>
+<h3>Creating annotations</h3>
+The StrandedFeatureSetI for the annots (in CurationSet) should
+contain AnnotatedFeatures
+for apollo's AnnotationView and its AnnotationMenu
+to function properly. AnnotatedFeature, Transcript,and Exon,
+all implement the AnnotatedFeatureI interface. (More needs to be
+written about this. For now you can look at a code example of
+AnnotatedFeature models being built in apollo.dataadapter.GAMEAdapter's
+getAnnot,
+getTranscript, and getExon methods.)
+<h3>How to create a simple analysis result </h3>
+(e.g. a repeatmasked area):.Create a SeqFeature with the appropriate
+start/stop/name and type.
+<h3>How to create a hit to another feature </h3>
+(e.g. a BLAST hit): Create a FeaturePair, with the visible SeqFeature
+as the first feature, and
+the hit feature as the second feature.
+<h3>How to create a group of features visibly linked together </h3>
+.. a set of exons grouped into a transcript ..create a FeatureSet,
+adding in the individual
+SeqFeatures into the set.
+<p>So theres an apollo quirk in that it turns out a features type can
+be set
+in either the child (SeqFeature/FeaturePair) or parent (FeatureSet)
+and it will work with the setting in tiers. Its probably best just to
+set both, but minimally for interoperability with other dataadapters
+(e.g. GAME)
+set the FeatureSets type.<br>
+</p>
+<h3>How to get dashed lines for transcript lines in results</h3>
+If you load example.xml with the game adapter youll notice some results
+have "transcript" lines that are dashed. This is used by flybase to
+show 2 different ESTs from the same cdna. To get this to happen you put
+all of the seqFeature/FeaturePairs in the same FeatureSet but give the
+ones with dashed lines different names.
+apollo.gui.drawable.DrawableResultSet (which is what you need to
+specifiy for this result in your tiers file) looks for feats with
+different names and makes the transcript line dashed if so. But it only
+does this if configured to look for it with the configuration in your
+style file of:<br>
+<br>
+DashSets&nbsp; "true"<br>
+<br>
+<h3>How to get start and stop codons in your transcript </h3>
+If you want start and stop codons to be automatically calculated and
+then appear in your transcript you
+need to call:
+<p>transcript.setTranslationStartAtFirstCodon()
+</p>
+<p>where transcript is an instance of the Transcript class.
+This will set the start at the standard start codon that gives the
+longest peptide (none is set
+if no starts are found), and then
+sets a stop if there is one in frame with the start. </p>
+<p>You can explicitly set a start with:
+</p>
+<p>transcript.setTranslationStart(int start)
+</p>
+<p>This will not explicitly set a stop.
+</p>
+<p>To explicitly set a stop call: </p>
+<p>transcript.setTranslationStop(int stop) </p>
+<p>If you want to explicitly set a start and have the stop
+automatically
+calculated from that call: </p>
+<p>transcript.setTranslationStart(int start, true) </p>
+<p>where the true tells it to calculate the end. setTranslationStop
+with
+no boolean has an implicit false for this param.
+</p>
+<p>You have to set the transcripts reference sequence for translation
+stops and starts to work properly (especially the automatic
+setting). This is done with: </p>
+<p>transcript.setRefSequence(SequenceI mainGenomicSequence)
+</p>
+<p>The sequence is usually (always?) the main genomic sequence. See
+"Sequence" below. </p>
+<p>I noticed the GAME adapter sets its exons' ref sequence as well. Its
+unclear if this is necessary but it doesn't hurt. It seems the GAME
+adapter sets ref sequences for most or all of its features. (check out
+source src/java/apollo/dataadapter/gamexml/GAMEAdapter setRange
+method).
+<br>
+</p>
+<h3>Curation Set Sequence (main genomic seq)<br>
+</h3>
+The main genomic sequence gets set with
+CurationSet.setRefSequence(SequenceI).
+There are several classes that implement SequenceI in apollo/datamodel.
+apollo.datamodel.Sequence is the most basic.
+Apollo seems to expect its sequence in upper case. All the dataadapters
+have their sequence in upper case. There are probably some things that
+won't work properly if sequence is in lower case.
+<p></p>
+<h4>Setting the sequence range from a data adapter</h4>
+The data model for a CurationSet is a sub-class of
+Range. What should be inferred from this is that a
+CurationSet is section of sequence that has been selected,
+from a larger sequence for annotation, in other words
+a CurationSet is a feature. Like other features it has
+a start and an end on a reference sequence.
+<p>When the gui is retrieving the sequence that has been
+curated it is necessary to know where that start and
+end are on the reference sequence so that the correct
+offsets can be applied. Therefore there is a link between
+the annotated sequence model to the curationSet. This
+is initialized when curation.setRefSequence(SequenceI seq)
+is called. Within this method (it overrides the parent's
+method in Range) internally the curation calls seq.setRange(this).
+Then when the Sequence model's getResidues() method is
+call it uses the start and end of the curation set to
+determine the correct offset.
+</p>
+<p>The needed calls in the adapter are:
+</p>
+<p>1. curation.setRefSequence(SequenceI sequence)<br>
+2. curation.setStrand(int)<br>
+3. curation.setStart(int)<br>
+4. curation.setEnd(int)<br>
+</p>
+<h3>Feature Pair Hit ref sequence and align sequence </h3>
+A FeaturePair has two features associated with it, a query feature and
+a hit feature.&nbsp; These can be retrieved with the methods <br>
+<br>
+SeqFeatureI FeaturePair.getHitFeature()<br>
+SeqFeatureI FeaturePair.getQueryFeature()<br>
+<br>
+The query feature is from the main genomic (from CurationSet) where the
+hit feature sequence from another source that has aligned with main
+genomic sequence in some fashion.<br>
+<br>
+There are 2 kinds of sequence that can be associated with a feature:
+reference sequence and alignment sequence. <br>
+<br>
+The ref sequence is what the feature refers to, the feature is
+basically a subsection of the ref sequence. For query features its
+refSequence is the main genomic sequence that CurationSet holds. Hit
+features refSequences are NOT the main genomic sequence, but some
+"external" sequence. The hit feature refers to a part of that
+"external" sequence that has aligned with the main genomic sequence at
+the query features coordinates. reference sequence can be set with the
+RangeI method<br>
+<br>
+void RangeI.setReferenceSequence(SequenceI)<br>
+<br>
+SeqFeatureI implements RangeI so this is a SeqFeatureI method as well.<br>
+<br>
+So for instance if you have a genomic sequence with coords 1 to 10000
+and an EST with coords from 1 to 500 and there is a "hit" where coords
+80 to 200 line up with coords 600 to 720 on the genomic, you would have
+a FeaturePair with a query feature with the main genomic as its ref
+sequence and start 600 and end 720, and a hit feature with its ref
+sequence being the EST sequence (which needs to be constructed as well)
+with start 80 and end 200. Apollo then extracts the proper subsequence
+for both hit &amp; query features in displaying their sequence. If you
+select a FeaturePair in apollo and bring up the Sequence window, the
+hit sequence (EST substring from 80 to 200) will be displayed with the
+"Result sequence" radio button. All the other radio buttons (peptide,
+cDNA, CDS, genomic) are for the query feature. genomic will include
+"intron" genomic sequence, cDNA cuts out introns (for a FeatureSet with
+multiple SeqFeats/FeatPairs), CDS cuts out UTRs (if theres translation
+start &amp; stop), peptide displays peptide sequence, if there is any,
+(which i believe only annotated features have peptide sequence
+translated from the genomic).<br>
+<br>
+The other sequence associated with a feature pair is alignment
+sequence. This can be set in 2 ways - "explicitly", with a the full
+alignment, or through the compact representation of whats called a
+"cigar". Alignment sequence contains the details of how the query and
+hit feature actually aligned with each other, so unlike ref sequence,
+alignment sequence can and ond often does have gaps in them for indels.
+Alignments are what is displayed in apollos alignment viewer jalview
+(jalview will display ref seqs if there are no alignments, but its not
+at all accurate without the indels).&nbsp; To set alignments
+"explicitly" you have to set both the hit &amp; query features
+alignments (alignments are meaningless if there is only one of them of
+course):<br>
+<br>
+FeaturePair.getHitFeature().setExplicitAlignment(SequenceI)<br>
+FeaturePair.getQueryFeature().setExplicitAlignment(SequenceI)<br>
+<br>
+The alternate compact way of seeting alignments is with a cigar. A
+cigar is a compact notation of describing all the indels between the
+hit and query. Cigars are set with:<br>
+<br>
+FeaturePair.setCigar(String cigarString)<br>
+<br>
+Here is an example cigar:<br>
+<br>
+M 6 I 3 M 24 D 9 M 33 D 3 M 51 D 21 M 33 D 3 M 9 D 3 M 24 I 3 M 51 I 3
+M 45<br>
+<br>
+M is for match, D is for delete, I is for insert.<br>
+<br>
+So what sequence do you see when you zoom into a feature in the main
+window? If there is hit alignment sequence this will be displayed, if
+not it will be display the hit sequence ("result sequence" of sequence
+window).<br>
+<br>
+<h3>Tiers and types </h3>
+A tier is a horizontal row that displays a user specified collection of
+result or annotation types. All of the types chosen by the user will
+appear (i.e. be layed out in the display) in this same region.
+<p>A type is associated with the data. A given analysis and its results
+are all of a single type. Likewise a collection of annotations are
+organized into types (all the P-elements).
+</p>
+<p>Thus, a tier describes a region of the graphic display. A type
+defines
+a collection of data.</p>
+<p>See the <a target="_new" href="userguide.html#TiersFiles">Apollo
+user guide</a> for a description of the tiers file. You
+will need to set up a tiers file for your datasource. Same with the
+style file.<br>
+</p>
+<p>For all of your features (results and annots) you will be setting a
+feature type with setFeatureType(String type). This is true of both the
+leaf SeqFeatures as well as the FeatureSets up the heirarchy. In order
+for your tier to be displayed, the feature type you set must correspond
+to a "datatype" in the tiers file. So a gene has featureTypes gene,
+transcript, and exon at its 3 levels. For the gene to be displayed
+those 3 types are in the gene Type as datatypes in the tiers file as
+such:<br>
+</p>
+<p>[Type]<br>
+label : gene<br>
+tiername : Annotation<br>
+datatype : gene<br>
+datatype : transcript<br>
+datatype : exon<br>
+glyph : DrawableGeneFeatureSet<br>
+.....<br>
+<br>
+</p>
+<h3> Start, end, low, high </h3>
+Start and End are strand specific (5' to 3') so...
+<p>On the forward strand
+<br>
+Start = Low; End = High
+</p>
+<p>on the reverse strand
+<br>
+Start = High; End = Low
+</p>
+<p>What is stored and recorded is low/high
+</p>
+<p>start/end (as Steve says) is biological and
+refers to what would be Start of transcription
+(or translation) and End of transcription.
+</p>
+<p>When setStart or setEnd is called the method
+checks the strand and sets low/high accordingly.
+So, beware that if you use start/end then
+you must call setStrand first or else things
+are assumed to be forward strand.
+</p>
+<p></p>
+<p><br>
+</p>
+<h2>Transactions</h2>
+Apollo now records transactions for almost all edits. The CurationSet
+holds a apollo.editor.TransactionManager. The TransactionManager holds
+Transactions.&nbsp; Transactions serve 2 purposes. They are used for
+undo (currently only in the annotation info editor) and for a fine
+grained writing approach if a data adapter chooses to go that way.<br>
+<br>
+The GAME Adapter both writes and reads out the transaction with
+apollo.dataadapter.gamexml.TransactionXMLAdapter.&nbsp; Thus with GAME
+transactions can be recorded across apollo sessions. The chado xml
+adapter does this as well. In order to enable the saving of
+transaction files you must set OutputTransactionXML to "true" in your
+apollo.cfg. The default is false.<br>
+<br>
+The way the GAME adapter does this is in addition to saving a game file
+a
+.tnxml file is saved as well. So if you saved data1.game, data1.tnxml
+will be saved in the same directory. On reading in data1.game,
+data1.tnxml is read in as well.
+<p>WARNING: If you intend to use these transactions
+(like for jdbc writeback) the 2 files must be kept consistent! If
+data1.game moves so must the .tnxml file. If data1.game is renamed
+data2.game, data1.tnxml must be renamed data2.tnxml. If this proves
+problematic, I am considering an option where they are saved together
+in 1 file.
+</p>
+<p>The Chado JDBC Adapter uses the transactions to do fine grained
+write
+back to the chado database.&nbsp; A transaction is converted into SQL
+for updates, deletes, and inserts to the database.<br>
+<br>
+Transactions can get very redundant. If you update the same field many
+times you don't need all of those updates to go to the database.
+TransactionManager has a coalesce method that tries to weed out all the
+redundant transactions.&nbsp; The coalesce function is a work in
+progress. Presently it gets most but not all redundancies. coalesce is
+called by the writeback adapters at write time.<br>
+<br>
+apollo.dataadapter.chadoxml.ChadoXMLTransactionAdapter converts apollo
+transactions to chado xml transactions. These can be used by the chado
+xort tool to update a chado database (an alternative to the jdbc
+adapter). This adapter is write-only. Converting chado xml transactions
+to apollo transactions is actually non-trivial.<br>
+<br>
+Transactions are used for undo. Undo is currently only implemented in
+the Annotation Info Editor. At some point we hope to get undo
+impelemented for all of apollo. <br>
+<br>
+So transactions can be used by any dataadapter that wants to do fine
+grain editing. Transactions are an alternative to dumping the whole
+apollo datamodel or diffing the apollo datamodel with ones datasource
+to in effect create your own transactions. Transactions can be really
+helpful for datasources that are not solely apollo, but are integrated
+with non-apollo data. With transactions one can edit the parts of ones
+datasource that apollo has changed. The alternative of dumping the
+whole apollo datamodel to the datasource can mean that the data entry
+gets wiped out and re-inserted, which can be tricky for integrated data.<br>
+<br>
+If you want to use transactions for you dataadapter here are some
+things you need to know. First get the TransactionManager with
+CurationSet.getTransactionManager(). Its then a good idea to call
+TransactionManager.coalesce() to get rid of redundancies. <br>
+<br>
+heres a bit of sample code:<br>
+<br>
+TransactionManager transactionManager =
+curationSet.getTransactionManager();<br>
+<br>
+transactionManager.coalesce(); // weed out redundant transactions for
+writeback<br>
+<br>
+for (int i=0; i &lt; transactionManager.numberOfTransactions(); i++) {<br>
+<br>
+&nbsp;&nbsp;&nbsp; Transaction transaction =
+transactionManager.getTransaction(i);<br>
+<br>
+&nbsp;&nbsp;&nbsp; if (transaction.isUpdate())<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; doUpdate(transaction);<br>
+&nbsp;&nbsp;&nbsp; <br>
+&nbsp;&nbsp;&nbsp; else if (transaction.isAdd())<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; doAdd(transaction);<br>
+<br>
+&nbsp;&nbsp;&nbsp; else if (transaction.isDelete())<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; doDelete(transaction);<br>
+<br>
+}<br>
+<br>
+<br>
+Heres some relevant methods from Transaction:<br>
+<br>
+boolean isUpdate()<br>
+boolean isAdd()<br>
+boolean isDelete()<br>
+Date getDate()<br>
+String getAuthor()<br>
+SeqFeatureI getSeqFeature()&nbsp; // seq feature edited<br>
+<br>
+boolean hasSubpart()<br>
+-- hasSubpart returns true if transaction has a subpart. add and delete
+feature have no subpart.&nbsp; All updates have subparts. Add and
+delete may or may not have subparts. adding a whole feature has no
+subpart. Adding a comment or synonym is an add with subpart. Same with
+delete.&nbsp; apollo.editor.TransactionSubpart is basically a
+controlled vocabulary of subparts.<br>
+<br>
+TransactionSubpart getSubpart() // returns subpart type. see
+apollo.editor.TransactionSubpart<br>
+<br>
+if hasSubpart() == true then <br>
+&nbsp;&nbsp;&nbsp; Object getNewSubpartValue() gives new value of
+subpart<br>
+&nbsp;&nbsp;&nbsp; Object getOldSubpartValue() gives old value of
+subpart<br>
+<br>
+<br>
+There are also CompoundTransactions (Transaction.isComopund() == true).
+For a data adapter I dont think these are of concern. They are for undo
+when a bunch of transactions result from one user action/edit, so that
+they can all be undone at once. coalesceTransactions actually flattens
+all of the compounds (at least for now) so after a coalesce you
+shouldnt see a compound transaction.<br>
+<br>
+<br>
+For examples of transactions being used for writeback see
+apollo.dataadapter.chado.JDBCTransactionWriter,
+apollo.dataadapter.gamexml.TransactionXMLAdapter, and
+apollo.dataadapter.ChadoTransactionXMLWriter. The chado xml writer
+writes ChadoTransactions.
+apollo.dataadapter.chado.ChadoTransactionTransformer converts apollo
+transaction to chado transactions.<br>
+<br>
+The game adapter had an early form of these transactions. These are no
+longer relevant, being supplanted by the new.<br>
+<br>
+</p>
+<h2>Exception handling.</h2>
+What do you do when things go wrong, for instance when the user enters
+"cat" into
+a chromosome start field? Or when the database you're examining has
+changed schema?
+--Why, you throw an apollo.dataadapter.DataAdapterException, of course.
+But what if
+you're overriding a method which is specified to have no such
+exception? Is the game over?
+Is it time to
+<p><code> catch(Exception e) { e.printStackTrace();} </code> ?
+</p>
+Well, no, there is a better way: throw a run-time exception, and catch
+it yourself from
+the entry points. See the NonFatalDataAdapterException as an example.
+<h2>What runs when </h2>
+<ol>
+  <li>ApolloRunner starts</li>
+  <li>Config loads</li>
+  <li>Each dataadapter is created and loaded into registry, along with
+its chosen Style</li>
+  <li>User chooses a dataadapter from dropdown </li>
+  <li>Dataadapter has its setProperties() invoked with history passed in</li>
+  <li>User populates fields on data adapter's gui and hits "OK"</li>
+  <li>DataAdapterGUI.doOperation method runs</li>
+  <li>DataAdapter's getCurationSet method is invoked</li>
+  <li>DataAdapterGUI.getProperties() invoked to grab the properties
+written to history</li>
+  <li>ApolloRunner receives the created curation set, creates the
+ApolloFrame, sets
+the data into it.</li>
+  <li>DrawableSeqFeatures are created for each of the SeqFeatures in
+the results/annotations.
+These are rendered by the various views resident inside the
+StrandedZoomableApolloPanels</li>
+</ol>
+<h2>Editing</h2>
+It is highly recommended to use apollo.gui.AnnotationEditor for all
+editing. All the annotation menu items are already wired into the
+AnnotationEditor so you shouldn't have to do anything. If you do find
+yourself doing some editing separately from the annotation menu (e.g.
+dataadapter backend checks or something like that) and you dont have
+access to the AnnotationEditor,
+you need to emulate the AnnotationEditor actions. One major error that
+can happen is that the model and view can get out of
+synch. AnnotationEditor handles synching them by sending out
+apollo.gui.event.AnnotationChangeEvents.
+apollo.gui.genomemap.AnnotationView receives these events and updates
+its drawables accordingly. So if you are doing any editing outside of
+the AnnotationEditor you need to send out your own
+AnnotationChangeEvents to apollo.gui.Controller. The Controller will
+then distribute the event to all listeners (which includes
+AnnotationView). You can get a hold of the Controller with
+apollo.gui.Config.getController().
+<h2>Chado JDBC Adapter</h2>
+The Chado JDBC Adapter was originally developed at TIGR by Johnathan
+Crabtree for TIGRs Chado databases. TIGR was at the time using an
+early version of chado (as that was what was available). The Chado
+Adapter has subsequently been adapted to Flybases chado database. The
+2 databases have a substantial amount of differences. Currently the
+differences are all lumped into one config param, ChadoInstance, which
+takes values FlyBase and TIGR, and now Rice as well.
+<p>The JDBC chado adapter is still a work in progress(as of time of
+writing 3/17/05). Theres still a few bugs to be hammered out(FlyBase
+contig dashed lines, exons out of range... see chado-jdbc-todo), and a
+few bells and whistles to add (on demand retrieval of seq and
+descriptions, user selects which features to retrieve... todo). </p>
+<p><br>
+<br>
+The Chado adapter allows Apollo to read data directly from a Chado
+<br>
+database (Chado is the database schema for biological data that is
+being
+<br>
+developed by the GMOD consortium).&nbsp; The default Chado database
+that
+<br>
+Apollo reads from is the FlyBase Chado Indiana public server, which
+holds
+<br>
+the same Drosophila melanogaster annotation data as is provided by the
+<br>
+GAME adapter.&nbsp; The Chado adapter will be most useful to groups
+that are
+<br>
+using a Chado database for storing their sequence annotation data (in
+<br>
+which case you will need to modify some of the configuration files to
+<br>
+handle your data).
+<br>
+<br>
+<br>
+If you are setting up Apollo to read from your chado database you will
+need to modify the configuration
+<br>
+files. To do this
+<br>
+you will need to add or change xml in the file conf/chado-adapter.xml
+in
+<br>
+order to fill in two elements: "chadodb" and "chadoInstance".
+<br>
+<br>
+chadodb element
+<br>
+---------------
+<br>
+Here is an example of the chadodb element:
+<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &lt;!-- Indiana public FlyBase server r3.2
+--&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &lt;chadodb&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;name&gt;FlyBase Chado
+Indiana public server r3.2&lt;/name&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;adapter&gt;apollo.dataadapter.chado.jdbc.PostgresChadoAdapter&lt;/adapter&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;url&gt;jdbc:postgresql://bugbane.bio.indiana.edu:7302/chado_r3.2&lt;/url&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;dbName&gt;chado_r3.2&lt;/dbName&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;dbUser&gt;flybase&lt;/dbUser&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;dbInstance&gt;flybaseInstance&lt;/dbInstance&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;style&gt;game.style&lt;/style&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;default-command-line-db&gt;true&lt;/default-command-line-db&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &lt;/chadodb&gt;
+<br>
+<br>
+You will need to add a similar entry to chado-adapter.xml describing
+your
+<br>
+Chado database.
+<br>
+<br>
+"name" is the label that will appear in the dropdown list of databases.
+<br>
+<br>
+"adapter" identifies the Apollo class to use for your database. If your
+<br>
+database uses Postgres, use
+<br>
+apollo.dataadapter.chado.jdbc.PostgresChadoAdapter; if you are using
+<br>
+Sybase use apollo.dataadapter.chado.jdbc.SybaseChadoAdapter. If you are
+<br>
+using a different database vendor, try Postgres and Sybase and see if
+one
+<br>
+of them works. Send email to the apollo mailing list if you encounter
+<br>
+problems.
+<br>
+<br>
+"url" is the URL for your database server that Apollo will connect to.
+<br>
+<br>
+"dbName" is the database name to use on your server.
+<br>
+<br>
+"dbUser" is the database user/login.
+<br>
+<br>
+"dbInstance" identifies the type of Chado database (see the section on
+<br>
+chadoInstance).
+<br>
+<br>
+"style" is the style file to use for this database.
+<br>
+<br>
+"default-command-line-db" if set to true this will be the database used
+when apollo is run from the command line.
+<br>
+<br>
+<br>
+chadoInstance element
+<br>
+---------------------
+<br>
+<br>
+In addition to the "chadodb" xml element, chado-adapter.xml has
+<br>
+"chadoInstance" elements that the chadodb elements refer to.
+<br>
+chadoInstance captures two things: a Chado instance class to use, and a
+<br>
+list of annotation types in that Chado database. Here is an example of
+<br>
+the chadoInstance element:
+<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp; &lt;chadoInstance id="flybaseInstance"&gt;
+<br>
+</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;inheritsInstance&gt;referenceInstance&lt;/inheritsInstance&gt;
+<br>
+</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;sequenceTypes&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;type&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;name&gt;chromosome_arm&lt;/name&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;useStartAndEnd&gt;true&lt;/useStartAndEnd&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;queryForValueList&gt;false&lt;/queryForValueList&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;values&gt;4,2L,2R,3L,3R,X,2h,3h,4h,Xh,Yh,U&lt;/values&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;/type&gt;
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp;
+&lt;type&gt;gene&lt;/type&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&lt;type&gt;golden_path_region&lt;/type&gt;
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/sequenceTypes&gt;
+<br>
+</p>
+&lt;&gt;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;clsName&gt;apollo.dataadapter.chado.jdbc.FlybaseChadoInstance&lt;/clsName&gt;
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;oneLevelAnnotTypes&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &lt;type&gt;promoter&lt;/type&gt;
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;type&gt;insertion
+site&lt;/type&gt;
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp;
+&lt;type&gt;transposable_element&lt;/type&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;
+&lt;type&gt;transposable_element_insertion_site&lt;/type&gt;
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;type&gt;remark&lt;/type&gt;
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp;
+&lt;type&gt;repeat_region&lt;/type&gt; <br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&lt;type&gt;substition&lt;/type&gt;<span style="font-family: monospace;"><br>
+&nbsp;&nbsp;&nbsp;&nbsp; </span>&lt;type&gt;nucleotide_deletion&lt;/type&gt;<span
+ style="font-family: monospace;"><br>
+&nbsp;&nbsp;&nbsp;&nbsp; </span>&lt;type&gt;nucletide_insertion&lt;/type&gt;<br>
+&nbsp;&nbsp; &nbsp; &nbsp; &lt;/oneLevelAnnotTypes&gt;
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;threeLevelAnnotTypes&gt;
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;type&gt;gene&lt;/type&gt;
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp;
+&lt;type&gt;pseudogene&lt;/type&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &lt;type&gt;tRNA&lt;/type&gt;
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;type&gt;snRNA&lt;/type&gt;
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp;
+&lt;type&gt;snoRNA&lt;/type&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &lt;type&gt;ncRNA&lt;/type&gt;
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;type&gt;rRNA&lt;/type&gt;
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp; &nbsp;&nbsp;
+&lt;type&gt;miRNA&lt;/type&gt;
+<br>
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &lt;/threeLevelAnnotTypes&gt; <br>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;featureCV&gt;sequence&lt;/featureCV&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;relationshipCV&gt;relationship&lt;/relationshipCV&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;propertyTypeCV&gt;feature_property&lt;/propertyTypeCV&gt;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;!-- default is part_of
+--&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;partOfCvTerm&gt;part_of&lt;/partOfCvTerm&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;transProtRelationTerm&gt;derives_from&lt;/transProtRelationTerm&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;polypeptideType&gt;polypeptide&lt;/polypeptideType&gt;<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;retrieveAnnotations&gt;true&lt;/retrieveAnnotations&gt;
+<br>
+</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;genePredictionPrograms&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;program&gt;genscan_masked&lt;/program&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;program&gt;genie_masked&lt;/program&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;/genePredictionPrograms&gt;
+<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;searchHitPrograms&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;program&gt;sim4&lt;/program&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;program&gt;%blastx%&lt;/program&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/searchHitPrograms&gt;
+<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;oneLevelResultPrograms&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;program&gt;crmscan&lt;/program&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;program&gt;crm_makeprimer&lt;/program&gt;
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;/oneLevelResultPrograms&gt;
+<br>
+<br>
+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;searchHitsHaveFeatLocs&gt;true&lt;/searchHitsHaveFeatLocs&gt;<br>
+</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;inheritsInstance&gt;referenceInstance&lt;/inheritsInstance&gt;</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;writebackXmlTemplateFile&gt;transactionXMLTemplate_rice.xml&lt;/writebackXmlTemplateFile&gt;<br>
+</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp; &lt;/chadoInstance&gt;
+<br>
+<br>
+"inheritsInstance" allows a chadoInstance to inherit all the values
+from another instance (to avoid redundancy), must label a previously
+described instance.
+<br>
+</p>
+<p>"sequenceTypes" are the database fields corresponding to top-level
+entries. These are the types that you can query in the GUI to load from
+chado. Each top-level controlled vocabulary term is listed as a type.
+The type can optionally further be broken down. &lt;name&gt; is the
+chado cv term for the type. &lt;useStartAndEnd&gt; will cause start and
+end fields to appear in the gui to get a sub section of the feature,
+for example a subsection of a chromosome. If &lt;queryForValueList&gt;
+is true then the values for the type that populate the dropdown list
+will be queried from chado. If queryForValueList is false then the list
+values need to be provided with &lt;values&gt;.
+<br>
+</p>
+<p>"clsName" is the class name to be used for your Chado instance.
+There
+are currently three Chado instance classes: -
+apollo.dataadapter.chado.jdbc.TigrSybilChadoInstance
+<br>
+- apollo.dataadapter.chado.jdbc.FlybaseChadoInstance
+<br>
+- apollo.dataadapter.chado.jdbc.RiceInstance
+<br>
+<br>
+FlyInstance is the most up-to-date of the three, so you can start by
+<br>
+trying that with your database.&nbsp; If that doesn't work, please
+contact the
+<br>
+apollo mailing list.
+<br>
+<br>
+"oneLevelAnnotTypes" and "threeLevelAnnotTypes" list annotation types
+<br>
+consisting of one and three levels. (Eventually this will be figured
+out
+<br>
+automatically.)
+One level annot types substitution, nucletide_insertion, and
+nucletide_deletion are treated special by apollo (though they are not
+by chado). These do not show up as features in the main window, rather
+they show up as sequence errors in the exon detail editor, with a base
+pair turned orange. The main window just displays an orange vertical
+line for these.
+</p>
+<p>featureCV is the name of the feature ontology in chado,
+relationshipCV is for the relationship ontology, and propertyTypeCV is
+for the property type ontology. <br>
+</p>
+<p>partOfCvTerm only needs to be listed if "part_of" is not used for
+this (alternate out there is "partof").<br>
+Likewise, "derives_from" is the default transcript-protein relation
+term. If your chado uses something different like "produced_by", that
+would need to be set here.&nbsp; The default polypeptide/protein type
+is "polypeptide. If you are using "protein", that needs to be set.<br>
+</p>
+<p>"inheritInstance" can be used to inherit from other chado instances
+already defined in the file.<br>
+</p>
+<p>"retrieveAnnotations" tells whether to query for annotations. The
+default is true.
+<br>
+<br>
+"genePredictionPrograms" list the gene prediction result programs to
+query for.
+<br>
+<br>
+"searchHitPrograms" list the programs to query for alignment/search hit
+results.
+<br>
+<br>
+"oneLevelResultPrograms" lists programs that return simple results that
+are only one level deep in structure, which are often used to construct
+one level annotations.
+<br>
+</p>
+<p>"writebackXmlTemplateFile" is the xml template configuration file to
+use for writeback - more details in the next section.<br>
+</p>
+<p>If no style is set in chadodb, the style that you are using will
+need to be set in apollo.cfg: <br>
+DataAdapterInstall "apollo.dataadapter.chado.ChadoAdapter"
+"tigrsybil.style"<br>
+Replace tigrstybil.style with your style file. (The style param
+DatabaseToStyle can be
+used to have multiple chado dbs with different styles, e.g.
+DatabaseToStyle "chado_r3.2 -&gt; game.style") </p>
+<p>ChadoInstance is where things get awkward and
+unsettled. TIGR stuff is outdated, FlyBase and Rice are more current,
+so
+you most likely want to try those. Unless you have mimicked the
+FlyBase or Rice schema exactly and have
+all the same kind of results in your database you will either get
+errors or perhaps an empty apollo (you are on unchartered
+territory). Currently there are TIGR, FlyBase, &amp; Rice chado
+instance
+classes that capture all the differences between them. This is
+sufficient for now. When a fourth data source comes along that needs
+different combinations of what has been lumped into these classes, we
+are going to need to get a lot more fine grained about configuring
+this adapter, but until we get to that point, theres no urgency to
+finely configure this. So in other words if you are wanting to connect
+up your chado database, please contact us
+via the <a target=_new href=http://mail.fruitfly.org/mailman/listinfo/apollo>Apollo mailing list</a>
+ and we can discuss what
+your chado database looks like, how much it conforms to SO, and figure
+out where the fine grain configging will need to
+happen to accommodate your needs. I'm taking a config-as-we-need-it
+approach, as I have no idea what will be encountered in a chado
+database of a different species. In theory, if a chado db follows SO
+closely there shouldn't be that much tweaking; there still will be
+some of course, and I am anxious to see how it plays out in
+practice. So send us email if you are thinking about taking up this
+endeavor. </p>
+<p>
+The query for CDS expects that the CDS is denoted in chado with
+SOFA's polypeptide and is in relationship to the transcript with
+"derives_from". Anything other than this, like "part_of" need to be
+configured as mentioned above. </p>
+<h3>Chado JDBC Writeback</h3>
+JDBC Writeback is now being used by several groups. There are some
+minor bugs, but its more or less working (and if they are killer, email
+the apollo
+mailing list and they will be fixed).<br>
+<br>
+Writeback is now working with 3 different instances of chado (rice,
+bdgp-inhouse-fly-crm,&nbsp; &amp; CyrilPommiers chado at INRA-URGI)<br>
+<p>
+Jdbc writeback uses Transactions, so read the above section on
+Transactions if you havent already done so.
+</p>
+<p>To configure writeback you will need to modify
+conf/transactionXMLTemplate so it fits your version of chado. The
+template there is how rice is setup. You will minimally need to put
+your organism in that file. If your cvterms vary from the standard
+ontologies, that also has to be configured.<br>
+</p>
+<p>There is an "impedance mismatch" between the apollo datamodel and
+chado. Apollo uses unshared exons where chado uses shared exons. This
+is problematic for writeback, as apollo does not carry through shared
+exon ids (this would be non-trivial - basically a major headache). So
+currently the jdbc writer makes the assumption that exon names are of
+the form genename:start-end. So if gene xyz had start 100 and end 200
+it would be named xyz:100-200. </p>
+<p>So for the moment your chado must conform to this naming convention
+for exons. If this is really problematic let us know (apollo mailing
+list). One alternate solution coud be to query via the exon's
+featureloc, but that is not in place at the moment.<br>
+</p>
+&lt;&gt;For sequencing errors (indels &amp; substitions from the exon
+detail
+editor) to be written back to chado you must add those types to the
+template file as such:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;cvterm op="lookup"
+id="substitution"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;cv_id&gt;Sequence Ontology Feature Annotation&lt;/cv_id&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;name&gt;substitution&lt;/name&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/cvterm&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;cvterm op="lookup"
+id="nucleotide_insertion"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;cv_id&gt;Sequence Ontology Feature Annotation&lt;/cv_id&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;name&gt;nucleotide_insertion&lt;/name&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/cvterm&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;cvterm op="lookup"
+id="nucleotide_deletion"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;cv_id&gt;Sequence Ontology Feature Annotation&lt;/cv_id&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&lt;name&gt;nucleotide_deletion&lt;/name&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/cvterm&gt;<br>
+Since this information is also redundantly&nbsp; in the
+chado-adapter.xml file in the one level annots section (or at least
+should be) eventually this should be able to be gleened soley from
+chado-adapter.xml, but for now both are necesary.<br>
+<br>
+<h2>GAME XML</h2>
+Lincoln Stein made some helpful informal notes about parsing GAME XML.
+For lack of a
+better place, here they are.
+<p>Lincoln: <br>
+Enclosed are my informal notes on what Apollo does and does not need
+[from the
+XML] to correctly process and display annotations.
+</p>
+<p>I found it was safer to work from the example GAME/XML file that
+comes with Apollo than to rely on the DTD, because there are a couple
+places where the reality diverges slightly from the theory.
+</p>
+<p></p>
+<dd><i>Note: Lincoln's notes were written before the <a
+ href="http://www.fruitfly.org/annot/apollo/game.rng.txt">RNG schema</a>
+for GAME XML was written to replace the inaccurate DTD.</i>
+  <p>&lt;seq&gt;<br>
+id yes<br>
+length yes<br>
+md5checksum no<br>
+version no<br>
+focus yes (for the main sequence)<br>
+&lt;/seq&gt;</p>
+  <p>&lt;map_position&gt; need! don't need &lt;arm&gt; but need
+&lt;span&gt;&lt;start&gt; &amp; &lt;end&gt;</p>
+  <p>&lt;annotation&gt;<br>
+id and name do not have to be the same -- name is the "display_name"<br>
+&lt;comment&gt; internal not needed<br>
+&lt;person&gt; and &lt;date&gt; use values<br>
+symbol -- ignore<br>
+property type must be part of a controlled vocabulary, will not load<br>
+without proper controlled vocabulary<br>
+Separate step that can happen later...<br>
+&lt;gene&gt; -- ignore<br>
+&lt;dbxref&gt; -- need and should be separated from other attributes<br>
+&lt;feature_set&gt; is synonymous with transcript, and gene can have
+multiple<br>
+&lt;feature_set&gt;<br>
+id -- need<br>
+produces_seq -- don't need<br>
+&lt;feature_span&gt;<br>
+Start codon is of type "translate offset" and coordinates are<br>
+three bases starting at codon 1.<br>
+Start can be &gt; end for minus strand.<br>
+&lt;seq_relationship&gt; -- indicates coordinate system "query" usually
+or "subject"<br>
+for alignments</p>
+  <p> &lt;computational_analysis&gt;<br>
+&lt;database&gt; must be there, but can say "dummy"<br>
+&lt;result_set&gt; is basically a hit.<br>
+id is a unique ID within the GAME file, but not critical maybe<br>
+name is a globally unique name for the hit (display_name)<br>
+The part before the first hyphen is displayed by Apollo.<br>
+&lt;result_span&gt; id = some number<br>
+&lt;output&gt; skip this section entirely<br>
+&lt;seq_relationship&gt;<br>
+"query" is the focus seq object<br>
+"subject" is the hit sequence<br>
+For minus strand hits, reverse the query (maybe).</p>
+  <p>Suzi's response:</p>
+  <p> For minus strands don't reverse query with subject, rather this
+is
+indicated by a start that is bigger than the end. This is true for both
+query and subject.</p>
+  <p>These are the four possible configurations (with
+pretend intervals of 100-110 on the query (genomic)
+and 10-20 on the subject). minus and minus is
+silly, but for completeness</p>
+  <p>genomic hit<br>
+100-110 10-20 (plus and plus)<br>
+110-100 10-20 (minus and plus)<br>
+100-110 20-10 (plus and minus)<br>
+110-100 20-10 (minus and minus) </p>
+  <h3> A note about comments in annotation info </h3>
+You can configure canned comments in Apollo. In fact its recommended
+to keep comments consistent. These comments are added in the style
+file with AnnotationComment &amp; TranscriptComment. See <a
+ href="userguide.html#Configuration">configuration</a> in the
+userguide.
+  <h3>Some terse notes on properties in GAME and Apollo<br>
+  </h3>
+  <br>
+so looking through example.xml there are properties like this: <br>
+  <br>
+&nbsp;&nbsp;&nbsp; &lt;property&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;type&gt;gbunit&lt;/type&gt; <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;value&gt;AE003603&lt;/value&gt; <br>
+&nbsp;&nbsp;&nbsp; &lt;/property&gt; <br>
+  <br>
+  <br>
+  <br>
+  <br>
+Annot Properties: <br>
+  <br>
+gbunit, sp_status, cyto_range, protein_id (proteins should be
+features!), sp_comment, internal_synonym (whats this?),validation_flag
+(??), <br>
+  <br>
+  <br>
+  <br>
+Annot properties unique to certain annots: <br>
+  <br>
+transposable_element props: element <br>
+  <br>
+trna props: aminoacid, anticodon <br>
+  <br>
+  <br>
+  <br>
+Result properties: <br>
+  <br>
+qseq_type, type <br>
+  <br>
+  <br>
+  <br>
+Game Adapter notes: <br>
+  <br>
+from GAMEAdapter.setTagValue(): <br>
+  <br>
+game prop total_score -&gt; apollo Score object <br>
+  <br>
+amino_acid -&gt; feat name <br>
+  <br>
+non_canonical_splice_site -&gt;
+Transcript.nonConsensusSplicingOkay(value.equals("approved")) <br>
+  <br>
+cigar -&gt; FeaturePair.setCigar <br>
+  <br>
+symbol -&gt; sets name (if not already set) <br>
+  <br>
+problem -&gt; AnnotatedFeature.setIsProblematic <br>
+  <br>
+otherwise just puts property in <br>
+  <br>
+  <br>
+properties that the game adapter seems to be adding to the apollo data
+model - unclear if these are still being used: <br>
+  <br>
+result: insertion_site (derived from sequence description) <br>
+  <br>
+analysis features: date,version <br>
+  <br>
+feature pair query: description <br>
+  <br>
+transcript: date <br>
+  <br>
+  <br>
+Properties that appear to be used by apollo: <br>
+  <br>
+program SeqFeature <br>
+database SeqFeature <br>
+  <br>
+tag - DrawableResultSeqFeature,TierPopupMenu <br>
+  <br>
+AnnotationEditor: <br>
+splice (AnnotationEditor(AE)) <br>
+insertion_site (AE,Triangle shape) <br>
+  <br>
+dicistronic&nbsp; AE,TransactionUtil, GeneEditPanel <br>
+  <br>
+  <br>
+cyto_range FlyIdValidator, GA <br>
+  <br>
+missing_start_codon GA <br>
+  <br>
+status TransactionUtil AE TranscriptEditPanel AnnotationMenu <br>
+frame(AnalysisFilter(AF), <br>
+revcomp AF <br>
+sim4_set AF <br>
+  <br>
+sp_status PeptideMenu TranscriptMenu PeptideValidator
+DrawableSeqFeature&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+GeneEditPanel <br>
+Ed Erwin &lt;ed_erwin@affymetrix.com&gt;<br>
+notes GenbankReport <br>
+  <br>
+query_frame DetailInfo <br>
+  <br>
+ODD Sim4Parser One level annot types substitution, nucletide_insertion,
+and
+nucletide_deletion are treated sepcial by apollo (though they are not
+by chado). These do not show up as features in the main window, rather
+they show up as sequence errors in the exon detail editor, with a base
+pair turned orange. The main window just displays an orange vertical
+line for these.<br>
+  <br>
+subject_alignment BlixemRunner <br>
+  <br>
+gbunit&nbsp; GenbankValidator, GA <br>
+  <br>
+date GAMESave(GS), GenbankAdapter(GA) <br>
+type GS <br>
+version GS <br>
+  <br>
+aminoacid&nbsp; GenbankAdapter(GA) tRNAValidator <br>
+  <br>
+prot_desc&nbsp; GenbankRead <br>
+gene GenbankRead <br>
+  <br>
+protein_id GenbankReport(GR) GA <br>
+codon_start&nbsp; GR <br>
+function&nbsp; GR <br>
+prot_desc GR <br>
+  <br>
+translation_start TranscriptTagHandler(Otter) <br>
+translation_end Otter <br>
+  <br>
+chado xml reads &amp; writes a bunch of pass throughs <br>
+  <h2> Name Adapters </h2>
+&lt;&gt;A name adapter is for species/lab specific naming of ids and
+names
+and
+whatnot. We have tried but not always suceeded to put everything that
+is flybase specific into apollo.config.FlyNameAdapter. Name adapters
+are configured for each annotation type in the tiers file (result types
+dont need name adapters) with the name_method tag: <br>
+  <br>
+[Type] <br>
+tiername : Annotation <br>
+typename : gene <br>
+datatype : gene <br>
+datatype : transcript <br>
+datatype : exon <br>
+.... <br>
+overlap_method : ORF_Overlap <br>
+name_method : FlyNameAdapter <br>
+  <br>
+  <br>
+So you could potentially have different name adapters for different
+annotations. If a name adapter is not specified with name_method (and
+theres no name adapter in the style file as well)
+apollo.config.DefaultNameAdapter is used. <br>
+  <br>
+All name adapters implement the ApolloNameAdapterI interface. Heres the
+interface which should give you an idea how this is used: <br>
+  <br>
+public interface ApolloNameAdapterI { <br>
+  <br>
+&nbsp; //generates a name for a given feature <br>
+&nbsp; public String generateName(StrandedFeatureSetI annots, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+String curation_name, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+SeqFeatureI feature); <br>
+  <br>
+&nbsp; //generates a name for a given feature <br>
+&nbsp; public String generateId(StrandedFeatureSetI annots, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+String curation_name, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+SeqFeatureI feature); <br>
+  <br>
+&nbsp; // sets the name of a given feature <br>
+&nbsp; public void setName(SeqFeatureI feature, String name); <br>
+  <br>
+&nbsp; // sets the name of a feature based upon its parent <br>
+&nbsp; public void setTranscriptNameFromAnnot(Transcript transcript,
+AnnotatedFeatureI gene); <br>
+  <br>
+&nbsp; // sets the name of a derived sequences based upon transcript
+name <br>
+&nbsp; public void changeSeqNames(Transcript transcript); <br>
+  <br>
+&nbsp; //find out if name is an id string <br>
+&nbsp; public boolean nameIsId (SeqFeatureI feature); <br>
+  <br>
+&nbsp; //generates a name for a given feature <br>
+&nbsp; public String selectMergeName(StrandedFeatureSetI annots, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+String curation_name, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+AnnotatedFeatureI feature1, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+AnnotatedFeatureI feature2); <br>
+  <br>
+&nbsp; public boolean suffixInUse(Vector transcripts, String suffix,
+int t_index); <br>
+  <br>
+&nbsp; /** Returns true if id jibes with seq feature's ID format. This
+can be used for both <br>
+&nbsp;&nbsp; * ids and names that mirror the id */ <br>
+&nbsp; public boolean checkFormat(SeqFeatureI feat,String id); <br>
+  <br>
+&nbsp; /** Return true if id and name have same format */ <br>
+&nbsp; public boolean idAndNameHaveSameFormat(SeqFeatureI feat,String
+id, String name); <br>
+  <br>
+&nbsp; /** Returns expected pattern (if any) for transcript names */ <br>
+&nbsp; public String getTranscriptNamePattern(); <br>
+  <br>
+&nbsp; /** Returns true if changing type from oldType to newType will
+cause a change <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; in feature ID, i.e. the ID prefix will
+change to reflect the new type */ <br>
+&nbsp; public boolean typeChangeCausesIdChange(String oldType, String
+newType); <br>
+  <br>
+&nbsp; public String getNewIdFromTypeChange(String oldId,String
+oldType,String newType); <br>
+  <br>
+&nbsp; /** A name adapter needs an annotation change log. Has to make
+sure new temp id <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; isnt in log. */ <br>
+&nbsp; public void setAnnotationChangeLog(AnnotationChangeLog acl); <br>
+  <br>
+&nbsp; /** Set annots id to id. May set annot subparts ids as well. */ <br>
+&nbsp; public void setId(AnnotatedFeatureI annot, String id); <br>
+  <br>
+} <br>
+  <br>
+The annotation editor calls these methods for its various editing
+methods. <br>
+There is now a&nbsp; GmodName Adapter which is a super class of
+the RiceNameAdapter and FlyNameAdapter. Rice doesnt override very much
+of it. There is also a SimpleNameAdapter that just uses the result name
+for the annot name, rather than giving a temp id. SimpleNameAdapter can
+only be used with 1 level annots (number_of_levels : 1 in tiers file).
+</dd>
+<dd> <br>
+</dd>
+</body>
+</html>

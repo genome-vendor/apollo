@@ -1,0 +1,170 @@
+#optimize results query for fb
+
+#get gene retrieval working in fb
+
+#fb gene predictions
+
+#add querying by gene in fb
+
+#match fb driver up with game style 
+
+make fb types match up with game types
+
+#masked_blastx scores coming up with zeros - where are scores stored?
+
+#gene query is slow - 1 minute - optimize
+
+#cds query is also really slow - 1 minute as well
+
+#cds comes in as a separate feature - get rid of that for fb
+actually this only shows up in debug mode for debugging
+
+#When you choose a database - its driver isnt set in the driver list.
+
+#get DatabaseToStyle working for flybase
+
+#refactor FeatureLocImplementation
+
+blastx results coming in as seq features NOT feature sets
+
+#gene prediction scores have an endless decimal
+
+the adapter doesnt set itself up initially with whats listed in the db
+chooser box - ya have to select something else and then select it to
+have it work - its minor but it would be nice if custom_db didnt have
+to be the initial selection
+
+on right clicking fb gene heix - due to lack of ref seq range from
+annot feat:
+java.lang.NullPointerException
+        at apollo.datamodel.Range.isContainedByRefSeq(Range.java:134)
+        at apollo.gui.menus.AnnotationMenu.menuInit(AnnotationMenu.java:161)
+        at apollo.gui.menus.AnnotationMenu.<init>(AnnotationMenu.java:97)
+        at apollo.gui.genomemap.AnnotationView.createPopupMenu(AnnotationView.java:327)
+        at apollo.gui.genomemap.FeatureView.showPopupMenu(FeatureView.java:566)
+        at apollo.gui.genomemap.ApolloPanel.mousePressed(ApolloPanel.java:1015)
+so isContainedByRefSeq just returning true - if debug prints message
+
+need start and stop of translation - different from tigr - tigr - cds
+feature, fb - protein feature
+
+genes not labeled with popular synonym (eg cact, heix) in annot view
+
+CFG2) Relationship cv terms having underscores (or something like that)
+CFG8) translation start and stop - (getCdsSql())
+
+fb sequence retrieval
+
+axis start and end green and red lines are at 0
+
+#feats have ref sequence - but ref seq has no range in fb
+
+retrieving target sequences one by one is very slow - 
+a) make target seq retrieval part of query - which is contingent
+getTargetSeq flag 
+
+On 2nd load DatabaseToStyle seems to be ignored - using tigr style not
+game style
+
+need to get sequence for gene query - which will be padded at some
+point - 
+config padding?
+
+gene models for scaffold AE003689 took 1 minute 13 sec - slow! should try to
+speed this up.
+
+need alignement seqs
+
+fb target species coming in as "Comp" for blastx hits - effect feature
+name - config #7
+CFG7) naming of features is different - tigr has species on hits in chado
+- fb doesnt (species "Comp")
+
+
+descriptions are featureprops - yikes - load initially as inner join
+on description? load as background thread? load on demand with
+selection?
+
+Migrate this stuff from Postgres/sybase classes to configged
+tigr/flybase classes
+
+Whats the best way to deal with schema differences? Config it?
+subclasses? some combination of the 2?
+
+gene prediction names not coming in right in fb
+
+genmoic sequence seems to be off by one even if padding = 0
+genomic sequence for genes looks wrong - probably because of padding
+
+ede bombs with >1 transcript
+
+seq find hangs - doesnt work
+
+translation stops are one codon early
+
+description columns not being filled in in evidence panel (eg LD10168
+- sima)
+
+There are also some ESTs missing with the JDBC adapter. SD09437.5prime and
+UNKNOWN_RE40268.TN_G10343.93_revcomp are just 3' to the gene, so I assume
+we would see these if we had padding with the gene query. (yup - need padding)
+But GH06439.5prime_revcomp, which matches the 3' end of cact, just seems
+to be missing. Can you please investigate?
+
+The lighter orange BLASTX results to other species and the P element
+insertions appeared to be missing with cact, but I got them for kel, so
+I'm not sure what's going on there. Perhaps it's related to that missing
+EST data I mentioned earlier? (sima)
+
+GH06439 est is getting drawn on top of by a dgc - different types -
+both sim4 i think - funky with selection - actually im seeing this in
+game as well - oh my - suzi is fixing this
+
+try out indiana servers!
+
+retrieving featureprop descriptions one by one is better than an outer
+join but still rather slow - optimize! - on demand? backround load? big "in"
+clause with all tgt ids? - this is ridiculoulsy slow for a scaffold
+need to redo - outer join jibes with indiana! who knows why
+
+for gene models small entry (gene) is much faster with seqscan (3s vs
+24s) but a scaffold is much faster with sescan enabled (1:11 vs 26
+sec) those numbers seem wacky - recheck - set seqscan according to
+query? try switching clustered index to accomodate? play around with
+this  -- try scott cains function index speedup! - tried scott cains
+index/fn - the gene query didnt even use it - bummer
+
+gene queries pads for sequence but the rest of the queries dont use
+the padding - put padding in for all the queries
+
+pare down ui for release - make it as simple as possible.
+
+---------^^^-----Release 1.4.5 (7/2/04)---------^^^---------
+
+db login can be optionally configged
+
+if db login is configged, login/username panel is hidden as its not needed
+
+optimize - whole scaffolds still slow(genes not so bad even with 25kb
+padding). 
+for scaffold AE003603: 
+sim4: 1 min 34 sec, blastx: 26 sec genes: 1 min 8 sec,
+(why is blastx faster than sim4??? merge blastx and sim queries?)
+sim4 and blastx queries merged!
+
+---------^^^-----Release 1.4.6 (7/8/04)---------^^^---------
+
+not getting transcript comments and other props for annot info editor.
+
+transcript last modified info
+
+gene comments in annot info
+
+not getting synonyms for annot info
+
+not getting DB XREFs 
+
+annot info frame shift: I looked at the "kel" gene, one of the
+examples of stop codon replacement
+with selenocysteine. This one should be marked "Problematic" (checkbox in
+the annotation info editor), but it is not with the JDBC adapter. (sima)

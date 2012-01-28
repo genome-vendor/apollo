@@ -1,0 +1,844 @@
+<?xml version="1.0"?>
+<grammar ns="" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <!-- RELAX-NG (see relaxng.org) schema description for GAME XML -->
+  <!-- The rng file is the home of the GAME XML schema.  game.xsd can be
+  derived from it using trang (see schema-notes), as can game.rnc if you
+  want the compact format.  Therefore, any modifications to the schema
+  should be made to the rng file first. -->
+  <!-- Schema for GAME XML, v1.0.
+  Note that this schema is liberal--it is possible to construct GAME XML
+  files that Apollo's GAME XML parser doesn't like but yet are
+  validated by this schema.
+  Started by Sohel Merchant at RGD; edited and commented by Suzanna
+  Lewis; edited and commented by Andrew Dalke; extensively revised by
+  Nomi Harris 11/2004 -->
+  <!-- Note on entities: some XML files include non-standard entities for
+  representing Greek letters, e.g. &tgr;.  Theoretically, all nonstandard
+  entities should be defined in the XML stream itself.  This is not the
+  case with the Apollo data because Apollo has code to deal with these
+  entities.  It turns out to be non-trivial to make the schema deal with
+  entities that are nonstandard and not defined in the XML input, so if
+  you try to validate a GAME XML file that includes these Greek entities,
+  you will unfortunately get a fatal error.  NH, 12/07/2004 -->
+  <start>
+    <choice>
+      <!-- The root element; represents the curation of one or more
+      sequences of DNA, RNA, or AA.  Most commonly, the <game> element
+      represents the curation of a single sequence. -->
+      <element name="game">
+        <optional>
+          <attribute name="version">
+            <data type="string"/>
+          </attribute>
+        </optional>
+        <oneOrMore>
+          <choice>
+            <!-- <seq>: Represents a sequence of DNA, RNA, or AA.  There
+            is generally one <seq> in the document representing the
+            primary sequence being curated, and other <seq>'s that
+            support the curation of the primary sequence.  The primary
+            <seq> is directly under the <game> element, and is identified
+            by having its "focus" attribute set to true.  Each <seq> has
+            one or more <db_xref> to indicate where the seq can be found
+            using a particular unique identifier.  
+            For Drosophila curation, BDGP uses the primary <seq> to represent
+            an accession, and other <seq>'s to represent cDNA's, protein
+            coding sequences, and homologous sequences that are
+            referenced by computational analyses such as tblastx. -->
+            <element name="seq">
+              <ref name="seqType"/>
+            </element>
+            <!-- <map_position>: Maps a sequence onto a chromosome.  For
+            Drosophila curation, only one <map_position> is used per
+            file, to specify the location of the primary sequence on a
+            chromosome. -->
+            <element name="map_position">
+              <interleave>
+                <attribute name="seq">
+                  <data type="string"/>
+                </attribute>
+                <attribute name="type">
+                  <data type="string"/>
+                </attribute>
+                <!-- Theoretically, we should have arm or chromosome, but
+                not both.  In practice, I've sometimes seen both. -->
+                <optional>
+                  <ref name="arm"/>
+                </optional>
+                <optional>
+                  <ref name="chromosome"/>
+                </optional>
+                <optional>
+                  <ref name="organism"/>
+                </optional>
+                <element name="span">
+                  <ref name="spanType"/>
+                </element>
+              </interleave>
+            </element>
+
+            <!-- <annotation>: Represents a set of related seqence
+            features and a collection of genetic information describing
+            them.  The term "sequence feature" means a segment of DNA.
+            An annotation will generally contain a number of
+            <feature_set>'s, each of which represents a set of related
+            sequence features that have a specific location.  A
+            <feature_set> can contain nested <feature_set>'s (although in
+            practice this has not yet occured), as well as one or more
+            <feature_span>'s, each of which represents an individual
+            sequence feature.  A <feature_span> can contain <evidence>
+            which specifies a result id and result type.  An <annotation>
+            can have one or more <db_xref>'s.
+            For Drosophila curation, the types of annotations are: gene,
+            pseudogene, transposon, tRNA, rRNA, snRNA, snoRNA,
+            "misc. non-coding RNA", and "miscellaneous curator's
+            observation".  [Note: there are now some additional types.]
+            For an <annotation> of type "gene", one <feature_set> element
+            represents each transcript, and for each transcript, one
+            <feature_span> element represents each exon. -->
+            <element name="annotation">
+              <interleave>
+                <optional>
+                  <attribute name="problem">
+                    <data type="boolean"/>
+                  </attribute>
+                </optional>
+                <attribute name="id">
+                  <data type="NMTOKEN"/>
+                </attribute>
+                <ref name="name"/>
+                <!-- Type should be constrained to be a SO term -->
+                <ref name="type"/>
+                <optional>
+                  <element name="date">
+                    <ref name="dateType"/>
+                  </element>
+                </optional>
+                <!-- A lot of magic is held in the property element.
+                It became the elastic that let us add new data (and have it
+                be saved to the database) without having to change any of
+                the other code. To get the full functionality of Apollo
+                maybe we should enumerate the special types here? -->
+                <zeroOrMore>
+                  <element name="property">
+                    <ref name="propertyType"/>
+                  </element>
+                </zeroOrMore>
+                <zeroOrMore>
+                  <ref name="synonym"/>
+                </zeroOrMore>
+                <optional>
+                  <element name="gene">
+                    <optional>
+                      <!-- This is another leftover.  The idea was that sometimes
+                      a curator might not 'know' which gene it is (from the literature)
+                      but they have a list of suspects that it might be.
+                      Perhaps we should eliminate this entire <gene> element.  -->
+                      <attribute name="association">
+                        <data type="string"/>
+                      </attribute>
+                    </optional>
+                    <attribute name="id">
+                      <data type="string"/>
+                    </attribute>
+                    <ref name="name"/>
+                    <optional>
+                      <!-- <dbxref>: Represents a database
+                      cross-reference.  The <xref_db> is the name of the
+                      database (e.g. EMBL), and the <db_xref_id> is the
+                      unique id within that database. -->
+                      <element name="dbxref">
+                        <ref name="dbxrefType"/>
+                      </element>
+                    </optional>
+                  </element>
+                </optional>
+                <!-- other db xrefs other than the primary one in the gene element -->
+                <zeroOrMore>
+                  <element name="dbxref">
+                    <ref name="dbxrefType"/>
+                  </element>
+                </zeroOrMore>
+                <zeroOrMore>
+                  <element name="comment">
+                    <ref name="commentType"/>
+                  </element>
+                </zeroOrMore>
+                <optional>
+                  <element name="description">
+                    <data type="string"/>
+                  </element>
+                </optional>
+                <choice>
+                  <oneOrMore>
+                    <!-- <feature_set>: Represents a set of sequence
+                    features (segments of DNA).
+                    For Drosophila curation, a <feature_set> represents a
+                    transcript, and contains a number of <feature_span>'s
+                    which represent the start codon and the exons.  Each
+                    <feature_set> typically contains two <seq>'s, one for
+                    the cDNA sequence and one for the protein-coding
+                    sequence of the transcript. -->
+                    <element name="feature_set">
+                      <ref name="feature_setType"/>
+                    </element>
+                  </oneOrMore>
+                  <oneOrMore>
+                    <!-- <feature_span>: Represents a sequence feature
+                    (segment of DNA), including its location, which is
+                    specified in a <seq_relationship>.  Can contain
+                    <evidence> which specifies a result id and result
+                    type. [Actually, I don't think we have explicit
+                    <evidence> tags anymore.]
+                    For Drosophila curation, a <feature_span> represents
+                    an exon or a start codon.  Each <feature_span>
+                    contains a <seq_relationship> of type "query"
+                    specifying the location on the primary sequence of
+                    the document, which is typically an accession. -->
+                    <element name="feature_span">
+                      <ref name="feature_spanType"/>
+                    </element>
+                  </oneOrMore>
+		  <oneOrMore>
+		    <!-- for one level annots just have a seq relationship which just gives
+		    coords for the annot -- new change to game as of fall 2005 -->
+		    <element name="seq_relationship">
+		      <ref name="seq_relationshipType"/>
+		    </element>
+		  </oneOrMore>
+                </choice>
+              </interleave>
+            </element>
+
+            <!-- <computational_analysis>: Contains evidence from
+            computational analysis programs such sim4 and blastx.
+            <result_set>'s and <result_span>'s represent a tree structure
+            of results, with <result_set>'s representing branch nodes
+            (e.g. gene matches), and <result_span>'s representing leaf
+            nodes (e.g. exon matches).  The elements <feature_set>,
+            <feature_span>, <result_set>, <result_span> run parallel to
+            one another. Both allow multiple levels of nesting, both have
+            physical location(s) on sequences. The key differences are
+            that 'features' have results as evidence and results have
+            some form of an associated score for the assay.
+            <seq_relationship>'s provides the locations on the underlying
+            <seq>'s. -->
+            <element name="computational_analysis">
+              <interleave>
+                <!-- program name is required -->
+                <ref name="program"/>
+                <optional>
+                  <ref name="database"/>
+                </optional>
+                <!-- version of program used -->
+                <optional>
+                  <ref name="version"/>
+                </optional>
+                <!-- There's not usually a "type" field here, but some
+                datasets seem to have it. -->
+                <optional>
+                  <ref name="type"/>
+                </optional>
+                <zeroOrMore>
+                  <element name="property">
+                    <ref name="propertyType"/>
+                  </element>
+                </zeroOrMore>
+                <!-- date analysis was run -->
+                <optional>
+                  <element name="date">
+                    <ref name="dateType"/>
+                  </element>
+                </optional>
+                <choice>
+                  <!-- Normally a computational analysis should have
+                  result sets, but sometimes they're empty. -->
+                  <zeroOrMore>
+                    <element name="result_set">
+                      <ref name="result_setType"/>
+                    </element>
+                  </zeroOrMore>
+                  <!-- some analyses just give single intervals, for example
+                  tRNAscan-SE. Although I will admit that most of the time
+                  what the DB has provided is a 'set' with only a single
+                  'span' contained within it. -->
+                  <zeroOrMore>
+                    <element name="result_span">
+                      <ref name="result_spanType"/>
+                    </element>
+                  </zeroOrMore>
+                </choice>
+              </interleave>
+            </element>
+            <element name="transaction">
+              <interleave>
+                <element name="date">
+                  <ref name="dateType"/>
+                </element>
+                <ref name="author"/>
+                <ref name="object_class"/>
+                <ref name="operation"/>
+                <element name="before">
+                  <interleave>
+                    <optional>
+                      <ref name="annotation_id"/>
+                    </optional>
+                    <optional>
+                      <ref name="id"/>
+                    </optional>
+                    <optional>
+                      <ref name="transcript_name"/>
+                    </optional>
+                    <optional>
+                      <ref name="name"/>
+                    </optional>
+                  </interleave>
+                </element>
+                <element name="after">
+                  <interleave>
+                    <optional>
+                      <ref name="annotation_id"/>
+                    </optional>
+                    <optional>
+                      <ref name="id"/>
+                    </optional>
+                    <optional>
+                      <ref name="transcript_name"/>
+                    </optional>
+                    <optional>
+                      <ref name="name"/>
+                    </optional>
+                  </interleave>
+                </element>
+              </interleave>
+            </element>
+            <!-- Obsolete types of transaction record,
+            included for backwards compatibility -->
+            <element name="deleted_transcript">
+              <attribute name="id">
+                <data type="string"/>
+              </attribute>
+            </element>
+            <element name="changed_gene">
+              <attribute name="id">
+                <data type="string"/>
+              </attribute>
+            </element>
+          </choice>
+        </oneOrMore>
+      </element>
+      <ref name="transcript_name"/>
+      <ref name="start"/>
+      <ref name="end"/>
+      <ref name="position"/>
+      <ref name="base"/>
+      <ref name="person"/>
+      <ref name="alignment"/>
+      <ref name="operation"/>
+      <ref name="chromosome"/>
+      <ref name="score"/>
+      <ref name="residues"/>
+      <ref name="xref_db"/>
+      <ref name="name"/>
+      <ref name="value"/>
+      <ref name="annotation_id"/>
+      <ref name="type"/>
+      <ref name="organism"/>
+      <ref name="version"/>
+      <ref name="arm"/>
+      <ref name="synonym"/>
+      <ref name="text"/>
+      <ref name="description"/>
+      <ref name="db_xref_id"/>
+      <ref name="database"/>
+      <ref name="program"/>
+      <ref name="author"/>
+      <ref name="object_class"/>
+    </choice>
+  </start>
+  <define name="position">
+    <element name="position">
+      <ref name="int"/>
+    </element>
+  </define>
+  <define name="base">
+    <element name="base">
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="organism">
+    <element name="organism">
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="result_spanType">
+    <interleave>
+      <optional>
+        <attribute name="id">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <ref name="name"/>
+      </optional>
+      <optional>
+        <ref name="type"/>
+      </optional>
+      <optional>
+        <ref name="score"/>
+      </optional>
+      <zeroOrMore>
+        <element name="output">
+          <ref name="outputType"/>
+        </element>
+      </zeroOrMore>
+      <oneOrMore>
+        <!-- <seq_relationship>: Provides the locations on the underlying
+        <seq>'s.  Every <seq_relationship> absolutely requires a seq_id
+        reference.  There are no hidden assumptions regarding which
+        sequence the positions refer to - it is firmly explicit.  This
+        makes it possible, among other things, to have the same feature
+        appear on multiple sequences. -->
+        <element name="seq_relationship">
+          <ref name="seq_relationshipType"/>
+        </element>
+      </oneOrMore>
+    </interleave>
+  </define>
+  <!-- Note that some values should really be restricted to a particular
+  type.  For example, sometimes scores appear as type=score, value=12345,
+  and we'd want to reject value=FOO, but we can't constrain value like
+  that because in other cases it represents other types of data.  -->
+  <define name="value">
+    <element name="value">
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="version">
+    <element name="version">
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="id">
+    <element name="id">
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="annotation_id">
+    <element name="annotation_id">
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="type">
+    <element name="type">
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="outputType">
+    <interleave>
+      <ref name="type"/>
+      <ref name="value"/>
+    </interleave>
+  </define>
+  <define name="spanType">
+    <interleave>
+      <ref name="start"/>
+      <ref name="end"/>
+    </interleave>
+  </define>
+  <define name="arm">
+    <element name="arm">
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="int">
+    <data type="int"/>
+  </define>
+  <define name="text">
+    <element name="text">
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="synonym">
+    <element name="synonym">
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="dbxrefType">
+    <interleave>
+      <ref name="xref_db"/>
+      <ref name="db_xref_id"/>
+    </interleave>
+  </define>
+  <define name="author">
+    <element name="author">
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="object_class">
+    <element name="object_class">
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="database">
+    <element name="database">
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="feature_spanType">
+    <interleave>
+      <optional>
+        <attribute name="produces_seq">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="type">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="id">
+          <data type="NMTOKEN"/>
+        </attribute>
+      </optional>
+      <optional>
+        <ref name="name"/>
+      </optional>
+      <optional>
+        <ref name="type"/>
+      </optional>
+      <oneOrMore>
+        <element name="seq_relationship">
+          <ref name="seq_relationshipType"/>
+        </element>
+      </oneOrMore>
+    </interleave>
+  </define>
+  <define name="program">
+    <element name="program">
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="description">
+    <element name="description">
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="commentType">
+    <interleave>
+      <optional>
+        <attribute name="internal">
+          <choice>
+            <value type="NMTOKEN">true</value>
+            <value type="NMTOKEN">false</value>
+          </choice>
+        </attribute>
+      </optional>
+      <!-- In some dbs (Otter/Ensembl), comments can have ids -->
+      <optional>
+        <attribute name="id">
+          <data type="NMTOKEN"/>
+        </attribute>
+      </optional>
+      <ref name="text"/>
+      <optional>
+        <ref name="person"/>
+      </optional>
+      <optional>
+        <element name="date">
+          <ref name="dateType"/>
+        </element>
+      </optional>
+      <optional>
+        <!-- Not standard here, but I found it in at least one dataset. -->
+        <element name="internal">
+          <data type="boolean"/>
+        </element>
+      </optional>
+    </interleave>
+  </define>
+  <define name="chromosome">
+    <element name="chromosome">
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="seq">
+    <element name="seq">
+      <ref name="seqType"/>
+    </element>
+  </define>
+  <define name="feature_setType">
+    <interleave>
+      <optional>
+        <attribute name="id">
+          <data type="NMTOKEN"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="problem">
+          <data type="boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="produces_seq">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <!-- Type attribute is redundant with type element, but if we
+        delete it then older GAME files won't validate. -->
+        <attribute name="type">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <ref name="name"/>
+      <optional>
+        <!-- This should really be restricted to be a SO term -->
+        <ref name="type"/>
+      </optional>
+      <optional>
+        <ref name="author"/>
+      </optional>
+      <optional>
+        <element name="date">
+          <ref name="dateType"/>
+        </element>
+      </optional>
+      <zeroOrMore>
+        <ref name="synonym"/>
+      </zeroOrMore>
+      <zeroOrMore>
+        <element name="comment">
+          <ref name="commentType"/>
+        </element>
+      </zeroOrMore>
+      <optional>
+        <element name="description">
+          <data type="string"/>
+        </element>
+      </optional>
+      <zeroOrMore>
+        <element name="property">
+          <ref name="propertyType"/>
+        </element>
+      </zeroOrMore>
+      <choice>
+        <oneOrMore>
+          <element name="feature_set">
+            <ref name="feature_setType"/>
+          </element>
+        </oneOrMore>
+        <oneOrMore>
+          <element name="feature_span">
+            <ref name="feature_spanType"/>
+          </element>
+        </oneOrMore>
+      </choice>
+
+      <!-- Can have 0 to 2 seqs (can have one for the mRNA and one for
+      the peptide).  When I tried to make it represent that constraint,
+      though, the translated xsd ended up with two <seq> elements and
+      some validators don't like that.  So I'm letting it allow zero or
+      more seqs.  -->
+      <zeroOrMore>
+        <ref name="seq"/>
+      </zeroOrMore>
+    </interleave>
+  </define>
+  <define name="person">
+    <element name="person">
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="operation">
+    <element name="operation">
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="transcript_name">
+    <element name="transcript_name">
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="seqType">
+    <interleave>
+      <optional>
+        <attribute name="type">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <!-- There should be only one of these in the entire XML document 
+        On the other hand, it strictly speaking is unneeded because
+        the focus sequence is the reference sequence of the curation -->
+        <attribute name="focus">
+          <data type="boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="md5checksum">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="length">
+          <data type="NMTOKEN"/>
+        </attribute>
+      </optional>
+      <attribute name="id">
+        <data type="string"/>
+      </attribute>
+      <optional>
+        <attribute name="version">
+          <data type="NMTOKEN"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <ref name="name"/>
+        <optional>
+          <ref name="organism"/>
+        </optional>
+        <optional>
+          <element name="potential_sequencing_error">
+            <interleave>
+              <ref name="type"/>
+              <ref name="position"/>
+              <optional>
+                <ref name="base"/>
+              </optional>
+            </interleave>
+          </element>
+        </optional>
+        <zeroOrMore>
+          <element name="dbxref">
+            <ref name="dbxrefType"/>
+          </element>
+        </zeroOrMore>
+        <optional>
+          <ref name="description"/>
+        </optional>
+        <optional>
+          <ref name="residues"/>
+        </optional>
+      </interleave>
+    </interleave>
+  </define>
+  <define name="result_setType">
+    <interleave>
+      <optional>
+        <attribute name="id">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <ref name="name"/>
+      <optional>
+        <!-- Normally you would expect to see scores in result_span, not
+        result_set -->
+        <element name="score">
+          <data type="float"/>
+        </element>
+      </optional>
+      <optional>
+        <element name="seq_relationship">
+          <ref name="seq_relationshipType"/>
+        </element>
+      </optional>
+      <zeroOrMore>
+        <element name="output">
+          <ref name="outputType"/>
+        </element>
+      </zeroOrMore>
+      <zeroOrMore>
+        <element name="result_set">
+          <ref name="result_setType"/>
+        </element>
+      </zeroOrMore>
+      <zeroOrMore>
+        <element name="result_span">
+          <ref name="result_spanType"/>
+        </element>
+      </zeroOrMore>
+    </interleave>
+  </define>
+  <define name="propertyType">
+    <interleave>
+      <ref name="type"/>
+      <ref name="value"/>
+    </interleave>
+  </define>
+  <define name="dateType">
+    <interleave>
+      <attribute name="timestamp">
+        <data type="NMTOKEN"/>
+      </attribute>
+      <data type="string"/>
+    </interleave>
+  </define>
+  <define name="alignment">
+    <element name="alignment">
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="seq_relationshipType">
+    <interleave>
+      <attribute name="seq">
+        <data type="string"/>
+      </attribute>
+      <optional>
+        <attribute name="type">
+          <choice>
+            <value type="NMTOKEN">query</value>
+            <value type="NMTOKEN">subject</value>
+          </choice>
+        </attribute>
+      </optional>
+      <element name="span">
+        <ref name="spanType"/>
+      </element>
+       <!-- this alignment element is deprecated. it should only
+       be used if a cigar property element and the corresponding
+       seq element are unavailble. Either this or the cigar+seq are
+       needed to drive the alignment viewer. The alignment is the
+       string parsed out of the BLAST or sim4 output -->
+      <optional>
+        <ref name="alignment"/>
+      </optional>
+    </interleave>
+  </define>
+  <define name="score">
+    <element name="score">
+      <data type="float"/>
+    </element>
+  </define>
+  <define name="name">
+    <element name="name">
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="db_xref_id">
+    <element name="db_xref_id">
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="xref_db">
+    <element name="xref_db">
+      <data type="string"/>
+    </element>
+  </define>
+  <define name="end">
+    <element name="end">
+      <ref name="int"/>
+    </element>
+  </define>
+  <define name="start">
+    <element name="start">
+      <ref name="int"/>
+    </element>
+  </define>
+  <define name="residues">
+    <element name="residues">
+      <data type="string"/>
+    </element>
+  </define>
+</grammar>

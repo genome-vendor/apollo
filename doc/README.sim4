@@ -1,0 +1,27 @@
+$Id: README.sim4,v 1.2 2007/04/25 15:23:48 briano Exp $
+
+When running sim4 you need to pass in your genomic sequence file first 
+THEN the query sequence file (sim4 will try to tell you to switch them 
+but it will still run).
+
+So the easiest example is just to open a region in Apollo, then click 
+on File->"Save sequence...", put in a name, and then save.  This is 
+the genomic sequence file, assuming you have a file with your query 
+sequence in fasta format, run sim4:
+
+ path/to/sim4 genomic.txt query.txt P=1 A=3 > sim4.out
+
+We're using A=3 output format (both exon endpoints and alignment text 
+(A=3, A=4)) and we're dropping poly-a tails (P=1).
+
+The output file (sim4.out in our example) can be loaded using Apollo's 
+"Layer more results..." and choosing sim4.  Browse to the output file, 
+and make sure that the "Genomic offset from #" is set to the number 
+they show in the label, don't use 0.  This is key to getting the 
+results to show up, the number that you use as offset should be the 
+coordinate (chromosome relative for our data) at the start of your 
+apollo window (should say what this is in the window title bar, 
+"Chromosome 1: start-end...").
+
+The sim4 alignment should then show up in some anemic color on the
+forward strand. 
