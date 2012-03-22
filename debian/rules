@@ -1,0 +1,26 @@
+#!/usr/bin/make -f
+
+PKG=apollo1.11.6
+VER=1.11.6
+DEB_DIR=debian/${PKG}
+
+%:
+	dh $@
+
+override_dh_auto_install:
+#	dh_auto_install
+	echo "copy files now!"
+	mkdir -p ${DEB_DIR}/usr/bin
+	mkdir -p ${DEB_DIR}/usr/lib/${PKG}/bin
+	mkdir -p ${DEB_DIR}/usr/lib/${PKG}/conf
+	mkdir -p ${DEB_DIR}/usr/lib/${PKG}/data
+	mkdir -p ${DEB_DIR}/usr/lib/${PKG}/jars
+	install -m755 bin/apollo ${DEB_DIR}/usr/lib/${PKG}/bin/apollo
+	install -m755 bin/bop ${DEB_DIR}/usr/lib/${PKG}/bin/bop
+	#install -m755 bin/blixem.LINUX ${DEB_DIR}/usr/lib/${PKG}/bin/blixem
+	echo "APOLLO_ROOT=/usr/lib/${PKG} ${DEB_DIR}/usr/lib/${PKG}/bin/apollo" >  ${DEB_DIR}/usr/bin/apollo1.11.6
+	echo "APOLLO_ROOT=/usr/lib/${PKG} ${DEB_DIR}/usr/lib/${PKG}/bin/bop" >  ${DEB_DIR}/usr/bin/bop1.11.6
+	#echo "export PATH=/usr/lib/${PKG}/bin:\$$PATH; exec blixem" >  ${DEB_DIR}/usr/bin/blixem1.11.6
+	cp -a conf/*  ${DEB_DIR}/usr/lib/${PKG}/conf/
+	cp -a data/*  ${DEB_DIR}/usr/lib/${PKG}/data/
+	cp -a jars/*  ${DEB_DIR}/usr/lib/${PKG}/jars/

@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+
+if [ "$1" = "configure" ]; then
+    if [ ! -e /usr/bin/apollo ]; then
+        update-alternatives --install /usr/bin/apollo apollo /usr/bin/apollo1.11.6 1
+        update-alternatives --install /usr/bin/bop bop /usr/bin/bop1.11.6 1
+        #update-alternatives --install /usr/bin/blixem blixem /usr/bin/blixem1.11.6 1
+    fi
+fi

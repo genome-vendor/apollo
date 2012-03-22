@@ -1,0 +1,8 @@
+#!/bin/sh
+set -e
+
+if [ \( "$1" = "upgrade" -o "$1" = "remove" \) -a -L /usr/bin/apollo ]; then
+    update-alternatives --remove apollo /usr/bin/apollo1.11.6
+    update-alternatives --remove bop /usr/bin/bop1.11.6
+    #update-alternatives --remove blixem /usr/bin/blixem1.11.6
+fi
