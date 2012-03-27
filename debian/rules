@@ -17,9 +17,10 @@ override_dh_auto_install:
 	mkdir -p ${DEB_DIR}/usr/lib/${PKG}/jars
 	install -m755 bin/apollo ${DEB_DIR}/usr/lib/${PKG}/bin/apollo
 	install -m755 bin/bop ${DEB_DIR}/usr/lib/${PKG}/bin/bop
+	install -m755 bin/get-real-path ${DEB_DIR}/usr/lib/${PKG}/bin/get-real-path
 	#install -m755 bin/blixem.LINUX ${DEB_DIR}/usr/lib/${PKG}/bin/blixem
-	echo "APOLLO_ROOT=/usr/lib/${PKG} ${DEB_DIR}/usr/lib/${PKG}/bin/apollo" >  ${DEB_DIR}/usr/bin/apollo1.11.6
-	echo "APOLLO_ROOT=/usr/lib/${PKG} ${DEB_DIR}/usr/lib/${PKG}/bin/bop" >  ${DEB_DIR}/usr/bin/bop1.11.6
+	echo "APOLLO_ROOT=/usr/lib/${PKG} /usr/lib/${PKG}/bin/apollo" >  ${DEB_DIR}/usr/bin/apollo1.11.6
+	echo "APOLLO_ROOT=/usr/lib/${PKG} /usr/lib/${PKG}/bin/bop" >  ${DEB_DIR}/usr/bin/bop1.11.6
 	#echo "export PATH=/usr/lib/${PKG}/bin:\$$PATH; exec blixem" >  ${DEB_DIR}/usr/bin/blixem1.11.6
 	cp -a conf/*  ${DEB_DIR}/usr/lib/${PKG}/conf/
 	cp -a data/*  ${DEB_DIR}/usr/lib/${PKG}/data/
